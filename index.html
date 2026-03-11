@@ -136,7 +136,7 @@
             </div>
         </aside>
         <!-- Orbit 2: Center Canvas (Dynamic Workspace) -->
-        <main class="flex-1 bg-background-dark relative flex flex-col overflow-y-auto">
+        <main class="flex-1 bg-background-light relative flex flex-col overflow-y-auto text-slate-800">
             <header class="h-16 flex items-center justify-between px-8 border-b border-primary/5">
                 <div class="flex items-center gap-4">
                     <span class="material-symbols-outlined text-slate-500">search</span>
@@ -186,12 +186,18 @@
                             <span class="text-sm font-semibold text-slate-200">Lux Lusitana Admin</span>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="text-xs text-slate-400 hover:text-primary transition-colors font-bold">PT</button>
+                    <div class="flex items-center gap-1">
+                        <button onclick="setLanguage('pt')"
+                            class="lang-btn text-xs text-slate-400 hover:text-primary transition-colors font-bold px-1">PT</button>
                         <span class="text-slate-700">|</span>
-                        <button
-                            class="text-xs text-slate-400 hover:text-primary transition-colors font-bold">EN</button>
+                        <button onclick="setLanguage('es')"
+                            class="lang-btn text-xs text-slate-400 hover:text-primary transition-colors font-bold px-1">ES</button>
+                        <span class="text-slate-700">|</span>
+                        <button onclick="setLanguage('en')"
+                            class="lang-btn text-xs text-slate-400 hover:text-primary transition-colors font-bold px-1">EN</button>
+                        <span class="text-slate-700">|</span>
+                        <button onclick="setLanguage('fr')"
+                            class="lang-btn text-xs text-slate-400 hover:text-primary transition-colors font-bold px-1">FR</button>
                     </div>
                 </div>
                 <!-- Gatekeeper Status -->
@@ -278,9 +284,13 @@
         function loadManual() {
             const canvas = document.getElementById('canvas-content');
             if (canvas) {
-                fetch('../gadgets/wd-manual.html')
+                fetch('gadgets/wd-manual.html')
                     .then(r => r.text())
-                    .then(html => { canvas.innerHTML = html; });
+                    .then(html => {
+                        canvas.innerHTML = html;
+                        const lang = localStorage.getItem('cpii_crm_lang') || 'pt';
+                        applyTranslations(lang);
+                    });
             }
         }
     </script>
