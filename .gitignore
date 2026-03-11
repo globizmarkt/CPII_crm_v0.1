@@ -1,0 +1,11 @@
+# BreederHub Project Gitignore
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.firebase/
+.agent/
+brain/
+*.tmp
+/tmp/

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII-CRM Skin 06 Integrated Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#1a1810",
+                        "neutral-muted": "#322d1a",
+                        "neutral-border": "#453f26",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .sidebar-item-active { background-color: rgba(242, 185, 13, 0.15); border-left: 3px solid #f2b90d; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Orbit 1: Sidebar -->
+<aside class="w-64 border-r border-neutral-border bg-background-light dark:bg-background-dark flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined text-2xl font-bold">diamond</span>
+</div>
+<h2 class="text-xl font-extrabold tracking-tight" data-i18n="brand.name">CPII-CRM</h2>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+<div class="sidebar-item-active flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer">
+<span class="material-symbols-outlined text-primary">dashboard</span>
+<span class="text-sm font-semibold" data-i18n="nav.dashboard">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary">pie_chart</span>
+<span class="text-sm font-medium" data-i18n="nav.portfolio">Portfolio</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary">real_estate_agent</span>
+<span class="text-sm font-medium" data-i18n="nav.mls">Mercado MLS</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary">lock</span>
+<span class="text-sm font-medium" data-i18n="nav.vault">Bóveda Legal</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined group-hover:text-primary">calculate</span>
+<span class="text-sm font-medium" data-i18n="nav.simulator">Simulador</span>
+</div>
+</nav>
+<div class="p-4 border-t border-neutral-border">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium" data-i18n="nav.settings">Configurações</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 transition-colors cursor-pointer text-red-500">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium" data-i18n="nav.logout">Sair</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="h-16 border-b border-neutral-border flex items-center justify-between px-8 bg-background-light dark:bg-background-dark/50 backdrop-blur-md">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="bg-neutral-muted border-none rounded-lg pl-10 pr-4 py-2 text-sm w-80 focus:ring-1 focus:ring-primary" data-i18n="search.placeholder" placeholder="Procurar ativos, documentos..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-neutral-muted rounded-lg relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full"></span>
+</button>
+<button class="flex items-center gap-3 pl-4 border-l border-neutral-border">
+<div class="text-right">
+<p class="text-xs font-bold" data-i18n="user.name">Lux Lusitana</p>
+<p class="text-[10px] text-primary font-medium" data-i18n="user.tier">Premium Investor</p>
+</div>
+<div class="size-9 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center overflow-hidden">
+<img alt="User" class="size-full object-cover" data-alt="User avatar for Lux Lusitana profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIobfx7QYryQpl1mS5Ib-hW_67tzlaLVliAMTvCFQa2n8ZIflkPooaHVYnny8QrKjtGQjdGq5sq_wblBNzDC-HCQ_Et-ShxJmZ4WLh1NROlU9RMx6OGFj7Cpx_Nd9vmRaS_MlBVJBJ_exEgOyLlE3hu2leE-e8TG2PQ7U2Nu_HCHFcrZfKwzOKauL6La4VFWONIDkWVNnvCKRnuOIg93nQO2fcCb5hQE4HUcnlG0yKV-M5t2RRelmpiaJUoH3u0qB63snUyxEJAw"/>
+</div>
+</button>
+</div>
+</header>
+<!-- Orbit 2: Canvas Central -->
+<div class="flex-1 overflow-y-auto p-8 space-y-6 bg-slate-50 dark:bg-background-dark">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-2xl font-extrabold" data-i18n="dash.welcome">Dashboard Integrado</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm" data-i18n="dash.subtitle">Bem-vindo ao Trinity Layout Core v2.4.0</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark px-4 py-2 rounded-lg font-bold text-sm shadow-lg shadow-primary/20 transition-all" data-i18n="btn.test_kyc">
+                        Test KYC
+                    </button>
+</div>
+<div class="grid grid-cols-2 gap-6 h-full min-h-[800px]">
+<!-- Block 1: PortfolioVisualizer -->
+<div class="bg-white dark:bg-neutral-muted/50 rounded-xl p-6 border border-neutral-border flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">insights</span>
+                                Portfolio Visualizer
+                            </h3>
+<span class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Real-Time</span>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-8">
+<div class="p-3 bg-background-light dark:bg-background-dark rounded-lg border border-neutral-border">
+<p class="text-[10px] uppercase font-bold text-slate-400">Total Equity</p>
+<p class="text-xl font-black">€1.42M</p>
+</div>
+<div class="p-3 bg-background-light dark:bg-background-dark rounded-lg border border-neutral-border">
+<p class="text-[10px] uppercase font-bold text-slate-400">Monthly Yield</p>
+<p class="text-xl font-black text-emerald-500">€8.4k</p>
+</div>
+<div class="p-3 bg-background-light dark:bg-background-dark rounded-lg border border-neutral-border">
+<p class="text-[10px] uppercase font-bold text-slate-400">Active Assets</p>
+<p class="text-xl font-black">12</p>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs font-bold mb-1">
+<span>Catapulta (Aggressive)</span>
+<span>85%</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-neutral-border h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-bold mb-1">
+<span>Refúgio (Safe-Haven)</span>
+<span>15%</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-neutral-border h-2 rounded-full overflow-hidden">
+<div class="bg-slate-400 h-full rounded-full" style="width: 15%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Block 2: Mercado MLS -->
+<div class="bg-white dark:bg-neutral-muted/50 rounded-xl p-6 border border-neutral-border flex flex-col">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">storefront</span>
+                                Mercado MLS <span class="text-xs font-normal text-slate-400 ml-2">Off-market</span>
+</h3>
+<button class="text-xs text-primary font-bold hover:underline">Ver Todos</button>
+</div>
+<div class="space-y-3">
+<!-- Card Tier A -->
+<div class="group bg-background-light dark:bg-background-dark rounded-lg border border-neutral-border p-3 flex gap-4 hover:border-primary transition-colors cursor-pointer">
+<div class="w-24 h-24 rounded-lg bg-slate-800 relative overflow-hidden flex-shrink-0">
+<img alt="Tier A" class="object-cover w-full h-full group-hover:scale-110 transition-transform" data-alt="Luxury modern property exterior view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjT2ZZCMBPn5CoaQRL0q11pnBRSYp2h9CgnzPv8FfniGPE4-Agoc3bLZy5l6rf2Rf9VCXx_0HIOa8XZf1d2cacv2e0QLXJ79dIdVyhGtrFTN92o7a1-5VU8nf6mkHchlQFV7WyevkgKHX3yu-UoXnLGgfT679Dvm-ouYw3Xhtm0FW-U3ztpmgHFDMgMmQsW2l3wNQAH8mnWpRUSbLgOUZDkOig_7fggKI7T7jqXDjgIWnUMlzYHwmzY8p_N9RuR4qI9nZrw6-QZA"/>
+<div class="absolute top-1 left-1 bg-emerald-500 text-[8px] font-black px-1.5 py-0.5 rounded text-white shadow-sm">SCORE 9.8</div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-bold">Lisbon Riverside Suite</h4>
+<span class="bg-emerald-500/10 text-emerald-500 text-[10px] px-2 py-0.5 rounded-full font-bold">Tier A</span>
+</div>
+<p class="text-[10px] text-slate-400">Lisboa, Portugal • Commercial</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<p class="text-[10px] font-bold text-slate-400">Target APY</p>
+<p class="text-sm font-black text-emerald-500">20%</p>
+</div>
+<button class="text-[10px] bg-primary/20 text-primary px-3 py-1 rounded font-bold group-hover:bg-primary group-hover:text-background-dark transition-colors">Detalhes</button>
+</div>
+</div>
+</div>
+<!-- Card Tier B -->
+<div class="group bg-background-light dark:bg-background-dark rounded-lg border border-neutral-border p-3 flex gap-4 hover:border-primary transition-colors cursor-pointer">
+<div class="w-24 h-24 rounded-lg bg-slate-800 relative overflow-hidden flex-shrink-0">
+<img alt="Tier B" class="object-cover w-full h-full group-hover:scale-110 transition-transform" data-alt="Cozy family house in quiet neighborhood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYX3KzYnEzkYdAOT45U3xWq37mlmWO7vpuCG9W5aog9FHjFxVMEAF8LyyaLkj3aZ-BYrXcSTxu_iQdx1t04pJvjsJJgpES2Kc4SDv4cGfCgvrHrCNZzCgMNSpsEnPLzAFp6SBUYVy4mbI9pWRjBQGmAIMahGYFnCpuMBV7EuKLt0VHaqVYovT8RdW88M3f1LvQ_Pzb3ZxRUxO1JqgaynyPS_FDZAh9sARoqKMmNkGURoAZduHD66kpMGa0gCb39kz0zKzp6gRTrA"/>
+<div class="absolute top-1 left-1 bg-amber-500 text-[8px] font-black px-1.5 py-0.5 rounded text-white shadow-sm">SCORE 7.4</div>
+</div>
+<div class="flex-1 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start">
+<h4 class="text-xs font-bold">Cascais Garden Villa</h4>
+<span class="bg-amber-500/10 text-amber-500 text-[10px] px-2 py-0.5 rounded-full font-bold">Tier B</span>
+</div>
+<p class="text-[10px] text-slate-400">Cascais, Portugal • Residential</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<p class="text-[10px] font-bold text-slate-400">Target APY</p>
+<p class="text-sm font-black text-amber-500">8%</p>
+</div>
+<button class="text-[10px] bg-primary/20 text-primary px-3 py-1 rounded font-bold group-hover:bg-primary group-hover:text-background-dark transition-colors">Detalhes</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Block 3: InvestmentSimulator -->
+<div class="bg-white dark:bg-neutral-muted/50 rounded-xl p-6 border border-neutral-border flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                                Investment Simulator
+                            </h3>
+<div class="flex bg-background-light dark:bg-background-dark p-1 rounded-lg border border-neutral-border">
+<button class="px-3 py-1 text-[10px] font-bold bg-primary text-background-dark rounded-md">PT</button>
+<button class="px-3 py-1 text-[10px] font-bold hover:bg-neutral-border rounded-md">ES</button>
+<button class="px-3 py-1 text-[10px] font-bold hover:bg-neutral-border rounded-md">BR</button>
+</div>
+</div>
+<div class="space-y-4 flex-1">
+<div>
+<label class="text-[10px] font-bold text-slate-400 mb-1 block">INVESTMENT AMOUNT</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 font-bold">€</span>
+<input class="w-full bg-background-light dark:bg-background-dark border-neutral-border rounded-lg pl-8 text-sm font-bold focus:ring-primary focus:border-primary" type="number" value="100000"/>
+</div>
+</div>
+<div>
+<label class="text-[10px] font-bold text-slate-400 mb-1 block">TIME HORIZON (YEARS)</label>
+<input class="w-full accent-primary h-1.5 bg-neutral-border rounded-lg appearance-none cursor-pointer" type="range"/>
+<div class="flex justify-between text-[10px] font-bold mt-1">
+<span>1 Year</span>
+<span>10 Years</span>
+</div>
+</div>
+<div class="p-4 bg-primary/10 border border-primary/20 rounded-lg">
+<p class="text-[10px] font-bold text-primary mb-1">PROJECTED YIELD (10Y)</p>
+<div class="flex items-baseline gap-2">
+<span class="text-2xl font-black">€248,500</span>
+<span class="text-xs text-emerald-500 font-bold">+148.5%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Block 4: DocuSignVault -->
+<div class="bg-white dark:bg-neutral-muted/50 rounded-xl p-6 border border-neutral-border flex flex-col items-center justify-center text-center space-y-4">
+<div class="size-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2">
+<span class="material-symbols-outlined text-4xl">ink_pen</span>
+</div>
+<div>
+<h3 class="text-lg font-bold" data-i18n="docs.title">DocuSign Vault</h3>
+<p class="text-sm text-slate-400 max-w-xs mx-auto" data-i18n="docs.desc">Você possui 2 documentos pendentes de assinatura legal para o Ativo 'Riverside'.</p>
+</div>
+<button class="w-full max-w-xs bg-primary hover:bg-primary/90 text-background-dark font-black py-4 rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 transition-transform active:scale-95" data-i18n="docs.cta_sign">
+<span class="material-symbols-outlined">edit_document</span>
+                            ASSINAR DOCUMENTOS
+                        </button>
+<p class="text-[10px] text-slate-500 italic">Certificado pela Trinity Legal Shield v1.2</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Orbit 3: Right Dock -->
+<aside class="w-80 border-l border-neutral-border bg-background-light dark:bg-background-dark flex flex-col">
+<!-- KYC Status -->
+<div class="p-6 border-b border-neutral-border">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Compliance</h4>
+<span class="bg-emerald-500/20 text-emerald-500 text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span>
+                        KYC VERIFICADO
+                    </span>
+</div>
+<div class="bg-neutral-muted/30 p-4 rounded-lg border border-neutral-border">
+<p class="text-[10px] font-bold text-slate-400 mb-2">AIMON STATUS</p>
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-background-dark">smart_toy</span>
+</div>
+<p class="text-xs italic leading-tight" data-i18n="aimon.dashboard_welcome">"Olá Lux! Seus rendimentos de Março já foram processados. Deseja ver o extrato?"</p>
+</div>
+</div>
+</div>
+<!-- Notifications / Messenger -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<h4 class="text-xs font-black uppercase tracking-widest text-slate-400">Notificações Recentes</h4>
+<div class="space-y-4">
+<!-- Notification 1 -->
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-emerald-500/20 text-emerald-500 flex flex-shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-lg">payments</span>
+</div>
+<div>
+<p class="text-xs font-bold">Rendimentos Creditados</p>
+<p class="text-[10px] text-slate-400">Seu portfolio 'Catapulta' rendeu +€1,240 hoje.</p>
+<p class="text-[9px] text-primary mt-1">Há 2 horas</p>
+</div>
+</div>
+<!-- Notification 2 -->
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-amber-500/20 text-amber-500 flex flex-shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-lg">priority_high</span>
+</div>
+<div>
+<p class="text-xs font-bold">Capital Call: Porto Project</p>
+<p class="text-[10px] text-slate-400">Aporte de €50,000 agendado para 24/05.</p>
+<p class="text-[9px] text-primary mt-1">Há 5 horas</p>
+</div>
+</div>
+<!-- Notification 3 -->
+<div class="flex gap-3">
+<div class="size-8 rounded-full bg-blue-500/20 text-blue-500 flex flex-shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-lg">task_alt</span>
+</div>
+<div>
+<p class="text-xs font-bold">Confirmação de Documento</p>
+<p class="text-[10px] text-slate-400">Escritura do ativo 'Villa 12' foi validada.</p>
+<p class="text-[9px] text-primary mt-1">Ontem</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Global Status Bar -->
+<div class="p-4 border-t border-neutral-border bg-neutral-muted/20">
+<div class="flex items-center justify-between text-[10px] font-bold">
+<span class="flex items-center gap-1">
+<span class="size-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                        SYSTEM ONLINE
+                    </span>
+<span class="text-slate-500">v2.4.0 (SKIN-06)</span>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

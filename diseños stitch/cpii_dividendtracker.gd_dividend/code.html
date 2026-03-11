@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII DividendTracker .gd-dividend</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c1a85c",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#161513",
+                        "neutral-800": "#2d2a24",
+                        "neutral-900": "#1e1b14",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .h-header { height: 64px; }
+        .h-footer { height: 32px; }
+        .w-sidebar { width: 250px; }
+        .w-dock { width: 320px; }
+        .chart-container { height: 200px; position: relative; }
+        .line-catapulta { stroke: #c1a85c; stroke-width: 3; fill: none; }
+        .line-refugio { stroke: #5a533f; stroke-width: 2; fill: none; stroke-dasharray: 4; }
+        .status-badge { @apply px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #3f3a2c; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-hidden h-screen flex flex-col">
+<header class="h-header border-b border-primary/20 flex items-center justify-between px-6 bg-background-light dark:bg-background-dark z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined font-bold">account_balance_wallet</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight" data-i18n="platform_title">CPII Platform</h1>
+</div>
+<div class="hidden md:flex items-center bg-primary/10 rounded-full px-4 py-1.5 gap-2 border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 placeholder:text-primary/50 w-64" data-i18n="[placeholder]search" placeholder="Global Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-primary/10 rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-primary/20">
+<div class="text-right">
+<p class="text-xs font-bold leading-none">Arch. Senior</p>
+<p class="text-[10px] text-primary/70 uppercase tracking-widest font-bold">Lux Lusitana</p>
+</div>
+<div class="size-10 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="size-full" data-alt="Stylized avatar of a professional architect" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMLmp1TKhpTp6LLManThs1ynLzC3NwETFH2zVpKCsfz-WlR8hPw8-ZrXHdxcCEdyP7f8tToN7NgAK2NwbrGlGHvICb18Z8ccHztRBznNomIkZM5ZMmjAybX2n-OSNx6CjN2N0YuVkfyJODyohRSNCwcguBhP5dask587aPlLQ2qTrt84FsLo_62sFrIbIwwJMmKC1SAKM8xmSCNcvqrmxtqGuXnblGMxrAFrftWt-kLZGmF9XkaRIOvJiHiGZJOnHgWk_KzfJ_koJO"/>
+</div>
+</div>
+</div>
+</header>
+<div class="flex-1 flex overflow-hidden">
+<aside class="w-sidebar border-r border-primary/20 bg-background-light dark:bg-background-dark flex flex-col p-4 gap-2">
+<div class="mb-4">
+<p class="text-[10px] font-bold text-primary/60 uppercase tracking-widest mb-4 px-3" data-i18n="menu_core">Core Navigation</p>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 text-primary/70" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="text-sm font-medium" data-i18n="nav_overview">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined text-xl">payments</span>
+<span class="text-sm font-bold" data-i18n="nav_tracker">Dividend Tracker</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 text-primary/70" href="#">
+<span class="material-symbols-outlined text-xl">show_chart</span>
+<span class="text-sm font-medium" data-i18n="nav_strategies">Estratégias</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 text-primary/70" href="#">
+<span class="material-symbols-outlined text-xl">history</span>
+<span class="text-sm font-medium" data-i18n="nav_history">Histórico</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto border-t border-primary/10 pt-4">
+<div class="bg-primary/5 rounded-xl p-4 border border-primary/10">
+<p class="text-xs text-primary/60 mb-1" data-i18n="app_context">Context Skin</p>
+<h3 class="text-sm font-bold text-primary">Skin 11: .gd-dividend</h3>
+<div class="flex items-center gap-2 mt-3">
+<div class="h-1.5 flex-1 bg-primary/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3"></div>
+</div>
+<span class="text-[10px] font-bold">V2.5.0</span>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+<div class="max-w-6xl mx-auto space-y-10">
+<header class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-primary/60 text-xs font-bold uppercase tracking-widest">
+<span data-i18n="breadcrumb_platform">Platform</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span data-i18n="breadcrumb_skin11">Skin 11</span>
+</div>
+<div class="flex items-end justify-between">
+<h2 class="text-4xl font-serif font-bold text-slate-100" data-i18n="tracker_title">Dividend Tracker</h2>
+<button class="bg-primary text-background-dark font-bold px-5 py-2 rounded-lg flex items-center gap-2 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+<span data-i18n="btn_new_dist">Nova Distribuição</span>
+</button>
+</div>
+</header>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all group">
+<p class="text-xs font-bold text-primary/60 uppercase tracking-widest mb-2" data-i18n="kpi_total">Total Distribuído</p>
+<h3 class="text-3xl font-serif text-slate-100 group-hover:text-primary transition-colors">R$ 125.400,00</h3>
+<div class="mt-4 flex items-center gap-1 text-emerald-500 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs LY</span>
+</div>
+</div>
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all group">
+<p class="text-xs font-bold text-primary/60 uppercase tracking-widest mb-2" data-i18n="kpi_avg">Média Mensal</p>
+<h3 class="text-3xl font-serif text-slate-100 group-hover:text-primary transition-colors">R$ 10.450,00</h3>
+<div class="mt-4 flex items-center gap-1 text-primary/50 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>Base: 12 meses</span>
+</div>
+</div>
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all group">
+<p class="text-xs font-bold text-primary/60 uppercase tracking-widest mb-2" data-i18n="kpi_next">Próxima Distribuição</p>
+<h3 class="text-3xl font-serif text-slate-100 group-hover:text-primary transition-colors">15 OUT</h3>
+<div class="mt-4 flex items-center gap-1 text-primary text-xs font-bold">
+<span class="material-symbols-outlined text-sm">timer</span>
+<span>Em 12 dias</span>
+</div>
+</div>
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/10 hover:border-primary/30 transition-all group">
+<p class="text-xs font-bold text-primary/60 uppercase tracking-widest mb-2" data-i18n="kpi_yield">Rendimento Acumulado</p>
+<h3 class="text-3xl font-serif text-slate-100 group-hover:text-primary transition-colors">12.4%</h3>
+<div class="mt-4 flex items-center gap-1 text-emerald-500 text-xs font-bold">
+<span class="material-symbols-outlined text-sm">star</span>
+<span>Top 5% Portfolio</span>
+</div>
+</div>
+</section>
+<section class="bg-neutral-800/30 rounded-xl border border-primary/10 p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold flex items-center gap-2" data-i18n="cal_title">
+<span class="material-symbols-outlined text-primary">calendar_view_month</span>
+                            Calendário de Distribuição 2024
+                        </h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary"></span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary/60">Catapulta</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full border border-primary/50"></span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-primary/60">Refúgio</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-1">
+<div class="col-span-12 grid grid-cols-12 mb-2">
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Jan</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Fev</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Mar</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Abr</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Mai</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Jun</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Jul</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Ago</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Set</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Out</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Nov</div>
+<div class="text-[10px] font-bold text-primary/40 text-center uppercase">Dez</div>
+</div>
+<div class="col-span-12 grid grid-cols-12 gap-1 mb-3">
+<div class="aspect-square flex items-center justify-center bg-primary rounded-sm shadow-lg shadow-primary/20"><span class="status-badge text-background-dark" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center bg-primary rounded-sm shadow-lg shadow-primary/20"><span class="status-badge text-background-dark" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center bg-primary rounded-sm shadow-lg shadow-primary/20"><span class="status-badge text-background-dark" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center bg-primary rounded-sm shadow-lg shadow-primary/20"><span class="status-badge text-background-dark" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center bg-primary/40 rounded-sm border border-primary/40"><span class="status-badge text-slate-100" data-i18n="pendente">PEND</span></div>
+<div class="aspect-square flex items-center justify-center bg-primary/40 rounded-sm border border-primary/40"><span class="status-badge text-slate-100" data-i18n="pendente">PEND</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center bg-neutral-900 border border-primary/20 rounded-sm opacity-50"><span class="status-badge text-primary/60" data-i18n="previsto">PREV</span></div>
+</div>
+<div class="col-span-12 grid grid-cols-12 gap-1">
+<div class="aspect-square flex items-center justify-center border border-primary/40 bg-primary/10 rounded-sm"><span class="status-badge text-primary" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/40 bg-primary/10 rounded-sm"><span class="status-badge text-primary" data-i18n="pago">PAGO</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="pendente">PEND</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="pendente">PEND</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+<div class="aspect-square flex items-center justify-center border border-primary/20 bg-neutral-900 rounded-sm opacity-50"><span class="status-badge text-primary/40" data-i18n="previsto">PREV</span></div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<section class="space-y-4">
+<h3 class="text-lg font-bold" data-i18n="vbreak_title">Vehicle Breakdown</h3>
+<div class="space-y-4">
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">rocket_launch</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-xl font-bold text-primary">Catapulta Tier A</h4>
+<p class="text-xs text-primary/60 font-bold uppercase tracking-widest">Active Vehicle</p>
+</div>
+<div class="text-right">
+<p class="text-3xl font-serif text-slate-100">20% <span class="text-xs font-sans">APY</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-background-dark/50 p-3 rounded-lg border border-primary/10">
+<p class="text-[10px] uppercase font-bold text-primary/40">Completed Cycles</p>
+<p class="text-lg font-bold">14 / 24</p>
+</div>
+<div class="bg-background-dark/50 p-3 rounded-lg border border-primary/10">
+<p class="text-[10px] uppercase font-bold text-primary/40">Next Step</p>
+<p class="text-lg font-bold">Tier S Opt-in</p>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[10px] font-bold text-primary/60 uppercase mb-2">
+<span>Current Cycle Progress</span>
+<span>82%</span>
+</div>
+<div class="h-2 w-full bg-primary/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 82%"></div>
+</div>
+</div>
+</div>
+<div class="bg-neutral-800/50 p-6 rounded-xl border border-primary/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-6xl">security</span>
+</div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="text-xl font-bold text-primary/70">Refúgio Tier B</h4>
+<p class="text-xs text-primary/60 font-bold uppercase tracking-widest">Conservative Vehicle</p>
+</div>
+<div class="text-right">
+<p class="text-3xl font-serif text-slate-100">8% <span class="text-xs font-sans">APY</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="bg-background-dark/50 p-3 rounded-lg border border-primary/10">
+<p class="text-[10px] uppercase font-bold text-primary/40">Completed Cycles</p>
+<p class="text-lg font-bold">42 / 60</p>
+</div>
+<div class="bg-background-dark/50 p-3 rounded-lg border border-primary/10">
+<p class="text-[10px] uppercase font-bold text-primary/40">Risk Rating</p>
+<p class="text-lg font-bold text-emerald-500">AAA</p>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[10px] font-bold text-primary/60 uppercase mb-2">
+<span>Current Cycle Progress</span>
+<span>45%</span>
+</div>
+<div class="h-2 w-full bg-primary/20 rounded-full overflow-hidden">
+<div class="h-full bg-primary/60" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold" data-i18n="proj_title">Future Projection (12M)</h3>
+<div class="flex gap-2">
+<span class="px-2 py-1 bg-primary/10 border border-primary/20 rounded text-[10px] font-bold text-primary">OPTIMISTIC</span>
+</div>
+</div>
+<div class="bg-neutral-800/30 rounded-xl border border-primary/10 p-6 chart-container flex items-end justify-between gap-2 overflow-hidden">
+<svg class="absolute inset-0 w-full h-full p-6">
+<path class="line-catapulta" d="M0 150 Q 50 140, 100 120 T 200 80 T 300 40 T 400 20" stroke-linecap="round"></path>
+<path class="line-refugio" d="M0 150 Q 50 145, 100 135 T 200 120 T 300 105 T 400 95" stroke-linecap="round"></path>
+</svg>
+<div class="flex-1 flex flex-col items-center gap-2 z-10">
+<div class="w-1 bg-primary/10 h-full rounded-full"></div>
+<span class="text-[9px] font-bold opacity-40">M1</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 z-10">
+<div class="w-1 bg-primary/10 h-full rounded-full"></div>
+<span class="text-[9px] font-bold opacity-40">M3</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 z-10">
+<div class="w-1 bg-primary/10 h-full rounded-full"></div>
+<span class="text-[9px] font-bold opacity-40">M6</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 z-10">
+<div class="w-1 bg-primary/10 h-full rounded-full"></div>
+<span class="text-[9px] font-bold opacity-40">M9</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2 z-10">
+<div class="w-1 bg-primary/10 h-32 rounded-full bg-primary/20"></div>
+<span class="text-[9px] font-bold text-primary">M12</span>
+</div>
+</div>
+<div class="bg-primary/5 p-4 rounded-xl border border-primary/10 border-dashed">
+<p class="text-xs text-primary/80 italic leading-relaxed">
+                                "The projection indicates a potential crossover in dividend yield between Catapulta and Refúgio by Month 8, primarily driven by the Tier A compounding cycles."
+                            </p>
+</div>
+</section>
+</div>
+<section class="bg-neutral-800/30 rounded-xl border border-primary/10 overflow-hidden">
+<div class="p-6 border-b border-primary/10 flex items-center justify-between">
+<h3 class="text-lg font-bold" data-i18n="history_title">Detailed History</h3>
+<div class="flex gap-2">
+<button class="bg-background-dark px-3 py-1.5 rounded-lg border border-primary/20 text-xs font-bold flex items-center gap-2 hover:bg-primary/10">
+<span class="material-symbols-outlined text-sm">filter_alt</span>
+                                Vehicle: All
+                            </button>
+<button class="bg-background-dark px-3 py-1.5 rounded-lg border border-primary/20 text-xs font-bold flex items-center gap-2 hover:bg-primary/10">
+<span class="material-symbols-outlined text-sm">event</span>
+                                Year: 2024
+                            </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="bg-background-dark/50 text-[10px] uppercase font-bold tracking-widest text-primary/60">
+<th class="px-6 py-4">Period</th>
+<th class="px-6 py-4">Vehicle</th>
+<th class="px-6 py-4 text-right">Gross</th>
+<th class="px-6 py-4 text-right">Tax</th>
+<th class="px-6 py-4 text-right">Net</th>
+<th class="px-6 py-4">Method</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4 text-center">Report</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-bold">SET 2024</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary"></span>
+                                            Catapulta Tier A
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right font-serif">R$ 8.500,00</td>
+<td class="px-6 py-4 text-right text-red-500/70">- R$ 1.275,00</td>
+<td class="px-6 py-4 text-right font-serif font-bold text-primary">R$ 7.225,00</td>
+<td class="px-6 py-4"><span class="bg-neutral-800 px-2 py-1 rounded text-[10px] font-bold">PIX/INST</span></td>
+<td class="px-6 py-4"><span class="text-emerald-500 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Settled</span></td>
+<td class="px-6 py-4 text-center">
+<button class="text-primary hover:underline text-xs flex items-center gap-1 mx-auto">
+                                            TR-8942 <span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-bold">AGO 2024</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full bg-primary"></span>
+                                            Catapulta Tier A
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right font-serif">R$ 8.100,00</td>
+<td class="px-6 py-4 text-right text-red-500/70">- R$ 1.215,00</td>
+<td class="px-6 py-4 text-right font-serif font-bold text-primary">R$ 6.885,00</td>
+<td class="px-6 py-4"><span class="bg-neutral-800 px-2 py-1 rounded text-[10px] font-bold">PIX/INST</span></td>
+<td class="px-6 py-4"><span class="text-emerald-500 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Settled</span></td>
+<td class="px-6 py-4 text-center">
+<button class="text-primary hover:underline text-xs flex items-center gap-1 mx-auto">
+                                            TR-7712 <span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 font-bold">AGO 2024</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="size-2 rounded-full border border-primary/50"></span>
+                                            Refúgio Tier B
+                                        </div>
+</td>
+<td class="px-6 py-4 text-right font-serif">R$ 3.200,00</td>
+<td class="px-6 py-4 text-right text-red-500/70">- R$ 480,00</td>
+<td class="px-6 py-4 text-right font-serif font-bold text-primary">R$ 2.720,00</td>
+<td class="px-6 py-4"><span class="bg-neutral-800 px-2 py-1 rounded text-[10px] font-bold">WIRE/SWIFT</span></td>
+<td class="px-6 py-4"><span class="text-emerald-500 font-bold flex items-center gap-1"><span class="material-symbols-outlined text-sm">check_circle</span> Settled</span></td>
+<td class="px-6 py-4 text-center">
+<button class="text-primary hover:underline text-xs flex items-center gap-1 mx-auto">
+                                            TR-7711 <span class="material-symbols-outlined text-xs">open_in_new</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-background-dark/50 border-t border-primary/10 flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-primary/40">
+<span>Mostrando 3 de 128 entradas</span>
+<div class="flex gap-2">
+<button class="px-2 py-1 border border-primary/20 rounded hover:bg-primary/10">Ant</button>
+<button class="px-2 py-1 border border-primary/20 rounded hover:bg-primary/10">Próx</button>
+</div>
+</div>
+</section>
+<div class="h-10"></div>
+</div>
+</main>
+<aside class="w-dock border-l border-primary/20 bg-background-light dark:bg-background-dark flex flex-col">
+<div class="p-6 border-b border-primary/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+<h3 class="font-bold">AIMON Contextual</h3>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6">
+<div class="bg-primary/10 p-4 rounded-xl border border-primary/20">
+<p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-2">Live Analysis</p>
+<p class="text-xs leading-relaxed">
+                        Detectamos que a performance da <span class="font-bold">Catapulta Tier A</span> está 4% acima do benchmark. Recomendo revisar a alocação do próximo ciclo para maximizar os juros compostos.
+                    </p>
+</div>
+<div class="space-y-4">
+<p class="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Suggested Queries</p>
+<button class="w-full text-left p-3 rounded-lg border border-primary/10 hover:border-primary/40 text-xs transition-all flex items-center justify-between group">
+                        Compare Catapulta vs Market
+                        <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg border border-primary/10 hover:border-primary/40 text-xs transition-all flex items-center justify-between group">
+                        Tax Optimization Report
+                        <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg border border-primary/10 hover:border-primary/40 text-xs transition-all flex items-center justify-between group">
+                        Explain APY Calculation
+                        <span class="material-symbols-outlined text-sm opacity-0 group-hover:opacity-100 transition-opacity">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="p-4 bg-background-dark/30 border-t border-primary/20">
+<div class="flex items-center gap-2 bg-background-dark border border-primary/30 rounded-lg p-2">
+<input class="flex-1 bg-transparent border-none text-xs focus:ring-0" placeholder="Ask AIMON..." type="text"/>
+<button class="size-8 bg-primary text-background-dark rounded-md flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">send</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<footer class="h-footer border-t border-primary/20 bg-background-light dark:bg-neutral-900 flex items-center justify-between px-6 z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-[10px] font-bold text-primary/60">
+<span class="size-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                SYSTEM OPERATIONAL
+            </div>
+<div class="flex items-center gap-2 text-[10px] font-bold text-primary/40 uppercase tracking-widest">
+<span class="material-symbols-outlined text-xs">database</span>
+                Last Sync: 2m ago
+            </div>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-bold text-primary/40">
+<span>LUX LUSITANA THEME ENGINE v2.5.0</span>
+<span class="px-2 py-0.5 bg-primary/10 rounded border border-primary/20">SECURE SESSION</span>
+</div>
+</footer>
+</body></html>

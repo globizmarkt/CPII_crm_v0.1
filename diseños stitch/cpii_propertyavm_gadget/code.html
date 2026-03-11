@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII-CRM Skin 07 PropertyAVM Gadget</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#221e10",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "kpi": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(242, 185, 13, 0.2);
+            border-radius: 10px;
+        }
+        .gauge-container {
+            position: relative;
+            width: 180px;
+            height: 90px;
+            overflow: hidden;
+        }
+        .gauge-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 15px solid #3d361d;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            transform: rotate(-45deg);
+        }
+        .gauge-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 15px solid #f2b90d;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden h-screen">
+<div class="flex h-full w-full flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 bg-background-light dark:bg-background-dark px-6 py-3 shrink-0">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-slate-900 dark:text-slate-100">
+<div class="size-6 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">analytics</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight font-display" data-i18n="app_title">CPII-CRM Skin 07</h2>
+</div>
+<label class="flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-slate-500 dark:text-primary/60 flex border-none bg-primary/5 dark:bg-primary/10 items-center justify-center pl-4 rounded-l-lg" data-icon="search">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-lg text-slate-900 dark:text-slate-100 focus:outline-0 focus:ring-1 focus:ring-primary border-none bg-primary/5 dark:bg-primary/10 h-full placeholder:text-slate-500 px-4 pl-2 text-sm font-normal" placeholder="Search Assets..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-primary text-sm font-semibold border-b-2 border-primary pb-1" data-i18n="nav_dashboard" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" data-i18n="nav_properties" href="#">Properties</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" data-i18n="nav_market" href="#">Market Data</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" data-i18n="nav_settings" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-3 pl-4 border-l border-primary/20">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-slate-900 dark:text-slate-100">Lux Lusitana Admin</p>
+<p class="text-[10px] text-primary">v2.4.0 Core</p>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border-2 border-primary/30" data-alt="User profile avatar circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAS00d5gYmaip0UpOp8ejFENsjr_UMDXJmcaw-FDHPyu5dK73g4H0IPbNMIWa8O3mzdTaywsg30lx69MmxyiOzvdcBcDetrgstYhnsbdUkZ42n5x_wthKqVqxNl_IFGaTkFIRc20Ir_XvH6zTdNTsdFGLHtuYz67cFUwGCp2ZxoCP0uWicHqvjic3jh4mB-LP-SD_oTBkgdgn-xyooZIR5I-odYWiVV0Kvtkc9T0g2bpS_wQ730CrQtGIeWGIgpaxCR6dUxcXZW4w");'></div>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-1 flex overflow-hidden">
+<!-- Sidebar (Collapsed Layout Style) -->
+<aside class="w-16 md:w-60 flex flex-col bg-background-light dark:bg-background-dark border-r border-primary/10 transition-all">
+<div class="flex-1 flex flex-col gap-1 p-3 custom-scrollbar overflow-y-auto">
+<div class="flex items-center gap-3 px-3 py-3 rounded-lg bg-primary/10 text-primary mb-4">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-bold hidden md:block">Orbit 2 Workspace</p>
+</div>
+<div class="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden md:block">Navigation</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-xl">home_work</span>
+<p class="text-sm font-medium hidden md:block">Assets Explorer</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-background-dark font-bold shadow-lg shadow-primary/20 transition-all" href="#">
+<span class="material-symbols-outlined text-xl">calculate</span>
+<p class="text-sm hidden md:block">PropertyAVM Tool</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<p class="text-sm font-medium hidden md:block">Market Reports</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined text-xl">query_stats</span>
+<p class="text-sm font-medium hidden md:block">Yield Forecast</p>
+</a>
+<div class="mt-auto px-3 py-4 border-t border-primary/10">
+<div class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-primary/5 hover:text-primary transition-all">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium hidden md:block">Configuration</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Gadget Content Area -->
+<section class="flex-1 flex flex-col overflow-hidden bg-background-light dark:bg-background-dark/50">
+<!-- Page Header -->
+<div class="px-8 pt-8 pb-4">
+<div class="flex items-center gap-2 text-xs text-primary font-bold uppercase tracking-wider mb-2">
+<span data-i18n="breadcrumb_mls">MLS</span>
+<span class="text-slate-400">/</span>
+<span data-i18n="breadcrumb_gadget">PropertyAVM Gadget</span>
+</div>
+<div class="flex items-end justify-between">
+<div>
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl font-black tracking-tight" data-i18n="gadget_title">PropertyAVM Gadget</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base" data-i18n="gadget_subtitle">Automated Valuation Model for off-market assets • v2.4.0</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-background-light dark:bg-primary/5 border border-primary/20 text-primary text-sm font-bold hover:bg-primary/10 transition-all">
+<span class="material-symbols-outlined text-lg">share</span>
+                                Export
+                            </button>
+<button class="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-background-dark text-sm font-bold hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-lg">save</span>
+                                Save Model
+                            </button>
+</div>
+</div>
+</div>
+<!-- 2-Column Layout Content -->
+<div class="flex-1 flex gap-6 px-8 pb-8 overflow-hidden">
+<!-- LEFT COLUMN: INPUTS -->
+<div class="w-1/3 flex flex-col bg-background-light dark:bg-background-dark border border-primary/20 rounded-xl overflow-hidden shadow-xl shadow-black/20">
+<div class="p-4 bg-primary/10 border-b border-primary/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+<h3 class="font-bold text-sm tracking-wide text-primary uppercase" data-i18n="inputs_header">Property Parameters</h3>
+</div>
+<div class="flex-1 p-6 overflow-y-auto custom-scrollbar">
+<form class="space-y-5">
+<!-- Jurisdiction Toggle -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_jurisdiction">Jurisdiction</label>
+<div class="flex p-1 bg-primary/5 rounded-lg border border-primary/10">
+<button class="flex-1 py-2 text-xs font-bold rounded-md bg-primary text-background-dark" type="button">PT (IMI)</button>
+<button class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-primary transition-colors" type="button">ES (IBI)</button>
+<button class="flex-1 py-2 text-xs font-bold text-slate-500 hover:text-primary transition-colors" type="button">BR (IPTU)</button>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_gps">GPS Latitude</label>
+<input class="w-full bg-primary/5 border-primary/20 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary" type="text" value="38.7223"/>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_gps_long">GPS Longitude</label>
+<input class="w-full bg-primary/5 border-primary/20 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary" type="text" value="-9.1393"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_m2">Living Area (m²)</label>
+<div class="relative">
+<input class="w-full bg-primary/5 border-primary/20 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary pl-4 pr-12 h-11" placeholder="120" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-primary">SQM</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_year">Year Built</label>
+<select class="w-full bg-primary/5 border-primary/20 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary">
+<option>2020+</option>
+<option>2010-2019</option>
+<option>2000-2009</option>
+<option>Before 2000</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_rooms">Rooms (Typology)</label>
+<select class="w-full bg-primary/5 border-primary/20 rounded-lg text-sm text-slate-900 dark:text-slate-100 focus:ring-primary focus:border-primary">
+<option>T1 / 1 Bed</option>
+<option>T2 / 2 Bed</option>
+<option selected="">T3 / 3 Bed</option>
+<option>T4+ / 4+ Bed</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-bold text-slate-500 uppercase tracking-tighter" data-i18n="label_state">Conservation State</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="border border-primary/40 rounded-lg p-2 text-xs font-bold bg-primary/20 text-primary" type="button">Excellent</button>
+<button class="border border-primary/10 rounded-lg p-2 text-xs font-bold text-slate-400" type="button">Good</button>
+<button class="border border-primary/10 rounded-lg p-2 text-xs font-bold text-slate-400" type="button">Needs Reno</button>
+<button class="border border-primary/10 rounded-lg p-2 text-xs font-bold text-slate-400" type="button">Ruin</button>
+</div>
+</div>
+</form>
+</div>
+<div class="p-4 border-t border-primary/20 bg-background-light dark:bg-background-dark">
+<button class="w-full bg-primary text-background-dark font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-100 transition-all shadow-lg shadow-primary/30" data-i18n="btn_calculate">
+<span class="material-symbols-outlined font-bold">analytics</span>
+                                CALCULAR AVM
+                            </button>
+</div>
+</div>
+<!-- RIGHT COLUMN: OUTPUTS -->
+<div class="flex-1 flex flex-col gap-6 overflow-hidden">
+<!-- Top: Score & Yield -->
+<div class="grid grid-cols-12 gap-6 shrink-0">
+<!-- Gauge Visual -->
+<div class="col-span-7 bg-background-light dark:bg-background-dark border border-primary/20 rounded-xl p-6 flex items-center gap-8 shadow-sm">
+<div class="flex flex-col items-center">
+<div class="gauge-container mb-2">
+<div class="gauge-bar"></div>
+<div class="gauge-fill" style="transform: rotate(115deg);"></div>
+<div class="absolute inset-x-0 bottom-0 text-center font-kpi text-4xl font-black text-primary">82.4</div>
+</div>
+<span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest" data-i18n="output_avm_score">AVM Precision Score</span>
+</div>
+<div class="flex-1 space-y-4">
+<div class="flex justify-between items-end border-b border-primary/10 pb-2">
+<div>
+<p class="text-[10px] font-bold text-slate-500 uppercase" data-i18n="output_predicted_value">Estimated Value</p>
+<p class="font-kpi text-3xl font-black text-primary">€ 485,200</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-1 bg-green-500/20 text-green-500 text-[10px] font-black rounded-full border border-green-500/30" data-i18n="badge_high">HIGH CONFIDENCE</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] font-bold text-slate-500 uppercase" data-i18n="output_yield">Predicted Yield</p>
+<p class="font-kpi text-xl font-bold text-slate-900 dark:text-slate-100">5.82% <span class="text-xs text-green-500 font-sans">↑ 0.4%</span></p>
+</div>
+<div>
+<p class="text-[10px] font-bold text-slate-500 uppercase" data-i18n="output_tax">Estimated Tax (IMI)</p>
+<p class="font-kpi text-xl font-bold text-slate-900 dark:text-slate-100">€ 1,455 <span class="text-xs text-slate-500 font-sans">/yr</span></p>
+</div>
+</div>
+</div>
+</div>
+<!-- Map / Location Context -->
+<div class="col-span-5 bg-background-light dark:bg-background-dark border border-primary/20 rounded-xl overflow-hidden relative group">
+<img class="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-80 transition-all duration-700" data-alt="Map view of Lisbon city center" data-location="Lisbon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4EPOe0NJSnrZn8Uq0ycrjo_vUBtcvBulzCV8fhU0Kj3HT4FW6dz39QEW4qUN0jeABeOoPpTKyPWS1nJALRg1e8vPEF3moAKG6WfpRUECGTvPyAAlbEjCsRvCa9Zf2TCAreb0KnfkDuApoFlJ9_poXKMDmalWRpkSnk274SxiSi6veT_2mhC9qYAud3H4DaK6GmoCS-t79u-OSwC6D_rMkoobKyDP6FhbDhZ0J051Cb0b5ndXPatjpP-j2BPX-pgywa0grLLkqdg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-lg">location_on</span>
+<span class="text-sm font-bold">Arroios, Lisboa</span>
+</div>
+<p class="text-[10px] text-slate-400 font-medium">Asset ID: LIS-88229-B</p>
+</div>
+</div>
+</div>
+<!-- Middle: Anomaly Flags -->
+<div class="shrink-0 bg-background-light dark:bg-background-dark border border-primary/20 rounded-xl p-4">
+<h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 px-2" data-i18n="anomaly_header">Market Anomaly Detection</h4>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg">
+<span class="material-symbols-outlined text-red-500 text-lg">trending_up</span>
+<span class="text-[11px] font-bold text-red-500 uppercase" data-i18n="flag_price">PRICE_ABOVE_MARKET</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+<span class="material-symbols-outlined text-amber-500 text-lg">person_off</span>
+<span class="text-[11px] font-bold text-amber-500 uppercase" data-i18n="flag_vacancy">VACANCY_HIGH</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-primary/10 border border-primary/20 rounded-lg">
+<span class="material-symbols-outlined text-primary text-lg">build</span>
+<span class="text-[11px] font-bold text-primary uppercase" data-i18n="flag_maint">MAINTENANCE_RISK</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-2 bg-slate-500/10 border border-slate-500/20 rounded-lg grayscale">
+<span class="material-symbols-outlined text-slate-500 text-lg">gavel</span>
+<span class="text-[11px] font-bold text-slate-500 uppercase" data-i18n="flag_jur">JURISDICTION_RISK</span>
+</div>
+</div>
+</div>
+<!-- Bottom: Comparables Table -->
+<div class="flex-1 flex flex-col bg-background-light dark:bg-background-dark border border-primary/20 rounded-xl overflow-hidden shadow-inner">
+<div class="px-6 py-4 border-b border-primary/10 flex justify-between items-center bg-primary/5">
+<h4 class="text-sm font-bold text-slate-900 dark:text-slate-100" data-i18n="comparables_header">Market Comparables (Nearest Assets)</h4>
+<span class="text-xs text-primary font-medium">12 matches found</span>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-background-light dark:bg-background-dark shadow-sm">
+<tr class="text-[10px] uppercase font-bold text-slate-500 border-b border-primary/10">
+<th class="px-6 py-3">Asset ID</th>
+<th class="px-6 py-3">Distance</th>
+<th class="px-6 py-3">Price/m²</th>
+<th class="px-6 py-3">Adj. Factor</th>
+<th class="px-6 py-3 text-right">Trend</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 text-xs font-bold text-slate-900 dark:text-slate-100 underline decoration-primary/30">#PRP-4092</td>
+<td class="px-6 py-4 text-xs text-slate-500">0.4 km</td>
+<td class="px-6 py-4 text-xs font-kpi font-bold">€ 4,120</td>
+<td class="px-6 py-4">
+<div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 85%"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right text-green-500">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 text-xs font-bold text-slate-900 dark:text-slate-100 underline decoration-primary/30">#PRP-5112</td>
+<td class="px-6 py-4 text-xs text-slate-500">0.8 km</td>
+<td class="px-6 py-4 text-xs font-kpi font-bold">€ 3,950</td>
+<td class="px-6 py-4">
+<div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 60%"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right text-slate-500">
+<span class="material-symbols-outlined text-sm">trending_flat</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 text-xs font-bold text-slate-900 dark:text-slate-100 underline decoration-primary/30">#PRP-2033</td>
+<td class="px-6 py-4 text-xs text-slate-500">1.2 km</td>
+<td class="px-6 py-4 text-xs font-kpi font-bold">€ 4,280</td>
+<td class="px-6 py-4">
+<div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 92%"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right text-red-500">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors">
+<td class="px-6 py-4 text-xs font-bold text-slate-900 dark:text-slate-100 underline decoration-primary/30">#PRP-8821</td>
+<td class="px-6 py-4 text-xs text-slate-500">1.5 km</td>
+<td class="px-6 py-4 text-xs font-kpi font-bold">€ 3,820</td>
+<td class="px-6 py-4">
+<div class="w-16 h-1.5 bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 45%"></div>
+</div>
+</td>
+<td class="px-6 py-4 text-right text-slate-500">
+<span class="material-symbols-outlined text-sm">trending_flat</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Tooltip/Notification Footer -->
+<footer class="h-10 shrink-0 bg-primary flex items-center justify-between px-6">
+<div class="flex items-center gap-4">
+<p class="text-[10px] font-black text-background-dark uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">shield</span>
+                    Skeleton Core v2.4.0 active
+                </p>
+<p class="text-[10px] font-bold text-background-dark/70">Sync Status: Stable Connection</p>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-black text-background-dark">
+<span data-i18n="footer_terms">Confidential MLS Data</span>
+<span class="w-1 h-1 bg-background-dark rounded-full"></span>
+<span>© 2024 Lux Lusitana CRM</span>
+</div>
+</footer>
+</div>
+</body></html>

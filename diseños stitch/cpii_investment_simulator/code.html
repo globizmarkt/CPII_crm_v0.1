@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII-CRM Skin 04 Investment Simulator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;700;800&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f2b90d",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#181611",
+                        "neutral-muted": "#393528",
+                        "neutral-text": "#bab29c",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .range-slider::-webkit-slider-runnable-track {
+            background: #393528;
+            height: 6px;
+            border-radius: 9999px;
+        }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            background: #f2b90d;
+            border-radius: 50%;
+            margin-top: -7px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-muted px-6 md:px-20 py-3 bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">account_balance</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">CPII-CRM</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" data-i18n="nav.dashboard" href="#">Dashboard</a>
+<a class="text-primary text-sm font-medium border-b-2 border-primary pb-1" data-i18n="nav.simulator" href="#">Simulator</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" data-i18n="nav.portfolio" href="#">Portfolio</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" data-i18n="nav.reports" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-6 items-center">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-neutral-text flex border-none bg-neutral-muted/50 items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-1 focus:ring-primary border-none bg-neutral-muted/50 h-full placeholder:text-neutral-text px-4 rounded-l-none pl-2 text-sm" placeholder="Search Markets" value=""/>
+</div>
+</label>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-4 bg-primary text-background-dark text-sm font-bold transition-transform active:scale-95">
+<span class="truncate" data-i18n="btn.profile">Profile</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20" data-alt="User profile portrait in a circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBv6Rshw_An19JKPk9uZRTN0AgkrzeG2SG5hUQmC4ADECn2NeKMWAvgVq6tM7uUUyaKdhQN5Dvm7sgS-7Lsd_c9G2BAmVEynAYQF8qbZ_F6p68aZF9_x_6Mek27XhbU9V3cdKbQLRaLiehSndwnzmU0QaTazBom-UrIggUefoa-Jd0lGhc1ZRWV8qBuVn5cTwviMYojYbpJ_BsCzlskTjMhE8yPPYAMgIvf3b2Seq9-XZmxNdCQofpEkGhrbv63nNg44z6dN7IhXA");'></div>
+</div>
+</header>
+<main class="flex flex-1 flex-col items-center py-10 px-6 md:px-10">
+<div class="max-w-[1100px] w-full flex flex-col gap-8">
+<!-- Page Header -->
+<div class="flex flex-wrap justify-between items-end gap-4 border-l-4 border-primary pl-6">
+<div class="flex flex-col gap-1">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight" data-i18n="header.title">Investment Simulator</h1>
+<p class="text-neutral-text text-base font-normal" data-i18n="header.subtitle">Orbit 2 Workspace | Lux Lusitana Theme | Skeleton Core v2.4.0</p>
+</div>
+<div class="flex items-center gap-2 bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+<span class="material-symbols-outlined text-primary text-sm">verified</span>
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Verified Investor Access</span>
+</div>
+</div>
+<!-- Simulator Canvas (2-Column Grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+<!-- Column 1: Inputs -->
+<div class="flex flex-col gap-6 p-8 rounded-xl bg-white dark:bg-neutral-muted/20 border border-slate-200 dark:border-neutral-muted/50">
+<div class="flex items-center gap-3 pb-2 border-b border-neutral-muted/30">
+<span class="material-symbols-outlined text-primary">tune</span>
+<h3 class="text-xl font-bold text-slate-800 dark:text-white">Configurações</h3>
+</div>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-neutral-text" data-i18n="input.initial_amount">Montante Inicial (EUR)</label>
+<input class="w-full bg-slate-50 dark:bg-background-dark border border-slate-300 dark:border-neutral-muted rounded-lg h-14 px-4 text-xl font-bold text-primary focus:ring-primary focus:border-primary" type="number" value="50000"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-neutral-text" data-i18n="input.monthly_contribution">Aporte Mensal (EUR)</label>
+<input class="w-full bg-slate-50 dark:bg-background-dark border border-slate-300 dark:border-neutral-muted rounded-lg h-14 px-4 text-xl font-bold text-primary focus:ring-primary focus:border-primary" type="number" value="2500"/>
+</div>
+<div class="flex flex-col gap-3">
+<label class="text-sm font-semibold text-slate-700 dark:text-neutral-text" data-i18n="input.vehicle">Investment Vehicle</label>
+<div class="flex h-12 w-full items-center justify-center rounded-lg bg-slate-100 dark:bg-neutral-muted/40 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-md px-4 transition-all has-[:checked]:bg-primary has-[:checked]:text-background-dark text-neutral-text font-bold text-xs tracking-widest">
+<span>CATAPULTA</span>
+<input checked="" class="hidden" name="vehicle" type="radio" value="CATAPULTA"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center rounded-md px-4 transition-all has-[:checked]:bg-primary has-[:checked]:text-background-dark text-neutral-text font-bold text-xs tracking-widest">
+<span>REFÚGIO</span>
+<input class="hidden" name="vehicle" type="radio" value="REFÚGIO"/>
+</label>
+</div>
+</div>
+<div class="flex flex-col gap-4 py-2">
+<div class="flex justify-between items-center">
+<label class="text-sm font-semibold text-slate-700 dark:text-neutral-text" data-i18n="input.cycles">Número de Ciclos</label>
+<span class="text-primary font-bold bg-primary/10 px-3 py-1 rounded">12 Ciclos</span>
+</div>
+<input class="range-slider w-full bg-transparent appearance-none cursor-pointer" max="12" min="1" type="range" value="12"/>
+<div class="flex justify-between text-[10px] text-neutral-text font-bold px-1">
+<span>1 CICLO</span>
+<span>6 CICLOS</span>
+<span>12 CICLOS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Calculated Outputs -->
+<div class="flex flex-col gap-6 p-8 rounded-xl bg-primary/5 border border-primary/20 relative overflow-hidden">
+<!-- Background decoration -->
+<div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="flex items-center gap-3 pb-2 border-b border-primary/20">
+<span class="material-symbols-outlined text-primary">analytics</span>
+<h3 class="text-xl font-bold text-slate-800 dark:text-white uppercase tracking-tight">Projeção de Performance</h3>
+</div>
+<div class="flex flex-col justify-center flex-1 gap-8">
+<div class="text-center md:text-left">
+<p class="text-sm font-bold text-neutral-text uppercase tracking-widest mb-1" data-i18n="output.projected_return">Rendimento Projetado</p>
+<h4 class="font-serif text-5xl md:text-6xl text-primary font-bold">€ 14.280,00</h4>
+</div>
+<div class="text-center md:text-left">
+<p class="text-sm font-bold text-neutral-text uppercase tracking-widest mb-1" data-i18n="output.total_accumulated">Total Acumulado</p>
+<h4 class="font-serif text-5xl md:text-6xl text-primary font-bold">€ 94.280,00</h4>
+</div>
+<div class="flex flex-wrap gap-3 mt-4">
+<div class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg border border-primary/30">
+<span class="material-symbols-outlined text-primary text-lg">event_repeat</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-neutral-text uppercase font-bold">Autofinanciamento</span>
+<span class="text-white text-sm font-bold">Mês 08</span>
+</div>
+</div>
+<div class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-lg border border-primary/30">
+<span class="material-symbols-outlined text-primary text-lg">payments</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-neutral-text uppercase font-bold">Revenue Share</span>
+<span class="text-white text-sm font-bold">4.2% Est.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Fiscal Impact Section -->
+<div class="w-full flex flex-col gap-6 p-8 rounded-xl bg-white dark:bg-neutral-muted/10 border border-slate-200 dark:border-neutral-muted/50">
+<div class="flex items-center justify-between border-b border-neutral-muted/30 pb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">policy</span>
+<h3 class="text-xl font-bold text-slate-800 dark:text-white" data-i18n="fiscal.title">Fiscal Impact Analysis</h3>
+</div>
+<div class="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-1 rounded border border-red-500/20 uppercase tracking-tighter">
+                                tax_disclaimer v1.2
+                            </div>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 rounded-md bg-primary text-background-dark font-bold text-xs tracking-widest">PORTUGAL (PT)</button>
+<button class="px-6 py-2 rounded-md bg-neutral-muted/40 text-neutral-text hover:text-white font-bold text-xs tracking-widest transition-colors">ESPAÑA (ES)</button>
+<button class="px-6 py-2 rounded-md bg-neutral-muted/40 text-neutral-text hover:text-white font-bold text-xs tracking-widest transition-colors">BRASIL (BR)</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+<div class="p-4 rounded-lg bg-background-light dark:bg-background-dark/50 border border-neutral-muted/30">
+<p class="text-[10px] font-bold text-neutral-text uppercase mb-2">Imposto Retido (28%)</p>
+<p class="text-2xl font-bold text-red-400">- € 3.998,40</p>
+</div>
+<div class="p-4 rounded-lg bg-background-light dark:bg-background-dark/50 border border-neutral-muted/30">
+<p class="text-[10px] font-bold text-neutral-text uppercase mb-2">Rendimento Líquido Estimado</p>
+<p class="text-2xl font-bold text-primary">€ 10.281,60</p>
+</div>
+<div class="p-4 rounded-lg bg-background-light dark:bg-background-dark/50 border border-neutral-muted/30 flex items-center justify-center">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-neutral-text text-3xl mb-1">info</span>
+<p class="text-[9px] text-center text-neutral-text uppercase leading-tight max-w-[150px]">Baseado na legislação fiscal portuguesa vigente para 2024.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Footer -->
+<div class="flex flex-col md:flex-row items-center justify-end gap-4 pt-6 border-t border-neutral-muted/30">
+<button class="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-lg border-2 border-primary text-primary font-bold hover:bg-primary/5 transition-all">
+<span class="material-symbols-outlined">bookmark</span>
+<span data-i18n="btn.save">Guardar Simulação</span>
+</button>
+<button class="w-full md:w-auto flex items-center justify-center gap-2 px-12 py-4 rounded-lg bg-primary text-background-dark font-black text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+<span data-i18n="btn.invest">Investir Agora</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Workspace Footer -->
+<footer class="mt-auto px-10 py-6 border-t border-neutral-muted/30 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-6">
+<span class="text-neutral-text text-xs uppercase tracking-widest font-bold">© 2024 CPII-CRM Global</span>
+<div class="flex gap-4">
+<a class="text-neutral-text hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">public</span></a>
+<a class="text-neutral-text hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">security</span></a>
+<a class="text-neutral-text hover:text-primary" href="#"><span class="material-symbols-outlined text-lg">help</span></a>
+</div>
+</div>
+<div class="flex items-center gap-4 text-neutral-text text-xs font-medium">
+<span>Status: <span class="text-green-500 font-bold">Operational</span></span>
+<span class="w-1 h-1 bg-neutral-muted rounded-full"></span>
+<span>Region: EU-West-1</span>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

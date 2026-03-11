@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII-CRM Skin 01 Layout Trinity</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c1a85c",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#161513",
+                        "surface": "#1e1b14",
+                        "accent-gold": "#C1A85D",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #161513;
+        }
+        .luxury-glass {
+            background: rgba(30, 27, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(193, 168, 93, 0.1);
+        }
+        .gatekeeper-overlay {
+            backdrop-filter: blur(8px);
+            background: rgba(22, 21, 19, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background-dark text-slate-100 overflow-hidden font-display">
+<!-- Security Overlay (Visible when KYC is pending) -->
+<div class="fixed inset-0 z-50 flex items-center justify-center gatekeeper-overlay pointer-events-none">
+<div class="pointer-events-auto luxury-glass p-8 rounded-xl border border-primary/30 flex flex-col items-center gap-6 max-w-md text-center shadow-2xl">
+<div class="size-16 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-4xl">verified_user</span>
+</div>
+<div>
+<h3 class="font-serif text-2xl text-primary mb-2" i18n="kyc_required">Acesso Restrito</h3>
+<p class="text-slate-400 text-sm" i18n="kyc_description">A sua verificação KYC está pendente. Algumas funcionalidades estão limitadas até à aprovação.</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-background-dark font-bold py-3 px-8 rounded-lg transition-all transform hover:scale-105">
+<span i18n="simulate_kyc">Simular KYC Verificado</span>
+</button>
+</div>
+</div>
+<!-- Main Trinity Layout -->
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Orbit 1: Left Sidebar (250px) -->
+<aside class="w-[250px] flex-shrink-0 bg-surface border-r border-primary/10 flex flex-col h-full z-30">
+<div class="p-6 flex flex-col gap-8">
+<!-- Brand -->
+<div class="flex items-center gap-3">
+<div class="size-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/40">
+<span class="material-symbols-outlined text-primary text-2xl">diamond</span>
+</div>
+<div class="flex flex-col">
+<h1 class="font-serif text-xl font-bold tracking-tight text-primary leading-none">Skeleton</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold" i18n="brand_subtitle">CPII Private Club</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 group" href="#">
+<span class="material-symbols-outlined transition-colors">dashboard</span>
+<span class="text-sm font-semibold" i18n="nav_dashboard">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined transition-colors">real_estate_agent</span>
+<span class="text-sm font-medium" i18n="nav_mls">Mercado MLS</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined transition-colors">hub</span>
+<span class="text-sm font-medium" i18n="nav_network">A Minha Rede</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined transition-colors">history</span>
+<span class="text-sm font-medium" i18n="nav_history">Histórico</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-primary/10">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group" href="#">
+<span class="material-symbols-outlined transition-colors">settings</span>
+<span class="text-sm font-medium" i18n="nav_settings">Definições</span>
+</a>
+</div>
+</aside>
+<!-- Orbit 2: Center Canvas (Dynamic Workspace) -->
+<main class="flex-1 bg-background-dark relative flex flex-col overflow-y-auto">
+<header class="h-16 flex items-center justify-between px-8 border-b border-primary/5">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-500">search</span>
+<input class="bg-transparent border-none text-sm text-slate-300 focus:ring-0 w-64" i18n-placeholder="search_placeholder" placeholder="Pesquisar oportunidades..." type="text"/>
+</div>
+</header>
+<div class="flex-1 flex flex-col items-center justify-center p-12 text-center">
+<div class="relative mb-8">
+<div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+<div class="relative bg-surface p-10 rounded-2xl border border-primary/10 shadow-2xl">
+<div class="bg-primary/10 size-24 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-primary text-5xl">explore</span>
+</div>
+<h2 class="font-serif text-3xl text-slate-100 mb-4" i18n="welcome_title">Espaço de Trabalho Dinâmico</h2>
+<p class="text-slate-400 max-w-sm mx-auto mb-8" i18n="empty_state">Selecione uma opção no menu para começar a explorar o seu portfólio de investimento privado.</p>
+<button class="border border-primary text-primary hover:bg-primary hover:text-background-dark px-6 py-2 rounded-lg transition-all font-semibold">
+<span i18n="explore_btn">Explorar Mercado</span>
+</button>
+</div>
+</div>
+<!-- Background Pattern -->
+<div class="opacity-10 pointer-events-none absolute inset-0 z-0">
+<div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, #c1a85c 1px, transparent 0); background-size: 40px 40px;"></div>
+</div>
+</div>
+</main>
+<!-- Orbit 3: Right Dock (320px) -->
+<aside class="w-[320px] flex-shrink-0 bg-surface border-l border-primary/10 flex flex-col h-full z-30">
+<!-- Top Controls -->
+<div class="p-6 border-b border-primary/10 flex flex-col gap-6">
+<!-- User Profile & Tenant -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<img alt="User" class="size-10 rounded-full border border-primary/30" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBLIzlq509XgX9H5ZrCtuy7ExVCWxa9-L-icSSPhaNIq_jYDnyGktznf0qVqVMINDmvGq4fk4lAQ8R7iPXGpUHO6WyaC01ELF6uXeMwN0QsAzy59xWejvwBLbCMSow7y2tDw9HPLGB0Hq_5wlevSzfZGWW3vLB87tCBV-JY34pCOpvngWkNo8OVAItak29ljVsDXCrZ3-ODq3WWIKEQJW73BpGpDPdIwdDMcsMBoWwSJzVm9_CSWH6tw83HiL-XWL7kA1A1G_Hwg"/>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 font-bold uppercase tracking-tighter" i18n="tenant_label">Tenant Name</span>
+<span class="text-sm font-semibold text-slate-200">Lux Lusitana Admin</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="text-xs text-slate-400 hover:text-primary transition-colors font-bold">PT</button>
+<span class="text-slate-700">|</span>
+<button class="text-xs text-slate-400 hover:text-primary transition-colors font-bold">EN</button>
+</div>
+</div>
+<!-- Gatekeeper Status -->
+<div class="bg-background-dark/50 p-4 rounded-xl border border-primary/10">
+<div class="flex items-center justify-between mb-3">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-widest" i18n="gatekeeper_title">Gatekeeper Status</span>
+<span class="size-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.6)]"></span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-10 bg-orange-500/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-orange-500">shield_with_heart</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-200" i18n="kyc_status">KYC Pending</span>
+<span class="text-[10px] text-slate-500" i18n="kyc_action">Requer atenção imediata</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AIMON Panel -->
+<div class="flex-1 p-6 flex flex-col">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+<h4 class="text-sm font-bold uppercase tracking-widest text-primary" i18n="aimon_title">AIMON Panel</h4>
+</div>
+<div class="bg-primary/5 border border-primary/20 p-5 rounded-xl flex flex-col gap-4 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 text-primary/10 group-hover:text-primary/20 transition-colors">
+<span class="material-symbols-outlined text-8xl">bolt</span>
+</div>
+<div class="relative z-10">
+<p class="text-slate-100 text-sm font-serif leading-relaxed" i18n="aimon_msg">
+                            Bem-vindo ao seu workspace dinâmico. Como posso assistir o seu investimento hoje?
+                        </p>
+</div>
+<button class="relative z-10 w-full bg-primary/20 hover:bg-primary/30 text-primary py-2 px-4 rounded-lg text-xs font-bold transition-all border border-primary/30">
+<span i18n="open_assistant">Open Assistant</span>
+</button>
+</div>
+<!-- Activity Feed Placeholder -->
+<div class="mt-8 flex flex-col gap-4">
+<span class="text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]" i18n="recent_activity">Atividade Recente</span>
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-start">
+<div class="size-2 mt-1.5 rounded-full bg-primary/40"></div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-300">Login efetuado de um novo dispositivo</span>
+<span class="text-[10px] text-slate-500">Há 2 minutos</span>
+</div>
+</div>
+<div class="flex gap-3 items-start">
+<div class="size-2 mt-1.5 rounded-full bg-primary/40"></div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-300">Documentação KYC recebida</span>
+<span class="text-[10px] text-slate-500">Ontem às 18:45</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Brand -->
+<div class="p-6 mt-auto flex items-center justify-center border-t border-primary/5">
+<span class="text-[10px] text-slate-700 tracking-[0.3em] font-bold uppercase">Trinity Architecture v1.0</span>
+</div>
+</aside>
+</div>
+<!-- Notification Toast -->
+<div class="fixed bottom-6 right-6 z-[60] luxury-glass border border-primary/30 px-6 py-4 rounded-xl flex items-center gap-4 shadow-2xl translate-y-20 opacity-0 pointer-events-none transition-all duration-500 transform">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-slate-100">Atualização de Sistema</span>
+<span class="text-[10px] text-slate-400">Novas propriedades MLS adicionadas.</span>
+</div>
+</div>
+</body></html>

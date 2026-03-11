@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-PT"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII WhitepaperViewer | Skin 16</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#c1a85c",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#161513",
+                        "neutral-gold": "#2a261a",
+                        "border-gold": "#3f3a2c",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: #3f3a2c transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #3f3a2c;
+            border-radius: 20px;
+        }
+        .glass-panel {
+            background: rgba(30, 27, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(193, 168, 92, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden h-screen flex flex-col">
+<!-- Header (h-header) -->
+<header class="h-16 border-b border-border-gold flex items-center justify-between px-6 bg-background-light dark:bg-background-dark z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl font-bold">shield_with_heart</span>
+<h1 class="text-xl font-bold tracking-tight uppercase" data-i18n="platform_name">CPII Platform</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6 ml-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" data-i18n="nav_dashboard" href="#">Dashboard</a>
+<a class="text-sm font-medium text-primary border-b-2 border-primary pb-1" data-i18n="nav_whitepaper" href="#">Explorar</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" data-i18n="nav_governance" href="#">Governança</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined text-sm">search</span>
+</span>
+<input class="bg-neutral-gold border-none rounded-lg pl-10 pr-4 py-1.5 text-sm w-64 focus:ring-1 focus:ring-primary" placeholder="Procurar documentação..." type="text"/>
+</div>
+<button class="p-2 rounded-full bg-neutral-gold text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary/20 border border-primary/50 overflow-hidden">
+<img alt="User Profile" data-alt="User avatar illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRkSEeCVHFcHuRWC4kMjz5J9RqVs0OLUoiLN9osVqYJDSA4UdZVbqVGMpcx_H5_Ykh0jtz_uT1lTPW4V_uRU_iqWSg7F27VR6O4EOcw9-hXN1HV9DtBtBlYSXVFCZKb_s2qoSTq6N9tTpKibKv_g0unTuk5BNRb5PvQLrtUbtQEMBuXBfru6Keb1eSo1yfw-QuC0rrzoctFoiIcx9CTJrSGEx6ZH-CeOui9p1ULyXYn6k5W88Y3cay4763mX3x-DiIUT1dPhUQ-fiB"/>
+</div>
+</div>
+</header>
+<!-- Main Layout Trinity -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Orbit 1 (w-sidebar): Main app navigation -->
+<aside class="w-[250px] border-r border-border-gold flex flex-col bg-background-light dark:bg-background-dark">
+<div class="p-6">
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-4" data-i18n="menu_label">Navegação Local</p>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-neutral-gold hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">grid_view</span>
+<span class="text-sm font-medium" data-i18n="sidebar_overview">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined">article</span>
+<span class="text-sm font-semibold" data-i18n="sidebar_whitepaper">Whitepaper</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-neutral-gold hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="text-sm font-medium" data-i18n="sidebar_roadmap">Roadmap</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-neutral-gold hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="text-sm font-medium" data-i18n="sidebar_repo">Repositório</span>
+</a>
+</div>
+</div>
+<div class="mt-auto p-6 border-t border-border-gold">
+<div class="p-4 rounded-xl bg-neutral-gold/50 border border-border-gold">
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-sm">verified_user</span>
+<span class="text-[10px] font-bold uppercase text-primary">Status de Governança</span>
+</div>
+<p class="text-xs text-slate-400">Consenso Ativo: 98.2%</p>
+<div class="w-full bg-slate-800 h-1 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[98%]"></div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Orbit 2 (flex-1): Main scroll area -->
+<main class="flex-1 overflow-y-auto custom-scrollbar bg-background-light dark:bg-background-dark p-8 space-y-8">
+<!-- Block 1: Whitepaper Header -->
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border-gold pb-8">
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-primary/20 text-primary rounded text-[10px] font-bold tracking-widest uppercase">Skin 16</span>
+<span class="px-2 py-1 bg-green-500/10 text-green-500 border border-green-500/20 rounded text-[10px] font-bold tracking-widest uppercase">Imutável</span>
+</div>
+<h2 class="text-4xl font-extrabold tracking-tight dark:text-slate-100" data-i18n="wp_title">CPII — Whitepaper Fundacional</h2>
+<div class="flex items-center gap-4 text-sm text-slate-500">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">info</span> Versão 1.0</span>
+<span class="font-mono bg-neutral-gold px-2 py-0.5 rounded text-xs">ed25519:7f83b1c2...a9d0e2f1</span>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-primary text-background-dark px-6 py-2.5 rounded-lg font-bold text-sm shadow-lg shadow-primary/10 hover:brightness-110 transition-all">
+<span class="material-symbols-outlined text-lg">verified</span>
+<span data-i18n="verify_btn">Verificar Assinatura</span>
+</button>
+</div>
+</section>
+<!-- Block 3: Maturity Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="p-6 rounded-xl border border-border-gold bg-neutral-gold/20 flex flex-col justify-between h-32">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider" data-i18n="metric_milestones">Milestones Concluídos</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-mono">12/20</span>
+<span class="text-green-500 text-xs font-bold">+5%</span>
+</div>
+</div>
+<div class="p-6 rounded-xl border border-border-gold bg-neutral-gold/20 flex flex-col justify-between h-32">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider" data-i18n="metric_maturity">Maturidade do Projeto</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-mono">60%</span>
+<span class="text-primary text-xs font-bold">Progressivo</span>
+</div>
+</div>
+<div class="p-6 rounded-xl border border-border-gold bg-neutral-gold/20 flex flex-col justify-between h-32">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider" data-i18n="metric_days">Dias desde Gênese</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-mono">428</span>
+<span class="text-slate-500 text-xs font-medium">dias</span>
+</div>
+</div>
+<div class="p-6 rounded-xl border border-border-gold bg-neutral-gold/20 flex flex-col justify-between h-32 border-l-4 border-l-primary">
+<p class="text-xs font-semibold text-slate-500 uppercase tracking-wider" data-i18n="metric_next">Próximo Milestone</p>
+<div class="flex flex-col">
+<span class="text-xl font-bold text-primary truncate">W-1.2 Protocol</span>
+<span class="text-xs text-slate-500">ETA: 12 dias</span>
+</div>
+</div>
+</section>
+<!-- Block 2: Milestone Timeline (Vertical Stepper) -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">timeline</span>
+                        Timeline de Milestones (W-0.0 a W-1.9)
+                    </h3>
+<span class="text-xs text-slate-500 italic">Documento Auditável Publicamente</span>
+</div>
+<div class="relative space-y-0 pl-12 before:absolute before:left-[19px] before:top-4 before:h-[calc(100%-32px)] before:w-0.5 before:bg-border-gold">
+<!-- Completed Milestone -->
+<div class="relative pb-10">
+<div class="absolute -left-12 flex h-10 w-10 items-center justify-center rounded-full bg-green-500/20 text-green-500 border-4 border-background-dark z-10">
+<span class="material-symbols-outlined text-sm font-black">check</span>
+</div>
+<div class="bg-neutral-gold/10 p-5 rounded-xl border border-border-gold hover:border-green-500/30 transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-mono font-bold text-green-500">W-0.0 — Genesis Block</h4>
+<span class="text-[10px] text-slate-500">01 JAN 2023</span>
+</div>
+<p class="text-sm text-slate-400 mb-3">Definição dos protocolos base e infraestrutura de governança descentralizada.</p>
+<div class="flex items-center gap-4 text-[10px] font-mono text-slate-600">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">key</span> 0x8a...f2e</span>
+<span class="px-2 py-0.5 bg-green-500/5 rounded text-green-600 border border-green-500/10 uppercase">Assinado</span>
+</div>
+</div>
+</div>
+<!-- Active Milestone -->
+<div class="relative pb-10">
+<div class="absolute -left-12 flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary border-4 border-background-dark z-10">
+<span class="material-symbols-outlined text-sm animate-pulse">hourglass_top</span>
+</div>
+<div class="bg-neutral-gold/30 p-5 rounded-xl border border-primary/40 shadow-lg shadow-primary/5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-mono font-bold text-primary">W-1.2 — Bridge Implementation</h4>
+<span class="px-2 py-0.5 bg-primary/20 text-primary rounded text-[10px] font-bold animate-pulse">EM PROGRESSO</span>
+</div>
+<p class="text-sm text-slate-300 mb-4">Interoperabilidade cross-chain e implementação de oráculos de terceira geração.</p>
+<div class="space-y-2">
+<div class="flex justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+<span>Progresso da Tarefa</span>
+<span>65%</span>
+</div>
+<div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pending Milestone -->
+<div class="relative pb-10">
+<div class="absolute -left-12 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-slate-500 border-4 border-background-dark z-10">
+<span class="material-symbols-outlined text-sm">lock</span>
+</div>
+<div class="bg-neutral-gold/5 p-5 rounded-xl border border-border-gold opacity-60">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-mono font-bold text-slate-400">W-1.3 — Liquidity V3 Layer</h4>
+<span class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Pendente</span>
+</div>
+<p class="text-sm text-slate-500">Otimização de liquidez concentrada e proteção contra impermanent loss.</p>
+</div>
+</div>
+<!-- Repeat Pending for Scale Visual -->
+<div class="relative">
+<div class="absolute -left-12 flex h-10 w-10 items-center justify-center rounded-full bg-slate-800 text-slate-500 border-4 border-background-dark z-10">
+<span class="material-symbols-outlined text-sm">lock</span>
+</div>
+<div class="bg-neutral-gold/5 p-5 rounded-xl border border-border-gold opacity-60">
+<h4 class="font-mono font-bold text-slate-400">W-1.9 — Final Mainnet Cluster</h4>
+<p class="text-sm text-slate-500 mt-2 italic">Estreia prevista para Q4 2024</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Orbit 3 (w-dock): AIMON Contextual assistant -->
+<aside class="w-[320px] border-l border-border-gold bg-background-light dark:bg-[#12110f] flex flex-col">
+<div class="p-6 border-b border-border-gold flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">robot_2</span>
+<h4 class="font-bold text-sm tracking-tight">AIMON Assistant</h4>
+</div>
+<span class="flex h-2 w-2 rounded-full bg-green-500"></span>
+</div>
+<div class="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+<div class="bg-neutral-gold/30 rounded-xl p-4 border border-border-gold">
+<p class="text-xs text-slate-300 leading-relaxed">
+                        Olá Administrador. Estou focado no <span class="text-primary font-bold">W-1.2</span>. 
+                        A implementação da Bridge está com um atraso de 2 dias nos testes unitários, mas a integridade do consenso permanece estável.
+                    </p>
+</div>
+<div class="space-y-4">
+<p class="text-[10px] font-bold uppercase text-slate-500 tracking-widest">Insights do Roadmap</p>
+<div class="space-y-3">
+<button class="w-full text-left p-3 rounded-lg bg-neutral-gold/20 hover:bg-neutral-gold/40 transition-colors border border-border-gold flex items-center gap-3 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">analytics</span>
+<span class="text-xs font-medium">Analisar atraso W-1.2</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg bg-neutral-gold/20 hover:bg-neutral-gold/40 transition-colors border border-border-gold flex items-center gap-3 group">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">history_edu</span>
+<span class="text-xs font-medium">Resumo do Whitepaper</span>
+</button>
+</div>
+</div>
+<div class="mt-8">
+<p class="text-[10px] font-bold uppercase text-slate-500 tracking-widest mb-3">Auditoria ed25519</p>
+<div class="p-3 bg-black/40 rounded-lg font-mono text-[10px] text-slate-500 break-all border border-border-gold">
+                        Signature Check: VALID<br/>
+                        Root Hash: a2e4...f12b<br/>
+                        Maturity: Stage 2/4
+                    </div>
+</div>
+</div>
+<div class="p-4 border-t border-border-gold">
+<div class="relative">
+<input class="w-full bg-neutral-gold border-none rounded-lg pl-4 pr-10 py-2.5 text-xs focus:ring-1 focus:ring-primary" placeholder="Pergunte sobre o projeto..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- Footer (h-footer): System status -->
+<footer class="h-8 border-t border-border-gold bg-neutral-gold/10 px-6 flex items-center justify-between z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+<span class="h-1.5 w-1.5 rounded-full bg-green-500"></span>
+<span>Node: Online (L-24)</span>
+</div>
+<div class="flex items-center gap-1.5 text-[10px] text-slate-500">
+<span class="material-symbols-outlined text-[10px]">timely</span>
+<span>Latency: 14ms</span>
+</div>
+</div>
+<div class="flex items-center gap-4 text-[10px] text-slate-500">
+<span class="font-mono tracking-tighter">BUILD v2.5.0-LUX</span>
+<span class="uppercase tracking-widest font-bold">PT-PT</span>
+</div>
+</footer>
+</body></html>

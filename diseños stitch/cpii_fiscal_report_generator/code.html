@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="light" lang="pt"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII-CRM Skin 05 Fiscal Report Generator</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1e3a8a", // Deep Blue for Lux Lusitana theme
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        accent: "#b45309", // Gold/Amber accent
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .lux-border { border-color: rgba(180, 83, 9, 0.2); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-screen overflow-hidden flex flex-col">
+<header class="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-6 shrink-0">
+<div class="flex items-center gap-4">
+<span class="material-icons-outlined text-primary text-3xl">account_balance</span>
+<h1 class="font-display text-xl font-bold tracking-tight">Lux Lusitana <span class="text-xs font-sans font-normal opacity-60 ml-2">Orbit 2.4.0</span></h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-xs font-medium">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span data-i18n="system_status">Core Active</span>
+</div>
+<button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined">dark_mode</span>
+</button>
+<div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-6">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-semibold leading-none">Consultor Fiscal</p>
+<p class="text-xs opacity-60">ID: #8829-MLS</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">CF</div>
+</div>
+</div>
+</header>
+<main class="flex-1 flex overflow-hidden">
+<aside class="w-20 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col items-center py-6 gap-8 shrink-0">
+<nav class="flex flex-col gap-6">
+<a class="p-3 bg-primary/10 text-primary rounded-xl" href="#" title="Fiscal Reports">
+<span class="material-icons-outlined">analytics</span>
+</a>
+<a class="p-3 text-slate-400 hover:text-primary transition-colors" href="#" title="Clients">
+<span class="material-icons-outlined">groups</span>
+</a>
+<a class="p-3 text-slate-400 hover:text-primary transition-colors" href="#" title="Documents">
+<span class="material-icons-outlined">folder</span>
+</a>
+<a class="p-3 text-slate-400 hover:text-primary transition-colors" href="#" title="Settings">
+<span class="material-icons-outlined">settings</span>
+</a>
+</nav>
+</aside>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-10">
+<div class="max-w-6xl mx-auto space-y-8">
+<section class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800" id="jurisdiction-block">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h2 class="text-lg font-semibold mb-1" data-i18n="jurisdiction_selection">Jurisdição de Reporte</h2>
+<p class="text-sm opacity-60" data-i18n="jurisdiction_desc">Selecione o país para carregar as normas fiscais aplicáveis.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+<button class="juris-btn px-6 py-2 rounded-md text-sm font-medium transition-all bg-white dark:bg-slate-700 shadow-sm text-primary" id="btn-PT" onclick="switchJurisdiction('PT')">PT</button>
+<button class="juris-btn px-6 py-2 rounded-md text-sm font-medium transition-all text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" id="btn-ES" onclick="switchJurisdiction('ES')">ES</button>
+<button class="juris-btn px-6 py-2 rounded-md text-sm font-medium transition-all text-slate-500 hover:text-slate-700 dark:hover:text-slate-300" id="btn-BR" onclick="switchJurisdiction('BR')">BR</button>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-lg border border-accent/20">
+<span class="material-icons-outlined text-sm">event</span>
+<div class="text-xs">
+<p class="font-bold uppercase tracking-wider leading-none" data-i18n="deadline_label">Prazo de Entrega</p>
+<p class="font-semibold" id="deadline-val">31 Julho</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-7 space-y-8">
+<section class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-base font-semibold flex items-center gap-2">
+<span class="material-icons-outlined text-primary">format_list_numbered</span>
+<span id="tax-table-title">Tramos de Imposto (PT)</span>
+</h3>
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Progresso Fiscal 2024</span>
+</div>
+<div class="overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800">
+<table class="w-full text-sm text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+<tr>
+<th class="px-4 py-3 font-semibold">Rendimento Coletável</th>
+<th class="px-4 py-3 font-semibold text-right">Taxa Normal</th>
+<th class="px-4 py-3 font-semibold text-right">Taxa Média</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800" id="tax-table-body">
+</tbody>
+</table>
+</div>
+<p class="mt-4 text-[11px] italic text-slate-500">* Adicionalmente aplicável Taxa de Solidariedade acima de 80,000€</p>
+</section>
+<section class="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
+<h3 class="text-base font-semibold mb-6 flex items-center gap-2">
+<span class="material-icons-outlined text-primary">verified_user</span>
+<span id="reg-title">Metadados Regulatórios (CMVM)</span>
+</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="reg-fields-grid">
+</div>
+</section>
+</div>
+<div class="lg:col-span-5 space-y-8">
+<div class="bg-primary text-white rounded-2xl p-8 shadow-xl shadow-primary/20 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-icons-outlined text-9xl">receipt_long</span>
+</div>
+<h3 class="font-display text-2xl mb-8 relative z-10">Resumo do Reporte</h3>
+<div class="space-y-6 relative z-10">
+<div class="flex justify-between items-end border-b border-white/10 pb-4">
+<p class="text-sm opacity-80 uppercase tracking-widest">Gross Yield</p>
+<p class="font-display text-3xl font-bold">142.480,00€</p>
+</div>
+<div class="flex justify-between items-end border-b border-white/10 pb-4">
+<p class="text-sm opacity-80 uppercase tracking-widest">Retention Rate</p>
+<p class="font-display text-3xl font-bold">28,0%</p>
+</div>
+<div class="flex justify-between items-end">
+<p class="text-sm font-semibold text-accent">Net Yield</p>
+<p class="font-display text-4xl font-bold text-accent">102.585,60€</p>
+</div>
+</div>
+<button class="w-full mt-10 bg-white text-primary hover:bg-slate-100 font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg">
+<span class="material-icons-outlined">file_download</span>
+<span data-i18n="export_btn">Exportar Relatório Fiscal</span>
+</button>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800/50 p-6 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+<h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2 text-slate-500">
+<span class="material-icons-outlined text-sm">warning</span>
+                                Aviso Legal Fiscal
+                            </h4>
+<p class="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
+                                Este documento é gerado automaticamente pelo motor fiscal <span class="font-semibold italic">Lux Lusitana Core</span> e não substitui a validação por um técnico de contas certificado. As taxas apresentadas referem-se ao exercício fiscal corrente e podem sofrer alterações legislativas retroativas.
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="h-8 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between text-[10px] font-medium text-slate-500 uppercase tracking-widest shrink-0">
+<div class="flex gap-4">
+<span>Jurisdição Ativa: <span class="text-primary font-bold" id="status-country">Portugal</span></span>
+<span>Regulador: <span class="text-primary font-bold" id="status-reg">CMVM</span></span>
+</div>
+<div class="flex gap-4">
+<span>Protocolo: TLS 1.3 Secure</span>
+<span>Runtime: 242ms</span>
+</div>
+</footer>
+<script>
+        const jurisdictionData = {
+            'PT': {
+                name: 'Portugal',
+                deadline: '31 Julho',
+                regTitle: 'Metadados Regulatórios (CMVM)',
+                regBody: 'CMVM',
+                tableTitle: 'Tramos de Imposto (PT - IRS)',
+                tableRows: [
+                    { range: 'Até 7.703€', rate: '14,5%', avg: '14,5%' },
+                    { range: 'De 7.703€ a 11.623€', rate: '21,0%', avg: '16,6%' },
+                    { range: 'De 11.623€ a 16.472€', rate: '26,5%', avg: '19,5%' },
+                    { range: 'De 16.472€ a 21.321€', rate: '28,5%', avg: '21,6%' },
+                    { range: 'De 21.321€ a 27.146€', rate: '35,0%', avg: '24,5%' }
+                ],
+                fields: [
+                    { label: 'Entidade Gestora ID', val: 'PT_EG_8819', key: 'entidade_gestora_id' },
+                    { label: 'Tipo de Rendimento', val: 'Categoria F (Rendas)', key: 'cat_f_type' },
+                    { label: 'NIF Entidade Retentora', val: '500 123 456', key: 'nif_retentora' },
+                    { label: 'Código Atividade', val: '01511 - Gestão Patrimonial', key: 'cae_code' }
+                ]
+            },
+            'ES': {
+                name: 'España',
+                deadline: '30 Junio',
+                regTitle: 'Metadatos Regulatorios (CNMV)',
+                regBody: 'CNMV',
+                tableTitle: 'Escalones IRPF (ES)',
+                tableRows: [
+                    { range: 'Hasta 12.450€', rate: '19,0%', avg: '19,0%' },
+                    { range: 'De 12.450€ a 20.200€', rate: '24,0%', avg: '21,5%' },
+                    { range: 'De 20.200€ a 35.200€', rate: '30,0%', avg: '25,2%' },
+                    { range: 'De 35.200€ a 60.000€', rate: '37,0%', avg: '29,8%' },
+                    { range: 'De 60.000€ a 300.000€', rate: '45,0%', avg: '38,1%' }
+                ],
+                fields: [
+                    { label: 'CIF Entidad', val: 'B81234567', key: 'cif_entidad' },
+                    { label: 'Modelo de Declaración', val: 'Modelo 100 / 714', key: 'modelo_id' },
+                    { label: 'Comunidad Autónoma', val: 'Madrid (01)', key: 'com_auto' },
+                    { label: 'ID Transacción', val: 'ES_TX_9901', key: 'tx_id' }
+                ]
+            },
+            'BR': {
+                name: 'Brasil',
+                deadline: '31 Maio',
+                regTitle: 'Metadados Regulatórios (CVM)',
+                regBody: 'CVM',
+                tableTitle: 'Tabela Progressiva (BR - IRPF)',
+                tableRows: [
+                    { range: 'Até R$ 22.847,76', rate: 'Isento', avg: '0,0%' },
+                    { range: 'De R$ 22.847 a 33.919', rate: '7,5%', avg: '3,8%' },
+                    { range: 'De R$ 33.919 a 45.012', rate: '15,0%', avg: '7,6%' },
+                    { range: 'De R$ 45.012 a 55.976', rate: '22,5%', avg: '11,4%' },
+                    { range: 'Acima de R$ 55.976', rate: '27,5%', avg: '16,2%' }
+                ],
+                fields: [
+                    { label: 'CNPJ do Fundo', val: '00.123.456/0001-00', key: 'cnpj_fundo' },
+                    { label: 'Código Receita', val: 'DIRPF-2024', key: 'cod_receita' },
+                    { label: 'Natureza Rendimento', val: 'Rend. Tributáveis', key: 'natureza_rend' },
+                    { label: 'Insc. Municipal', val: '887.221-1', key: 'insc_mun' }
+                ]
+            }
+        };
+        function switchJurisdiction(code) {
+            const data = jurisdictionData[code];
+            // Update Toggle Styles
+            document.querySelectorAll('.juris-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-primary');
+                btn.classList.add('text-slate-500', 'hover:text-slate-700', 'dark:hover:text-slate-300');
+            });
+            const activeBtn = document.getElementById(`btn-${code}`);
+            activeBtn.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-primary');
+            activeBtn.classList.remove('text-slate-500', 'hover:text-slate-700', 'dark:hover:text-slate-300');
+            // Update Header & Deadline
+            document.getElementById('deadline-val').innerText = data.deadline;
+            document.getElementById('tax-table-title').innerText = data.tableTitle;
+            document.getElementById('reg-title').innerText = data.regTitle;
+            document.getElementById('status-country').innerText = data.name;
+            document.getElementById('status-reg').innerText = data.regBody;
+            // Update Table
+            const tbody = document.getElementById('tax-table-body');
+            tbody.innerHTML = data.tableRows.map(row => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+                    <td class="px-4 py-3 font-medium">${row.range}</td>
+                    <td class="px-4 py-3 text-right">${row.rate}</td>
+                    <td class="px-4 py-3 text-right opacity-60">${row.avg}</td>
+                </tr>
+            `).join('');
+            // Update Fields Grid
+            const grid = document.getElementById('reg-fields-grid');
+            grid.innerHTML = data.fields.map(f => `
+                <div class="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30">
+                    <p class="text-[10px] font-bold uppercase text-slate-400 mb-1">${f.label}</p>
+                    <p class="text-sm font-mono font-medium">${f.val}</p>
+                    <p class="text-[9px] font-mono text-slate-400 mt-2 opacity-40">key: ${f.key}</p>
+                </div>
+            `).join('');
+        }
+        // Initialize with PT
+        window.onload = () => switchJurisdiction('PT');
+    </script>
+
+</body></html>

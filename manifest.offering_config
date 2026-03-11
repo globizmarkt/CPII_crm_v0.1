@@ -1,0 +1,8 @@
+{
+  "project_id": "CPII-CRM",
+  "theme": "gold-luxury",
+  "i18n_default": "pt",
+  "endpoints": {
+    "db": "firestore/cpii-landing"
+  }
+}
