@@ -196,20 +196,25 @@ class GdManual extends HTMLElement {
       </div>
     `;
   }
+
+  /**
+     * _applyI18n
+     * Aplica traducciones a elementos con [data-i18n]
+     */
+  _applyI18n() {
+    if (!window.__CPII__?.i18n?.t) return;
+    const t = window.__CPII__.i18n.t.bind(window.__CPII__.i18n);
+    this.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const translation = t(key);
+      if (translation && translation !== key) {
+        el.textContent = translation;
+      }
+    });
+  }
 }
 
-_applyI18n() {
-  if (!window.__CPII__?.i18n?.t) return;
-  const t = window.__CPII__.i18n.t.bind(window.__CPII__.i18n);
-  this.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    const translation = t(key);
-    if (translation && translation !== key) {
-      el.textContent = translation;
-    }
-  });
-}
-
+// Registro del componente
 if (!customElements.get('gd-manual')) {
   customElements.define('gd-manual', GdManual);
 }
