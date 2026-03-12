@@ -3,16 +3,16 @@
 <html class="dark" lang="en">
 
 <head>
+    <link rel="stylesheet" href="css/tab-manager.css">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>CPII-CRM Skin 01 Layout Trinity</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script src="../core/i18n.js"></script>
+    <script src="core/i18n.js"></script>
+    <script src="core/at-tab-manager.js" defer></script>
+    <script src="gadgets/gd-manual.js" defer></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
@@ -121,7 +121,7 @@
                         <span class="text-sm font-medium" data-i18n="nav_history">Histórico</span>
                     </a>
                     <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#" onclick="loadManual(); return false;">
+                        href="#" onclick="TabManager.open('manual', {title: 'Manual de Boas Práticas'}); return false;">
                         <span class="material-symbols-outlined transition-colors">menu_book</span>
                         <span class="text-sm font-medium" data-i18n="nav_manuals">Manuais</span>
                     </a>
@@ -145,7 +145,7 @@
                         type="text" />
                 </div>
             </header>
-            <div id="canvas-content" class="flex-1 flex flex-col items-center justify-center p-12 text-center">
+            <div id="canvas-orbita-2" class="flex-1 flex flex-col relative">
                 <div class="relative mb-8">
                     <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
                     <div class="relative bg-surface p-10 rounded-2xl border border-primary/10 shadow-2xl">
@@ -280,20 +280,9 @@
             <span class="text-[10px] text-slate-400">Novas propriedades MLS adicionadas.</span>
         </div>
     </div>
-    <script>
-        function loadManual() {
-            const canvas = document.getElementById('canvas-content');
-            if (canvas) {
-                fetch('gadgets/gd-manual.html')
-                    .then(r => r.text())
-                    .then(html => {
-                        canvas.innerHTML = html;
-                        const lang = localStorage.getItem('cpii_crm_lang') || 'pt';
-                        applyTranslations(lang);
-                    });
-            }
-        }
-    </script>
+    <!-- El TabManager se encarga de cargar los gadgets ahora -->
+    <script src="core/at-tab-manager.js"></script>
+    <script src="gadgets/gd-manual.js"></script>
 </body>
 
 </html>

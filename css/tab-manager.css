@@ -1,0 +1,244 @@
+/**
+ * CPII — tab-manager.css
+ * Estilos para Órbita 2: Tab Bar + Workspace + gd-manual
+ * Ruta: css/tab-manager.css
+ *
+ * Doctrina R3: CERO hex — solo var(--theme-*)
+ * Doctrina R0: CERO valores hardcoded
+ *
+ * Variables requeridas en :root del proyecto:
+ * --theme-bg              Fondo principal
+ * --theme-bg-secondary    Fondo secundario (tab bar, secciones)
+ * --theme-bg-elevated     Fondo elevado (tabs inactivas)
+ * --theme-surface         Superficie de cards/gadgets
+ * --theme-border          Color de bordes
+ * --theme-accent          Color de acento / tab activa
+ * --theme-accent-subtle   Acento suave (hover)
+ * --theme-text-primary    Texto principal
+ * --theme-text-secondary  Texto secundario
+ * --theme-text-muted      Texto atenuado
+ * --theme-danger-bg       Fondo alerta oscura
+ * --theme-danger-border   Borde alerta oscura
+ * --theme-danger-text     Texto alerta oscura
+ * --theme-radius-sm       Border radius pequeño
+ * --theme-radius-md       Border radius medio
+ * --theme-spacing-xs      Espaciado extra pequeño
+ * --theme-spacing-sm      Espaciado pequeño
+ * --theme-spacing-md      Espaciado medio
+ * --theme-spacing-lg      Espaciado grande
+ * --theme-font-sm         Tamaño fuente pequeño
+ * --theme-font-md         Tamaño fuente medio
+ * --theme-font-lg         Tamaño fuente grande
+ * --theme-font-xl         Tamaño fuente extra grande
+ * --theme-transition      Transición estándar
+ */
+
+/* ── Órbita 2: Canvas ──────────────────────────────────────── */
+#canvas-orbita-2 {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--theme-bg);
+    overflow: hidden;
+}
+
+/* ── Tab Bar ───────────────────────────────────────────────── */
+.cpii-tab-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--theme-spacing-xs);
+    padding: var(--theme-spacing-xs) var(--theme-spacing-sm) 0;
+    background: var(--theme-bg-secondary);
+    border-bottom: 1px solid var(--theme-border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+    flex-shrink: 0;
+}
+
+.cpii-tab-bar::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+/* ── Tab individual ────────────────────────────────────────── */
+.cpii-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--theme-spacing-xs);
+    padding: var(--theme-spacing-xs) var(--theme-spacing-sm);
+    background: var(--theme-bg-elevated);
+    border: 1px solid var(--theme-border);
+    border-bottom: none;
+    border-radius: var(--theme-radius-sm) var(--theme-radius-sm) 0 0;
+    color: var(--theme-text-secondary);
+    font-size: var(--theme-font-sm);
+    cursor: pointer;
+    transition: var(--theme-transition);
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.cpii-tab:hover {
+    background: var(--theme-accent-subtle);
+    color: var(--theme-text-primary);
+}
+
+.cpii-tab.is-active {
+    background: var(--theme-bg);
+    border-color: var(--theme-border);
+    border-bottom-color: var(--theme-bg);
+    /* Fusiona con workspace */
+    color: var(--theme-accent);
+    font-weight: 600;
+    margin-bottom: -1px;
+    /* Cubre el borde inferior del tab-bar */
+}
+
+.cpii-tab__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
+}
+
+.cpii-tab__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border: none;
+    border-radius: var(--theme-radius-sm);
+    background: transparent;
+    color: var(--theme-text-muted);
+    font-size: var(--theme-font-sm);
+    cursor: pointer;
+    transition: var(--theme-transition);
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.cpii-tab__close:hover {
+    background: var(--theme-danger-bg);
+    color: var(--theme-danger-text);
+}
+
+/* ── Workspace ─────────────────────────────────────────────── */
+.cpii-workspace {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--theme-spacing-md);
+    background: var(--theme-bg);
+}
+
+/* ── gd-manual ─────────────────────────────────────────────── */
+.gd-manual {
+    display: block;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.gd-manual__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--theme-spacing-lg);
+}
+
+/* Cabecera */
+.gd-manual__header {
+    padding-bottom: var(--theme-spacing-md);
+    border-bottom: 1px solid var(--theme-border);
+}
+
+.gd-manual__title {
+    font-size: var(--theme-font-xl);
+    font-weight: 700;
+    color: var(--theme-text-primary);
+    margin: 0 0 var(--theme-spacing-xs) 0;
+}
+
+.gd-manual__subtitle {
+    font-size: var(--theme-font-md);
+    color: var(--theme-text-secondary);
+    margin: 0;
+}
+
+/* Alerta doctrinal — cuadro oscuro */
+.gd-manual__alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--theme-spacing-sm);
+    padding: var(--theme-spacing-md);
+    background: var(--theme-danger-bg);
+    border: 1px solid var(--theme-danger-border);
+    border-radius: var(--theme-radius-md);
+    color: var(--theme-danger-text);
+}
+
+.gd-manual__alert-icon {
+    font-size: var(--theme-font-lg);
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.gd-manual__alert p {
+    margin: 0;
+    font-size: var(--theme-font-sm);
+    line-height: 1.6;
+}
+
+/* Índice */
+.gd-manual__index {
+    padding: var(--theme-spacing-md);
+    background: var(--theme-bg-secondary);
+    border: 1px solid var(--theme-border);
+    border-radius: var(--theme-radius-md);
+}
+
+.gd-manual__index-title {
+    font-size: var(--theme-font-md);
+    font-weight: 600;
+    color: var(--theme-text-primary);
+    margin: 0 0 var(--theme-spacing-sm) 0;
+}
+
+.gd-manual__index-list {
+    margin: 0;
+    padding-left: var(--theme-spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--theme-spacing-xs);
+}
+
+.gd-manual__index-list a {
+    color: var(--theme-accent);
+    text-decoration: none;
+    font-size: var(--theme-font-sm);
+    transition: var(--theme-transition);
+}
+
+.gd-manual__index-list a:hover {
+    text-decoration: underline;
+    color: var(--theme-text-primary);
+}
+
+/* Secciones */
+.gd-manual__section {
+    padding-top: var(--theme-spacing-md);
+    border-top: 1px solid var(--theme-border);
+}
+
+.gd-manual__section-title {
+    font-size: var(--theme-font-lg);
+    font-weight: 600;
+    color: var(--theme-text-primary);
+    margin: 0 0 var(--theme-spacing-sm) 0;
+}
+
+.gd-manual__section-body {
+    font-size: var(--theme-font-md);
+    color: var(--theme-text-secondary);
+    line-height: 1.7;
+    margin: 0;
+}
