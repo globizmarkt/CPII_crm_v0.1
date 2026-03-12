@@ -284,7 +284,7 @@
         function loadManual() {
             const canvas = document.getElementById('canvas-content');
             if (canvas) {
-                fetch('gadgets/wd-manual.html')
+                fetch('gadgets/gd-manual.html')
                     .then(r => r.text())
                     .then(html => {
                         canvas.innerHTML = html;
