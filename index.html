@@ -121,7 +121,8 @@
                         <span class="text-sm font-medium" data-i18n="nav_history">Histórico</span>
                     </a>
                     <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#" onclick="TabManager.open('manual', {title: 'Manual de Boas Práticas'}); return false;">
+                        href="#"
+                        onclick="window.__CPII__.tabManager.open('gd-manual', {title: 'Manual'}); return false;">
                         <span class="material-symbols-outlined transition-colors">menu_book</span>
                         <span class="text-sm font-medium" data-i18n="nav_manuals">Manuais</span>
                     </a>
@@ -146,28 +147,6 @@
                 </div>
             </header>
             <div id="canvas-orbita-2" class="flex-1 flex flex-col relative">
-                <div class="relative mb-8">
-                    <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                    <div class="relative bg-surface p-10 rounded-2xl border border-primary/10 shadow-2xl">
-                        <div class="bg-primary/10 size-24 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <span class="material-symbols-outlined text-primary text-5xl">explore</span>
-                        </div>
-                        <h2 class="font-serif text-3xl text-slate-100 mb-4" data-i18n="welcome_title">Espaço de Trabalho
-                            Dinâmico</h2>
-                        <p class="text-slate-400 max-w-sm mx-auto mb-8" data-i18n="empty_state">Selecione uma opção no
-                            menu para começar a explorar o seu portfólio de investimento privado.</p>
-                        <button
-                            class="border border-primary text-primary hover:bg-primary hover:text-background-dark px-6 py-2 rounded-lg transition-all font-semibold">
-                            <span data-i18n="explore_btn">Explorar Mercado</span>
-                        </button>
-                    </div>
-                </div>
-                <!-- Background Pattern -->
-                <div class="opacity-10 pointer-events-none absolute inset-0 z-0">
-                    <div class="absolute inset-0"
-                        style="background-image: radial-gradient(circle at 2px 2px, #c1a85c 1px, transparent 0); background-size: 40px 40px;">
-                    </div>
-                </div>
             </div>
         </main>
         <!-- Orbit 3: Right Dock (320px) -->
