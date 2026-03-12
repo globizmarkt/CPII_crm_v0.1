@@ -1,5 +1,6 @@
 /**
  * CPII — gd-manual.js
+ * Versión: v1.1 -> v1.2
  * Gadget: Manual de Buenas Prácticas
  * Ruta: gadgets/gd-manual.js
  *
@@ -11,6 +12,13 @@
  * window.__CPII__.tabManager.open('gd-manual')
  * — o directamente —
  * <gd-manual></gd-manual>
+ * 
+ * Índice Maestro:  
+ * [SEC-01] Cabecera técnica y metadatos.
+ * [SEC-02] Clase GdManual y Ciclo de vida.
+ * [SEC-03] Método render() (Contenido del Manual).
+ * [SEC-04] Método _applyI18n() (Motor de traducción).
+ * [SEC-05] Registro del componente.
  */
 class GdManual extends HTMLElement {
 
@@ -200,7 +208,6 @@ _applyI18n() {
       el.textContent = translation;
     }
   });
-}
 }
 
 if (!customElements.get('gd-manual')) {
