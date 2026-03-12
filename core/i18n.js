@@ -465,6 +465,8 @@ function setLanguage(lang) {
     // ── Clave canónica del ecosistema (alineada con at-bootstrapper.js) ──
     localStorage.setItem('cpii:locale', lang);
     applyTranslations(lang);
+    // Notificar a Web Components autónomos (ej. gd-manual) para re-renderizar
+    document.dispatchEvent(new CustomEvent('cpii:lang:change', { detail: { lang } }));
 }
 
 // ── Inicialización ────────────────────────────────────────────
