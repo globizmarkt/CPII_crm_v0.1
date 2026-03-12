@@ -1,11 +1,23 @@
 /**
- * i18n.js — CPII CRM
- * Skeleton Factory · R4 Compliance
- * Tokens: PT · ES · EN · FR
+ * CPII — i18n.js
+ * Versión: v2.0
+ * Motor de traducción universal del ecosistema
+ * Ruta: core/i18n.js
+ *
+ * CAMBIOS v1.x → v2.0:
+ * - Clave localStorage migrada: 'cpii_crm_lang' → 'cpii:locale'
+ *   (alineada con at-bootstrapper.js y el Handoff de Estado Universal)
+ * - Motor expuesto como window.__CPII__.i18n.t()
+ *   (permite que Web Components como gd-manual llamen _applyI18n() en cualquier momento)
+ * - applyTranslations() ahora también recorre Web Components montados en el DOM
+ * - Correcciones menores de tokens: 'manual.s1.avoid' y 'manual.s7.r4.role' en EN/FR
+ *
+ * Doctrina: R0 Sin hardcode | R4 data-i18n obligatorio
  */
 
 const translations = {
     pt: {
+        // ── UI Global ─────────────────────────────────────────
         "brand_subtitle": "CPII Club Privado",
         "nav_dashboard": "Dashboard",
         "nav_mls": "Mercado MLS",
@@ -28,6 +40,11 @@ const translations = {
         "aimon_msg": "Bem-vindo ao seu workspace. Como posso assistir o seu investimento hoje?",
         "open_assistant": "Abrir Assistente",
         "recent_activity": "Atividade Recente",
+        // ── Tab Manager ───────────────────────────────────────
+        "tab_manual": "Manual",
+        "tab_simulador": "Simulador",
+        "tab_calculadora": "Calculadora",
+        // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Versão 1.0 · Março 2026",
         "manual.title": "Manual de Boas Práticas",
         "manual.subtitle": "Gestão e Crescimento do Clube",
@@ -97,9 +114,10 @@ const translations = {
         "manual.s8.placeholder": "Escreve aqui...",
         "manual.footer": "Manual de Boas Práticas · v1.0 · Março 2026",
         "manual.reminder": "Lembra-te: ideias, dúvidas e sugestões → nota de áudio para a equipa.",
-
     },
+
     es: {
+        // ── UI Global ─────────────────────────────────────────
         "brand_subtitle": "CPII Club Privado",
         "nav_dashboard": "Dashboard",
         "nav_mls": "Mercado MLS",
@@ -122,13 +140,18 @@ const translations = {
         "aimon_msg": "Bienvenido a tu workspace. ¿Cómo puedo asistirte hoy?",
         "open_assistant": "Abrir Asistente",
         "recent_activity": "Actividad Reciente",
+        // ── Tab Manager ───────────────────────────────────────
+        "tab_manual": "Manual",
+        "tab_simulador": "Simulador",
+        "tab_calculadora": "Calculadora",
+        // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Versión 1.0 · Marzo 2026",
         "manual.title": "Manual de Buenas Prácticas",
         "manual.subtitle": "Gestión y Crecimiento del Club",
         "manual.purpose": "Este manual recoge las directrices operativas para que cualquier miembro del equipo pueda replicar el sistema de captación, incorporación y fidelización de miembros del club de forma consistente y escalable.",
         "manual.s1.title": "Principio Rector: Un Sistema Duplicable",
         "manual.s1.intro": "El objetivo es crear un sistema tan claro que cualquier persona pueda ejecutarlo y transmitirlo correctamente.",
-        "manual.s1.avoid": "❌ Erros a evitar",
+        "manual.s1.avoid": "❌ Errores a evitar",
         "manual.s1.err1": "Que cada miembro explique el proyecto con sus propias palabras.",
         "manual.s1.err2": "Que los prescriptores intenten responder todas las preguntas antes de tiempo.",
         "manual.s1.err3": "Que se mezclen mensajes, etapas y audiencias distintas en una misma conversación.",
@@ -180,7 +203,7 @@ const translations = {
         "manual.s7.r2.desc": "Gestión de webinars, presentaciones y comunicación con miembros.",
         "manual.s7.r3.role": "Equipo IA",
         "manual.s7.r3.desc": "Procesar notas de audio, redactar emails, crear presentaciones.",
-        "manual.s7.r4.role": "Prescritores",
+        "manual.s7.r4.role": "Prescriptores",
         "manual.s7.r4.desc": "Enviar el vídeo. Invitar al webinar. Asistir junto al invitado. Solo abrir la puerta.",
         "manual.s7.r5.role": "Nuevos Staff",
         "manual.s7.r5.desc": "Aportar ideas en formato nota de audio. Seguir el sistema. No improvisar.",
@@ -191,9 +214,10 @@ const translations = {
         "manual.s8.placeholder": "Escribe aquí...",
         "manual.footer": "Manual de Buenas Prácticas · v1.0 · Marzo 2026",
         "manual.reminder": "Recuerda: ideas, dudas y sugerencias → nota de audio al equipo.",
-
     },
+
     en: {
+        // ── UI Global ─────────────────────────────────────────
         "brand_subtitle": "CPII Private Club",
         "nav_dashboard": "Dashboard",
         "nav_mls": "MLS Market",
@@ -216,13 +240,18 @@ const translations = {
         "aimon_msg": "Welcome to your workspace. How can I assist your investment today?",
         "open_assistant": "Open Assistant",
         "recent_activity": "Recent Activity",
+        // ── Tab Manager ───────────────────────────────────────
+        "tab_manual": "Manual",
+        "tab_simulador": "Simulator",
+        "tab_calculadora": "Calculator",
+        // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Version 1.0 · March 2026",
         "manual.title": "Best Practices Manual",
         "manual.subtitle": "Club Management and Growth",
         "manual.purpose": "This manual gathers the operational guidelines so that any team member can replicate the club member acquisition, onboarding and retention system in a consistent and scalable way.",
         "manual.s1.title": "Core Principle: A Duplicable System",
         "manual.s1.intro": "The goal is to create a system so clear that anyone can execute it and pass it on correctly.",
-        "manual.s1.avoid": "❌ Erros a evitar",
+        "manual.s1.avoid": "❌ Errors to avoid",
         "manual.s1.err1": "Members explaining the project in their own words.",
         "manual.s1.err2": "Prescribers trying to answer all questions before the right time.",
         "manual.s1.err3": "Mixing messages, stages and different audiences in the same conversation.",
@@ -274,7 +303,7 @@ const translations = {
         "manual.s7.r2.desc": "Webinar management, presentations and member communication.",
         "manual.s7.r3.role": "AI Team",
         "manual.s7.r3.desc": "Process audio notes, write emails, create presentations.",
-        "manual.s7.r4.role": "Prescritores",
+        "manual.s7.r4.role": "Prescribers",
         "manual.s7.r4.desc": "Send the video. Invite to webinar. Attend with guest. Just open the door.",
         "manual.s7.r5.role": "New Staff",
         "manual.s7.r5.desc": "Contribute ideas as audio notes. Follow the system. Do not improvise.",
@@ -285,9 +314,10 @@ const translations = {
         "manual.s8.placeholder": "Write here...",
         "manual.footer": "Best Practices Manual · v1.0 · March 2026",
         "manual.reminder": "Remember: ideas, doubts and suggestions → audio note to the team.",
-
     },
+
     fr: {
+        // ── UI Global ─────────────────────────────────────────
         "brand_subtitle": "CPII Club Privé",
         "nav_dashboard": "Tableau de bord",
         "nav_mls": "Marché MLS",
@@ -310,13 +340,18 @@ const translations = {
         "aimon_msg": "Bienvenue dans votre espace de travail. Comment puis-je vous aider aujourd'hui?",
         "open_assistant": "Ouvrir l'Assistant",
         "recent_activity": "Activité Récente",
+        // ── Tab Manager ───────────────────────────────────────
+        "tab_manual": "Manuel",
+        "tab_simulador": "Simulateur",
+        "tab_calculadora": "Calculatrice",
+        // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Version 1.0 · Mars 2026",
         "manual.title": "Manuel des Bonnes Pratiques",
         "manual.subtitle": "Gestion et Croissance du Club",
         "manual.purpose": "Ce manuel rassemble les directives opérationnelles pour que tout membre de l'équipe puisse répliquer le système d'acquisition, d'intégration et de fidélisation des membres du club.",
         "manual.s1.title": "Principe Directeur: Un Système Duplicable",
         "manual.s1.intro": "L'objectif est de créer un système si clair que n'importe qui peut l'exécuter et le transmettre correctement.",
-        "manual.s1.avoid": "❌ Erros a evitar",
+        "manual.s1.avoid": "❌ Erreurs à éviter",
         "manual.s1.err1": "Que chaque membre explique le projet avec ses propres mots.",
         "manual.s1.err2": "Que les prescripteurs tentent de répondre à toutes les questions avant le bon moment.",
         "manual.s1.err3": "Que l'on mélange messages, étapes et audiences dans une même conversation.",
@@ -368,7 +403,7 @@ const translations = {
         "manual.s7.r2.desc": "Gestion des webinaires, présentations et communication avec les membres.",
         "manual.s7.r3.role": "Équipe IA",
         "manual.s7.r3.desc": "Traiter les notes audio, rédiger des emails, créer des présentations.",
-        "manual.s7.r4.role": "Prescritores",
+        "manual.s7.r4.role": "Prescripteurs",
         "manual.s7.r4.desc": "Envoyer la vidéo. Inviter au webinaire. Assister avec l'invité. Juste ouvrir la porte.",
         "manual.s7.r5.role": "Nouveaux Staff",
         "manual.s7.r5.desc": "Contribuer avec des idées en note audio. Suivre le système. Ne pas improviser.",
@@ -379,34 +414,74 @@ const translations = {
         "manual.s8.placeholder": "Écris ici...",
         "manual.footer": "Manuel des Bonnes Pratiques · v1.0 · Mars 2026",
         "manual.reminder": "Rappelle-toi: idées, doutes et suggestions → note audio à l'équipe.",
-
     }
 };
 
-function applyTranslations(lang) {
-    const dict = translations[lang] || translations["pt"];
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (dict[key]) el.textContent = dict[key];
-    });
-    document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        if (dict[key]) el.placeholder = dict[key];
-    });
-    document.documentElement.lang = lang;
+// ── Motor de traducción ───────────────────────────────────────
+/**
+ * t(key) — función de traducción pura
+ * Disponible en window.__CPII__.i18n.t()
+ * Usada por Web Components (gd-manual._applyI18n, etc.)
+ */
+function t(key) {
+    const lang = localStorage.getItem('cpii:locale') || 'pt';
+    const dict = translations[lang] || translations['pt'];
+    return dict[key] || key;
 }
 
+/**
+ * applyTranslations(lang)
+ * Aplica traducciones a todo el DOM, incluyendo Web Components montados
+ */
+function applyTranslations(lang) {
+    const dict = translations[lang] || translations['pt'];
+
+    // ── DOM estático ──────────────────────────────────────────
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key]) el.placeholder = dict[key];
+    });
+
+    document.documentElement.lang = lang;
+
+    // ── Web Components (Light DOM) ────────────────────────────
+    // Busca cualquier gd-* montado y llama su _applyI18n si lo tiene
+    document.querySelectorAll('[class^="gd-"], gd-manual, gd-simulador, gd-calculadora').forEach(component => {
+        if (typeof component._applyI18n === 'function') {
+            component._applyI18n();
+        }
+    });
+}
+
+/**
+ * setLanguage(lang)
+ * Cambia idioma, persiste con clave canónica cpii:locale y aplica al DOM
+ */
 function setLanguage(lang) {
-    localStorage.setItem("cpii_crm_lang", lang);
+    // ── Clave canónica del ecosistema (alineada con at-bootstrapper.js) ──
+    localStorage.setItem('cpii:locale', lang);
     applyTranslations(lang);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const saved = localStorage.getItem("cpii_crm_lang") || "pt";
-    const selector = document.getElementById("lang-selector");
+// ── Inicialización ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Leer desde clave canónica (at-bootstrapper ya la habrá escrito si viene del pasillo)
+    const saved = localStorage.getItem('cpii:locale') || 'pt';
+    const selector = document.getElementById('lang-selector');
+
     if (selector) {
         selector.value = saved;
-        selector.addEventListener("change", e => setLanguage(e.target.value));
+        selector.addEventListener('change', e => setLanguage(e.target.value));
     }
+
     applyTranslations(saved);
 });
+
+// ── Exponer motor en window.__CPII__ ──────────────────────────
+// Permite que Web Components llamen window.__CPII__.i18n.t(key)
+window.__CPII__ = window.__CPII__ || {};
+window.__CPII__.i18n = { t, setLanguage, applyTranslations };
