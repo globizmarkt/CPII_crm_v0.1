@@ -7,22 +7,33 @@
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
+                        theme: {
+                            bg: "var(--theme-bg)",
+                            surface: "var(--theme-surface)",
+                            "surface-hover": "var(--theme-surface-hover)",
+                            border: "var(--theme-border)",
+                            "border-active": "var(--theme-border-active)",
+                            text: "var(--theme-text)",
+                            "text-muted": "var(--theme-text-muted)",
+                        },
                         brand: {
                             bg: "#161513",
                             surface: "#1e1b14",
                             primary: "#C1A85D",
                             text: "#FDFBF6",
-                            accent: "#2D2921",
-                            muted: "#8C8370",
+                            border: "#35332c",
+                            muted: "#b2afa3",
                             alert: "#C15D5D"
                         }
+                    },
+                    spacing: {
+                        'sidebar': '250px',
                     },
                     fontFamily: {
                         "headline": ["Public Sans", "sans-serif"],
@@ -31,9 +42,9 @@
                         "serif": ["Playfair Display", "serif"]
                     },
                     borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
                         "full": "9999px"
                     },
                 },
@@ -42,14 +53,31 @@
     </script>
 <style>
         :root {
-            --brand-bg: #161513;
-            --brand-surface: #1e1b14;
+            --theme-bg: #161513;
+            --theme-surface: #1e1b14;
+            --theme-surface-hover: #26231a;
+            --theme-border: #35332c;
+            --theme-border-active: #C1A85D;
+            --theme-text: #FDFBF6;
+            --theme-text-muted: #b2afa3;
+            
             --brand-primary: #C1A85D;
-            --brand-text: #FDFBF6;
+            --brand-alert: #C15D5D;
         }
+
+        .light-mode {
+            --theme-bg: #FDFBF6;
+            --theme-surface: #F5F2EA;
+            --theme-surface-hover: #EBE7DA;
+            --theme-border: #D1CDBC;
+            --theme-border-active: #C1A85D;
+            --theme-text: #161513;
+            --theme-text-muted: #6B685C;
+        }
+
         body {
-            background-color: var(--brand-bg);
-            color: var(--brand-text);
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
             font-family: 'Public Sans', sans-serif;
             overflow: hidden;
         }
@@ -59,10 +87,9 @@
         .serif-numbers {
             font-family: 'Playfair Display', serif;
         }
-        .glass-panel {
-            background: rgba(30, 27, 20, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(193, 168, 93, 0.1);
+        .institutional-card {
+            background: var(--theme-surface);
+            border: 1px solid var(--theme-border);
         }
         .custom-scrollbar::-webkit-scrollbar {
             width: 4px;
@@ -72,187 +99,178 @@
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: var(--brand-primary);
-            border-radius: 10px;
+            border-radius: 0;
         }
     </style>
 </head>
 <body class="h-full">
-<div class="gd-dashboard h-full flex flex-col overflow-hidden">
+<div class="gd-dashboard h-full flex flex-col overflow-hidden bg-theme-bg" data-purpose="trinity-layout">
 <!-- Top Navigation Bar -->
-<header class="h-16 border-b border-brand-accent flex items-center justify-between px-6 bg-brand-surface shrink-0">
+<header class="h-16 border-b border-theme-border flex items-center justify-between px-6 bg-theme-surface shrink-0 z-10">
 <div class="flex items-center gap-8">
 <div class="flex items-center gap-3">
 <img class="w-8 h-8 object-contain" data-alt="CPII Gold Emblem Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCchZMtCk-M-v0zS6tTeKu9grz5IPukpK1D1zijo8ElTgBrMaVJLRqh_kXiSXIwGxdFXtvfBkmONhzE1pxfifuRKrzQkkXyyFH-mCpRssRdSMoFo2ozdP5PI3ydQCfDUSyriVVknq5CEkqe5uik_d29mmX6qyNP69FA88EJRgXbBjgtyfKGCDXwctz_QuxYZJTJ6GNUqylQ6znoE2wSt-dDq6UkPUI4wrxaEVYzLyldeisuT_MRMbEFvsFrDUvSncYvIjK4e54dD4X8"/>
 <div class="flex flex-col leading-tight">
-<span class="text-brand-text font-bold tracking-wider">CPII</span>
-<span class="text-brand-muted text-[10px] uppercase tracking-widest">Lux Lusitana</span>
+<span class="text-theme-text font-bold tracking-wider text-sm">CPII</span>
+<span class="text-theme-text-muted text-[10px] uppercase tracking-widest">Lux Lusitana</span>
 </div>
 </div>
-<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
-<a class="text-brand-primary" data-i18n="dash.nav.overview" href="#">Overview</a>
-<a class="text-brand-muted hover:text-brand-text transition-colors" data-i18n="dash.nav.reports" href="#">Reports</a>
-<a class="text-brand-muted hover:text-brand-text transition-colors" data-i18n="dash.nav.activity" href="#">Activity</a>
+<nav class="hidden md:flex items-center gap-6 text-xs font-semibold uppercase tracking-widest">
+<a class="text-theme-border-active" data-i18n="dash.nav.overview" href="#">Overview</a>
+<a class="text-theme-text-muted hover:text-theme-text transition-colors" data-i18n="dash.nav.reports" href="#">Reports</a>
+<a class="text-theme-text-muted hover:text-theme-text transition-colors" data-i18n="dash.nav.activity" href="#">Activity</a>
 </nav>
 </div>
 <div class="flex items-center gap-4">
 <div class="relative hidden lg:block">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted text-sm">search</span>
-<input class="bg-brand-bg border-brand-accent rounded-full pl-10 pr-4 py-1.5 text-xs w-64 focus:ring-brand-primary focus:border-brand-primary" placeholder="Search Orbit 2" type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-theme-text-muted text-sm">search</span>
+<input class="bg-theme-bg border-theme-border rounded-none pl-10 pr-4 py-1.5 text-[11px] w-64 focus:ring-brand-primary focus:border-brand-primary text-theme-text" placeholder="Search Orbit 2" type="text"/>
 </div>
-<button class="text-brand-muted hover:text-brand-text transition-colors">
+<button class="text-theme-text-muted hover:text-theme-text transition-colors">
 <span class="material-symbols-outlined">notifications</span>
 </button>
-<button class="text-brand-muted hover:text-brand-text transition-colors">
-<span class="material-symbols-outlined">help</span>
-</button>
-<div class="w-8 h-8 rounded-full overflow-hidden border border-brand-primary/30">
-<img class="w-full h-full object-cover" data-alt="User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnDvU_vHA4O2gn2pMTFt6sdqkltnBmwWAWse87GRcXp-SuEN3RXfV0fZN9q588eljgO607mO0MR_DIAhBOOcQlqU8Fm-W_grDddzcvAFuOE1xzqTP-mvskjEeuNNlyZ8hRAEUFK5zP-lLomskw5dGxGxMkoDLaBjg0sk0AmDCoAU986O7GbGyahe9VasfJUOvmfiVrVO0SMN2Uusy-kS6IrIPX9d1rJLobnDtD3AqiTMWHpCWM9PGTPx4IzRDBghsWwwE_GfETkiNL"/>
+<div class="w-8 h-8 rounded-none overflow-hidden border border-theme-border">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" data-alt="User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnDvU_vHA4O2gn2pMTFt6sdqkltnBmwWAWse87GRcXp-SuEN3RXfV0fZN9q588eljgO607mO0MR_DIAhBOOcQlqU8Fm-W_grDddzcvAFuOE1xzqTP-mvskjEeuNNlyZ8hRAEUFK5zP-lLomskw5dGxGxMkoDLaBjg0sk0AmDCoAU986O7GbGyahe9VasfJUOvmfiVrVO0SMN2Uusy-kS6IrIPX9d1rJLobnDtD3AqiTMWHpCWM9PGTPx4IzRDBghsWwwE_GfETkiNL"/>
 </div>
 </div>
 </header>
 <div class="flex flex-1 overflow-hidden">
 <!-- Side Navigation (Orbit 1) -->
-<aside class="w-[250px] border-r border-brand-accent bg-brand-bg flex flex-col shrink-0">
+<aside class="w-sidebar border-r border-theme-border bg-theme-bg flex flex-col shrink-0">
 <div class="p-6">
 <div class="flex items-center gap-3 mb-8">
-<div class="text-sm font-semibold text-brand-text" data-i18n="dash.side.header">Dashboard</div>
+<div class="text-[10px] font-bold uppercase tracking-[0.2em] text-theme-text-muted" data-i18n="dash.side.header">Navigation</div>
 </div>
 <nav class="space-y-1">
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-brand-primary/10 text-brand-primary group transition-all" onclick="SceneManager.goTo('dashboard')">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-theme-border-active bg-theme-surface text-theme-border-active group transition-all">
 <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-<span class="text-sm font-medium">Dashboard</span>
+<span class="text-[13px] font-semibold">Dashboard</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-theme-text-muted hover:bg-theme-surface-hover hover:text-theme-text transition-all">
 <span class="material-symbols-outlined text-xl">account_balance</span>
-<span class="text-sm font-medium">Portfolio</span>
+<span class="text-[13px] font-semibold">Portfolio</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-theme-text-muted hover:bg-theme-surface-hover hover:text-theme-text transition-all">
 <span class="material-symbols-outlined text-xl">storefront</span>
-<span class="text-sm font-medium">Marketplace</span>
+<span class="text-[13px] font-semibold">Marketplace</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-theme-text-muted hover:bg-theme-surface-hover hover:text-theme-text transition-all">
 <span class="material-symbols-outlined text-xl">description</span>
-<span class="text-sm font-medium">Documents</span>
+<span class="text-[13px] font-semibold">Documents</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-theme-text-muted hover:bg-theme-surface-hover hover:text-theme-text transition-all">
 <span class="material-symbols-outlined text-xl">insights</span>
-<span class="text-sm font-medium">Analytics</span>
+<span class="text-[13px] font-semibold">Analytics</span>
 </button>
-<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<button class="w-full flex items-center gap-3 px-3 py-2 border-l-2 border-transparent text-theme-text-muted hover:bg-theme-surface-hover hover:text-theme-text transition-all">
 <span class="material-symbols-outlined text-xl">settings</span>
-<span class="text-sm font-medium">Settings</span>
+<span class="text-[13px] font-semibold">Settings</span>
 </button>
 </nav>
 </div>
 <div class="mt-auto p-6">
-<div class="bg-gradient-to-br from-brand-primary to-amber-700 rounded-xl p-4 shadow-lg shadow-brand-primary/10">
-<p class="text-[10px] uppercase tracking-widest text-brand-bg font-bold mb-1 opacity-80" data-i18n="dash.side.cta_label">Exclusive Access</p>
-<p class="text-brand-bg text-sm font-bold mb-3" data-i18n="dash.side.cta_title">Grow your wealth with CPII.</p>
-<button class="w-full bg-brand-bg text-brand-primary py-2 rounded-lg text-xs font-bold hover:bg-opacity-90 transition-all">Invest Now</button>
+<div class="bg-theme-surface border border-theme-border-active/20 p-4">
+<p class="text-[10px] uppercase tracking-widest text-theme-border-active font-bold mb-1" data-i18n="dash.side.cta_label">Private Access</p>
+<p class="text-theme-text text-xs font-semibold mb-3 leading-tight" data-i18n="dash.side.cta_title">Exclusive Investment Opportunities.</p>
+<button class="w-full bg-theme-border-active text-theme-bg py-2 text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all">Request Allocation</button>
 </div>
 </div>
 </aside>
 <!-- Main Content (Orbit 2) -->
-<main class="flex-1 bg-brand-bg overflow-y-auto custom-scrollbar">
-<div class="gd-dashboard-home p-8 max-w-5xl mx-auto" data-hibernatable="true" data-state="active">
+<main class="flex-1 bg-theme-bg overflow-y-auto custom-scrollbar">
+<div class="gd-dashboard-home p-8 max-w-6xl mx-auto" data-hibernatable="true" data-state="active">
 <!-- Breadcrumbs -->
-<nav class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-brand-muted mb-8">
+<nav class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-theme-text-muted mb-8">
 <span>Home</span>
 <span class="material-symbols-outlined text-[10px]">chevron_right</span>
-<span class="text-brand-primary">Dashboard</span>
+<span class="text-theme-border-active">Dashboard</span>
 </nav>
 <!-- KYC Alert Banner -->
-<div class="mb-8 flex items-center justify-between p-4 bg-brand-alert/10 border border-brand-alert/20 rounded-xl">
+<div class="mb-8 flex items-center justify-between p-4 bg-theme-surface border-l-4 border-[var(--brand-alert)]">
 <div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-full bg-brand-alert/20 flex items-center justify-center text-brand-alert">
+<div class="w-10 h-10 bg-[var(--brand-alert)]/10 flex items-center justify-center text-[var(--brand-alert)]">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
 </div>
 <div>
-<p class="text-brand-text font-bold text-sm" data-i18n="dash.alert.kyc_title">KYC Verification Required</p>
-<p class="text-brand-muted text-xs" data-i18n="dash.alert.kyc_desc">Complete your profile to unlock all investment opportunities.</p>
+<p class="text-theme-text font-bold text-xs uppercase tracking-wider" data-i18n="dash.alert.kyc_title">Regulatory Compliance Required</p>
+<p class="text-theme-text-muted text-[11px]" data-i18n="dash.alert.kyc_desc">Please complete your KYC verification to access institutional-grade assets.</p>
 </div>
 </div>
-<button class="px-5 py-2 bg-brand-alert text-brand-text text-xs font-bold rounded-lg hover:bg-opacity-90 transition-all" data-i18n="dash.alert.kyc_cta">
-                            Verify Now
-                        </button>
+<button class="px-5 py-2 bg-[var(--brand-alert)] text-theme-text text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all" data-i18n="dash.alert.kyc_cta">
+                        Verify Now
+                    </button>
 </div>
 <!-- Welcome Header -->
-<div class="flex items-end justify-between mb-8">
+<div class="flex items-end justify-between mb-8 border-b border-theme-border pb-6">
 <div>
-<h1 class="text-3xl font-serif text-brand-text mb-1" data-i18n="dash.welcome">Good Morning, Alexander</h1>
-<p class="text-brand-muted text-sm" data-i18n="dash.subtitle">Here is your portfolio performance for today.</p>
+<h1 class="text-2xl font-serif text-theme-text mb-1" data-i18n="dash.welcome">Good Morning, Alexander</h1>
+<p class="text-theme-text-muted text-[11px] uppercase tracking-widest" data-i18n="dash.subtitle">Consolidated Portfolio Performance • Oct 10, 2024</p>
 </div>
-<div class="flex gap-3">
-<button class="p-2 border border-brand-accent rounded-lg text-brand-muted hover:text-brand-text transition-colors">
-<span class="material-symbols-outlined">share</span>
-</button>
-<button class="p-2 border border-brand-accent rounded-lg text-brand-muted hover:text-brand-text transition-colors">
-<span class="material-symbols-outlined">download</span>
-</button>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 border border-theme-border text-theme-text-muted hover:text-theme-text hover:border-theme-border-active transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">share</span> Share
+                        </button>
+<button class="px-3 py-1.5 border border-theme-border text-theme-text-muted hover:text-theme-text hover:border-theme-border-active transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm">download</span> Report
+                        </button>
 </div>
 </div>
 <!-- Bento Grid Layout -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 <!-- Investment Summary Card -->
-<div class="md:col-span-2 glass-panel p-6 rounded-2xl relative overflow-hidden group">
-<div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-<span class="material-symbols-outlined text-9xl">payments</span>
+<div class="md:col-span-2 institutional-card p-6 relative overflow-hidden bg-theme-surface border-theme-border">
+<div class="flex justify-between items-start mb-8">
+<h3 class="text-theme-text-muted text-[10px] uppercase tracking-[0.2em] font-bold" data-i18n="dash.card.summary">Capital Overview</h3>
+<span class="text-[10px] text-theme-border-active font-bold uppercase tracking-widest">Audited Assets</span>
 </div>
-<h3 class="text-brand-muted text-xs uppercase tracking-widest font-bold mb-6" data-i18n="dash.card.summary">Investment Summary</h3>
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
 <div>
-<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.total">Total Invested</p>
-<p class="serif-numbers text-3xl text-brand-primary">€142,500.00</p>
+<p class="text-theme-text-muted text-[10px] uppercase tracking-widest mb-2" data-i18n="dash.label.total">Total Asset Value</p>
+<p class="serif-numbers text-3xl text-theme-border-active">€142,500.00</p>
 </div>
 <div>
-<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.yield">Current Yield</p>
-<p class="serif-numbers text-3xl text-brand-text">7.24<span class="text-lg opacity-60">%</span></p>
+<p class="text-theme-text-muted text-[10px] uppercase tracking-widest mb-2" data-i18n="dash.label.yield">Projected Yield</p>
+<p class="serif-numbers text-3xl text-theme-text">7.24<span class="text-lg opacity-40">%</span></p>
 </div>
 <div>
-<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.payout">Next Payout</p>
-<p class="serif-numbers text-2xl text-brand-text">Oct 12, 2024</p>
+<p class="text-theme-text-muted text-[10px] uppercase tracking-widest mb-2" data-i18n="dash.label.payout">Next Maturity</p>
+<p class="serif-numbers text-2xl text-theme-text">Oct 12, 2024</p>
 </div>
 </div>
-<div class="mt-8 pt-6 border-t border-brand-accent/30 flex items-center justify-between">
+<div class="mt-8 pt-6 border-t border-theme-border flex items-center justify-between">
 <div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-<span class="text-[10px] text-brand-muted font-medium uppercase tracking-tighter">Market Open</span>
+<span class="w-1.5 h-1.5 bg-emerald-500"></span>
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">Markets Open</span>
 </div>
-<button class="text-xs text-brand-primary font-bold flex items-center gap-1 hover:underline">
-                                    View Detailed Analytics <span class="material-symbols-outlined text-xs">arrow_forward</span>
+<button class="text-[10px] text-theme-border-active font-bold uppercase tracking-widest flex items-center gap-1 hover:underline">
+                                Detailed Statement <span class="material-symbols-outlined text-xs">arrow_forward</span>
 </button>
 </div>
 </div>
 <!-- Quick Actions Card -->
-<div class="glass-panel p-6 rounded-2xl">
-<h3 class="text-brand-muted text-xs uppercase tracking-widest font-bold mb-6" data-i18n="dash.card.quick">Quick Actions</h3>
-<div class="space-y-3">
-<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<div class="institutional-card p-6 bg-theme-surface border-theme-border">
+<h3 class="text-theme-text-muted text-[10px] uppercase tracking-[0.2em] font-bold mb-6" data-i18n="dash.card.quick">Transactions</h3>
+<div class="space-y-2">
+<button class="w-full flex items-center justify-between p-3 border border-theme-border hover:border-theme-border-active bg-theme-bg transition-all group">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
-<span class="material-symbols-outlined text-sm">add_circle</span>
+<span class="material-symbols-outlined text-lg text-theme-border-active">add_circle</span>
+<span class="text-[11px] font-bold uppercase tracking-widest text-theme-text" data-i18n="dash.action.invest">New Investment</span>
 </div>
-<span class="text-sm font-medium" data-i18n="dash.action.invest">Invest Now</span>
-</div>
-<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+<span class="material-symbols-outlined text-theme-text-muted group-hover:text-theme-border-active text-sm">chevron_right</span>
 </button>
-<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<button class="w-full flex items-center justify-between p-3 border border-theme-border hover:border-theme-border-active bg-theme-bg transition-all group">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
-<span class="material-symbols-outlined text-sm">pie_chart</span>
+<span class="material-symbols-outlined text-lg text-theme-border-active">pie_chart</span>
+<span class="text-[11px] font-bold uppercase tracking-widest text-theme-text" data-i18n="dash.action.portfolio">Rebalance Portfolio</span>
 </div>
-<span class="text-sm font-medium" data-i18n="dash.action.portfolio">View Portfolio</span>
-</div>
-<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+<span class="material-symbols-outlined text-theme-text-muted group-hover:text-theme-border-active text-sm">chevron_right</span>
 </button>
-<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<button class="w-full flex items-center justify-between p-3 border border-theme-border hover:border-theme-border-active bg-theme-bg transition-all group">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
-<span class="material-symbols-outlined text-sm">shopping_bag</span>
+<span class="material-symbols-outlined text-lg text-theme-border-active">shopping_bag</span>
+<span class="text-[11px] font-bold uppercase tracking-widest text-theme-text" data-i18n="dash.action.market">Access Market</span>
 </div>
-<span class="text-sm font-medium" data-i18n="dash.action.market">Marketplace</span>
-</div>
-<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+<span class="material-symbols-outlined text-theme-text-muted group-hover:text-theme-border-active text-sm">chevron_right</span>
 </button>
 </div>
 </div>
@@ -261,64 +279,54 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
 <section>
 <div class="flex items-center justify-between mb-6">
-<h3 class="text-lg font-serif" data-i18n="dash.news.title">Club News Feed</h3>
-<button class="text-brand-muted hover:text-brand-primary text-xs font-bold uppercase tracking-widest">See All</button>
+<h3 class="text-sm font-bold uppercase tracking-widest text-theme-text" data-i18n="dash.news.title">Intelligence Feed</h3>
+<button class="text-theme-text-muted hover:text-theme-border-active text-[10px] font-bold uppercase tracking-widest">Archive</button>
 </div>
 <div class="space-y-4">
-<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
-<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Luxury Villa Property Preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJKlI2kYDU8FQFrXvHICDxQ9KnN1li7h3Uupb5I_DQKRGRpa0G7kh85u-4Bkn10Wd29k7BX-oMLOe6ZRwcdbX4jCCfnme-Lz2NPSI2UwqZRCJ1KbWF6XqBOj_4XkLmrOUtwtxCWsuCUALp1E5ZT_cfITYrKaO2c_uPcPi0sVGuqLnuAEitk05SC5-h7FrInqDpU2MH73tKT-rKOUTLP3KgwlrxRHxtH3-kGQ0DrbWJwnWk17NDZsmui0UZ6adDqhUXv3V1bx991I"/>
+<div class="flex gap-4 p-4 border border-theme-border bg-theme-surface hover:border-theme-border-active transition-colors cursor-pointer group">
+<div class="w-24 h-24 overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="Luxury Villa" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJKlI2kYDU8FQFrXvHICDxQ9KnN1li7h3Uupb5I_DQKRGRpa0G7kh85u-4Bkn10Wd29k7BX-oMLOe6ZRwcdbX4jCCfnme-Lz2NPSI2UwqZRCJ1KbWF6XqBOj_4XkLmrOUtwtxCWsuCUALp1E5ZT_cfITYrKaO2c_uPcPi0sVGuqLnuAEitk05SC5-h7FrInqDpU2MH73tKT-rKOUTLP3KgwlrxRHxtH3-kGQ0DrbWJwnWk17NDZsmui0UZ6adDqhUXv3V1bx991I"/>
 </div>
 <div>
-<span class="text-[10px] text-brand-primary font-bold uppercase tracking-widest">New Property</span>
-<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Palácio Real: Alentejo Estate</h4>
-<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">Exclusive pre-launch for CPII members. A historical estate renovation project with projected 12% ROI.</p>
+<span class="text-[9px] text-theme-border-active font-bold uppercase tracking-[0.2em]">Asset Launch</span>
+<h4 class="text-[13px] font-bold text-theme-text mb-1 mt-0.5 group-hover:text-theme-border-active transition-colors uppercase tracking-wider">Palácio Real: Alentejo Estate</h4>
+<p class="text-[11px] text-theme-text-muted leading-relaxed line-clamp-2">Exclusive pre-launch for CPII members. Historical renovation with projected 12% ROI.</p>
 </div>
 </div>
-<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
-<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern Office Building Interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLY1tbqwZw5joDUXXx147ieSWNXMYiALKBh0Kz9fPKviP7xPnuF7ZBLOStz5khMUI_2gte0u-2eaxglgkbs_7EEOSuohrSWGBK82etq8pQ1jLUF_YNLJ5HokmE7Wl3P_4wFam7Jp6LnZ7Gx_Q3crXah4tj8vWmkbLA-NFlwugE2pL_8hSP6KE3RiQkZ9k4XlycMiKBRSW52vq9w7YqfL1obqRf63SFRpuk0W7QRUxllbrYTdWp5K2OdDrf9Z5cxBHIosK8xwrYqmq8"/>
-</div>
-<div>
-<span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Market Update</span>
-<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Commercial Real Estate Outlook Q4</h4>
-<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">Our quarterly analysis of the Portuguese commercial sector and liquidity opportunities.</p>
-</div>
-</div>
-<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
-<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
-<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Boutique Hotel Frontage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPSwXaQGE2rVO6yvwgLotFqkGIXBpoXu68U_AA3UD73jyfIIYAxKhTNiMfdBq9vuGSzB9JJOLCQthJ2NEzuCscOZRo0bRpwnR5soFej-mR364ETrwt1aqyBaVPN5Lnp2cheiw2rlxUshmea_eXWSyqn_qtenHq0Tzx4aDRSS_2RPONA-HzkHMvxGSmeJ47xQXH7OpkN6Gr9J3F_XPPs_F9ugCWQb66O48HyBqXr4zlqY5Iu151Nnn9MHlwtwEtg8y9IJc6XqME3RVa"/>
+<div class="flex gap-4 p-4 border border-theme-border bg-theme-surface hover:border-theme-border-active transition-colors cursor-pointer group">
+<div class="w-24 h-24 overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" data-alt="Office Building" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLY1tbqwZw5joDUXXx147ieSWNXMYiALKBh0Kz9fPKviP7xPnuF7ZBLOStz5khMUI_2gte0u-2eaxglgkbs_7EEOSuohrSWGBK82etq8pQ1jLUF_YNLJ5HokmE7Wl3P_4wFam7Jp6LnZ7Gx_Q3crXah4tj8vWmkbLA-NFlwugE2pL_8hSP6KE3RiQkZ9k4XlycMiKBRSW52vq9w7YqfL1obqRf63SFRpuk0W7QRUxllbrYTdWp5K2OdDrf9Z5cxBHIosK8xwrYqmq8"/>
 </div>
 <div>
-<span class="text-[10px] text-brand-primary font-bold uppercase tracking-widest">Sold Out</span>
-<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Douro Riverside Boutique Hotel</h4>
-<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">The project has reached its funding goal 12 days ahead of schedule. All slots filled.</p>
+<span class="text-[9px] text-theme-border-active font-bold uppercase tracking-[0.2em]">Market Report</span>
+<h4 class="text-[13px] font-bold text-theme-text mb-1 mt-0.5 group-hover:text-theme-border-active transition-colors uppercase tracking-wider">Commercial Real Estate Outlook Q4</h4>
+<p class="text-[11px] text-theme-text-muted leading-relaxed line-clamp-2">Quarterly analysis of the Portuguese commercial sector and liquidity opportunities.</p>
 </div>
 </div>
 </div>
 </section>
 <section>
 <div class="flex items-center justify-between mb-6">
-<h3 class="text-lg font-serif" data-i18n="dash.portfolio.title">Portfolio Allocation</h3>
-<button class="text-brand-muted hover:text-brand-primary text-xs font-bold uppercase tracking-widest">Manage</button>
+<h3 class="text-sm font-bold uppercase tracking-widest text-theme-text" data-i18n="dash.portfolio.title">Asset Allocation</h3>
+<button class="text-theme-text-muted hover:text-theme-border-active text-[10px] font-bold uppercase tracking-widest">Configuration</button>
 </div>
-<div class="glass-panel p-8 rounded-2xl h-[334px] flex flex-col justify-center items-center relative">
-<div class="w-48 h-48 rounded-full border-[12px] border-brand-accent flex items-center justify-center relative">
-<!-- Simplified Chart Representation -->
-<div class="absolute inset-[-12px] rounded-full border-[12px] border-l-brand-primary border-t-brand-primary border-r-brand-primary border-b-transparent rotate-[45deg]"></div>
+<div class="institutional-card p-8 h-[314px] flex flex-col justify-center items-center bg-theme-surface border-theme-border">
+<div class="w-44 h-44 border-[1px] border-theme-border flex items-center justify-center relative">
+<div class="absolute inset-0 border-4 border-theme-border-active/20"></div>
+<div class="absolute inset-0 border-t-4 border-l-4 border-theme-border-active"></div>
 <div class="text-center">
-<p class="text-xs text-brand-muted font-medium mb-1">Total Assets</p>
-<p class="serif-numbers text-2xl">24</p>
+<p class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest mb-1">Total Assets</p>
+<p class="serif-numbers text-3xl text-theme-text">24</p>
 </div>
 </div>
 <div class="mt-8 flex gap-6">
 <div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-brand-primary"></span>
-<span class="text-[10px] text-brand-muted font-bold uppercase tracking-tighter">Real Estate (75%)</span>
+<span class="w-2 h-2 bg-theme-border-active"></span>
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">Real Estate (75%)</span>
 </div>
 <div class="flex items-center gap-2">
-<span class="w-2 h-2 rounded-full bg-brand-accent"></span>
-<span class="text-[10px] text-brand-muted font-bold uppercase tracking-tighter">Commercial (25%)</span>
+<span class="w-2 h-2 bg-theme-border"></span>
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">Commercial (25%)</span>
 </div>
 </div>
 </div>
@@ -327,73 +335,73 @@
 </div>
 </main>
 <!-- Dock / Side Info Panel (Orbit 3) -->
-<aside class="w-[320px] border-l border-brand-accent bg-brand-surface shrink-0 hidden xl:flex flex-col">
-<div class="p-6 border-b border-brand-accent">
-<h3 class="text-brand-text font-bold text-sm mb-4" data-i18n="dash.dock.market">Market Pulse</h3>
+<aside class="w-[300px] border-l border-theme-border bg-theme-surface shrink-0 hidden xl:flex flex-col">
+<div class="p-6 border-b border-theme-border">
+<h3 class="text-theme-text font-bold text-xs uppercase tracking-[0.2em] mb-6" data-i18n="dash.dock.market">Market Pulse</h3>
 <div class="space-y-4">
-<div class="flex items-center justify-between">
-<span class="text-xs text-brand-muted font-medium">Lisbon Residential Index</span>
-<span class="text-xs text-emerald-500 font-bold serif-numbers">+4.2%</span>
+<div class="flex items-center justify-between border-b border-theme-border pb-3">
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">Lisbon Residential</span>
+<span class="text-[11px] text-emerald-500 font-bold serif-numbers">+4.2%</span>
 </div>
-<div class="flex items-center justify-between">
-<span class="text-xs text-brand-muted font-medium">CPII Fund Performance</span>
-<span class="text-xs text-emerald-500 font-bold serif-numbers">+1.8%</span>
+<div class="flex items-center justify-between border-b border-theme-border pb-3">
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">CPII Core Fund</span>
+<span class="text-[11px] text-emerald-500 font-bold serif-numbers">+1.8%</span>
 </div>
-<div class="flex items-center justify-between">
-<span class="text-xs text-brand-muted font-medium">Euribor 12M</span>
-<span class="text-xs text-brand-text font-bold serif-numbers">3.85%</span>
+<div class="flex items-center justify-between border-b border-theme-border pb-3">
+<span class="text-[10px] text-theme-text-muted font-bold uppercase tracking-widest">Euribor 12M</span>
+<span class="text-[11px] text-theme-text font-bold serif-numbers">3.85%</span>
 </div>
 </div>
 </div>
 <div class="p-6">
-<h3 class="text-brand-text font-bold text-sm mb-4" data-i18n="dash.dock.events">Upcoming Events</h3>
-<div class="space-y-4">
-<div class="flex gap-4">
-<div class="w-10 h-10 bg-brand-accent rounded flex flex-col items-center justify-center shrink-0">
-<span class="text-[10px] font-bold text-brand-primary">OCT</span>
-<span class="text-sm font-bold text-brand-text">24</span>
+<h3 class="text-theme-text font-bold text-xs uppercase tracking-[0.2em] mb-6" data-i18n="dash.dock.events">Investor Calendar</h3>
+<div class="space-y-6">
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 border border-theme-border-active/30 flex flex-col items-center justify-center shrink-0">
+<span class="text-[9px] font-bold text-theme-border-active uppercase">Oct</span>
+<span class="text-sm font-bold text-theme-text serif-numbers">24</span>
 </div>
 <div>
-<h4 class="text-xs font-bold text-brand-text">Investor Summit 2024</h4>
-<p class="text-[10px] text-brand-muted">Digital Webinar • 14:00 GMT</p>
+<h4 class="text-[11px] font-bold text-theme-text uppercase tracking-wider">Investor Summit</h4>
+<p class="text-[9px] text-theme-text-muted uppercase tracking-widest">Digital Hub • 14:00 GMT</p>
 </div>
 </div>
-<div class="flex gap-4">
-<div class="w-10 h-10 bg-brand-accent rounded flex flex-col items-center justify-center shrink-0">
-<span class="text-[10px] font-bold text-brand-primary">NOV</span>
-<span class="text-sm font-bold text-brand-text">02</span>
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 border border-theme-border-active/30 flex flex-col items-center justify-center shrink-0">
+<span class="text-[9px] font-bold text-theme-border-active uppercase">Nov</span>
+<span class="text-sm font-bold text-theme-text serif-numbers">02</span>
 </div>
 <div>
-<h4 class="text-xs font-bold text-brand-text">New Project Pre-Launch</h4>
-<p class="text-[10px] text-brand-muted">Priority Members Only</p>
+<h4 class="text-[11px] font-bold text-theme-text uppercase tracking-wider">Asset Pre-Launch</h4>
+<p class="text-[9px] text-theme-text-muted uppercase tracking-widest">Priority Allocation</p>
 </div>
 </div>
 </div>
 </div>
-<div class="mt-auto p-6 bg-brand-accent/20">
+<div class="mt-auto p-6 bg-theme-bg/50 border-t border-theme-border">
 <div class="flex items-center gap-3 mb-4">
-<span class="material-symbols-outlined text-brand-primary">support_agent</span>
+<span class="material-symbols-outlined text-theme-border-active">verified_user</span>
 <div>
-<p class="text-xs font-bold text-brand-text">Need Assistance?</p>
-<p class="text-[10px] text-brand-muted">Your personal advisor is online.</p>
+<p class="text-[11px] font-bold text-theme-text uppercase tracking-wider">Direct Advisor</p>
+<p class="text-[9px] text-theme-text-muted uppercase tracking-widest">Secured Channel Active</p>
 </div>
 </div>
-<button class="w-full py-2.5 bg-brand-surface border border-brand-primary/30 text-brand-primary text-xs font-bold rounded-lg hover:bg-brand-primary/5 transition-all">
-                        Chat with Support
-                    </button>
+<button class="w-full py-2.5 bg-theme-surface border border-theme-border-active/50 text-theme-border-active text-[10px] font-bold uppercase tracking-widest hover:bg-theme-border-active hover:text-theme-bg transition-all">
+                    Initiate Secure Chat
+                </button>
 </div>
 </aside>
 </div>
 <!-- Footer -->
-<footer class="h-10 border-t border-brand-accent bg-brand-surface flex items-center justify-between px-6 shrink-0 text-[10px] text-brand-muted uppercase tracking-widest font-bold">
-<div>© 2024 CPII - Lux Lusitana. All Rights Reserved.</div>
+<footer class="h-10 border-t border-theme-border bg-theme-surface flex items-center justify-between px-6 shrink-0 text-[9px] text-theme-text-muted uppercase tracking-[0.2em] font-bold">
+<div>© 2024 CPII - Lux Lusitana • Institutional Private Banking</div>
 <div class="flex items-center gap-6">
-<a class="hover:text-brand-primary" href="#">Legal</a>
-<a class="hover:text-brand-primary" href="#">Privacy</a>
+<a class="hover:text-theme-border-active" href="#">Terms</a>
+<a class="hover:text-theme-border-active" href="#">Privacy</a>
 <div class="flex items-center gap-2">
-<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    System Status: Operational
-                </div>
+<span class="w-1.5 h-1.5 bg-emerald-500"></span>
+                System Operational
+            </div>
 </div>
 </footer>
 </div>

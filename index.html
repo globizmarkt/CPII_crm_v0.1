@@ -122,8 +122,7 @@
                         <span class="text-sm font-medium" data-i18n="nav_history">Histórico</span>
                     </a>
                     <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#"
-                        onclick="window.__CPII__.tabManager.open('gd-manual', {title: 'Manual'}); return false;">
+                        href="#" onclick="window.__CPII__.tabManager.openFromRegistry('gd-manual'); return false;">
                         <span class="material-symbols-outlined transition-colors">menu_book</span>
                         <span class="text-sm font-medium" data-i18n="nav_manuals">Manuais</span>
                     </a>
@@ -253,7 +252,6 @@
         </div>
     </div>
     <!-- El TabManager se encarga de cargar los gadgets ahora -->
-    <script src="core/at-tab-manager.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
@@ -262,9 +260,9 @@
                 sidebarLinks.forEach(link => {
                     link.addEventListener('click', (e) => {
                         const text = e.target.innerText.toLowerCase();
-                        if (text.includes('manual')) window.__CPII__.tabManager.openFromRegistry('manual');
-                        if (text.includes('dashboard')) window.__CPII__.tabManager.openFromRegistry('dashboard');
-                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('simulador'); // Ejemplo
+                        if (text.includes('manual')) window.__CPII__.tabManager.openFromRegistry('gd-manual');
+                        if (text.includes('dashboard')) window.__CPII__.tabManager.openFromRegistry('gd-dashboard');
+                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('gd-simulador'); // Ejemplo
                     });
                 });
             }, 1000); // Esperamos a que todo cargue

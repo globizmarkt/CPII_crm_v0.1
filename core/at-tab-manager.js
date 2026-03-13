@@ -17,10 +17,10 @@
         const input = document.createElement('input');
         input.type = 'text';
         input.placeholder = t('search_placeholder') || 'Pesquisar...';
-        input.style.cssText = 'height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px; border: 1px solid #c1a85c44; background: #161513; color: #fff; outline: none; width: 260px;';
+        input.style.cssText = 'height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px; border: 1px solid var(--theme-border); background: var(--theme-bg); color: var(--theme-text); outline: none; width: 260px;';
 
         const dropdown = document.createElement('ul');
-        dropdown.style.cssText = 'position: absolute; top: 100%; right: 0; min-width: 260px; margin-top: 4px; background: #1e1b14; border: 1px solid #c1a85c33; border-radius: 6px; z-index: 999; display: none; padding: 0; list-style: none; overflow: hidden;';
+        dropdown.style.cssText = 'position: absolute; top: 100%; right: 0; min-width: 260px; margin-top: 4px; background: var(--theme-surface); border: 1px solid var(--theme-border); border-radius: 6px; z-index: 999; display: none; padding: 0; list-style: none; overflow: hidden;';
 
         // Lógica de búsqueda
         input.addEventListener('input', () => {
@@ -40,8 +40,8 @@
                 ids.forEach(id => {
                     const li = document.createElement('li');
                     li.textContent = t(registry[id]?.labelKey || id);
-                    li.style.cssText = 'padding: 10px 15px; cursor: pointer; color: #ccc; border-bottom: 1px solid #ffffff05; font-size: 13px;';
-                    li.addEventListener('mouseenter', () => li.style.background = 'rgba(193,168,93,0.1)');
+                    li.style.cssText = 'padding: 10px 15px; cursor: pointer; color: var(--theme-text-muted); border-bottom: 1px solid var(--theme-border); font-size: 13px;';
+                    li.addEventListener('mouseenter', () => li.style.background = 'var(--theme-surface-hover)');
                     li.addEventListener('mouseleave', () => li.style.background = 'transparent');
                     li.addEventListener('mousedown', (ev) => {
                         ev.preventDefault();
@@ -73,12 +73,12 @@
         // Crear Barra (CONTRASTE MEJORADO)
         tabBarRef = document.createElement('div');
         tabBarRef.id = 'cpii-tab-bar';
-        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid rgba(193, 168, 93, 0.25); background: linear-gradient(180deg, #1a1815 0%, #161513 100%); padding: 0 24px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10;';
+        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-surface); padding: 0 24px; width: 100%; z-index: 10;';
 
         // Crear Área de Contenido
         contentAreaRef = document.createElement('div');
         contentAreaRef.id = 'cpii-content-area';
-        contentAreaRef.style.cssText = 'flex: 1; position: relative; overflow: auto; background: #f8f7f6;';
+        contentAreaRef.style.cssText = 'flex: 1; position: relative; overflow: auto; background: var(--theme-bg);';
 
         // Ensamblar
         tabBarRef.appendChild(createOmnibox());
@@ -104,7 +104,7 @@
         // Crear pestaña visual
         const tabEl = document.createElement('div');
         tabEl.dataset.id = id;
-        tabEl.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 0 15px; height: 36px; background: #161513; border: 1px solid #c1a85c33; border-radius: 6px; color: #888; cursor: pointer; font-size: 13px; transition: all 0.2s;';
+        tabEl.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 0 15px; height: 36px; background: var(--theme-bg); border: 1px solid var(--theme-border); border-radius: 6px; color: var(--theme-text-muted); cursor: pointer; font-size: 13px; transition: all 0.2s;';
         tabEl.innerHTML = `<span>${t(res.labelKey)}</span><b style="margin-left:8px; opacity:0.5; font-weight:normal;">&times;</b>`;
 
         tabEl.addEventListener('click', () => activateTab(id));
@@ -123,9 +123,9 @@
             t.node.style.display = t.id === id ? 'block' : 'none';
             const el = tabBarRef.querySelector(`[data-id="${t.id}"]`);
             if (el) {
-                el.style.color = t.id === id ? '#fff' : '#888';
-                el.style.borderColor = t.id === id ? '#c1a85c' : '#c1a85c33';
-                el.style.background = t.id === id ? '#1e1b14' : '#161513';
+                el.style.color = t.id === id ? 'var(--theme-text)' : 'var(--theme-text-muted)';
+                el.style.borderColor = t.id === id ? 'var(--theme-border-active)' : 'var(--theme-border)';
+                el.style.background = t.id === id ? 'var(--theme-surface)' : 'var(--theme-bg)';
             }
         });
         state.activeId = id;

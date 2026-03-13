@@ -238,127 +238,126 @@ class GdManual extends HTMLElement {
   render() {
     const T = MANUAL_I18N[this.getLang()];
     this.innerHTML = `
-      <div class="p-10 bg-white text-black font-sans max-w-5xl mx-auto border border-slate-200 shadow-sm">
-
-        <header class="border-b-2 border-slate-900 pb-6 mb-8">
-          <h1 class="text-3xl font-bold uppercase tracking-tight text-slate-900">${T.title}</h1>
-          <p class="text-sm font-semibold text-slate-600 uppercase">${T.subtitle} · ${T.version}</p>
+      <div class="p-10 bg-theme-bg text-theme-text font-sans max-w-5xl mx-auto border border-theme-border">
+        <header class="border-b-2 border-theme-border pb-6 mb-8">
+          <h1 class="text-3xl font-bold uppercase tracking-tight text-theme-text">${T.title}</h1>
+          <p class="text-sm font-semibold text-theme-text-muted uppercase">${T.subtitle} · ${T.version}</p>
         </header>
 
-        <div class="bg-blue-100 p-4 border border-blue-200 mb-8">
-          <p class="text-sm italic text-blue-900 leading-relaxed"><strong class="font-bold">💡 </strong>${T.purpose}</p>
+        <div class="bg-theme-surface p-4 border border-theme-border mb-8">
+          <p class="text-sm italic text-theme-text leading-relaxed"><strong class="font-bold">💡 </strong>${T.purpose}</p>
         </div>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s1_title}</h2>
-          <p class="mb-4 text-sm leading-relaxed text-slate-800">${T.s1_intro}</p>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s1_title}</h2>
+          <p class="mb-4 text-sm leading-relaxed text-theme-text">${T.s1_intro}</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-slate-50 p-4 border border-slate-200">
+            <div class="bg-theme-surface p-4 border border-theme-border">
               <p class="text-xs font-bold mb-2 uppercase text-red-700">${T.s1_avoid}</p>
-              <ul class="text-xs space-y-1 list-disc pl-4 text-slate-700">
+              <ul class="text-xs space-y-1 list-disc pl-4 text-theme-text-muted">
                 <li>${T.s1_err1}</li><li>${T.s1_err2}</li><li>${T.s1_err3}</li>
               </ul>
             </div>
-            <div class="bg-blue-900 p-4 text-white">
-              <p class="text-xs font-bold mb-2 uppercase text-blue-200">${T.s1_rule_label}</p>
+            <div class="bg-theme-border-active p-4 text-theme-bg">
+              <p class="text-xs font-bold mb-2 uppercase text-theme-bg opacity-70">${T.s1_rule_label}</p>
               <p class="text-sm italic font-medium leading-relaxed">${T.s1_rule}</p>
             </div>
           </div>
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s2_title}</h2>
-          <table class="w-full text-left text-xs border-collapse border border-slate-300">
-            <thead><tr class="bg-blue-900 text-white uppercase">
-              <th class="p-3 border border-slate-300">${T.s2_th_phase}</th>
-              <th class="p-3 border border-slate-300">${T.s2_th_action}</th>
-              <th class="p-3 border border-slate-300">${T.s2_th_note}</th>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s2_title}</h2>
+          <table class="w-full text-left text-xs border-collapse border border-theme-border">
+            <thead><tr class="bg-theme-border-active text-theme-bg uppercase">
+              <th class="p-3 border border-theme-border">${T.s2_th_phase}</th>
+              <th class="p-3 border border-theme-border">${T.s2_th_action}</th>
+              <th class="p-3 border border-theme-border">${T.s2_th_note}</th>
             </tr></thead>
             <tbody>
-              <tr><td class="p-2 border border-slate-300 font-bold bg-slate-50">${T.s2_f1_phase}</td><td class="p-2 border border-slate-300">${T.s2_f1_action}</td><td class="p-2 border border-slate-300 text-slate-600">${T.s2_f1_note}</td></tr>
-              <tr><td class="p-2 border border-slate-300 font-bold bg-slate-50">${T.s2_f2_phase}</td><td class="p-2 border border-slate-300">${T.s2_f2_action}</td><td class="p-2 border border-slate-300 text-slate-600 italic font-medium">${T.s2_f2_note}</td></tr>
-              <tr><td class="p-2 border border-slate-300 font-bold bg-slate-50">${T.s2_f3_phase}</td><td class="p-2 border border-slate-300 font-semibold">${T.s2_f3_action}</td><td class="p-2 border border-slate-300 text-slate-600">${T.s2_f3_note}</td></tr>
-              <tr><td class="p-2 border border-slate-300 font-bold bg-slate-50 text-slate-500">${T.s2_f4_phase}</td><td class="p-2 border border-slate-300">${T.s2_f4_action}</td><td class="p-2 border border-slate-300 text-slate-500">${T.s2_f4_note}</td></tr>
-              <tr class="bg-blue-50"><td class="p-2 border border-slate-300 font-bold text-blue-900">${T.s2_f5_phase}</td><td class="p-2 border border-slate-300 font-bold">${T.s2_f5_action}</td><td class="p-2 border border-slate-300 font-bold italic">${T.s2_f5_note}</td></tr>
+              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f1_phase}</td><td class="p-2 border border-theme-border">${T.s2_f1_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f1_note}</td></tr>
+              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f2_phase}</td><td class="p-2 border border-theme-border">${T.s2_f2_action}</td><td class="p-2 border border-theme-border text-theme-text-muted italic font-medium">${T.s2_f2_note}</td></tr>
+              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f3_phase}</td><td class="p-2 border border-theme-border font-semibold">${T.s2_f3_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f3_note}</td></tr>
+              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f4_phase}</td><td class="p-2 border border-theme-border">${T.s2_f4_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f4_note}</td></tr>
+              <tr class="bg-theme-surface"><td class="p-2 border border-theme-border font-bold text-theme-border-active">${T.s2_f5_phase}</td><td class="p-2 border border-theme-border font-bold">${T.s2_f5_action}</td><td class="p-2 border border-theme-border font-bold italic">${T.s2_f5_note}</td></tr>
             </tbody>
           </table>
-          <div class="mt-2 bg-blue-100 p-2 text-[10px] text-blue-900 border border-blue-200 font-bold uppercase italic">${T.s2_warning}</div>
+          <div class="mt-2 bg-theme-surface p-2 text-[10px] text-theme-text-muted border border-theme-border font-bold uppercase italic">${T.s2_warning}</div>
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s3_title}</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s3_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ul class="text-sm list-decimal pl-5 space-y-2 text-slate-800 font-medium italic">
+            <ul class="text-sm list-decimal pl-5 space-y-2 text-theme-text-muted font-medium italic">
               <li>${T.s3_step1}</li><li>${T.s3_step2}</li><li>${T.s3_step3}</li><li>${T.s3_step4}</li>
             </ul>
-            <div class="bg-blue-50 p-4 border border-blue-200 flex items-center italic">
-              <p class="text-xs text-blue-900 font-medium"><strong>${T.s3_goal_label}</strong> ${T.s3_goal}</p>
+            <div class="bg-theme-surface p-4 border border-theme-border flex items-center italic">
+              <p class="text-xs text-theme-text font-medium"><strong>${T.s3_goal_label}</strong> ${T.s3_goal}</p>
             </div>
           </div>
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s4_title}</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s4_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div class="bg-blue-900 text-white p-4">
-              <h4 class="font-bold mb-2 uppercase border-b border-blue-700 pb-1">${T.s4_wa_label}</h4>
-              <p class="text-blue-100">${T.s4_wa_body}</p>
+            <div class="bg-theme-border-active text-theme-bg p-4">
+              <h4 class="font-bold mb-2 uppercase border-b border-theme-border pb-1">${T.s4_wa_label}</h4>
+              <p class="text-theme-bg opacity-80">${T.s4_wa_body}</p>
             </div>
-            <div class="bg-blue-900 text-white p-4">
-              <h4 class="font-bold mb-2 uppercase border-b border-blue-700 pb-1">${T.s4_wb_label}</h4>
-              <p class="text-blue-100">${T.s4_wb_body}</p>
+            <div class="bg-theme-border-active text-theme-bg p-4">
+              <h4 class="font-bold mb-2 uppercase border-b border-theme-border pb-1">${T.s4_wb_label}</h4>
+              <p class="text-theme-bg opacity-80">${T.s4_wb_body}</p>
             </div>
           </div>
         </section>
 
         <section class="mb-8 text-sm">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s5_title}</h2>
-          <table class="w-full text-left text-xs border-collapse border border-slate-300 mb-2">
-            <thead class="bg-slate-100 text-slate-600 uppercase text-[10px] tracking-widest">
-              <tr><th class="p-2 border border-slate-300">${T.s5_th_email}</th><th class="p-2 border border-slate-300">${T.s5_th_when}</th><th class="p-2 border border-slate-300">${T.s5_th_goal}</th></tr>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s5_title}</h2>
+          <table class="w-full text-left text-xs border-collapse border border-theme-border mb-2">
+            <thead class="bg-theme-surface text-theme-text-muted uppercase text-[10px] tracking-widest">
+              <tr><th class="p-2 border border-theme-border">${T.s5_th_email}</th><th class="p-2 border border-theme-border">${T.s5_th_when}</th><th class="p-2 border border-theme-border">${T.s5_th_goal}</th></tr>
             </thead>
-            <tbody class="text-slate-700">
-              <tr><td class="p-2 border border-slate-300 font-bold italic">${T.s5_e1_label}</td><td class="p-2 border border-slate-300 italic">${T.s5_e1_when}</td><td class="p-2 border border-slate-300">${T.s5_e1_goal}</td></tr>
-              <tr><td class="p-2 border border-slate-300 font-bold italic">${T.s5_e2_label}</td><td class="p-2 border border-slate-300 italic">${T.s5_e2_when}</td><td class="p-2 border border-slate-300">${T.s5_e2_goal}</td></tr>
-              <tr class="bg-slate-50"><td class="p-2 border border-slate-300 font-bold">${T.s5_e3_label}</td><td class="p-2 border border-slate-300 font-bold italic">${T.s5_e3_when}</td><td class="p-2 border border-slate-300 font-medium">${T.s5_e3_goal}</td></tr>
+            <tbody class="text-theme-text">
+              <tr><td class="p-2 border border-theme-border font-bold italic">${T.s5_e1_label}</td><td class="p-2 border border-theme-border italic">${T.s5_e1_when}</td><td class="p-2 border border-theme-border">${T.s5_e1_goal}</td></tr>
+              <tr><td class="p-2 border border-theme-border font-bold italic">${T.s5_e2_label}</td><td class="p-2 border border-theme-border italic">${T.s5_e2_when}</td><td class="p-2 border border-theme-border">${T.s5_e2_goal}</td></tr>
+              <tr class="bg-theme-surface"><td class="p-2 border border-theme-border font-bold">${T.s5_e3_label}</td><td class="p-2 border border-theme-border font-bold italic">${T.s5_e3_when}</td><td class="p-2 border border-theme-border font-medium">${T.s5_e3_goal}</td></tr>
             </tbody>
           </table>
-          <p class="text-[10px] font-bold text-slate-500 uppercase italic">${T.s5_note}</p>
+          <p class="text-[10px] font-bold text-theme-text-muted uppercase italic">${T.s5_note}</p>
         </section>
 
-        <section class="mb-8 p-6 border-2 border-blue-900 bg-slate-50">
-          <h2 class="text-xl font-bold mb-4 text-blue-900 uppercase">${T.s6_title}</h2>
+        <div class="p-6 border-2 border-theme-border-active bg-theme-surface">
+          <h2 class="text-xl font-bold mb-4 text-theme-border-active uppercase">${T.s6_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs italic">
-            <ul class="space-y-1 list-disc pl-4 text-slate-800 font-medium leading-relaxed">
+            <ul class="space-y-1 list-disc pl-4 text-theme-text font-medium leading-relaxed">
               <li>${T.s6_li1}</li><li>${T.s6_li2}</li><li>${T.s6_li3}</li><li>${T.s6_li4}</li>
             </ul>
-            <div class="bg-blue-900 text-white p-6 font-bold uppercase text-center flex items-center justify-center">
+            <div class="bg-theme-border-active text-theme-bg p-6 font-bold uppercase text-center flex items-center justify-center">
               <p class="text-sm tracking-wide leading-relaxed italic">${T.s6_rule}</p>
             </div>
           </div>
-        </section>
+        </div>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s7_title}</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s7_title}</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-[11px]">
-            <div class="p-3 border border-slate-300 bg-slate-50"><strong class="block text-blue-900 uppercase">${T.s7_r1_role}</strong>${T.s7_r1_desc}</div>
-            <div class="p-3 border border-slate-300 bg-slate-50"><strong class="block text-blue-900 uppercase">${T.s7_r2_role}</strong>${T.s7_r2_desc}</div>
-            <div class="p-3 border border-slate-300 bg-slate-50"><strong class="block text-blue-900 uppercase">${T.s7_r3_role}</strong>${T.s7_r3_desc}</div>
-            <div class="p-3 border border-slate-300 bg-slate-50"><strong class="block text-blue-900 uppercase">${T.s7_r4_role}</strong>${T.s7_r4_desc}</div>
-            <div class="p-3 border border-slate-300 bg-slate-50"><strong class="block text-blue-900 uppercase">${T.s7_r5_role}</strong>${T.s7_r5_desc}</div>
+            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r1_role}</strong>${T.s7_r1_desc}</div>
+            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r2_role}</strong>${T.s7_r2_desc}</div>
+            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r3_role}</strong>${T.s7_r3_desc}</div>
+            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r4_role}</strong>${T.s7_r4_desc}</div>
+            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r5_role}</strong>${T.s7_r5_desc}</div>
           </div>
         </section>
 
         <section class="pb-6">
-          <h2 class="text-xl font-bold mb-4 border-b border-slate-300 pb-1 uppercase">${T.s8_title}</h2>
+          <h2 class="text-xl font-bold mb-4 border-b border-theme-border pb-1 uppercase">${T.s8_title}</h2>
           <div class="grid grid-cols-3 gap-2 h-24">
-            <div class="border border-slate-300 p-2 text-[9px] text-slate-400 uppercase font-bold">${T.s8_q1}</div>
-            <div class="border border-slate-300 p-2 text-[9px] text-slate-400 uppercase font-bold">${T.s8_q2}</div>
-            <div class="border border-slate-300 p-2 text-[9px] text-slate-400 uppercase font-bold">${T.s8_q3}</div>
+            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q1}</div>
+            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q2}</div>
+            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q3}</div>
           </div>
         </section>
 
-        <footer class="text-center pt-6 border-t border-slate-300 text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em]">
+        <footer class="text-center pt-6 border-t border-theme-border text-[9px] text-theme-text-muted font-bold uppercase tracking-[0.3em]">
           ${T.footer}
         </footer>
       </div>

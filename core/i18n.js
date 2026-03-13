@@ -44,6 +44,9 @@ const translations = {
         "tab_manual": "Manual",
         "tab_simulador": "Simulador",
         "tab_calculadora": "Calculadora",
+        "tab_dashboard": "Dashboard",
+        "omnibox_placeholder": "Abrir recurso...",
+        "omnibox_no_results": "Sem resultados",
         // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Versão 1.0 · Março 2026",
         "manual.title": "Manual de Boas Práticas",
@@ -144,6 +147,9 @@ const translations = {
         "tab_manual": "Manual",
         "tab_simulador": "Simulador",
         "tab_calculadora": "Calculadora",
+        "tab_dashboard": "Dashboard",
+        "omnibox_placeholder": "Abrir recurso...",
+        "omnibox_no_results": "Sin resultados",
         // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Versión 1.0 · Marzo 2026",
         "manual.title": "Manual de Buenas Prácticas",
@@ -241,9 +247,12 @@ const translations = {
         "open_assistant": "Open Assistant",
         "recent_activity": "Recent Activity",
         // ── Tab Manager ───────────────────────────────────────
-        "tab_manual": "Manual",
+        "tab_manual": "Guide",
         "tab_simulador": "Simulator",
         "tab_calculadora": "Calculator",
+        "tab_dashboard": "Dashboard",
+        "omnibox_placeholder": "Open resource...",
+        "omnibox_no_results": "No results",
         // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Version 1.0 · March 2026",
         "manual.title": "Best Practices Manual",
@@ -324,7 +333,7 @@ const translations = {
         "nav_network": "Mon Réseau",
         "nav_history": "Historique",
         "nav_settings": "Paramètres",
-        "nav_manuals": "Manuels",
+        "nav_manuals": "Guides",
         "search_placeholder": "Rechercher...",
         "tenant_label": "Utilisateur",
         "welcome_title": "Espace de Travail",
@@ -344,6 +353,9 @@ const translations = {
         "tab_manual": "Manuel",
         "tab_simulador": "Simulateur",
         "tab_calculadora": "Calculatrice",
+        "tab_dashboard": "Tableau de bord",
+        "omnibox_placeholder": "Ouvrir ressource...",
+        "omnibox_no_results": "Aucun résultat",
         // ── gd-manual ─────────────────────────────────────────
         "manual.version": "Version 1.0 · Mars 2026",
         "manual.title": "Manuel des Bonnes Pratiques",
