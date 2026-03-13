@@ -73,7 +73,7 @@
         // Crear Barra (CONTRASTE MEJORADO)
         tabBarRef = document.createElement('div');
         tabBarRef.id = 'cpii-tab-bar';
-        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-ink); padding: 0 24px; width: 100%; z-index: 10;';
+        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-surface); padding: 0 24px; width: 100%; z-index: 10;';
 
         // Crear Área de Contenido
         contentAreaRef = document.createElement('div');
@@ -125,7 +125,7 @@
             if (el) {
                 el.style.color = t.id === id ? 'var(--theme-border-active)' : 'rgba(255,255,255,0.5)';
                 el.style.borderColor = t.id === id ? 'var(--theme-border-active)' : 'transparent';
-                el.style.background = t.id === id ? 'rgba(255,255,255,0.08)' : 'transparent';
+                el.style.background = t.id === id ? 'rgba(255,255,255,0.12)' : 'transparent';
             }
         });
         state.activeId = id;

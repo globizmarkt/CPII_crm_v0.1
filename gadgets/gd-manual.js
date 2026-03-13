@@ -240,18 +240,25 @@ class GdManual extends HTMLElement {
     this.innerHTML = `
       <div class="p-10 bg-theme-bg text-theme-text font-sans max-w-5xl mx-auto border border-theme-border">
         <header class="mb-8">
-          <div class="bg-[var(--theme-ink)] text-white p-6">
-            <h1 class="text-3xl font-bold uppercase tracking-tight">${T.title}</h1>
-            <p class="text-sm font-semibold uppercase opacity-70 mt-1">${T.subtitle} · ${T.version}</p>
+          <div style="background: var(--theme-ink);" class="text-white p-6 flex items-start justify-between">
+            <div>
+              <h1 class="text-3xl font-bold uppercase tracking-tight">${T.title}</h1>
+              <p class="text-sm font-semibold uppercase opacity-70 mt-1">${T.subtitle} · ${T.version}</p>
+            </div>
+            <div class="flex items-center gap-2 mt-1 flex-shrink-0">
+              <button id="zoom-out" style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:white; width:28px; height:28px; border-radius:4px; cursor:pointer; font-size:14px; font-weight:bold;">A-</button>
+              <button id="zoom-in"  style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:white; width:28px; height:28px; border-radius:4px; cursor:pointer; font-size:16px; font-weight:bold;">A+</button>
+            </div>
           </div>
         </header>
 
-        <div class="bg-theme-surface p-4 border border-theme-border mb-8">
-          <p class="text-sm italic text-theme-text leading-relaxed"><strong class="font-bold">💡 </strong>${T.purpose}</p>
-        </div>
+        <div class="manual-body">
+          <div class="bg-theme-surface p-4 border border-theme-border mb-8">
+            <p class="text-sm italic text-theme-text leading-relaxed"><strong class="font-bold">💡 </strong>${T.purpose}</p>
+          </div>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s1_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s1_title}</h2>
           <p class="mb-4 text-sm leading-relaxed text-theme-text">${T.s1_intro}</p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-theme-surface p-4 border border-theme-border">
@@ -268,9 +275,9 @@ class GdManual extends HTMLElement {
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s2_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s2_title}</h2>
           <table class="w-full text-left text-xs border-collapse border border-theme-border">
-            <thead><tr class="bg-[var(--theme-ink)] text-white uppercase">
+            <thead><tr style="background: var(--theme-ink);" class="text-white uppercase">
               <th class="p-3 border border-theme-border">${T.s2_th_phase}</th>
               <th class="p-3 border border-theme-border">${T.s2_th_action}</th>
               <th class="p-3 border border-theme-border">${T.s2_th_note}</th>
@@ -287,7 +294,7 @@ class GdManual extends HTMLElement {
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s3_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s3_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <ul class="text-sm list-decimal pl-5 space-y-2 text-theme-text-muted font-medium italic">
               <li>${T.s3_step1}</li><li>${T.s3_step2}</li><li>${T.s3_step3}</li><li>${T.s3_step4}</li>
@@ -299,7 +306,7 @@ class GdManual extends HTMLElement {
         </section>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s4_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s4_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
             <div class="bg-theme-border-active text-theme-bg p-4">
               <h4 class="font-bold mb-2 uppercase border-b border-theme-border pb-1">${T.s4_wa_label}</h4>
@@ -313,9 +320,9 @@ class GdManual extends HTMLElement {
         </section>
 
         <section class="mb-8 text-sm">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s5_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s5_title}</h2>
           <table class="w-full text-left text-xs border-collapse border border-theme-border mb-2">
-            <thead class="bg-[var(--theme-ink)] text-white uppercase text-[10px] tracking-widest">
+            <thead style="background: var(--theme-ink);" class="text-white uppercase text-[10px] tracking-widest">
               <tr><th class="p-2 border border-theme-border">${T.s5_th_email}</th><th class="p-2 border border-theme-border">${T.s5_th_when}</th><th class="p-2 border border-theme-border">${T.s5_th_goal}</th></tr>
             </thead>
             <tbody class="text-theme-text">
@@ -328,7 +335,7 @@ class GdManual extends HTMLElement {
         </section>
 
         <div class="p-6 border-2 border-theme-border-active bg-theme-surface">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s6_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s6_title}</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs italic">
             <ul class="space-y-1 list-disc pl-4 text-theme-text font-medium leading-relaxed">
               <li>${T.s6_li1}</li><li>${T.s6_li2}</li><li>${T.s6_li3}</li><li>${T.s6_li4}</li>
@@ -340,7 +347,7 @@ class GdManual extends HTMLElement {
         </div>
 
         <section class="mb-8">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s7_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s7_title}</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-[11px]">
             <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r1_role}</strong>${T.s7_r1_desc}</div>
             <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r2_role}</strong>${T.s7_r2_desc}</div>
@@ -351,7 +358,7 @@ class GdManual extends HTMLElement {
         </section>
 
         <section class="pb-6">
-          <h2 class="text-xl font-bold mb-4 border-b-2 border-[var(--theme-ink)] pb-1 uppercase text-[var(--theme-ink)]">${T.s8_title}</h2>
+          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s8_title}</h2>
           <div class="grid grid-cols-3 gap-2 h-24">
             <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q1}</div>
             <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q2}</div>
@@ -362,8 +369,34 @@ class GdManual extends HTMLElement {
         <footer class="text-center pt-6 border-t border-theme-border text-[9px] text-theme-text-muted font-bold uppercase tracking-[0.3em]">
           ${T.footer}
         </footer>
-      </div>
+        </div> <!-- cierre manual-body -->
+      </div> <!-- cierre manual-container --> 
     `;
+
+    const ZOOM_LEVELS = [0.9, 1, 1.15, 1.3, 1.5];
+    const ZOOM_KEY = 'cpii:manual:zoom';
+    const body = this.querySelector('.manual-body');
+
+    let currentZoom = parseFloat(localStorage.getItem(ZOOM_KEY)) || 1;
+
+    const applyZoom = () => {
+      if (body) body.style.fontSize = currentZoom + 'rem';
+      localStorage.setItem(ZOOM_KEY, currentZoom);
+    };
+
+    this.querySelector('#zoom-out').addEventListener('click', () => {
+      const idx = ZOOM_LEVELS.indexOf(currentZoom);
+      if (idx > 0) currentZoom = ZOOM_LEVELS[idx - 1];
+      applyZoom();
+    });
+
+    this.querySelector('#zoom-in').addEventListener('click', () => {
+      const idx = ZOOM_LEVELS.indexOf(currentZoom);
+      if (idx < ZOOM_LEVELS.length - 1) currentZoom = ZOOM_LEVELS[idx + 1];
+      applyZoom();
+    });
+
+    applyZoom();
   }
 }
 
