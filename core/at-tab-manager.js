@@ -73,7 +73,7 @@
         // Crear Barra (CONTRASTE MEJORADO)
         tabBarRef = document.createElement('div');
         tabBarRef.id = 'cpii-tab-bar';
-        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-surface); padding: 0 24px; width: 100%; z-index: 10;';
+        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-ink); padding: 0 24px; width: 100%; z-index: 10;';
 
         // Crear Área de Contenido
         contentAreaRef = document.createElement('div');
@@ -104,7 +104,7 @@
         // Crear pestaña visual
         const tabEl = document.createElement('div');
         tabEl.dataset.id = id;
-        tabEl.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 0 15px; height: 36px; background: var(--theme-bg); border: 1px solid var(--theme-border); border-radius: 6px; color: var(--theme-text-muted); cursor: pointer; font-size: 13px; transition: all 0.2s;';
+        tabEl.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 0 15px; height: 36px; background: transparent; border: 1px solid transparent; border-radius: 6px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; transition: all 0.2s;';
         tabEl.innerHTML = `<span>${t(res.labelKey)}</span><b style="margin-left:8px; opacity:0.5; font-weight:normal;">&times;</b>`;
 
         tabEl.addEventListener('click', () => activateTab(id));
@@ -123,9 +123,9 @@
             t.node.style.display = t.id === id ? 'block' : 'none';
             const el = tabBarRef.querySelector(`[data-id="${t.id}"]`);
             if (el) {
-                el.style.color = t.id === id ? 'var(--theme-text)' : 'var(--theme-text-muted)';
-                el.style.borderColor = t.id === id ? 'var(--theme-border-active)' : 'var(--theme-border)';
-                el.style.background = t.id === id ? 'var(--theme-surface)' : 'var(--theme-bg)';
+                el.style.color = t.id === id ? 'var(--theme-border-active)' : 'rgba(255,255,255,0.5)';
+                el.style.borderColor = t.id === id ? 'var(--theme-border-active)' : 'transparent';
+                el.style.background = t.id === id ? 'rgba(255,255,255,0.08)' : 'transparent';
             }
         });
         state.activeId = id;
