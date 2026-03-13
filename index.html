@@ -13,6 +13,7 @@
     <script src="core/at-resource-registry.js" defer></script>
     <script src="core/at-search-engine.js" defer></script>
     <script src="core/at-tab-manager.js" defer></script>
+    <script src="gadgets/gd-dashboard.js" defer></script>
     <script src="gadgets/gd-manual.js" defer></script>
     <script src="gadgets/gd-simulador.js" defer></script>
     <script src="gadgets/gd-calculadora.js" defer></script>
@@ -253,6 +254,22 @@
     </div>
     <!-- El TabManager se encarga de cargar los gadgets ahora -->
     <script src="core/at-tab-manager.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                // Buscamos los botones del sidebar que tengan texto coincidente
+                const sidebarLinks = document.querySelectorAll('aside nav a, aside nav button, .sidebar-link');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        const text = e.target.innerText.toLowerCase();
+                        if (text.includes('manual')) window.__CPII__.tabManager.openFromRegistry('manual');
+                        if (text.includes('dashboard')) window.__CPII__.tabManager.openFromRegistry('dashboard');
+                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('simulador'); // Ejemplo
+                    });
+                });
+            }, 1000); // Esperamos a que todo cargue
+        });
+    </script>
 </body>
 
 </html>

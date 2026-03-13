@@ -70,10 +70,10 @@
         const orbitCanvas = document.getElementById('canvas-orbita-2');
         if (!orbitCanvas) return;
 
-        // Crear Barra
+        // Crear Barra (CONTRASTE MEJORADO)
         tabBarRef = document.createElement('div');
         tabBarRef.id = 'cpii-tab-bar';
-        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid #c1a85c11; background: #1e1b14; padding: 0 24px; width: 100%;';
+        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid rgba(193, 168, 93, 0.25); background: linear-gradient(180deg, #1a1815 0%, #161513 100%); padding: 0 24px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 10;';
 
         // Crear Área de Contenido
         contentAreaRef = document.createElement('div');
@@ -148,10 +148,10 @@
 
         buildInterface();
 
-        // Auto-apertura del manual (Retraso de seguridad para asegurar i18n y Registry)
+        // Auto-apertura del Dashboard
         setTimeout(() => {
-            if (window.__CPII__.RESOURCE_REGISTRY?.['manual']) {
-                openFromRegistry('manual');
+            if (window.__CPII__.RESOURCE_REGISTRY?.['dashboard']) {
+                openFromRegistry('dashboard');
             }
         }, 600);
     }

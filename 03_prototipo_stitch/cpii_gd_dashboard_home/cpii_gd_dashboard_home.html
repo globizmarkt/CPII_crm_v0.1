@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CPII - Lux Lusitana Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: "#161513",
+                            surface: "#1e1b14",
+                            primary: "#C1A85D",
+                            text: "#FDFBF6",
+                            accent: "#2D2921",
+                            muted: "#8C8370",
+                            alert: "#C15D5D"
+                        }
+                    },
+                    fontFamily: {
+                        "headline": ["Public Sans", "sans-serif"],
+                        "body": ["Public Sans", "sans-serif"],
+                        "label": ["Public Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        :root {
+            --brand-bg: #161513;
+            --brand-surface: #1e1b14;
+            --brand-primary: #C1A85D;
+            --brand-text: #FDFBF6;
+        }
+        body {
+            background-color: var(--brand-bg);
+            color: var(--brand-text);
+            font-family: 'Public Sans', sans-serif;
+            overflow: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .serif-numbers {
+            font-family: 'Playfair Display', serif;
+        }
+        .glass-panel {
+            background: rgba(30, 27, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(193, 168, 93, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--brand-primary);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="h-full">
+<div class="gd-dashboard h-full flex flex-col overflow-hidden">
+<!-- Top Navigation Bar -->
+<header class="h-16 border-b border-brand-accent flex items-center justify-between px-6 bg-brand-surface shrink-0">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 object-contain" data-alt="CPII Gold Emblem Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCchZMtCk-M-v0zS6tTeKu9grz5IPukpK1D1zijo8ElTgBrMaVJLRqh_kXiSXIwGxdFXtvfBkmONhzE1pxfifuRKrzQkkXyyFH-mCpRssRdSMoFo2ozdP5PI3ydQCfDUSyriVVknq5CEkqe5uik_d29mmX6qyNP69FA88EJRgXbBjgtyfKGCDXwctz_QuxYZJTJ6GNUqylQ6znoE2wSt-dDq6UkPUI4wrxaEVYzLyldeisuT_MRMbEFvsFrDUvSncYvIjK4e54dD4X8"/>
+<div class="flex flex-col leading-tight">
+<span class="text-brand-text font-bold tracking-wider">CPII</span>
+<span class="text-brand-muted text-[10px] uppercase tracking-widest">Lux Lusitana</span>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+<a class="text-brand-primary" data-i18n="dash.nav.overview" href="#">Overview</a>
+<a class="text-brand-muted hover:text-brand-text transition-colors" data-i18n="dash.nav.reports" href="#">Reports</a>
+<a class="text-brand-muted hover:text-brand-text transition-colors" data-i18n="dash.nav.activity" href="#">Activity</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted text-sm">search</span>
+<input class="bg-brand-bg border-brand-accent rounded-full pl-10 pr-4 py-1.5 text-xs w-64 focus:ring-brand-primary focus:border-brand-primary" placeholder="Search Orbit 2" type="text"/>
+</div>
+<button class="text-brand-muted hover:text-brand-text transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-brand-muted hover:text-brand-text transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-brand-primary/30">
+<img class="w-full h-full object-cover" data-alt="User Profile Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnDvU_vHA4O2gn2pMTFt6sdqkltnBmwWAWse87GRcXp-SuEN3RXfV0fZN9q588eljgO607mO0MR_DIAhBOOcQlqU8Fm-W_grDddzcvAFuOE1xzqTP-mvskjEeuNNlyZ8hRAEUFK5zP-lLomskw5dGxGxMkoDLaBjg0sk0AmDCoAU986O7GbGyahe9VasfJUOvmfiVrVO0SMN2Uusy-kS6IrIPX9d1rJLobnDtD3AqiTMWHpCWM9PGTPx4IzRDBghsWwwE_GfETkiNL"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Side Navigation (Orbit 1) -->
+<aside class="w-[250px] border-r border-brand-accent bg-brand-bg flex flex-col shrink-0">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="text-sm font-semibold text-brand-text" data-i18n="dash.side.header">Dashboard</div>
+</div>
+<nav class="space-y-1">
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-brand-primary/10 text-brand-primary group transition-all" onclick="SceneManager.goTo('dashboard')">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<span class="material-symbols-outlined text-xl">account_balance</span>
+<span class="text-sm font-medium">Portfolio</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<span class="material-symbols-outlined text-xl">storefront</span>
+<span class="text-sm font-medium">Marketplace</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="text-sm font-medium">Documents</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<span class="material-symbols-outlined text-xl">insights</span>
+<span class="text-sm font-medium">Analytics</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-brand-muted hover:bg-brand-accent/50 hover:text-brand-text transition-all">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</button>
+</nav>
+</div>
+<div class="mt-auto p-6">
+<div class="bg-gradient-to-br from-brand-primary to-amber-700 rounded-xl p-4 shadow-lg shadow-brand-primary/10">
+<p class="text-[10px] uppercase tracking-widest text-brand-bg font-bold mb-1 opacity-80" data-i18n="dash.side.cta_label">Exclusive Access</p>
+<p class="text-brand-bg text-sm font-bold mb-3" data-i18n="dash.side.cta_title">Grow your wealth with CPII.</p>
+<button class="w-full bg-brand-bg text-brand-primary py-2 rounded-lg text-xs font-bold hover:bg-opacity-90 transition-all">Invest Now</button>
+</div>
+</div>
+</aside>
+<!-- Main Content (Orbit 2) -->
+<main class="flex-1 bg-brand-bg overflow-y-auto custom-scrollbar">
+<div class="gd-dashboard-home p-8 max-w-5xl mx-auto" data-hibernatable="true" data-state="active">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-brand-muted mb-8">
+<span>Home</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-brand-primary">Dashboard</span>
+</nav>
+<!-- KYC Alert Banner -->
+<div class="mb-8 flex items-center justify-between p-4 bg-brand-alert/10 border border-brand-alert/20 rounded-xl">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-brand-alert/20 flex items-center justify-center text-brand-alert">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
+</div>
+<div>
+<p class="text-brand-text font-bold text-sm" data-i18n="dash.alert.kyc_title">KYC Verification Required</p>
+<p class="text-brand-muted text-xs" data-i18n="dash.alert.kyc_desc">Complete your profile to unlock all investment opportunities.</p>
+</div>
+</div>
+<button class="px-5 py-2 bg-brand-alert text-brand-text text-xs font-bold rounded-lg hover:bg-opacity-90 transition-all" data-i18n="dash.alert.kyc_cta">
+                            Verify Now
+                        </button>
+</div>
+<!-- Welcome Header -->
+<div class="flex items-end justify-between mb-8">
+<div>
+<h1 class="text-3xl font-serif text-brand-text mb-1" data-i18n="dash.welcome">Good Morning, Alexander</h1>
+<p class="text-brand-muted text-sm" data-i18n="dash.subtitle">Here is your portfolio performance for today.</p>
+</div>
+<div class="flex gap-3">
+<button class="p-2 border border-brand-accent rounded-lg text-brand-muted hover:text-brand-text transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-2 border border-brand-accent rounded-lg text-brand-muted hover:text-brand-text transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- Investment Summary Card -->
+<div class="md:col-span-2 glass-panel p-6 rounded-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-9xl">payments</span>
+</div>
+<h3 class="text-brand-muted text-xs uppercase tracking-widest font-bold mb-6" data-i18n="dash.card.summary">Investment Summary</h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+<div>
+<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.total">Total Invested</p>
+<p class="serif-numbers text-3xl text-brand-primary">€142,500.00</p>
+</div>
+<div>
+<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.yield">Current Yield</p>
+<p class="serif-numbers text-3xl text-brand-text">7.24<span class="text-lg opacity-60">%</span></p>
+</div>
+<div>
+<p class="text-brand-muted text-xs mb-1" data-i18n="dash.label.payout">Next Payout</p>
+<p class="serif-numbers text-2xl text-brand-text">Oct 12, 2024</p>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-brand-accent/30 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-[10px] text-brand-muted font-medium uppercase tracking-tighter">Market Open</span>
+</div>
+<button class="text-xs text-brand-primary font-bold flex items-center gap-1 hover:underline">
+                                    View Detailed Analytics <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Quick Actions Card -->
+<div class="glass-panel p-6 rounded-2xl">
+<h3 class="text-brand-muted text-xs uppercase tracking-widest font-bold mb-6" data-i18n="dash.card.quick">Quick Actions</h3>
+<div class="space-y-3">
+<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+</div>
+<span class="text-sm font-medium" data-i18n="dash.action.invest">Invest Now</span>
+</div>
+<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
+<span class="material-symbols-outlined text-sm">pie_chart</span>
+</div>
+<span class="text-sm font-medium" data-i18n="dash.action.portfolio">View Portfolio</span>
+</div>
+<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 rounded-xl border border-brand-accent hover:border-brand-primary hover:bg-brand-primary/5 transition-all group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-brand-bg transition-colors">
+<span class="material-symbols-outlined text-sm">shopping_bag</span>
+</div>
+<span class="text-sm font-medium" data-i18n="dash.action.market">Marketplace</span>
+</div>
+<span class="material-symbols-outlined text-brand-muted group-hover:text-brand-primary">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Club News & Recent Projects -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-serif" data-i18n="dash.news.title">Club News Feed</h3>
+<button class="text-brand-muted hover:text-brand-primary text-xs font-bold uppercase tracking-widest">See All</button>
+</div>
+<div class="space-y-4">
+<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Luxury Villa Property Preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJKlI2kYDU8FQFrXvHICDxQ9KnN1li7h3Uupb5I_DQKRGRpa0G7kh85u-4Bkn10Wd29k7BX-oMLOe6ZRwcdbX4jCCfnme-Lz2NPSI2UwqZRCJ1KbWF6XqBOj_4XkLmrOUtwtxCWsuCUALp1E5ZT_cfITYrKaO2c_uPcPi0sVGuqLnuAEitk05SC5-h7FrInqDpU2MH73tKT-rKOUTLP3KgwlrxRHxtH3-kGQ0DrbWJwnWk17NDZsmui0UZ6adDqhUXv3V1bx991I"/>
+</div>
+<div>
+<span class="text-[10px] text-brand-primary font-bold uppercase tracking-widest">New Property</span>
+<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Palácio Real: Alentejo Estate</h4>
+<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">Exclusive pre-launch for CPII members. A historical estate renovation project with projected 12% ROI.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Modern Office Building Interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLY1tbqwZw5joDUXXx147ieSWNXMYiALKBh0Kz9fPKviP7xPnuF7ZBLOStz5khMUI_2gte0u-2eaxglgkbs_7EEOSuohrSWGBK82etq8pQ1jLUF_YNLJ5HokmE7Wl3P_4wFam7Jp6LnZ7Gx_Q3crXah4tj8vWmkbLA-NFlwugE2pL_8hSP6KE3RiQkZ9k4XlycMiKBRSW52vq9w7YqfL1obqRf63SFRpuk0W7QRUxllbrYTdWp5K2OdDrf9Z5cxBHIosK8xwrYqmq8"/>
+</div>
+<div>
+<span class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest">Market Update</span>
+<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Commercial Real Estate Outlook Q4</h4>
+<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">Our quarterly analysis of the Portuguese commercial sector and liquidity opportunities.</p>
+</div>
+</div>
+<div class="flex gap-4 p-4 rounded-xl border border-brand-accent/50 hover:bg-brand-surface transition-colors cursor-pointer group">
+<div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Boutique Hotel Frontage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPSwXaQGE2rVO6yvwgLotFqkGIXBpoXu68U_AA3UD73jyfIIYAxKhTNiMfdBq9vuGSzB9JJOLCQthJ2NEzuCscOZRo0bRpwnR5soFej-mR364ETrwt1aqyBaVPN5Lnp2cheiw2rlxUshmea_eXWSyqn_qtenHq0Tzx4aDRSS_2RPONA-HzkHMvxGSmeJ47xQXH7OpkN6Gr9J3F_XPPs_F9ugCWQb66O48HyBqXr4zlqY5Iu151Nnn9MHlwtwEtg8y9IJc6XqME3RVa"/>
+</div>
+<div>
+<span class="text-[10px] text-brand-primary font-bold uppercase tracking-widest">Sold Out</span>
+<h4 class="text-sm font-bold text-brand-text mb-1 mt-0.5 group-hover:text-brand-primary transition-colors">Douro Riverside Boutique Hotel</h4>
+<p class="text-xs text-brand-muted line-clamp-2 leading-relaxed">The project has reached its funding goal 12 days ahead of schedule. All slots filled.</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-serif" data-i18n="dash.portfolio.title">Portfolio Allocation</h3>
+<button class="text-brand-muted hover:text-brand-primary text-xs font-bold uppercase tracking-widest">Manage</button>
+</div>
+<div class="glass-panel p-8 rounded-2xl h-[334px] flex flex-col justify-center items-center relative">
+<div class="w-48 h-48 rounded-full border-[12px] border-brand-accent flex items-center justify-center relative">
+<!-- Simplified Chart Representation -->
+<div class="absolute inset-[-12px] rounded-full border-[12px] border-l-brand-primary border-t-brand-primary border-r-brand-primary border-b-transparent rotate-[45deg]"></div>
+<div class="text-center">
+<p class="text-xs text-brand-muted font-medium mb-1">Total Assets</p>
+<p class="serif-numbers text-2xl">24</p>
+</div>
+</div>
+<div class="mt-8 flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-primary"></span>
+<span class="text-[10px] text-brand-muted font-bold uppercase tracking-tighter">Real Estate (75%)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-accent"></span>
+<span class="text-[10px] text-brand-muted font-bold uppercase tracking-tighter">Commercial (25%)</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Dock / Side Info Panel (Orbit 3) -->
+<aside class="w-[320px] border-l border-brand-accent bg-brand-surface shrink-0 hidden xl:flex flex-col">
+<div class="p-6 border-b border-brand-accent">
+<h3 class="text-brand-text font-bold text-sm mb-4" data-i18n="dash.dock.market">Market Pulse</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-xs text-brand-muted font-medium">Lisbon Residential Index</span>
+<span class="text-xs text-emerald-500 font-bold serif-numbers">+4.2%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-brand-muted font-medium">CPII Fund Performance</span>
+<span class="text-xs text-emerald-500 font-bold serif-numbers">+1.8%</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-brand-muted font-medium">Euribor 12M</span>
+<span class="text-xs text-brand-text font-bold serif-numbers">3.85%</span>
+</div>
+</div>
+</div>
+<div class="p-6">
+<h3 class="text-brand-text font-bold text-sm mb-4" data-i18n="dash.dock.events">Upcoming Events</h3>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-10 h-10 bg-brand-accent rounded flex flex-col items-center justify-center shrink-0">
+<span class="text-[10px] font-bold text-brand-primary">OCT</span>
+<span class="text-sm font-bold text-brand-text">24</span>
+</div>
+<div>
+<h4 class="text-xs font-bold text-brand-text">Investor Summit 2024</h4>
+<p class="text-[10px] text-brand-muted">Digital Webinar • 14:00 GMT</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 bg-brand-accent rounded flex flex-col items-center justify-center shrink-0">
+<span class="text-[10px] font-bold text-brand-primary">NOV</span>
+<span class="text-sm font-bold text-brand-text">02</span>
+</div>
+<div>
+<h4 class="text-xs font-bold text-brand-text">New Project Pre-Launch</h4>
+<p class="text-[10px] text-brand-muted">Priority Members Only</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-auto p-6 bg-brand-accent/20">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-brand-primary">support_agent</span>
+<div>
+<p class="text-xs font-bold text-brand-text">Need Assistance?</p>
+<p class="text-[10px] text-brand-muted">Your personal advisor is online.</p>
+</div>
+</div>
+<button class="w-full py-2.5 bg-brand-surface border border-brand-primary/30 text-brand-primary text-xs font-bold rounded-lg hover:bg-brand-primary/5 transition-all">
+                        Chat with Support
+                    </button>
+</div>
+</aside>
+</div>
+<!-- Footer -->
+<footer class="h-10 border-t border-brand-accent bg-brand-surface flex items-center justify-between px-6 shrink-0 text-[10px] text-brand-muted uppercase tracking-widest font-bold">
+<div>© 2024 CPII - Lux Lusitana. All Rights Reserved.</div>
+<div class="flex items-center gap-6">
+<a class="hover:text-brand-primary" href="#">Legal</a>
+<a class="hover:text-brand-primary" href="#">Privacy</a>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    System Status: Operational
+                </div>
+</div>
+</footer>
+</div>
+</body></html>
