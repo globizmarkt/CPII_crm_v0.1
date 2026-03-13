@@ -7,6 +7,8 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>CPII-CRM Skin 01 Layout Trinity</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
     <script src="core/i18n.js"></script>
     <script src="core/at-resource-registry.js" defer></script>
     <script src="core/at-search-engine.js" defer></script>
@@ -14,11 +16,11 @@
     <script src="gadgets/gd-manual.js" defer></script>
     <script src="gadgets/gd-simulador.js" defer></script>
     <script src="gadgets/gd-calculadora.js" defer></script>
+
     <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
         rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -36,12 +38,7 @@
                         "display": ["Manrope", "sans-serif"],
                         "serif": ["Playfair Display", "serif"]
                     },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
                 },
             },
         }

@@ -1,25 +1,43 @@
+// core/at-tab-manager.js — CPII Tab Manager v3.0 (Corregido)
 (function () {
     'use strict';
-    const state = { tabs: [], activeId: null };
+
+    const state = {
+        tabs: [],
+        activeId: null,
+    };
+
     let tabBar, contentArea, omniboxInput, omniboxDropdown;
 
-    function t(key) { return window.__CPII__?.i18n?.t(key) ?? key; }
-    function emit(name, detail = {}) { document.dispatchEvent(new CustomEvent(name, { detail, bubbles: true })); }
+    function t(key) {
+        return window.__CPII__?.i18n?.t(key) ?? key;
+    }
+
+    function emit(name, detail = {}) {
+        document.dispatchEvent(new CustomEvent(name, { detail, bubbles: true }));
+    }
 
     function buildOmnibox() {
         const wrapper = document.createElement('div');
+        wrapper.className = 'cpii-omnibox-wrapper';
         wrapper.style.cssText = `position: relative; display: flex; align-items: center; margin-left: auto;`;
 
         omniboxInput = document.createElement('input');
         omniboxInput.type = 'text';
-        omniboxInput.placeholder = t('search_placeholder') || 'Buscar recursos...';
-        // Estilos de Tailwind inyectados para integrarse con tu CSS
-        omniboxInput.className = "bg-transparent border border-slate-700 rounded-md text-sm text-slate-300 focus:ring-1 focus:ring-primary w-64 h-8 px-3 ml-4";
+        omniboxInput.placeholder = t('search_placeholder') || 'Pesquisar...';
+        // Estilos alineados a tu diseño original
+        omniboxInput.style.cssText = `
+      height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px;
+      border: 1px solid var(--theme-border, #333); background: transparent; 
+      color: var(--theme-text, #ccc); outline: none; width: 260px;
+    `;
 
         omniboxDropdown = document.createElement('ul');
-        omniboxDropdown.className = "absolute right-0 bg-[#1e1b14] border border-[#c1a85c]/20 rounded-md shadow-lg z-50 text-sm text-slate-300 w-64";
-        omniboxDropdown.style.top = "calc(100% + 4px)";
-        omniboxDropdown.style.display = 'none';
+        omniboxDropdown.style.cssText = `
+      position: absolute; top: calc(100% + 4px); right: 0; min-width: 260px;
+      margin: 0; padding: 4px 0; list-style: none; background: #1e1b14;
+      border: 1px solid rgba(193, 168, 93, 0.2); border-radius: 6px; z-index: 200; display: none;
+    `;
 
         omniboxInput.addEventListener('input', () => {
             const query = omniboxInput.value.trim();
@@ -27,13 +45,20 @@
             emit('cpii:omnibox:search', { query });
         });
 
+        // CORRECCIÓN APLICADA: Mapear IDs a Objetos
         document.addEventListener('cpii:omnibox:results', (e) => {
             const ids = e.detail.ids || [];
             const registry = window.__CPII__.RESOURCE_REGISTRY || {};
-            renderDropdown(ids.map(id => ({ id, labelKey: registry[id]?.labelKey || id })));
+            const resultsForRender = ids.map(id => ({
+                id,
+                labelKey: registry[id]?.labelKey || id
+            }));
+            renderDropdown(resultsForRender);
         });
 
-        document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) hideDropdown(); });
+        document.addEventListener('click', (e) => {
+            if (!wrapper.contains(e.target)) hideDropdown();
+        });
 
         wrapper.appendChild(omniboxInput);
         wrapper.appendChild(omniboxDropdown);
@@ -43,12 +68,18 @@
     function renderDropdown(results) {
         omniboxDropdown.innerHTML = '';
         if (results.length === 0) {
-            omniboxDropdown.innerHTML = `<li class="px-4 py-2 text-slate-500">Sin resultados</li>`;
+            const empty = document.createElement('li');
+            empty.textContent = 'Sin resultados';
+            empty.style.cssText = `padding: 8px 12px; font-size: 13px; color: #888; pointer-events: none;`;
+            omniboxDropdown.appendChild(empty);
         } else {
             results.forEach((item) => {
                 const li = document.createElement('li');
-                li.textContent = t(item.labelKey);
-                li.className = "px-4 py-2 cursor-pointer hover:bg-[#c1a85c]/10 hover:text-white transition-colors";
+                li.textContent = t(item.labelKey) || item.id;
+                li.dataset.resourceId = item.id;
+                li.style.cssText = `padding: 8px 14px; font-size: 13px; color: #ccc; cursor: pointer;`;
+                li.addEventListener('mouseenter', () => li.style.background = 'rgba(193, 168, 93, 0.1)');
+                li.addEventListener('mouseleave', () => li.style.background = 'transparent');
                 li.addEventListener('mousedown', (e) => {
                     e.preventDefault();
                     openFromRegistry(item.id);
@@ -61,19 +92,28 @@
         omniboxDropdown.style.display = 'block';
     }
 
-    function hideDropdown() { omniboxDropdown.style.display = 'none'; }
+    function hideDropdown() {
+        omniboxDropdown.style.display = 'none';
+    }
 
     function buildTabBar() {
         tabBar = document.createElement('div');
-        // Adaptado a tu header original
-        tabBar.className = "flex items-center gap-2 px-8 border-b border-primary/5 h-16 w-full";
+        tabBar.id = 'cpii-tab-bar';
+        tabBar.style.cssText = `
+      display: flex; align-items: center; gap: 4px; padding: 0 24px; 
+      height: 64px; border-bottom: 1px solid rgba(193, 168, 93, 0.1); width: 100%;
+    `;
 
         contentArea = document.createElement('div');
-        contentArea.className = "flex-1 overflow-auto relative p-6";
+        contentArea.id = 'cpii-content-area';
+        contentArea.style.cssText = `flex: 1; overflow: auto; position: relative; padding: 24px;`;
 
-        // AQUI ESTA LA CORRECCIÓN DEL ID
+        // CORRECCIÓN: Apuntando al div real de tu HTML
         const orbitCanvas = document.getElementById('canvas-orbita-2');
-        if (!orbitCanvas) return console.warn('[TabManager] #canvas-orbita-2 no encontrado.');
+        if (!orbitCanvas) {
+            console.warn('[TabManager] #canvas-orbita-2 no encontrado.');
+            return;
+        }
 
         tabBar.appendChild(buildOmnibox());
         orbitCanvas.appendChild(tabBar);
@@ -82,47 +122,56 @@
 
     function renderTabItem(tab) {
         const item = document.createElement('div');
+        item.className = 'cpii-tab-item';
         item.dataset.tabId = tab.id;
-        item.className = "flex items-center gap-2 px-4 h-8 rounded-md text-sm cursor-pointer border border-transparent text-slate-400 transition-colors";
+        item.style.cssText = `
+      display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 36px;
+      font-size: 13px; color: #888; border-radius: 6px; cursor: pointer; border: 1px solid transparent;
+    `;
 
         const label = document.createElement('span');
-        label.textContent = t(tab.labelKey);
+        label.textContent = t(tab.labelKey) || tab.id;
 
         const closeBtn = document.createElement('button');
         closeBtn.innerHTML = '&times;';
-        closeBtn.className = "hover:text-white ml-2";
-        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeTab(tab.id); });
+        closeBtn.style.cssText = `background: none; border: none; color: inherit; cursor: pointer; font-size: 16px;`;
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeTab(tab.id);
+        });
 
         item.appendChild(label);
         item.appendChild(closeBtn);
         item.addEventListener('click', () => activateTab(tab.id));
-        tabBar.insertBefore(item, tabBar.querySelector('div')); // inserta antes del wrapper del omnibox
+
+        tabBar.insertBefore(item, tabBar.querySelector('.cpii-omnibox-wrapper'));
         return item;
     }
 
     function activateTab(id) {
         state.tabs.forEach((tab) => {
             tab.node.style.display = tab.id === id ? '' : 'none';
-            const tabEl = tabBar.querySelector(`[data-tab-id="${tab.id}"]`);
-            if (tabEl) {
-                if (tab.id === id) {
-                    tabEl.classList.add('bg-[#1e1b14]', 'border-[#c1a85c]/20', 'text-white');
-                    tabEl.classList.remove('text-slate-400', 'border-transparent');
-                } else {
-                    tabEl.classList.remove('bg-[#1e1b14]', 'border-[#c1a85c]/20', 'text-white');
-                    tabEl.classList.add('text-slate-400', 'border-transparent');
-                }
-            }
+        });
+
+        tabBar.querySelectorAll('.cpii-tab-item').forEach((el) => {
+            const isActive = el.dataset.tabId === id;
+            el.style.background = isActive ? '#1e1b14' : 'transparent';
+            el.style.color = isActive ? '#fff' : '#888';
+            el.style.borderColor = isActive ? 'rgba(193, 168, 93, 0.2)' : 'transparent';
         });
         state.activeId = id;
     }
 
     function openFromRegistry(resourceId) {
         const registry = window.__CPII__?.RESOURCE_REGISTRY;
-        const resource = registry?.[resourceId];
+        if (!registry) return;
+        const resource = registry[resourceId];
         if (!resource) return;
 
-        if (state.tabs.find((t) => t.id === resourceId)) return activateTab(resourceId);
+        if (state.tabs.find((t) => t.id === resourceId)) {
+            activateTab(resourceId);
+            return;
+        }
 
         const node = document.createElement(resource.tag);
         node.style.display = 'none';
@@ -137,15 +186,25 @@
     function closeTab(id) {
         const idx = state.tabs.findIndex((t) => t.id === id);
         if (idx === -1) return;
-        state.tabs[idx].node.remove();
+        const [removed] = state.tabs.splice(idx, 1);
+        removed.node.remove();
         tabBar.querySelector(`[data-tab-id="${id}"]`)?.remove();
-        state.tabs.splice(idx, 1);
-        if (state.activeId === id) activateTab(state.tabs[idx]?.id || state.tabs[idx - 1]?.id);
+
+        if (state.activeId === id) {
+            const next = state.tabs[idx] ?? state.tabs[idx - 1];
+            next ? activateTab(next.id) : (state.activeId = null);
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        window.__CPII__ = window.__CPII__ || {};
-        window.__CPII__.tabManager = { openFromRegistry };
+    function init() {
+        window.__CPII__ = window.__CPII__ ?? {};
+        window.__CPII__.tabManager = { openFromRegistry, activateTab, closeTab };
         buildTabBar();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();
