@@ -26,11 +26,21 @@
         omniboxInput.type = 'text';
         omniboxInput.placeholder = t('search_placeholder') || 'Pesquisar...';
         // Estilos alineados a tu diseño original
-        omniboxInput.style.cssText = `
-      height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px;
-      border: 1px solid var(--theme-border, #333); background: transparent; 
-      color: var(--theme-text, #ccc); outline: none; width: 260px;
-    `;
+        omniboxDropdown.style.cssText = `
+            position: absolute; 
+            top: 100%; 
+            right: 0; 
+            min-width: 260px;
+            margin-top: 4px;
+            padding: 4px 0; 
+            list-style: none; 
+            background: #1e1b14;
+            border: 1px solid rgba(193, 168, 93, 0.3); 
+            border-radius: 6px; 
+            z-index: 999; 
+            display: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        `;
 
         omniboxDropdown = document.createElement('ul');
         omniboxDropdown.style.cssText = `
@@ -197,6 +207,9 @@
     }
 
     function init() {
+        // CERROJO: Si ya existe la barra, no hagas nada
+        if (document.getElementById('cpii-tab-bar')) return;
+
         window.__CPII__ = window.__CPII__ ?? {};
         window.__CPII__.tabManager = { openFromRegistry, activateTab, closeTab };
         buildTabBar();
