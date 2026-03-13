@@ -7,10 +7,13 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>CPII-CRM Skin 01 Layout Trinity</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="core/i18n.js"></script>
+    <script src="core/at-resource-registry.js" defer></script>
+    <script src="core/at-search-engine.js" defer></script>
     <script src="core/at-tab-manager.js" defer></script>
     <script src="gadgets/gd-manual.js" defer></script>
+    <script src="gadgets/gd-simulador.js" defer></script>
+    <script src="gadgets/gd-calculadora.js" defer></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=Playfair+Display:wght@400;500;600;700&amp;display=swap"
         rel="stylesheet" />
@@ -138,14 +141,6 @@
         </aside>
         <!-- Orbit 2: Center Canvas (Dynamic Workspace) -->
         <main class="flex-1 bg-background-light relative flex flex-col overflow-y-auto text-slate-800">
-            <header class="h-16 flex items-center justify-between px-8 border-b border-primary/5">
-                <div class="flex items-center gap-4">
-                    <span class="material-symbols-outlined text-slate-500">search</span>
-                    <input class="bg-transparent border-none text-sm text-slate-300 focus:ring-0 w-64"
-                        data-i18n-placeholder="search_placeholder" placeholder="Pesquisar oportunidades..."
-                        type="text" />
-                </div>
-            </header>
             <div id="canvas-orbita-2" class="flex-1 flex flex-col relative">
             </div>
         </main>

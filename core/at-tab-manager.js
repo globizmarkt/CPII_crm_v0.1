@@ -1,269 +1,151 @@
-/**
- * CPII — at-tab-manager.js
- * Artifact: Gestor Universal de Pestañas (Órbita 2)
- * Ruta: core/at-tab-manager.js
- *
- * Responsabilidades:
- * - Registro agnóstico de gadgets (gd-*)
- * - Renderiza y gestiona la barra de pestañas en Órbita 2
- * - Inyecta/destruye Web Components en #cpii-workspace
- * - Persistencia volátil (sessionStorage)
- * - Emite eventos: cpii:tab:open | cpii:tab:close | cpii:tab:change
- *
- * Doctrina: R0 Sin hardcode | R3 Solo var(--theme-*) | R4 data-i18n obligatorio
- */
 (function () {
     'use strict';
+    const state = { tabs: [], activeId: null };
+    let tabBar, contentArea, omniboxInput, omniboxDropdown;
 
-    // ── Registro de gadgets disponibles ──────────────────────
-    // Añadir aquí cada nuevo gd-* que se incorpore al ecosistema
-    const GADGET_REGISTRY = {
-        'gd-manual': {
-            labelKey: 'tab_manual',
-            labelFallback: 'Manual'
-        },
-        'gd-simulador': {
-            labelKey: 'tab_simulador',
-            labelFallback: 'Simulador'
-        },
-        'gd-calculadora': {
-            labelKey: 'tab_calculadora',
-            labelFallback: 'Calculadora'
-        }
-    };
+    function t(key) { return window.__CPII__?.i18n?.t(key) ?? key; }
+    function emit(name, detail = {}) { document.dispatchEvent(new CustomEvent(name, { detail, bubbles: true })); }
 
-    // ── Estado interno (volátil — sessionStorage) ─────────────
-    const SESSION_KEY = 'cpii:tabs';
+    function buildOmnibox() {
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = `position: relative; display: flex; align-items: center; margin-left: auto;`;
 
-    function loadState() {
-        try {
-            return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || { tabs: [], activeId: null };
-        } catch {
-            return { tabs: [], activeId: null };
-        }
-    }
+        omniboxInput = document.createElement('input');
+        omniboxInput.type = 'text';
+        omniboxInput.placeholder = t('search_placeholder') || 'Buscar recursos...';
+        // Estilos de Tailwind inyectados para integrarse con tu CSS
+        omniboxInput.className = "bg-transparent border border-slate-700 rounded-md text-sm text-slate-300 focus:ring-1 focus:ring-primary w-64 h-8 px-3 ml-4";
 
-    function saveState(state) {
-        sessionStorage.setItem(SESSION_KEY, JSON.stringify(state));
-    }
+        omniboxDropdown = document.createElement('ul');
+        omniboxDropdown.className = "absolute right-0 bg-[#1e1b14] border border-[#c1a85c]/20 rounded-md shadow-lg z-50 text-sm text-slate-300 w-64";
+        omniboxDropdown.style.top = "calc(100% + 4px)";
+        omniboxDropdown.style.display = 'none';
 
-    let state = loadState();
-
-    // ── Helpers ───────────────────────────────────────────────
-    function getLabel(tagName) {
-        const entry = GADGET_REGISTRY[tagName];
-        if (!entry) return tagName;
-        if (window.__CPII__?.i18n?.t) {
-            return window.__CPII__.i18n.t(entry.labelKey) || entry.labelFallback;
-        }
-        return entry.labelFallback;
-    }
-
-    function generateId(tagName) {
-        return `${tagName}-${Date.now()}`;
-    }
-
-    function emit(eventName, detail) {
-        document.dispatchEvent(new CustomEvent(eventName, { detail, bubbles: true }));
-    }
-
-    // ── DOM refs ──────────────────────────────────────────────
-    function getCanvas() { return document.getElementById('canvas-orbita-2'); }
-    function getTabBar() { return document.querySelector('.cpii-tab-bar'); }
-    function getWorkspace() { return document.querySelector('.cpii-workspace'); }
-
-    // ── Inicializar estructura en Órbita 2 ────────────────────
-    function initDOM() {
-        const canvas = getCanvas();
-        if (!canvas) return;
-
-        if (!getTabBar()) {
-            const nav = document.createElement('nav');
-            nav.className = 'cpii-tab-bar';
-            nav.setAttribute('role', 'tablist');
-            canvas.prepend(nav);
-        }
-
-        if (!getWorkspace()) {
-            const ws = document.createElement('div');
-            ws.className = 'cpii-workspace';
-            canvas.appendChild(ws);
-        }
-    }
-
-    // ── Renderizar barra de pestañas ──────────────────────────
-    function renderTabBar() {
-        const tabBar = getTabBar();
-        if (!tabBar) return;
-
-        tabBar.innerHTML = '';
-
-        state.tabs.forEach(tab => {
-            const btn = document.createElement('button');
-            btn.className = 'cpii-tab' + (tab.id === state.activeId ? ' is-active' : '');
-            btn.dataset.tabId = tab.id;
-            btn.setAttribute('role', 'tab');
-            btn.setAttribute('aria-selected', String(tab.id === state.activeId));
-
-            const labelSpan = document.createElement('span');
-            labelSpan.className = 'cpii-tab__label';
-            labelSpan.textContent = tab.label;
-
-            const closeBtn = document.createElement('button');
-            closeBtn.className = 'cpii-tab__close';
-            closeBtn.setAttribute('aria-label', 'Cerrar pestaña');
-            closeBtn.textContent = '×';
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                tabManager.close(tab.id);
-            });
-
-            btn.appendChild(labelSpan);
-            btn.appendChild(closeBtn);
-            btn.addEventListener('click', () => tabManager.activate(tab.id));
-
-            tabBar.appendChild(btn);
-        });
-    }
-
-    // ── Renderizar workspace ──────────────────────────────────
-    function renderWorkspace() {
-        const ws = getWorkspace();
-        if (!ws) return;
-
-        Array.from(ws.children).forEach(el => {
-            el.style.display = 'none';
+        omniboxInput.addEventListener('input', () => {
+            const query = omniboxInput.value.trim();
+            if (query.length < 1) { hideDropdown(); return; }
+            emit('cpii:omnibox:search', { query });
         });
 
-        if (state.activeId) {
-            const activeEl = ws.querySelector(`[data-tab-id="${state.activeId}"]`);
-            if (activeEl) activeEl.style.display = '';
-        }
+        document.addEventListener('cpii:omnibox:results', (e) => {
+            const ids = e.detail.ids || [];
+            const registry = window.__CPII__.RESOURCE_REGISTRY || {};
+            renderDropdown(ids.map(id => ({ id, labelKey: registry[id]?.labelKey || id })));
+        });
+
+        document.addEventListener('click', (e) => { if (!wrapper.contains(e.target)) hideDropdown(); });
+
+        wrapper.appendChild(omniboxInput);
+        wrapper.appendChild(omniboxDropdown);
+        return wrapper;
     }
 
-    // ── API pública ───────────────────────────────────────────
-    const tabManager = {
-
-        /**
-         * Abrir un gadget como pestaña
-         * @param {string} tagName — nombre del Web Component (ej. 'gd-manual')
-         * @param {object} props   — propiedades opcionales a pasar al componente
-         */
-        open(tagName, props = {}) {
-            // Si ya existe una pestaña de este tipo, activarla (no duplicar)
-            const existing = state.tabs.find(t => t.tagName === tagName);
-            if (existing) {
-                this.activate(existing.id);
-                return;
-            }
-
-            if (!GADGET_REGISTRY[tagName]) {
-                console.warn(`[TabManager] Gadget no registrado: ${tagName}`);
-                return;
-            }
-
-            const id = generateId(tagName);
-            const label = getLabel(tagName);
-
-            state.tabs.push({ id, tagName, label });
-            state.activeId = id;
-            saveState(state);
-
-            const ws = getWorkspace();
-            const gadget = document.createElement(tagName);
-            gadget.dataset.tabId = id;
-
-            Object.entries(props).forEach(([key, val]) => {
-                gadget.setAttribute(key, val);
+    function renderDropdown(results) {
+        omniboxDropdown.innerHTML = '';
+        if (results.length === 0) {
+            omniboxDropdown.innerHTML = `<li class="px-4 py-2 text-slate-500">Sin resultados</li>`;
+        } else {
+            results.forEach((item) => {
+                const li = document.createElement('li');
+                li.textContent = t(item.labelKey);
+                li.className = "px-4 py-2 cursor-pointer hover:bg-[#c1a85c]/10 hover:text-white transition-colors";
+                li.addEventListener('mousedown', (e) => {
+                    e.preventDefault();
+                    openFromRegistry(item.id);
+                    omniboxInput.value = '';
+                    hideDropdown();
+                });
+                omniboxDropdown.appendChild(li);
             });
+        }
+        omniboxDropdown.style.display = 'block';
+    }
 
-            ws.appendChild(gadget);
+    function hideDropdown() { omniboxDropdown.style.display = 'none'; }
 
-            renderTabBar();
-            renderWorkspace();
-            emit('cpii:tab:open', { id, tagName, label });
-        },
+    function buildTabBar() {
+        tabBar = document.createElement('div');
+        // Adaptado a tu header original
+        tabBar.className = "flex items-center gap-2 px-8 border-b border-primary/5 h-16 w-full";
 
-        /**
-         * Activar una pestaña existente
-         * @param {string} id
-         */
-        activate(id) {
-            if (!state.tabs.find(t => t.id === id)) return;
-            state.activeId = id;
-            saveState(state);
-            renderTabBar();
-            renderWorkspace();
-            emit('cpii:tab:change', { id });
-        },
+        contentArea = document.createElement('div');
+        contentArea.className = "flex-1 overflow-auto relative p-6";
 
-        /**
-         * Cerrar una pestaña
-         * @param {string} id
-         */
-        close(id) {
-            const idx = state.tabs.findIndex(t => t.id === id);
-            if (idx === -1) return;
+        // AQUI ESTA LA CORRECCIÓN DEL ID
+        const orbitCanvas = document.getElementById('canvas-orbita-2');
+        if (!orbitCanvas) return console.warn('[TabManager] #canvas-orbita-2 no encontrado.');
 
-            const { tagName, label } = state.tabs[idx];
+        tabBar.appendChild(buildOmnibox());
+        orbitCanvas.appendChild(tabBar);
+        orbitCanvas.appendChild(contentArea);
+    }
 
-            const ws = getWorkspace();
-            const gadget = ws?.querySelector(`[data-tab-id="${id}"]`);
-            if (gadget) gadget.remove();
+    function renderTabItem(tab) {
+        const item = document.createElement('div');
+        item.dataset.tabId = tab.id;
+        item.className = "flex items-center gap-2 px-4 h-8 rounded-md text-sm cursor-pointer border border-transparent text-slate-400 transition-colors";
 
-            state.tabs.splice(idx, 1);
+        const label = document.createElement('span');
+        label.textContent = t(tab.labelKey);
 
-            if (state.activeId === id) {
-                state.activeId = state.tabs[Math.min(idx, state.tabs.length - 1)]?.id || null;
+        const closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '&times;';
+        closeBtn.className = "hover:text-white ml-2";
+        closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeTab(tab.id); });
+
+        item.appendChild(label);
+        item.appendChild(closeBtn);
+        item.addEventListener('click', () => activateTab(tab.id));
+        tabBar.insertBefore(item, tabBar.querySelector('div')); // inserta antes del wrapper del omnibox
+        return item;
+    }
+
+    function activateTab(id) {
+        state.tabs.forEach((tab) => {
+            tab.node.style.display = tab.id === id ? '' : 'none';
+            const tabEl = tabBar.querySelector(`[data-tab-id="${tab.id}"]`);
+            if (tabEl) {
+                if (tab.id === id) {
+                    tabEl.classList.add('bg-[#1e1b14]', 'border-[#c1a85c]/20', 'text-white');
+                    tabEl.classList.remove('text-slate-400', 'border-transparent');
+                } else {
+                    tabEl.classList.remove('bg-[#1e1b14]', 'border-[#c1a85c]/20', 'text-white');
+                    tabEl.classList.add('text-slate-400', 'border-transparent');
+                }
             }
-
-            saveState(state);
-            renderTabBar();
-            renderWorkspace();
-            emit('cpii:tab:close', { id, tagName, label });
-        },
-
-        /**
-         * Cerrar todas las pestañas
-         */
-        closeAll() {
-            state.tabs = [];
-            state.activeId = null;
-            saveState(state);
-            const ws = getWorkspace();
-            if (ws) ws.innerHTML = '';
-            renderTabBar();
-        },
-
-        getState() {
-            return { ...state };
-        }
-    };
-
-    // ── Inicialización ────────────────────────────────────────
-    function init() {
-        initDOM();
-
-        if (state.tabs.length > 0) {
-            const ws = getWorkspace();
-            state.tabs.forEach(tab => {
-                const gadget = document.createElement(tab.tagName);
-                gadget.dataset.tabId = tab.id;
-                ws.appendChild(gadget);
-            });
-            renderTabBar();
-            renderWorkspace();
-        }
+        });
+        state.activeId = id;
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
+    function openFromRegistry(resourceId) {
+        const registry = window.__CPII__?.RESOURCE_REGISTRY;
+        const resource = registry?.[resourceId];
+        if (!resource) return;
+
+        if (state.tabs.find((t) => t.id === resourceId)) return activateTab(resourceId);
+
+        const node = document.createElement(resource.tag);
+        node.style.display = 'none';
+        contentArea.appendChild(node);
+
+        const tab = { id: resourceId, labelKey: resource.labelKey, node };
+        state.tabs.push(tab);
+        renderTabItem(tab);
+        activateTab(resourceId);
     }
 
-    // ── Exponer API global ────────────────────────────────────
-    window.__CPII__ = window.__CPII__ || {};
-    window.__CPII__.tabManager = tabManager;
+    function closeTab(id) {
+        const idx = state.tabs.findIndex((t) => t.id === id);
+        if (idx === -1) return;
+        state.tabs[idx].node.remove();
+        tabBar.querySelector(`[data-tab-id="${id}"]`)?.remove();
+        state.tabs.splice(idx, 1);
+        if (state.activeId === id) activateTab(state.tabs[idx]?.id || state.tabs[idx - 1]?.id);
+    }
 
+    document.addEventListener('DOMContentLoaded', () => {
+        window.__CPII__ = window.__CPII__ || {};
+        window.__CPII__.tabManager = { openFromRegistry };
+        buildTabBar();
+    });
 })();
