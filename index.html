@@ -1,11 +1,12 @@
 <!--
 ============================================================
 ARCHIVO  : index.html
-VERSIÓN  : 1.2.0
+VERSIÓN  : v1.4.0
 FECHA    : 2026-03-14
-PROPÓSITO: Entry point único de Trinity Architecture.
-           Contiene Órbita 1 (Sidebar), Órbita 2 (Canvas),
-           Órbita 3 (Dock). Carga gadgets vía at-tab-manager.
+PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
+           Inyectar componente tooltip brand_tooltip_text en Órbita 1.
+           Inyectar 6 tokens semánticos en :root para conectar
+           tab-manager.css con el sistema de diseño R3.
 ============================================================
 
 ÍNDICE
@@ -15,6 +16,9 @@ PROPÓSITO: Entry point único de Trinity Architecture.
 [SEC-04] Gatekeeper Overlay — KYC security layer
 [SEC-05] Trinity Layout — Contenedor principal flex
 [SEC-06] Órbita 1 — Sidebar (250px): nav, brand, user footer
+        [SEC-06] — MODIFICADA  (Brand: h1 hardcoded → data-i18n="brand_name")
+        [SEC-06] — MODIFICADA  (Subtítulo: p hardcoded → data-i18n="brand_subtitle")
+        [SEC-06] — AMPLIADA    (nuevo tooltip data-i18n="brand_tooltip_text")
 [SEC-07] Órbita 2 — Canvas dinámico (#canvas-orbita-2)
 [SEC-08] Órbita 3 — Dock (320px): perfil, gatekeeper, AIMON
 [SEC-09] Notification Toast — Sistema de alertas flotante
@@ -89,6 +93,14 @@ PROPÓSITO: Entry point único de Trinity Architecture.
             --theme-bg-rgb: 22, 21, 19;
             --theme-surface-rgb: 30, 27, 20;
             --theme-primary-rgb: 193, 168, 93;
+
+            /* Tokens semánticos — consumidos por tab-manager.css */
+            --theme-border: rgba(var(--theme-primary-rgb), 0.1);
+            --theme-accent: var(--theme-primary);
+            --theme-accent-subtle: rgba(var(--theme-primary-rgb), 0.08);
+            --theme-bg-secondary: var(--theme-surface);
+            --theme-bg-elevated: rgba(var(--theme-primary-rgb), 0.05);
+            --theme-surface-hover: rgba(var(--theme-primary-rgb), 0.08);
         }
 
         /* ── Utilidades globales ── */
@@ -146,10 +158,19 @@ PROPÓSITO: Entry point único de Trinity Architecture.
                         class="size-10 bg-primary/20 rounded-lg flex items-center justify-center border border-primary/40">
                         <span class="material-symbols-outlined text-primary text-2xl">diamond</span>
                     </div>
-                    <div class="flex flex-col">
-                        <h1 class="font-serif text-xl font-bold tracking-tight text-primary leading-none">Skeleton</h1>
+                    <div class="flex flex-col relative group/brand">
+                        <h1 class="font-serif text-xl font-bold tracking-tight text-primary leading-none"
+                            data-i18n="brand_name">Gestor de Relaciones</h1>
                         <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold"
-                            data-i18n="brand_subtitle">CPII Private Club</p>
+                            data-i18n="brand_subtitle">Club Privado</p>
+                        <!-- Tooltip Inteligencia Patrimonial -->
+                        <div class="absolute left-0 top-full mt-2 w-64 z-50
+                                    bg-surface border border-primary/20 rounded-lg p-3
+                                    text-[11px] text-slate-400 leading-relaxed shadow-xl
+                                    opacity-0 pointer-events-none
+                                    group-hover/brand:opacity-100 group-hover/brand:pointer-events-auto
+                                    transition-opacity duration-200" data-i18n="brand_tooltip_text">
+                        </div>
                     </div>
                 </div>
                 <!-- Navigation -->

@@ -1,16 +1,13 @@
 /**
  * CPII — i18n.js
- * Versión: v2.0
+ * Versión: v2.0 → v2.1
+ * FECHA    : 2026-03-14
  * Motor de traducción universal del ecosistema
  * Ruta: core/i18n.js
  *
- * CAMBIOS v1.x → v2.0:
- * - Clave localStorage migrada: 'cpii_crm_lang' → 'cpii:locale'
- *   (alineada con at-bootstrapper.js y el Handoff de Estado Universal)
- * - Motor expuesto como window.__CPII__.i18n.t()
- *   (permite que Web Components como gd-manual llamen _applyI18n() en cualquier momento)
- * - applyTranslations() ahora también recorre Web Components montados en el DOM
- * - Correcciones menores de tokens: 'manual.s1.avoid' y 'manual.s7.r4.role' en EN/FR
+ * Propósito:   - Añadir claves brand_name y brand_tooltip_text en los
+ *              - 4 idiomas. Actualizar brand_subtitle (eliminar prefijo CPII).
+ * Índice:      - Sin balizas nuevas. Cambios dentro del bloque translations.
  *
  * Doctrina: R0 Sin hardcode | R4 data-i18n obligatorio
  */
@@ -18,7 +15,9 @@
 const translations = {
     pt: {
         // ── UI Global ─────────────────────────────────────────
-        "brand_subtitle": "CPII Club Privado",
+        "brand_name": "Gestor de Relações",
+        "brand_subtitle": "Clube Privado",
+        "brand_tooltip_text": "Estratégia de Inteligência Patrimonial: Gestão centralizada com visão 360° para otimizar cada oportunidade de investimento.",
         "nav_dashboard": "Dashboard",
         "nav_mls": "Mercado MLS",
         "nav_network": "A Minha Rede",
@@ -121,7 +120,9 @@ const translations = {
 
     es: {
         // ── UI Global ─────────────────────────────────────────
-        "brand_subtitle": "CPII Club Privado",
+        "brand_name": "Gestor de Relaciones",
+        "brand_subtitle": "Club Privado",
+        "brand_tooltip_text": "Estrategia de Inteligencia Patrimonial: Gestión centralizada con visión 360° para optimizar cada oportunidad de inversión.",
         "nav_dashboard": "Dashboard",
         "nav_mls": "Mercado MLS",
         "nav_network": "Mi Red",
@@ -224,13 +225,15 @@ const translations = {
 
     en: {
         // ── UI Global ─────────────────────────────────────────
-        "brand_subtitle": "CPII Private Club",
+        "brand_name": "Relationship Manager",
+        "brand_subtitle": "Private Club",
+        "brand_tooltip_text": "Wealth Intelligence Strategy: Centralized 360° management to optimize every investment opportunity.",
         "nav_dashboard": "Dashboard",
         "nav_mls": "MLS Market",
         "nav_network": "My Network",
         "nav_history": "History",
         "nav_settings": "Settings",
-        "nav_manuals": "Manuals",
+        "nav_manuals": "Guides",
         "search_placeholder": "Search...",
         "tenant_label": "User",
         "welcome_title": "Workspace",
@@ -327,13 +330,15 @@ const translations = {
 
     fr: {
         // ── UI Global ─────────────────────────────────────────
-        "brand_subtitle": "CPII Club Privé",
+        "brand_name": "Gestionnaire de Relations",
+        "brand_subtitle": "Club Privé",
+        "brand_tooltip_text": "Stratégie d'Intelligence Patrimoniale : Gestion centralisée avec vision 360° pour optimiser chaque opportunité d'investissement.",
         "nav_dashboard": "Tableau de bord",
         "nav_mls": "Marché MLS",
         "nav_network": "Mon Réseau",
         "nav_history": "Historique",
         "nav_settings": "Paramètres",
-        "nav_manuals": "Guides",
+        "nav_manuals": "Manuels",
         "search_placeholder": "Rechercher...",
         "tenant_label": "Utilisateur",
         "welcome_title": "Espace de Travail",

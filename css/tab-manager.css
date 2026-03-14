@@ -1,39 +1,24 @@
 /**
- * CPII — tab-manager.css
- * Estilos para Órbita 2: Tab Bar + Workspace + gd-manual
- * Ruta: css/tab-manager.css
+ * ============================================================
+ * ARCHIVO  : tab-manager.css
+ * VERSIÓN  : 1.1.0
+ * FECHA    : 2026-03-14
+ * PROPÓSITO: Estilos de Órbita 2: Tab Bar, Workspace, Omnibox
+ *            y gd-manual. Doctrina R3: cero hex, solo tokens.
+ * ============================================================
  *
- * Doctrina R3: CERO hex — solo var(--theme-*)
- * Doctrina R0: CERO valores hardcoded
- *
- * Variables requeridas en :root del proyecto:
- * --theme-bg              Fondo principal
- * --theme-bg-secondary    Fondo secundario (tab bar, secciones)
- * --theme-bg-elevated     Fondo elevado (tabs inactivas)
- * --theme-surface         Superficie de cards/gadgets
- * --theme-border          Color de bordes
- * --theme-accent          Color de acento / tab activa
- * --theme-accent-subtle   Acento suave (hover)
- * --theme-text-primary    Texto principal
- * --theme-text-secondary  Texto secundario
- * --theme-text-muted      Texto atenuado
- * --theme-danger-bg       Fondo alerta oscura
- * --theme-danger-border   Borde alerta oscura
- * --theme-danger-text     Texto alerta oscura
- * --theme-radius-sm       Border radius pequeño
- * --theme-radius-md       Border radius medio
- * --theme-spacing-xs      Espaciado extra pequeño
- * --theme-spacing-sm      Espaciado pequeño
- * --theme-spacing-md      Espaciado medio
- * --theme-spacing-lg      Espaciado grande
- * --theme-font-sm         Tamaño fuente pequeño
- * --theme-font-md         Tamaño fuente medio
- * --theme-font-lg         Tamaño fuente grande
- * --theme-font-xl         Tamaño fuente extra grande
- * --theme-transition      Transición estándar
+ * ÍNDICE
+ * [SEC-01] Canvas Órbita 2
+ * [SEC-02] Tab Bar + Tab individual
+ * [SEC-03] Workspace
+ * [SEC-04] gd-manual
+ * [SEC-05] Omnibox
+ * [SEC-06] Empty State — .cpii-empty-state
+ * ============================================================
  */
 
-/* ── Órbita 2: Canvas ──────────────────────────────────────── */
+/* ── [SEC-01] Canvas Órbita 2 ──────────────────────────────────────── */
+
 #canvas-orbita-2 {
     display: flex;
     flex-direction: column;
@@ -42,7 +27,8 @@
     overflow: hidden;
 }
 
-/* ── Tab Bar ───────────────────────────────────────────────── */
+/* ── [SEC-02] Tab Bar + Tab individual ──────────────────────────────────────── */
+
 .cpii-tab-bar {
     display: flex;
     align-items: flex-end;
@@ -124,7 +110,7 @@
     color: var(--theme-danger-text);
 }
 
-/* ── Workspace ─────────────────────────────────────────────── */
+/* ── [SEC-03] Workspace ──────────────────────────────────────── */
 .cpii-workspace {
     flex: 1;
     overflow-y: auto;
@@ -132,7 +118,7 @@
     background: var(--theme-bg);
 }
 
-/* ── gd-manual ─────────────────────────────────────────────── */
+/* ── [SEC-04] gd-manual ──────────────────────────────────────── */
 .gd-manual {
     display: block;
     max-width: 720px;
@@ -241,4 +227,151 @@
     color: var(--theme-text-secondary);
     line-height: 1.7;
     margin: 0;
+}
+
+/* ── [SEC-05] Omnibox ──────────────────────────────────────── */
+.cpii-omnibox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.cpii-omnibox__input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    height: 36px;
+    background: rgba(var(--theme-surface-rgb), 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(var(--theme-primary-rgb), 0.2);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+
+.cpii-omnibox__input-wrapper:focus-within {
+    border-color: var(--theme-primary);
+}
+
+.cpii-omnibox__icon {
+    color: rgba(var(--theme-primary-rgb), 0.5);
+    font-size: 18px;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.cpii-omnibox__input {
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--theme-bg-light);
+    width: 220px;
+}
+
+.cpii-omnibox__input::placeholder {
+    color: rgba(var(--theme-primary-rgb), 0.4);
+}
+
+.cpii-omnibox__dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 260px;
+    background: var(--theme-surface);
+    border: 1px solid var(--theme-border);
+    border-radius: 8px;
+    z-index: 999;
+    display: none;
+    padding: 4px 0;
+    list-style: none;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(var(--theme-bg-rgb), 0.6);
+}
+
+.cpii-omnibox__item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--theme-accent);
+    border-bottom: 1px solid var(--theme-border);
+    transition: background 0.15s ease;
+}
+
+.cpii-omnibox__item:last-child {
+    border-bottom: none;
+}
+
+.cpii-omnibox__item:hover {
+    background: var(--theme-accent-subtle);
+}
+
+.cpii-omnibox__empty {
+    padding: 10px 16px;
+    font-size: 12px;
+    color: rgba(var(--theme-primary-rgb), 0.4);
+}
+
+/* ── [SEC-06] Empty State ──────────────────────────────────── */
+.cpii-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    height: 100%;
+    padding: 48px;
+    text-align: center;
+}
+
+.cpii-empty-state__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(var(--theme-primary-rgb), 0.1);
+    border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cpii-empty-state__icon .material-symbols-outlined {
+    font-size: 32px;
+}
+
+.cpii-empty-state__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cpii-empty-state__title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.cpii-empty-state__desc {
+    font-size: 13px;
+    margin: 0;
+    max-width: 280px;
+    line-height: 1.6;
+}
+
+.cpii-empty-state__btn {
+    margin-top: 8px;
+    padding: 10px 28px;
+    background: rgba(var(--theme-primary-rgb), 0.15);
+    border: 1px solid rgba(var(--theme-primary-rgb), 0.3);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cpii-empty-state__btn:hover {
+    background: rgba(var(--theme-primary-rgb), 0.25);
 }

@@ -1,7 +1,31 @@
-// core/at-tab-manager.js — Versión Blindada 3.1
+// ============================================================
+// ARCHIVO  : at-tab-manager.js
+// VERSIÓN  : 3.6.0
+// FECHA    : 2026-03-14
+// PROPÓSITO: Inyección de Empty State (syncPlaceholder) para eliminar
+//            el canvas negro cuando no hay pestañas abiertas.
+//            Desconectar estilos inline. Conectar clases CSS del
+//            sistema (.cpii-tab, .is-active, .cpii-tab__close).
+//            Textos delegados a clases Tailwind.
+//            Conectar createOmnibox() a las clases .cpii-omnibox
+//            del CSS. Eliminar todos los style.cssText inline
+//            del componente buscador.
+//            Limpiar style.cssText residual de syncPlaceholder.
+//            Mover estilos del empty state a .cpii-empty-state en CSS.
+//            Orden 7 ya aplicada en v3.5.0 — verificada y cerrada.
+
+//  Índice   :
+// [SEC-01] Configuración y estado
+// [SEC-02] MODIFICADA  (syncPlaceholder: style.cssText → clases CSS + Tailwind)
+// [SEC-03] createOmnibox — MODIFICADA
+// [SEC-04] buildInterface
+// [SEC-05] Gestión de pestañas
+// [SEC-06] Inicialización
+// ============================================================
 (function () {
     'use strict';
 
+    // [SEC-01] Configuración y estado
     const state = { tabs: [], activeId: null };
     // Referencias persistentes
     let tabBarRef, contentAreaRef;
@@ -9,18 +33,81 @@
     const t = (key) => window.__CPII__?.i18n?.t(key) ?? key;
     const emit = (name, detail = {}) => document.dispatchEvent(new CustomEvent(name, { detail, bubbles: true }));
 
-    // 1. CONSTRUCTOR DEL OMNIBOX (Blindado)
-    function createOmnibox() {
-        const wrapper = document.createElement('div');
-        wrapper.style.cssText = 'position: relative; display: flex; align-items: center; margin-left: auto;';
+    // [SEC-02] Empty State — syncPlaceholder
+    function syncPlaceholder() {
+        const existing = document.getElementById('cpii-empty-state');
+        if (state.tabs.length > 0) {
+            if (existing) existing.remove();
+            return;
+        }
+        if (existing) return; // ya está montado, no duplicar
 
+        const el = document.createElement('div');
+        el.id = 'cpii-empty-state';
+        el.className = 'cpii-empty-state';
+        el.innerHTML = `
+            <div class="cpii-empty-state__icon">
+                <span class="material-symbols-outlined text-primary">diamond</span>
+            </div>
+            <div class="cpii-empty-state__body">
+                <h2 class="cpii-empty-state__title font-serif text-primary">
+                    ${window.__CPII__.i18n.t('welcome_title')}
+                </h2>
+                <p class="cpii-empty-state__desc text-slate-400">
+                    ${window.__CPII__.i18n.t('empty_state')}
+                </p>
+            </div>
+            <button id="cpii-explore-btn" class="cpii-empty-state__btn text-primary">
+                ${window.__CPII__.i18n.t('explore_btn')}
+            </button>
+        `;
+
+        el.querySelector('#cpii-explore-btn').addEventListener('click', () => {
+            openFromRegistry('gd-dashboard');
+        });
+
+        // Re-traducir al cambiar idioma
+        document.addEventListener('cpii:lang:change', () => {
+            const btn = document.getElementById('cpii-explore-btn');
+            const existing = document.getElementById('cpii-empty-state');
+            if (!existing) return;
+            existing.querySelector('h2').textContent = window.__CPII__.i18n.t('welcome_title');
+            existing.querySelector('p').textContent = window.__CPII__.i18n.t('empty_state');
+            if (btn) btn.textContent = window.__CPII__.i18n.t('explore_btn');
+        });
+
+        contentAreaRef.appendChild(el);
+    }
+
+    // [SEC-03] OMNIBOX — createOmnibox()
+    function createOmnibox() {
+        // Contenedor raíz
+        const wrapper = document.createElement('div');
+        wrapper.className = 'cpii-omnibox';
+
+        // Input wrapper (luxury-glass via CSS)
+        const inputWrapper = document.createElement('div');
+        inputWrapper.className = 'cpii-omnibox__input-wrapper';
+
+        // Icono búsqueda
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined cpii-omnibox__icon';
+        icon.textContent = 'search';
+
+        // Input
         const input = document.createElement('input');
         input.type = 'text';
-        input.placeholder = t('search_placeholder') || 'Pesquisar...';
-        input.style.cssText = 'height: 32px; padding: 0 12px; font-size: 13px; border-radius: 6px; border: 1px solid var(--theme-border); background: var(--theme-bg); color: var(--theme-text); outline: none; width: 260px;';
+        input.className = 'cpii-omnibox__input';
+        input.placeholder = window.__CPII__.i18n.t('search_placeholder');
 
+        // Dropdown
         const dropdown = document.createElement('ul');
-        dropdown.style.cssText = 'position: absolute; top: 100%; right: 0; min-width: 260px; margin-top: 4px; background: var(--theme-surface); border: 1px solid var(--theme-border); border-radius: 6px; z-index: 999; display: none; padding: 0; list-style: none; overflow: hidden;';
+        dropdown.className = 'cpii-omnibox__dropdown';
+
+        // Re-traducir placeholder al cambiar idioma
+        document.addEventListener('cpii:lang:change', () => {
+            input.placeholder = window.__CPII__.i18n.t('search_placeholder');
+        });
 
         // Lógica de búsqueda
         input.addEventListener('input', () => {
@@ -35,14 +122,15 @@
             dropdown.innerHTML = '';
 
             if (ids.length === 0) {
-                dropdown.innerHTML = '<li style="padding: 10px; color: #666; font-size: 12px;">Sin resultados</li>';
+                const empty = document.createElement('li');
+                empty.className = 'cpii-omnibox__empty';
+                empty.textContent = window.__CPII__.i18n.t('omnibox_no_results');
+                dropdown.appendChild(empty);
             } else {
                 ids.forEach(id => {
                     const li = document.createElement('li');
+                    li.className = 'cpii-omnibox__item';
                     li.textContent = t(registry[id]?.labelKey || id);
-                    li.style.cssText = 'padding: 10px 15px; cursor: pointer; color: var(--theme-text-muted); border-bottom: 1px solid var(--theme-border); font-size: 13px;';
-                    li.addEventListener('mouseenter', () => li.style.background = 'var(--theme-surface-hover)');
-                    li.addEventListener('mouseleave', () => li.style.background = 'transparent');
                     li.addEventListener('mousedown', (ev) => {
                         ev.preventDefault();
                         openFromRegistry(id);
@@ -60,12 +148,15 @@
             if (!wrapper.contains(e.target)) dropdown.style.display = 'none';
         });
 
-        wrapper.appendChild(input);
+        // Ensamblar
+        inputWrapper.appendChild(icon);
+        inputWrapper.appendChild(input);
+        wrapper.appendChild(inputWrapper);
         wrapper.appendChild(dropdown);
         return wrapper;
     }
 
-    // 2. CONSTRUCTOR DE LA ESTRUCTURA
+    // [SEC-04] buildInterface — Constructor de la estructura
     function buildInterface() {
         const orbitCanvas = document.getElementById('canvas-orbita-2');
         if (!orbitCanvas) return;
@@ -73,20 +164,21 @@
         // Crear Barra (CONTRASTE MEJORADO)
         tabBarRef = document.createElement('div');
         tabBarRef.id = 'cpii-tab-bar';
-        tabBarRef.style.cssText = 'display: flex; align-items: center; gap: 8px; height: 64px; border-bottom: 1px solid var(--theme-border); background: var(--theme-surface); padding: 0 24px; width: 100%; z-index: 10;';
+        tabBarRef.className = 'cpii-tab-bar';
 
         // Crear Área de Contenido
         contentAreaRef = document.createElement('div');
         contentAreaRef.id = 'cpii-content-area';
-        contentAreaRef.style.cssText = 'flex: 1; position: relative; overflow: auto; background: var(--theme-bg);';
+        contentAreaRef.className = 'cpii-workspace';
 
         // Ensamblar
         tabBarRef.appendChild(createOmnibox());
         orbitCanvas.appendChild(tabBarRef);
         orbitCanvas.appendChild(contentAreaRef);
+        syncPlaceholder();
     }
 
-    // 3. GESTIÓN DE PESTAÑAS (Blindada)
+    // [SEC-05] Gestión de pestañas
     function openFromRegistry(id) {
         const res = window.__CPII__?.RESOURCE_REGISTRY?.[id];
         if (!res) return;
@@ -94,7 +186,7 @@
         // Si ya existe, activar
         if (state.tabs.find(t => t.id === id)) return activateTab(id);
 
-        const node = document.createElement(res.tag);
+        const node = document.createElement(res.tagName || 'div');
         node.style.display = 'none';
         contentAreaRef.appendChild(node);
 
@@ -104,11 +196,14 @@
         // Crear pestaña visual
         const tabEl = document.createElement('div');
         tabEl.dataset.id = id;
-        tabEl.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 0 15px; height: 36px; background: transparent; border: 1px solid transparent; border-radius: 6px; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 13px; transition: all 0.2s;';
-        tabEl.innerHTML = `<span>${t(res.labelKey)}</span><b style="margin-left:8px; opacity:0.5; font-weight:normal;">&times;</b>`;
+        tabEl.className = 'cpii-tab text-slate-400';
+        tabEl.innerHTML = `
+            <span class="cpii-tab__label">${t(res.labelKey)}</span>
+            <button class="cpii-tab__close">&times;</button>
+        `;
 
         tabEl.addEventListener('click', () => activateTab(id));
-        tabEl.querySelector('b').addEventListener('click', (e) => {
+        tabEl.querySelector('.cpii-tab__close').addEventListener('click', (e) => {
             e.stopPropagation();
             closeTab(id);
         });
@@ -116,6 +211,7 @@
         // Insertar antes del buscador
         tabBarRef.insertBefore(tabEl, tabBarRef.lastChild);
         activateTab(id);
+        syncPlaceholder();
     }
 
     function activateTab(id) {
@@ -123,9 +219,9 @@
             t.node.style.display = t.id === id ? 'block' : 'none';
             const el = tabBarRef.querySelector(`[data-id="${t.id}"]`);
             if (el) {
-                el.style.color = t.id === id ? 'var(--theme-border-active)' : 'rgba(255,255,255,0.5)';
-                el.style.borderColor = t.id === id ? 'var(--theme-border-active)' : 'transparent';
-                el.style.background = t.id === id ? 'rgba(255,255,255,0.12)' : 'transparent';
+                el.classList.toggle('is-active', t.id === id);
+                el.classList.toggle('text-slate-100', t.id === id);
+                el.classList.toggle('text-slate-400', t.id !== id);
             }
         });
         state.activeId = id;
@@ -138,9 +234,10 @@
         tabBarRef.querySelector(`[data-id="${id}"]`).remove();
         state.tabs.splice(idx, 1);
         if (state.activeId === id && state.tabs.length > 0) activateTab(state.tabs[0].id);
+        syncPlaceholder();
     }
 
-    // 4. INICIALIZACIÓN
+    // [SEC-06] Inicialización
     function init() {
         if (document.getElementById('cpii-tab-bar')) return;
         window.__CPII__ = window.__CPII__ || {};
@@ -150,8 +247,8 @@
 
         // Auto-apertura del Dashboard
         setTimeout(() => {
-            if (window.__CPII__.RESOURCE_REGISTRY?.['dashboard']) {
-                openFromRegistry('dashboard');
+            if (window.__CPII__.RESOURCE_REGISTRY?.['gd-dashboard']) {
+                openFromRegistry('gd-dashboard');
             }
         }, 600);
     }
