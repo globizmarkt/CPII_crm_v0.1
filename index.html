@@ -1,6 +1,30 @@
-<!DOCTYPE html>
+<!--
+============================================================
+ARCHIVO  : index.html
+VERSIÓN  : 1.2.0
+FECHA    : 2026-03-14
+PROPÓSITO: Entry point único de Trinity Architecture.
+           Contiene Órbita 1 (Sidebar), Órbita 2 (Canvas),
+           Órbita 3 (Dock). Carga gadgets vía at-tab-manager.
+============================================================
 
+ÍNDICE
+[SEC-01] Head — Meta, fuentes y scripts core
+[SEC-02] Tailwind Config — Design tokens vía var(--theme-*)
+[SEC-03] Estilos globales — :root tokens + clases utilitarias
+[SEC-04] Gatekeeper Overlay — KYC security layer
+[SEC-05] Trinity Layout — Contenedor principal flex
+[SEC-06] Órbita 1 — Sidebar (250px): nav, brand, user footer
+[SEC-07] Órbita 2 — Canvas dinámico (#canvas-orbita-2)
+[SEC-08] Órbita 3 — Dock (320px): perfil, gatekeeper, AIMON
+[SEC-09] Notification Toast — Sistema de alertas flotante
+[SEC-10] Bootstrap Script — Wiring del TabManager con sidebar
+============================================================
+-->
+<!DOCTYPE html>
 <html class="dark" lang="en">
+
+<!-- [SEC-01] Head — Meta, fuentes y scripts core -->
 
 <head>
     <link rel="stylesheet" href="css/tab-manager.css">
@@ -23,17 +47,20 @@
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet" />
+
+    <!-- [SEC-02] Tailwind Config — Design tokens vía var(--theme-*) -->
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#c1a85c",
-                        "background-light": "#f8f7f6",
-                        "background-dark": "#161513",
-                        "surface": "#1e1b14",
-                        "accent-gold": "#C1A85D",
+                        "primary": "var(--theme-primary)",
+                        "background-light": "var(--theme-bg-light)",
+                        "background-dark": "var(--theme-bg)",
+                        "surface": "var(--theme-surface)",
+                        "accent-gold": "var(--theme-accent)",
+                        "ink": "var(--theme-ink)",
                     },
                     fontFamily: {
                         "display": ["Manrope", "sans-serif"],
@@ -44,31 +71,48 @@
             },
         }
     </script>
+
+    <!-- [SEC-03] Estilos globales — :root Design Token System + clases utilitarias -->
     <style>
+        /* ── Design Token System — fuente única de verdad ── */
+        :root {
+            /* Colores sólidos */
+            --theme-bg: #161513;
+            --theme-bg-light: #f8f7f6;
+            --theme-surface: #1e1b14;
+            --theme-primary: #c1a85c;
+            --theme-accent: #C1A85D;
+            --theme-ink: #181d6d;
+            /* wet blue ink / bloomberg */
+
+            /* Tripletes RGB para uso en rgba() — Doctrina R3 */
+            --theme-bg-rgb: 22, 21, 19;
+            --theme-surface-rgb: 30, 27, 20;
+            --theme-primary-rgb: 193, 168, 93;
+        }
+
+        /* ── Utilidades globales ── */
         body {
             font-family: 'Manrope', sans-serif;
-            background-color: #161513;
+            background-color: var(--theme-bg);
         }
 
         .luxury-glass {
-            background: rgba(30, 27, 20, 0.7);
+            background: rgba(var(--theme-surface-rgb), 0.7);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(193, 168, 93, 0.1);
-        }
-
-        /* Tema "wet blue ink" para aspecto bloomberg: */
-        :root {
-            --theme-ink: #181d6d;
+            border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
         }
 
         .gatekeeper-overlay {
             backdrop-filter: blur(8px);
-            background: rgba(22, 21, 19, 0.4);
+            background: rgba(var(--theme-bg-rgb), 0.4);
         }
     </style>
 </head>
 
 <body class="bg-background-dark text-slate-100 overflow-hidden font-display">
+
+    <!-- [SEC-04] Gatekeeper Overlay — KYC security layer -->
     <!-- Security Overlay (Visible when KYC is pending) -->
     <div class="fixed inset-0 z-50 flex items-center justify-center gatekeeper-overlay pointer-events-none">
         <div
@@ -87,8 +131,12 @@
             </button>
         </div>
     </div>
+
+    <!-- [SEC-05] Trinity Layout — Contenedor principal flex -->
     <!-- Main Trinity Layout -->
     <div class="flex h-screen w-full overflow-hidden">
+
+        <!-- [SEC-06] Órbita 1 — Sidebar (250px): nav, brand, user footer -->
         <!-- Orbit 1: Left Sidebar (250px) -->
         <aside class="w-[250px] flex-shrink-0 bg-surface border-r border-primary/10 flex flex-col h-full z-30">
             <div class="p-6 flex flex-col gap-8">
@@ -141,11 +189,15 @@
                 </a>
             </div>
         </aside>
+
+        <!-- [SEC-07] Órbita 2 — Canvas dinámico (#canvas-orbita-2) -->
         <!-- Orbit 2: Center Canvas (Dynamic Workspace) -->
         <main class="flex-1 bg-background-light relative flex flex-col overflow-y-auto text-slate-800">
             <div id="canvas-orbita-2" class="flex-1 flex flex-col relative">
             </div>
         </main>
+
+        <!-- [SEC-08] Órbita 3 — Dock (320px): perfil, gatekeeper, AIMON -->
         <!-- Orbit 3: Right Dock (320px) -->
         <aside class="w-[320px] flex-shrink-0 bg-surface border-l border-primary/10 flex flex-col h-full z-30">
             <!-- Top Controls -->
@@ -247,6 +299,8 @@
             </div>
         </aside>
     </div>
+
+    <!-- [SEC-09] Notification Toast — Sistema de alertas flotante -->
     <!-- Notification Toast -->
     <div
         class="fixed bottom-6 right-6 z-[60] luxury-glass border border-primary/30 px-6 py-4 rounded-xl flex items-center gap-4 shadow-2xl translate-y-20 opacity-0 pointer-events-none transition-all duration-500 transform">
@@ -256,6 +310,8 @@
             <span class="text-[10px] text-slate-400">Novas propriedades MLS adicionadas.</span>
         </div>
     </div>
+
+    <!-- [SEC-10] Bootstrap Script — Wiring del TabManager con sidebar -->
     <!-- El TabManager se encarga de cargar los gadgets ahora -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -267,12 +323,13 @@
                         const text = e.target.innerText.toLowerCase();
                         if (text.includes('manual')) window.__CPII__.tabManager.openFromRegistry('gd-manual');
                         if (text.includes('dashboard')) window.__CPII__.tabManager.openFromRegistry('gd-dashboard');
-                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('gd-simulador'); // Ejemplo
+                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('gd-simulador');
                     });
                 });
             }, 1000); // Esperamos a que todo cargue
         });
     </script>
+
 </body>
 
 </html>
