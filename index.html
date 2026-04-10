@@ -363,166 +363,157 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
         </div>
     </div>
 
-    <!-- [SEC-10] Bootstrap Script — Trinity Router v2.0.0 (Kimi) -->
+    <!-- [SEC-10] Bootstrap Script — Trinity Router v3.0.0 (Resilience) -->
     <script>
         // ============================================================
         // CARTOGRAFÍA QUIRÚRGICA v3.2
         // ============================================================
         // ARCHIVO   : index.html [SEC-10] Bootstrap Trinity Router
-        // VERSIÓN   : 2.0.0
-        // FECHA     : 2026-03-22
+        // VERSIÓN   : 3.0.0-RESILIENCE
+        // FECHA     : 2026-04-10
         // AUTOR     : Junior Dev-Logic Kimi
         // DOCTRINA  : R2 (Light DOM) | R4 (i18n Strict) | R5 (Economía O(1))
-        // PROPÓSITO : Reemplazar el enrutamiento por innerText (legacy) con
-        //             Event Delegation basado en atributos data-gadget, garantizando
-        //             inmunidad ante cambios de idioma y complejidad O(1) constante.
-        // SPRINT    : VIBE-CPII-19 — Saneamiento Sprint 3
+        // PROPÓSITO : Blindaje contra race conditions. El Gatekeeper opera
+        //             independientemente del router. Retry polivalente O(1).
+        // SPRINT    : VIBE-CPII-20 — Conexión Traccional
         // ============================================================
 
+        'use strict';
+
+        // ============================================================
+        // [SEC-10.0] FAILSAFE INDEPENDIENTE — Gatekeeper Kill-Switch
+        // Prioridad: CRÍTICA. Debe operar incluso si el router colapsa.
+        // ============================================================
         document.addEventListener('DOMContentLoaded', () => {
-            (function () {
-                'use strict';
+            document.addEventListener('click', (e) => {
+                const trigger = e.target.closest('[data-action="dismiss-gatekeeper"]');
+                if (!trigger) return;
 
-                // Fail-fast: dependencias críticas
-                if (!window.__CPII__?.tabManager) {
-                    console.error('[TrinityRouter] ❌ TabManager no disponible en namespace');
+                e.preventDefault();
+                const overlay = document.querySelector('.gatekeeper-overlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    document.dispatchEvent(new CustomEvent('cpii:kyc-dismissed', {
+                        detail: { timestamp: Date.now(), trigger: 'manual-click' }
+                    }));
+                }
+            });
+        });
+
+        // ============================================================
+        // [SEC-10.1] TRINITY ROUTER — Inicialización con Resilience
+        // ============================================================
+        function initTrinity() {
+            // Fail-soft: Si el TabManager no está listo, auto-retry en 100ms (R5: sin polling agresivo)
+            if (!window.__CPII__?.tabManager) {
+                console.warn('[TrinityRouter] ⏳ TabManager no disponible, reintentando en 100ms...');
+                setTimeout(initTrinity, 100);
+                return;
+            }
+
+            const tm = window.__CPII__.tabManager;
+
+            // Whitelist O(1) de gadgets permitidos (fail-closed security)
+            const ALLOWED_GADGETS = new Set([
+                'gd-dashboard',
+                'gd-manual',
+                'gd-simulador',
+                'gd-calculadora',
+                'gd-vault',
+                'gd-crm',
+                'gd-academy',
+                'gd-history',
+                'gd-network',
+                'gd-settings'
+            ]);
+
+            // Delegación de navegación en Órbita 1 (Sidebar)
+            const sidebar = document.querySelector('aside.w-\\[250px\\]');
+            if (!sidebar) {
+                console.error('[TrinityRouter] ❌ Sidebar no encontrado en DOM');
+                return;
+            }
+
+            sidebar.addEventListener('click', (e) => {
+                const trigger = e.target.closest('[data-gadget]');
+                if (!trigger) return;
+
+                e.preventDefault();
+                const gadgetId = trigger.getAttribute('data-gadget');
+
+                // R5: Validación O(1) contra Set constante
+                if (!ALLOWED_GADGETS.has(gadgetId)) {
+                    console.warn(`[TrinityRouter] Gadget no autorizado: ${gadgetId}`);
                     return;
                 }
 
-                const tm = window.__CPII__.tabManager;
+                try {
+                    tm.openFromRegistry(gadgetId);
 
-                // Whitelist O(1) de gadgets permitidos (fail-closed security)
-                const ALLOWED_GADGETS = new Set([
-                    'gd-dashboard',
-                    'gd-manual',
-                    'gd-simulador',
-                    'gd-calculadora',
-                    'gd-vault',
-                    'gd-crm',
-                    'gd-academy',
-                    'gd-history',
-                    'gd-network',
-                    'gd-settings'
-                ]);
+                    // Feedback visual: actualizar estado activo en menú
+                    document.querySelectorAll('.menu-pillar').forEach(el => {
+                        el.classList.remove('bg-primary/10', 'text-primary', 'border-primary/20');
+                        el.classList.add('text-slate-400');
+                    });
 
-                // [SEC-10.1] Delegación de navegación en Órbita 1 (Sidebar)
-                // Escucha única en el contenedor padre, sin setTimeout ni innerText
-                const sidebar = document.querySelector('aside.w-\\[250px\\]'); // Selector del aside 250px
+                    const activePillar = trigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
+                        || trigger.closest('.menu-pillar')
+                        || trigger;
 
-                if (!sidebar) {
-                    console.error('[TrinityRouter] Sidebar no encontrado en DOM');
+                    activePillar.classList.add('bg-primary/10', 'text-primary', 'border-primary/20');
+                    activePillar.classList.remove('text-slate-400');
+
+                    document.dispatchEvent(new CustomEvent('trinity:navigate', {
+                        detail: { gadget: gadgetId, source: 'sidebar', timestamp: Date.now() },
+                        bubbles: true
+                    }));
+
+                } catch (err) {
+                    console.error(`[TrinityRouter] Error cargando ${gadgetId}:`, err);
+                }
+            });
+
+            console.log('[TrinityRouter] ✅ Inicializado (Event Delegation O(1))');
+
+            // [SEC-10.2] Auto-Boot: Conexión Traccional por defecto (R5 O(1))
+            (function autoBootTraccional() {
+                const DEFAULT_GADGET = 'gd-manual';
+
+                if (!ALLOWED_GADGETS.has(DEFAULT_GADGET)) {
+                    console.warn(`[TrinityRouter] Auto-boot bloqueado: ${DEFAULT_GADGET} no en whitelist`);
                     return;
                 }
 
-                sidebar.addEventListener('click', (e) => {
-                    // R2: Navegación por atributos, nunca por contenido de texto (R4)
-                    const trigger = e.target.closest('[data-gadget]');
-                    if (!trigger) return; // No es un link gadget, permitir comportamiento nativo
+                try {
+                    tm.openFromRegistry(DEFAULT_GADGET);
 
-                    e.preventDefault();
-
-                    const gadgetId = trigger.getAttribute('data-gadget');
-
-                    // R5: Validación O(1) contra Set constante
-                    if (!ALLOWED_GADGETS.has(gadgetId)) {
-                        console.warn(`[TrinityRouter] Gadget no autorizado: ${gadgetId}`);
-                        return;
-                    }
-
-                    // Delegar al TabManager
-                    try {
-                        tm.openFromRegistry(gadgetId);
-
-                        // Feedback visual: actualizar estado activo en menú (sin mutar estructura)
-                        document.querySelectorAll('.menu-pillar').forEach(el => {
-                            el.classList.remove('bg-primary/10', 'text-primary', 'border-primary/20');
-                            el.classList.add('text-slate-400');
-                        });
-
-                        const activePillar = trigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
-                            || trigger.closest('.menu-pillar')
-                            || trigger;
+                    const defaultTrigger = sidebar.querySelector(`[data-gadget="${DEFAULT_GADGET}"]`);
+                    if (defaultTrigger) {
+                        const activePillar = defaultTrigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
+                            || defaultTrigger.closest('.menu-pillar')
+                            || defaultTrigger;
 
                         activePillar.classList.add('bg-primary/10', 'text-primary', 'border-primary/20');
                         activePillar.classList.remove('text-slate-400');
-
-                        // Evento canónico para auditoría
-                        document.dispatchEvent(new CustomEvent('trinity:navigate', {
-                            detail: { gadget: gadgetId, source: 'sidebar', timestamp: Date.now() },
-                            bubbles: true
-                        }));
-
-                    } catch (err) {
-                        console.error(`[TrinityRouter] Error cargando ${gadgetId}:`, err);
-                    }
-                });
-
-                // [SEC-10.2] Delegación global para acciones del sistema (Gatekeeper, etc.)
-                document.addEventListener('click', (e) => {
-                    // R2: Capturar acciones por data-action, nunca onclick inline
-                    const actionTrigger = e.target.closest('[data-action]');
-                    if (!actionTrigger) return;
-
-                    const action = actionTrigger.getAttribute('data-action');
-
-                    switch (action) {
-                        case 'dismiss-gatekeeper':
-                            e.preventDefault();
-                            const overlay = document.querySelector('.gatekeeper-overlay');
-                            if (overlay) {
-                                overlay.style.display = 'none';
-                                document.dispatchEvent(new CustomEvent('cpii:kyc-dismissed', {
-                                    detail: { timestamp: Date.now(), trigger: 'manual-click' }
-                                }));
-                            }
-                            break;
-
-                        // Espacio reservado para futuras acciones globales (logout, theme toggle, etc.)
-                        default:
-                            break;
-                    }
-                });
-
-                console.log('[TrinityRouter] ✅ Inicializado (Event Delegation O(1))');
-
-                // [SEC-10.3] Auto-Boot: Conexión Traccional por defecto (R5 O(1))
-                (function autoBootTraccional() {
-                    const DEFAULT_GADGET = 'gd-manual';
-
-                    // Fail-closed: Validar contra whitelist existente (O(1))
-                    if (!ALLOWED_GADGETS.has(DEFAULT_GADGET)) {
-                        console.warn(`[TrinityRouter] Auto-boot bloqueado: ${DEFAULT_GADGET} no en whitelist`);
-                        return;
                     }
 
-                    try {
-                        // Inyección en Órbita 2
-                        tm.openFromRegistry(DEFAULT_GADGET);
+                    document.dispatchEvent(new CustomEvent('trinity:boot-complete', {
+                        detail: { gadget: DEFAULT_GADGET, mode: 'auto-traccional', timestamp: Date.now() },
+                        bubbles: true
+                    }));
 
-                        // Activación visual del pilar correspondiente (sin duplicar lógica de eventos)
-                        const defaultTrigger = sidebar.querySelector(`[data-gadget="${DEFAULT_GADGET}"]`);
-                        if (defaultTrigger) {
-                            const activePillar = defaultTrigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
-                                || defaultTrigger.closest('.menu-pillar')
-                                || defaultTrigger;
-
-                            // Aplicar estado activo (clases Tailwind canónicas del sistema)
-                            activePillar.classList.add('bg-primary/10', 'text-primary', 'border-primary/20');
-                            activePillar.classList.remove('text-slate-400');
-                        }
-
-                        document.dispatchEvent(new CustomEvent('trinity:boot-complete', {
-                            detail: { gadget: DEFAULT_GADGET, mode: 'auto-traccional', timestamp: Date.now() },
-                            bubbles: true
-                        }));
-
-                    } catch (err) {
-                        console.error('[TrinityRouter] Auto-boot fallido:', err);
-                        // Fail-safe: El lienzo permanece en estado válido (vacío) si el gadget falla
-                    }
-                })();
+                } catch (err) {
+                    console.error('[TrinityRouter] Auto-boot fallido:', err);
+                }
             })();
-        });
+        }
+
+        // Disparar inicialización con espera DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initTrinity);
+        } else {
+            initTrinity();
+        }
     </script>
     <script src="core/passport-engine.js" defer></script>
 
