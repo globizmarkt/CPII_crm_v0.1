@@ -1,0 +1,134 @@
+# MEMORY_DUMP_BULLDOZER.md
+**Agente:** Bulldozer (Claude)
+**Proyecto:** CPII / Lux Lusitana — Skeleton Factory
+**Fase cubierta:** Acoplamiento FASE 0
+**Fecha de volcado:** 2026-03-15
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Ejecución de código, bisturí sobre archivos existentes, generación de artefactos nuevos.
+- Análisis de vectores de riesgo y arquitectura a nivel táctico.
+- Detección y registro de deuda técnica aunque no sea objeto de la orden.
+- Emisión de diagnóstico previo antes de cualquier intervención de más de 2 archivos.
+- Actualización autónoma del Cuadro de Mando al cierre de cada orden.
+
+**Qué NO hago:**
+- No toco `cpii-landing`. Está en producción, aislada, fuera de mi jurisdicción.
+- No audito integraciones Telegram/Sheets de la Landing.
+- No ejecuto bisturí sin diagnóstico previo en intervenciones de más de 2 archivos.
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido (salvo orden explícita).
+- No reproduzco hexadecimales de color (R3 — Zero-Hex). Toda referencia de color vía tokens semánticos o variables CSS.
+- No hardcodeo strings de UI (R4 — i18n). Todo texto visible a través de capa de traducción.
+
+**Condiciones necesarias antes de actuar:**
+- Intervenciones de más de 1 archivo: validación del Lead Architect (Gemini) como condición bloqueante.
+- Intervenciones de más de 2 archivos: diagnóstico emitido + alineación explícita del Director confirmada.
+- Cualquier veto R3/R4 detectado: detener bisturí, emitir aviso, proponer corrección alternativa desde cero antes de ejecutar.
+
+**Matices aprendidos en este proyecto:**
+- La jerarquía es Director > Lead Architect (Gemini) > Bulldozer. Gemini emite vetos bloqueantes; yo no los puenteo.
+- Mi rol en FASE 0 es análisis puro, cero generación de código final. El código llega con FASE A.
+- El entorno es Zero-Server (Vanilla JS + Tailwind). Sin frameworks de componentes, sin SSR, sin bundler implícito.
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+**Globales que me afectan:**
+
+| Código | Doctrina | Aplicación directa |
+|--------|----------|--------------------|
+| R3 | Zero-Hex | Ningún color literal en CSS/JS. Solo `var(--token)` o clase semántica Tailwind. |
+| R4 | i18n obligatorio | Todo string de UI en capa de traducción. Prohibido texto hardcodeado. |
+| ZT | Zero Trust | El ecosistema Skeleton opera bajo este principio. `pending_users` = zona no confiable por defecto. |
+| ZS | Zero-Server | Vanilla JS puro. Sin Node runtime en cliente. Sin frameworks implícitos. |
+
+**Doctrinas emergentes (no codificadas oficialmente, surgidas del trabajo real):**
+
+- **Doctrina de Esclusa:** `pending_users` nunca es fuente de verdad. Es zona de tránsito. El esquema Verdent en `/users/{uid}` es la única fuente de verdad del CRM.
+- **Doctrina de Transmutación Atómica:** El ETL Landing→Verdent ocurre en una única operación transaccional. No hay estado intermedio persistido.
+- **Doctrina de Origen Marcado:** Todo perfil creado fuera del flujo normal (colisión, direct_signup) lleva flag de origen explícito. El sistema nunca asume un perfil limpio sin verificar `meta.origen`.
+- **Doctrina de Referral Diferido:** La validación del `referral_code` no bloquea la creación del perfil. Si es inválido, se persiste como `null` + flag para revisión manual. El flujo no se rompe por un código de embajador incorrecto.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+**FASE 0 — Análisis (activo en memoria, no en disco):**
+
+| Artefacto | Qué hace | Ubicación |
+|-----------|----------|-----------|
+| Análisis Vector Huérfanos | Política TTL via campo `expireAt` en `pending_users` + Cloud Scheduler de auditoría | Memoria / pendiente implementación FASE A |
+| Análisis Vector Colisión | Política de creación condicional: perfil mínimo + flag `origen: "direct_signup"` si no hay documento en esclusa | Memoria / pendiente implementación FASE A |
+| Mapa de Transmutación Landing→Verdent | Tabla de correspondencia campo crudo → campo Esquema Verdent con lógica de validación | Memoria / pendiente implementación FASE A |
+
+**Producción confirmada (externa a mi jurisdicción):**
+
+| Artefacto | Qué hace | Ubicación |
+|-----------|----------|-----------|
+| `cpii-landing` | Landing pública, captura leads, escribe en `pending_users` | Producción — NO TOCAR |
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|---------------------|
+| Rechazar autenticación Firebase si no existe doc en `pending_users` | Firebase Auth no es el punto de control correcto para lógica de negocio. Bloquear el Sign-In desde Auth es frágil y viola separación de responsabilidades. La lógica de "perfil incompleto" vive en Firestore/Functions, no en Auth. |
+| Cloud Function de barrido para eliminar huérfanos de `pending_users` | Redundante y costoso. El TTL nativo de Firestore (`expireAt`) cubre el borrado automático sin coste operativo adicional. La Function queda solo para auditoría de compliance, no para borrado. |
+| Validación de `referral_code` como gate de creación de perfil | Rompería el flujo de onboarding por un dato que puede ser inválido por error tipográfico. Decisión: validación diferida, perfil siempre se crea, el flag permite revisión manual sin fricción para el usuario. |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+| Item | Descripción | Severidad | Propietario |
+|------|-------------|-----------|-------------|
+| DT-01 | Política de retención de `pending_users` no está implementada en la Landing. El TTL (`expireAt`) debe escribirse desde el momento en que la Landing crea el documento. Actualmente no se ha confirmado si la Landing lo incluye. | ALTA | Frontera Landing/Skeleton — requiere confirmación del Director |
+| DT-02 | El Esquema Verdent completo no está documentado formalmente en ningún artefacto accesible para este agente. Solo existe el mapeo parcial derivado del SITREP. | ALTA | Lead Architect (Gemini) |
+| DT-03 | El flujo de onboarding diferido para perfiles `origen: "direct_signup"` está definido conceptualmente pero sin implementación ni wireframe. | MEDIA | Pendiente FASE A |
+| DT-04 | No existe política documentada sobre qué ocurre si el mismo email hace Sign-In dos veces antes de que se destruya su documento en `pending_users` (carrera de condición en la transmutación). | MEDIA | Requiere decisión de arquitectura antes de FASE A |
+| DT-05 | La colección de agentes (para validar `referral_code`) no ha sido mencionada en ningún documento de arquitectura. Se asume que existe, pero su estructura es desconocida para este agente. | BAJA-MEDIA | Lead Architect (Gemini) |
+
+---
+
+## 6. CONOCIMIENTO TÁCTICO DEL PROYECTO
+
+**Lo que no está en ningún documento:**
+
+- **"Lux Lusitana" es el nombre de marca, "CPII" es el nombre de proyecto interno.** No mezclar en comunicaciones hacia usuario final.
+- **El ecosistema es CRM + MLS privado.** No es un SaaS genérico. Los usuarios son agentes inmobiliarios o similares con relaciones de referido entre ellos. El `referral_code` no es un cupón de marketing — es un vínculo estructural entre agentes que tiene implicaciones de comisión o jerarquía.
+- **Zero Trust no es solo una doctrina técnica aquí — es una postura de negocio.** El cliente/Director tiene alta sensibilidad sobre qué datos cruzan qué fronteras. Cualquier propuesta que mezcle zonas (pública/privada) sin esclusa explícita generará fricción aunque sea técnicamente válida.
+- **La Landing está blindada políticamente.** No se toca aunque se detecte deuda técnica en ella. Si algo de la Landing es un problema (ej. no escribe `expireAt`), la solución va en el lado Skeleton, no en la Landing.
+- **Gemini como Lead Architect tiene veto bloqueante real.** No es un rol ceremonial. En sesiones anteriores su validación ha sido condición necesaria para avanzar. No saltarse este paso aunque la solución parezca obvia.
+- **El entorno Zero-Server es una restricción dura, no una preferencia.** Cualquier solución que requiera runtime de servidor en cliente (Express, Next, etc.) es descartada automáticamente sin debate.
+- **Tailwind se usa en modo CDN/utilidades, sin compilador.** Solo clases del core de Tailwind disponibles en runtime. Sin purge, sin JIT, sin plugins que requieran build step.
+- **La colección `/users/{uid}` es sagrada.** Nada escribe en ella excepto la Cloud Function de transmutación. Ningún cliente escribe directamente. Las Firestore Security Rules deben reflejar esto.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3 (FASE A — El Gate)
+
+Para operar desde el primer mensaje sin fricción, necesito recibir exactamente:
+
+**BLOQUE A — Esquema Verdent completo**
+El documento JSON o TypeScript interface que define `/users/{uid}` al completo. Sin él, la Cloud Function de transmutación es código ciego.
+
+**BLOQUE B — Decisión sobre DT-04 (carrera de condición)**
+¿Qué comportamiento es correcto si el mismo email dispara el Sign-In dos veces antes de que el primer proceso de transmutación complete y destruya el doc en `pending_users`? Opciones conocidas: (1) idempotencia por UID — la segunda llamada detecta que `/users/{uid}` ya existe y aborta, (2) lock con campo `procesando: true` en `pending_users` durante la transmutación.
+
+**BLOQUE C — Confirmación de TTL en Landing**
+¿La Landing ya escribe `expireAt` en cada documento de `pending_users`? Si no, necesito el plazo acordado (ej. 72h) para que la Cloud Function lo gestione como fallback.
+
+**BLOQUE D — Estructura de la colección de agentes**
+Al menos los campos necesarios para validar `referral_code` → `uid_agente`. Sin esto, la lógica de referidos de la transmutación queda como stub.
+
+**BLOQUE E — Reglas de Firestore Security Rules base**
+Si ya existen reglas en el proyecto Firebase, necesito verlas antes de escribir las nuevas. Escribir encima de reglas existentes sin conocerlas es riesgo de ruptura silenciosa.
+
+---
+
+*Fin del volcado. Bulldozer en standby. Esperando FASE A.*

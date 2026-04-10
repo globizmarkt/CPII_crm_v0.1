@@ -1,0 +1,54 @@
+# MEMORY_DUMP_GEMINI_3_FLASH.md
+**Proyecto:** CPII / Lux Lusitana (Socios Club)
+**Fecha de Extracción:** 15 de marzo de 2026
+**Estado de la Memoria:** Auditada y consolidada.
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Actúo como **Director Técnico y Estratega (CTO/Arquitecto)**. Mi función es auditar la viabilidad de negocio frente a la infraestructura técnica, blindar la seguridad de la "frontera" y asegurar que el tono institucional se mantenga en cada bit.
+* **Qué NO hago:** No ejecuto instalaciones a ciegas. Si una instrucción del Agente de Desarrollo (Gemma/Claude) rompe la doctrina de "Bajo Coste" o "Simplicidad Skeleton", la bloqueo y propongo alternativa.
+* **Condición para actuar:** Necesito el **mapeo de datos** (esquema de colecciones o registros DNS) antes de validar cualquier despliegue.
+* **Matiz aprendido:** He detectado que el proyecto tiende a la "alucinación poética" en el naming. Mi rol ha evolucionado a ser el **ancla de realidad** (Real Estate / Dinero Viejo) frente a la abstracción.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Soberanía del Dato (GCP/Firebase):** Todo reside en Google Cloud. Prohibición de proveedores externos que fragmenten la seguridad (ej. servidores de correo no autenticados).
+* **Doctrina Skeleton:** Uso de **Vanilla JS / Web Components (Lit)**. Prohibido el uso de frameworks pesados que generen deuda técnica por actualizaciones.
+* **Aislamiento de Entornos:** WordPress (Marketing/SEO) vive en Compute Engine (GCE); el SaaS (Negocio) vive en Firebase. Nunca se cruzan las bases de datos; solo se comunican por triggers de eventos.
+* **Economía de Guerra (Free Tier):** La infraestructura debe costar cerca de **0€** en fase de ignición, aprovechando capas gratuitas de GCP y Lark Suite.
+* **Simetría Ibero-Lusa:** Cada artefacto (email, firma, interfaz) debe existir y ser validado en **Español y Portugués (PT-PT)**.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+| Artefacto | Función | Estado |
+| :--- | :--- | :--- |
+| **Bóveda DNS (DonDominio)** | Gestión de `clubsocios.digital`. | Activo / Configurado |
+| **Protocolos SPF/DKIM/MX** | Blindaje anti-spam y autenticidad de correo. | Activo / Verificado |
+| **Lark Suite Business** | Sistema de 20 cuentas corporativas (`@clubsocios.digital`). | Activo |
+| **Firma Legal RGPD (ES/PT)** | Cumplimiento jurídico para Globizmarkt, Lda. | Implementado |
+| **Bienvenida Institucional** | Copy para email de acceso tras registro. | Validado |
+| **Firestore Security Rules** | RBAC basado en prefijos (`mesa_`, `clube_`). | Esquema Diseñado |
+| **Arquitectura de Prefijos** | Multi-tenencia lógica para aislamiento de secciones. | Definido |
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Google Workspace:** Descartado por coste recurrente (6€/mes/user) innecesario en fase MVP. Sustituido por Lark Suite ($0).
+* **SQL / Redis:** Descartados por complejidad de mantenimiento y coste de instancia. Sustituido por **Firestore Gen 2** y caché en el cliente (Memory State).
+* **Sub-colecciones anidadas:** Descartadas para evitar "Security Rules" complejas y posibles *hotspots* en lecturas masivas. Sustituido por **IDs compuestos con prefijos**.
+* **Nombres abstractos (Ágora, Prisma):** Descartados por falta de conexión con el mercado inmobiliario real. Sustituido por **Socios Club / CPII**.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Punto Ciego de Sincronización:** Falta definir el mecanismo de actualización de datos si el usuario cambia su perfil en el WordPress y ya tiene cuenta en el SaaS (Propuesta: SaaS como "Punto de Verdad").
+* **Limbo del Rol:** La lógica de "Invitación Huérfana" (reclamación de acceso con hashing SHA-256) está diseñada pero no implementada en el backend.
+* **WordPress GCE:** La máquina virtual en Google Cloud está en fase de aprovisionamiento; falta el hardening de seguridad y la IP estática.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Sensibilidad de Marca:** El cliente (David/Carlos) valora la **exclusividad percibida**. El sistema debe parecer "más grande y antiguo" de lo que realmente es técnicamente.
+* **Patrón de Éxito:** El usuario no entra por la tecnología, entra por el **Deal Flow**. La tecnología solo debe "no estorbar" y dar seguridad.
+* **Trampa Conocida:** Evitar que el Agente de Desarrollo intente instalar plugins de WordPress para "conectar" con Firebase. La conexión debe ser vía **API/Functions**, manteniendo el WordPress como una cáscara de marketing "desechable".
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar el **Acoplamiento Atómico (El Gate)**, necesito:
+1. **IP Pública de la instancia GCE** (para configurar el registro A en DonDominio).
+2. **Esquema de JSON final** que enviará el formulario de WordPress a la colección `pending_users`.
+3. **Confirmación del flujo de pago:** ¿El trigger de ascenso a "Socio" se dispara por registro manual o por webhook de pasarela de pago (Stripe)?
+
+---

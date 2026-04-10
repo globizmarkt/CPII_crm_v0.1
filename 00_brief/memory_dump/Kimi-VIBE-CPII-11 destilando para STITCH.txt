@@ -1,0 +1,175 @@
+# MEMORY_DUMP_KIMI-SEARCHER.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Investigación profunda de benchmarks de plataformas de inversión privada, visualización de datos financieros y UX empresarial
+- Búsqueda web en tiempo real para validar patrones, tecnologías y mejores prácticas (2024-2025)
+- Generación de schemas JSON con firma ed25519 obligatoria
+- Análisis de trade-offs técnicos y recomendación de soluciones Vanilla JS compatibles con stack CPII
+- Documentación de retos de implementación y sus resoluciones
+- Integración con Layout Trinity (Canvas Central / Right Dock / Left Rail)
+
+### Qué NO hago
+- NO genero código ejecutable de componentes (HTML/CSS/JS) — eso corresponde a VIBE-CODER o STITCH
+- NO implemento lógica de negocio en Cloud Functions
+- NO diseño interfaces visuales (wireframes, mockups) — solo especifico patrones UX
+- NO gestiono estado de aplicación ni stores
+- NO tengo acceso a repositorio de código ni a entornos de desarrollo
+- NO genero archivos descargables ni documentos finales (solo markdown de investigación)
+
+### Condición necesaria antes de actuar
+- Contexto completo del módulo a investigar: función, directrices arquitectónicas, constraints de negocio
+- Confirmación de stack técnico cerrado (Firebase/Firestore, Cloud Functions TypeScript Gen 2, Vanilla JS, Tailwind CDN)
+- Jerarquía de roles vigente y modelo financiero actual
+- Clasificación UI requerida (Widget/Gadget/Artifact) y órbita de layout
+- Preguntas de enfoque específicas del Director o agentes técnicos
+
+### Matiz de comportamiento aprendido
+- Debo ser explícito cuando una recomendación es **propia** vs. **benchmark real** (ej: weights 0.6/0.4 en AgentMetrics)
+- Debo ofrecer alternativas cuando el stack cerrado limita opciones estándar (ej: caché sin Redis)
+- Debo separar claramente "doctrina Web3" (inmutabilidad, público por defecto) de requerimientos funcionales (secciones restringidas)
+- Debo anticipar conflictos entre reglas de seguridad y UX (ej: visibility public vs. contenido restringido)
+
+---
+
+## DOCTRINAS TÉCNICAS
+
+### Globales aplicables
+- **R3 (Rigor-Robustez-Resiliencia)**: Toda recomendación debe soportar escala, ser auditada y recuperarse de fallos
+- **R4**: Reglas de negocio explícitas, no hardcodeadas; configurabilidad por tier
+- **Vanilla JS**: Cero frameworks frontend; Web Components nativos si necesario
+- **Compliance**: Firma ed25519 en todos los schemas, trazabilidad completa, GDPR por diseño
+
+### Específicas de investigación/UX
+- **Layout Trinity**: 
+  - Widget (.wd-*): Canvas Central, vida efímera, no hibernable
+  - Gadget (.gd-*): Right Dock, persiste en workspace, hibernable
+  - Artifact (.at-*): soberano, altera estado del sistema, fullscreen opcional
+- **Triple Escritura Atómica**: Patrón de validación documental para Administrative Score
+- **Doctrina Web3 en Whitepaper**: Existencia pública absoluta, contenido puede variar por rol, firma criptográfica visible
+- **Cross-Section Visualization**: Prescriptores cruzan fronteras organizativas; requiere indicadores visuales específicos (líneas punteadas, color ámbar)
+- **Optimistic Locking**: Campo `version` obligatorio en transacciones de estado críticas (DealRoom)
+
+---
+
+## INVENTARIO DE LO CONSTRUIDO
+
+### Investigaciones completas (6 módulos)
+
+| Artefacto | Qué hace | Ubicación |
+|-----------|----------|-----------|
+| **AgentMetrics + CommissionWaterfall** | Dashboard dual-score (Operativo/Administrativo) con visualización de comisiones multinivel L1/L2/L3 | Investigación en VIBE-CPII-11 |
+| **AutofinancingClock** | Contador de progreso hacia autofinanciación mes 12-24 con proyecciones y milestones | Investigación en VIBE-CPII-11 |
+| **ClubPulse** | Termómetro agregado del club: capital desplegado, rendimiento, inversores activos, ventanas de liquidación | Investigación en VIBE-CPII-11 |
+| **WhitepaperViewer** | Visualizador público de whitepaper por hitos (W-0.0 → W-1.9) con firma ed2559 y auditoría KAIROS | Investigación en VIBE-CPII-11 |
+| **PrescriptorTree** | Árbol genealógico L1/L2/L3 en tiempo real con métricas de revenue share y cross-section indicators | Investigación en VIBE-CPII-11 |
+| **DealRoom** | Pipeline Kanban de activos off-market con estados, Check 4 Gatekeeper y DocuSign integration | Investigación en VIBE-CPII-11 |
+
+### Schemas JSON entregados
+- `AgentMetrics` — estructura completa con operationalScore, administrativeScore, commissionWaterfall
+- `AutofinancingClock` — milestones, proyecciones, currentProgress
+- `ClubPulse` — fundMetrics, performance, investorBase, liquidityWindows
+- `WhitepaperDocument` — milestones públicos, auditoría, changelog
+- `PrescriptorNode` + `NetworkTree` — estructura jerárquica con crossSection flags
+- `DealRoom` + `DealStateTransition` — pipeline states, docusign integration, optimistic locking
+
+### Benchmarks documentados
+- Juniper Square, Addepar, 4Degrees (AgentMetrics)
+- Fundrise, EquityMultiple, iCapital Network, Cadre (AutofinancingClock, ClubPulse, DealRoom)
+- GitBook, Ethereum Foundation, Fynk (WhitepaperViewer)
+- Business MLM Software, Hybrid MLM, MLM Vibes (PrescriptorTree)
+
+### Respuestas a Preguntas de Enfoque (P01-P06)
+- P01: Weights 0.6/0.4 — propuesta lógica, no benchmark directo
+- P02: Caché Firebase nativo — Cloud Functions v2 con estado en memoria + Firestore TTL
+- P03: Mapa de calor — D3.js + TopoJSON + Natural Earth (cero coste)
+- P04: Visibility public — separación documento/sections, reglas de seguridad granulares
+- P05: CrossSection flag — líneas punteadas ámbar, nodos fantasmas con opacidad 0.5
+- P06: Optimistic locking — transacciones Firestore, toast de conflicto, auto-refresh
+
+---
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|---------------------|
+| **Redis/Memorystore para caché** | Stack cerrado Firebase/GCP sin servicios adicionales; coste y complejidad operativa innecesaria |
+| **Google Maps API / Mapbox para mapa de calor** | Coste por petición, dependencia de terceros; D3.js + TopoJSON cumple función idéntica gratuitamente |
+| **SVG para PrescriptorTree &gt;500 nodos** | Performance degradada; Canvas API obligatorio para grandes datasets |
+| **vis.js como primera opción para árbol genealógico** | Menos flexible que D3.js para customización de cross-section indicators; D3.js preferido por control total |
+| **Firma ed25519 en cada cambio de score** | Frecuencia de actualización invalidaría firmas constantemente; solución: firmar checkpoints de milestones |
+| **Campo visibility variable en Whitepaper** | Conflicto con doctrina Web3 de público absoluto; solución: visibility de sections, no de documento |
+| **Real-time estricto para ClubPulse** | Coste prohibitivo de reads agregados frecuentes; solución: tiered updates (5min/1h/diario) |
+
+---
+
+## DEUDA TÉCNICA DETECTADA
+
+### Propia (investigación/UX)
+- **Schemas sin validación formal**: JSON Schema o Zod no aplicados; estructura semántica pero sin validador automático
+- **Fórmulas de scoring no calibradas**: Weights propuestos necesitan validación con datos reales de CPII
+- **Breakpoints de performance no testeados**: Límites exactos de nodos (500) para switch SVG→Canvas teóricos, no medidos
+- **Integración DocuSign no profundizada**: Webhooks y manejo de errores de firma pendientes de especificación
+
+### Observada en proyecto (no mía)
+- **Firma ed25519**: Implementación en Cloud Functions no mostrada; posible deuda criptográfica
+- **Triple Escritura Atómica**: Definición abstracta, mecanismo de validación concreto no especificado
+- **KAIROS auditor**: Entidad externa, proceso de auditoría no detallado
+- **Layout Trinity**: Implementación CSS real no vista; puede haber gap entre especificación y código
+
+---
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Restricciones de negocio
+- **CPII es off-market**: Sin regulación de mercado público, pero con compliance autoimpuesto estricto (doctrina Web3)
+- **Mercado lusófono PT/ES/BR**: Implica consideraciones fiscales, regulatorias y culturales diferenciadas; mapa de calor debe reflejar esto
+- **Revenue Share L1/L2/L3**: Es el motor de crecimiento; PrescriptorTree es módulo crítico para retención
+- **Fondo Sostenibilidad 50%**: Diferenciador ético; debe ser visible en ClubPulse pero no dominante
+
+### Sensibilidades del cliente
+- **Doctrina Web3 tomada en serio**: No es marketing; hay resistencia real a cualquier opacidad en whitepaper
+- **Autofinanciación mes 12-24**: Es "argumento de retención más potente"; este feature tiene prioridad implícita alta
+- **Gatekeeper Check 4**: Control de acceso sensible; DealRoom debe manejar rechazos elegantemente, no solo bloqueos técnicos
+
+### Patrones que funcionan
+- **Scores duales** (Operativo/Administrativo): Balancea incentivos de venta con compliance
+- **Milestones W-0.0 → W-1.9**: Narrativa de progreso clara para inversores y agentes
+- **Clasificación UI Widget/Gadget/Artifact**: Reduce complejidad de decisión de layout
+
+### Trampas conocidas
+- **Confundir "público" con "visible para todos"**: Whitepaper es público en existencia, no en contenido completo
+- **Optimistic locking sin UX de conflicto**: Segundo gestor debe entender qué pasó, no solo recibir error
+- **Cross-section en árbol**: Fácil de ignorar visualmente; requiere diseño explícito de indicadores
+- **Caché agresivo en financieros**: AutofinancingClock necesita balance precisión/coste; proyecciones no deben sentirse "desactualizadas"
+
+---
+
+## INPUT REQUISITO PARA SPRINT 3
+
+Para operar en El Gate desde el primer mensaje, necesito recibir:
+
+1. **Decisión sobre weights de scoring** (P01): ¿Confirmar 0.6/0.4 Catapulta/Refugio o ajustar a 0.5/0.5 con multiplicador de velocidad?
+
+2. **Datos de prueba calibrados**: 
+   - Rango esperado de inversores activos (¿100? ¿1,000? ¿10,000?)
+   - Profundidad típica de árboles de prescriptores (¿promedio 5 L1, 20 L2, 50 L3?)
+   - Frecuencia de transiciones de estado en DealRoom (¿10/día? ¿100/día?)
+
+3. **Definición de "tiempo real"**:
+   - ClubPulse: ¿5 minutos es aceptable o se necesita verdadero real-time (&lt;30s)?
+   - PrescriptorTree: ¿Qué tan rápido debe reflejarse una nueva inscripción en el árbol visual?
+
+4. **Especificación de Triple Escritura Atómica**: ¿Qué tres documentos específicos? ¿Validación manual o automatizada? ¿Quién firma?
+
+5. **Integración DocuSign**: ¿Cuenta existente? ¿Templates de envelope por estado de DealRoom? ¿Sandbox disponible?
+
+6. **Prioridad de módulos para Sprint 3**: ¿Orden de implementación? ¿Dependencias críticas (ej: DealRoom bloquea CommissionWaterfall)?
+
+7. **Acceso a**: 
+   - Repositorio de schemas existentes (para coherencia con ed25519)
+   - Definición de roles y permisos actualizada (¿cambios en jerarquía Dueños→Inversores?)
+   - Diseño visual de referencia (si existe) o paleta de colores CPII definitiva
+
+Sin estos inputs, cualquier recomendación de Sprint 3 será genérica y requerirá re-trabajo.

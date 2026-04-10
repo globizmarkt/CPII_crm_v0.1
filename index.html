@@ -1,12 +1,17 @@
 <!--
 ============================================================
 ARCHIVO  : index.html
-VERSIÓN  : v1.4.0
+VERSIÓN  : v1.4.0 → v1.5.0
 FECHA    : 2026-03-14
 PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
            Inyectar componente tooltip brand_tooltip_text en Órbita 1.
            Inyectar 6 tokens semánticos en :root para conectar
            tab-manager.css con el sistema de diseño R3.
+           Sustituir los 5 enlaces nav actuales por los 6 pilares
+           fiduciarios con data-phase, data-requires y
+           menu-pillar-wrapper para Fases 1, 2 y 3.
+           Conservar clases Tailwind base del sistema.
+           Enlazar passport-engine.js antes del cierre de </body>.
 ============================================================
 
 ÍNDICE
@@ -19,10 +24,12 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
         [SEC-06] — MODIFICADA  (Brand: h1 hardcoded → data-i18n="brand_name")
         [SEC-06] — MODIFICADA  (Subtítulo: p hardcoded → data-i18n="brand_subtitle")
         [SEC-06] — AMPLIADA    (nuevo tooltip data-i18n="brand_tooltip_text")
+        [SEC-06] — SUSTITUIDA  (bloque <nav> completo: 5 enlaces → 6 pilares)
 [SEC-07] Órbita 2 — Canvas dinámico (#canvas-orbita-2)
 [SEC-08] Órbita 3 — Dock (320px): perfil, gatekeeper, AIMON
 [SEC-09] Notification Toast — Sistema de alertas flotante
 [SEC-10] Bootstrap Script — Wiring del TabManager con sidebar
+        [SEC-10] MODIFICADA — Bootstrap Scripts
 ============================================================
 -->
 <!DOCTYPE html>
@@ -35,6 +42,7 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>CPII-CRM Skin 01 Layout Trinity</title>
+    <script src="features/at-attribution.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
     <script src="core/i18n.js"></script>
@@ -137,7 +145,7 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
                 <p class="text-slate-400 text-sm" data-i18n="kyc_description">A sua verificação KYC está pendente.
                     Algumas funcionalidades estão limitadas até à aprovação.</p>
             </div>
-            <button onclick="document.querySelector('.gatekeeper-overlay').style.display='none'"
+            <button data-action="dismiss-gatekeeper"
                 class="bg-primary hover:bg-primary/90 text-background-dark font-bold py-3 px-8 rounded-lg transition-all transform hover:scale-105">
                 <span data-i18n="simulate_kyc">Simular KYC Verificado</span>
             </button>
@@ -175,36 +183,59 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
                 </div>
                 <!-- Navigation -->
                 <nav class="flex flex-col gap-1">
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 group"
-                        href="#">
-                        <span class="material-symbols-outlined transition-colors">dashboard</span>
-                        <span class="text-sm font-semibold" data-i18n="nav_dashboard">Dashboard</span>
+                    <!-- Fase 1 — Acceso inmediato -->
+                    <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 group"
+                        href="/dashboard" data-phase="1" data-requires="none" data-gadget="gd-dashboard">
+                        <span class="material-symbols-outlined transition-colors">monitoring</span>
+                        <span class="text-sm font-semibold" data-i18n="nav_dashboard">Posición Global</span>
                     </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#">
-                        <span class="material-symbols-outlined transition-colors">real_estate_agent</span>
-                        <span class="text-sm font-medium" data-i18n="nav_mls">Mercado MLS</span>
-                    </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#">
+                    <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
+                        href="/network" data-phase="1" data-requires="none" data-gadget="gd-network">
                         <span class="material-symbols-outlined transition-colors">hub</span>
-                        <span class="text-sm font-medium" data-i18n="nav_network">A Minha Rede</span>
+                        <span class="text-sm font-medium" data-i18n="nav_network">Mi Red</span>
                     </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#">
-                        <span class="material-symbols-outlined transition-colors">history</span>
-                        <span class="text-sm font-medium" data-i18n="nav_history">Histórico</span>
+                    <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
+                        href="/academy" data-phase="1" data-requires="none" data-gadget="gd-academy">
+                        <span class="material-symbols-outlined transition-colors">school</span>
+                        <span class="text-sm font-medium" data-i18n="nav_academy">Academy</span>
                     </a>
-                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="#" onclick="window.__CPII__.tabManager.openFromRegistry('gd-manual'); return false;">
-                        <span class="material-symbols-outlined transition-colors">menu_book</span>
-                        <span class="text-sm font-medium" data-i18n="nav_manuals">Manuais</span>
-                    </a>
+                    <!-- Fase 2 — Custody Hold: KYC + Academy 100% -->
+                    <div class="menu-pillar-wrapper relative group" data-phase="2"
+                        data-requires="kyc:approved,academy:100" data-i18n-tooltip="tooltip_phase2">
+                        <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all"
+                            href="/portfolio" data-gadget="gd-vault">
+                            <span class="material-symbols-outlined transition-colors">account_balance_wallet</span>
+                            <span class="text-sm font-medium" data-i18n="nav_vault">Mi Cartera</span>
+                        </a>
+                    </div>
+                    <div class="menu-pillar-wrapper relative group" data-phase="2"
+                        data-requires="kyc:approved,academy:100" data-i18n-tooltip="tooltip_phase2">
+                        <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all"
+                            href="/history" data-gadget="gd-history">
+                            <span class="material-symbols-outlined transition-colors">history_edu</span>
+                            <span class="text-sm font-medium" data-i18n="nav_audit">Historial y Documentos</span>
+                        </a>
+                    </div>
+                    <!-- Fase 3 — Custody Hold: AUM o rol Staff/Manager -->
+                    <div class="menu-pillar-wrapper relative group" data-phase="3"
+                        data-requires="kyc:approved,academy:100,aum:500000|role:staff,manager"
+                        data-i18n-tooltip="tooltip_phase3">
+                        <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all"
+                            href="/crm" data-gadget="gd-crm">
+                            <span class="material-symbols-outlined transition-colors">diversity_3</span>
+                            <span class="text-sm font-medium" data-i18n="nav_crm">Gestión de Relaciones</span>
+                        </a>
+                    </div>
                 </nav>
             </div>
-            <div class="mt-auto p-6 border-t border-primary/10">
-                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                    href="#">
+            <div class="mt-auto p-6 border-t border-primary/10 flex flex-col gap-1">
+                <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
+                    href="/manuals" data-phase="1" data-requires="none" data-gadget="gd-manual">
+                    <span class="material-symbols-outlined transition-colors">menu_book</span>
+                    <span class="text-sm font-medium" data-i18n="nav_manuals">Manuales</span>
+                </a>
+                <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
+                    href="/settings" data-phase="1" data-requires="none">
                     <span class="material-symbols-outlined transition-colors">settings</span>
                     <span class="text-sm font-medium" data-i18n="nav_settings">Definições</span>
                 </a>
@@ -332,24 +363,129 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
         </div>
     </div>
 
-    <!-- [SEC-10] Bootstrap Script — Wiring del TabManager con sidebar -->
-    <!-- El TabManager se encarga de cargar los gadgets ahora -->
+    <!-- [SEC-10] Bootstrap Script — Trinity Router v2.0.0 (Kimi) -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                // Buscamos los botones del sidebar que tengan texto coincidente
-                const sidebarLinks = document.querySelectorAll('aside nav a, aside nav button, .sidebar-link');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        const text = e.target.innerText.toLowerCase();
-                        if (text.includes('manual')) window.__CPII__.tabManager.openFromRegistry('gd-manual');
-                        if (text.includes('dashboard')) window.__CPII__.tabManager.openFromRegistry('gd-dashboard');
-                        if (text.includes('mercado')) window.__CPII__.tabManager.openFromRegistry('gd-simulador');
-                    });
+            // ============================================================
+            // CARTOGRAFÍA QUIRÚRGICA v3.2
+            // ============================================================
+            // ARCHIVO   : index.html [SEC-10] Bootstrap Trinity Router
+            // VERSIÓN   : 2.0.0
+            // FECHA     : 2026-03-22
+            // AUTOR     : Junior Dev-Logic Kimi
+            // DOCTRINA  : R2 (Light DOM) | R4 (i18n Strict) | R5 (Economía O(1))
+            // PROPÓSITO : Reemplazar el enrutamiento por innerText (legacy) con
+            //             Event Delegation basado en atributos data-gadget, garantizando
+            //             inmunidad ante cambios de idioma y complejidad O(1) constante.
+            // SPRINT    : VIBE-CPII-19 — Saneamiento Sprint 3
+            // ============================================================
+
+            (function () {
+                'use strict';
+
+                // Fail-fast: dependencias críticas
+                if (!window.__CPII__?.tabManager) {
+                    console.error('[TrinityRouter] ❌ TabManager no disponible en namespace');
+                    return;
+                }
+
+                const tm = window.__CPII__.tabManager;
+
+                // Whitelist O(1) de gadgets permitidos (fail-closed security)
+                const ALLOWED_GADGETS = new Set([
+                    'gd-dashboard',
+                    'gd-manual',
+                    'gd-simulador',
+                    'gd-calculadora',
+                    'gd-vault',
+                    'gd-crm',
+                    'gd-academy',
+                    'gd-history',
+                    'gd-network',
+                    'gd-settings'
+                ]);
+
+                // [SEC-10.1] Delegación de navegación en Órbita 1 (Sidebar)
+                // Escucha única en el contenedor padre, sin setTimeout ni innerText
+                const sidebar = document.querySelector('aside.w-\\[250px\\]'); // Selector del aside 250px
+
+                if (!sidebar) {
+                    console.error('[TrinityRouter] Sidebar no encontrado en DOM');
+                    return;
+                }
+
+                sidebar.addEventListener('click', (e) => {
+                    // R2: Navegación por atributos, nunca por contenido de texto (R4)
+                    const trigger = e.target.closest('[data-gadget]');
+                    if (!trigger) return; // No es un link gadget, permitir comportamiento nativo
+
+                    e.preventDefault();
+
+                    const gadgetId = trigger.getAttribute('data-gadget');
+
+                    // R5: Validación O(1) contra Set constante
+                    if (!ALLOWED_GADGETS.has(gadgetId)) {
+                        console.warn(`[TrinityRouter] Gadget no autorizado: ${gadgetId}`);
+                        return;
+                    }
+
+                    // Delegar al TabManager
+                    try {
+                        tm.openFromRegistry(gadgetId);
+
+                        // Feedback visual: actualizar estado activo en menú (sin mutar estructura)
+                        document.querySelectorAll('.menu-pillar').forEach(el => {
+                            el.classList.remove('bg-primary/10', 'text-primary', 'border-primary/20');
+                            el.classList.add('text-slate-400');
+                        });
+
+                        const activePillar = trigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
+                            || trigger.closest('.menu-pillar')
+                            || trigger;
+
+                        activePillar.classList.add('bg-primary/10', 'text-primary', 'border-primary/20');
+                        activePillar.classList.remove('text-slate-400');
+
+                        // Evento canónico para auditoría
+                        document.dispatchEvent(new CustomEvent('trinity:navigate', {
+                            detail: { gadget: gadgetId, source: 'sidebar', timestamp: Date.now() },
+                            bubbles: true
+                        }));
+
+                    } catch (err) {
+                        console.error(`[TrinityRouter] Error cargando ${gadgetId}:`, err);
+                    }
                 });
-            }, 1000); // Esperamos a que todo cargue
-        });
+
+                // [SEC-10.2] Delegación global para acciones del sistema (Gatekeeper, etc.)
+                document.addEventListener('click', (e) => {
+                    // R2: Capturar acciones por data-action, nunca onclick inline
+                    const actionTrigger = e.target.closest('[data-action]');
+                    if (!actionTrigger) return;
+
+                    const action = actionTrigger.getAttribute('data-action');
+
+                    switch (action) {
+                        case 'dismiss-gatekeeper':
+                            e.preventDefault();
+                            const overlay = document.querySelector('.gatekeeper-overlay');
+                            if (overlay) {
+                                overlay.style.display = 'none';
+                                document.dispatchEvent(new CustomEvent('cpii:kyc-dismissed', {
+                                    detail: { timestamp: Date.now(), trigger: 'manual-click' }
+                                }));
+                            }
+                            break;
+
+                        // Espacio reservado para futuras acciones globales (logout, theme toggle, etc.)
+                        default:
+                            break;
+                    }
+                });
+
+                console.log('[TrinityRouter] ✅ Inicializado (Event Delegation O(1))');
+            })();
     </script>
+    <script src="core/passport-engine.js" defer></script>
 
 </body>
 

@@ -1,0 +1,159 @@
+# MEMORY_DUMP_QWEN.md
+# Proyecto: CPII-CRM / Lux Lusitana
+# Agente: Junior Dev-Qwen (Unidad de Artifacts)
+# Generado: VIBE-CPII-15 | Estado: Exportación para Auditoría
+
+---
+
+## ROL Y LÍMITES OPERATIVOS
+
+### QUÉ HAGO
+- Crear Web Components autónomos (Modelo Híbrido) siguiendo el patrón `gd-*`: `connectedCallback` → leer `cpii:locale` → suscribirse a `cpii:lang:change` → `render()` con diccionarios internos.
+- Poblar `RESOURCE_REGISTRY` con metadatos: `{ tagName, loader, meta: { category, i18n, keywords, injectMode } }`.
+- Traducir diccionarios i18n para ES/PT/EN/FR manteniendo fidelidad técnica y semántica.
+- Aplicar protocolo /laparoscopia: entregar solo código modificado, nunca archivos completos salvo que sea 100% necesario.
+- Validar R3/R4 en cada línea: cero hexadecimales, cero texto hardcodeado fuera de diccionarios.
+
+### QUÉ NO HAGO
+- NO modifico `core/*.js` (i18n.js, at-tab-manager.js, at-bootstrapper.js, handoff-emitter.js).
+- NO solicito auditoría de archivos que no sean gadgets o recursos de mi unidad.
+- NO invento contenido, variables CSS o estructuras HTML cuando falta fuente (Regla: Cero Alucinaciones).
+- NO tomo decisiones arquitectónicas sobre persistencia, eventos globales o inyección de DOM.
+- NO asumo que una variable `--theme-*` o `--brand-*` existe sin confirmación de `input.css` o Stitch.
+
+### CONDICIÓN PARA ACTUAR
+1. Recibir archivo fuente o contenido explícito del HTML de Stitch antes de extraer/convertir.
+2. Confirmación de que las variables CSS usadas están definidas en `input.css` o programadas para estarlo.
+3. Brief con alcance delimitado: patrón conocido + entregable específico + doctrina aplicable.
+4. Señal de rol explícita: `[ROL: Qwen | Unidad de Artifacts]` para evitar deriva de responsabilidades.
+
+### MATIZ APRENDIDO SOBRE MI COMPORTAMIENTO
+- Tiendo a "ser útil" completando tareas con suposiciones cuando falta input crítico. Esto viola la doctrina de Cero Alucinaciones.
+- Mi valor real no es la velocidad de entrega, sino la precisión doctrinal: un gadget R3/R4-compliant que no requiere refactorización posterior.
+- Debo bloquear y preguntar inmediatamente si falta un archivo fuente, variable CSS o clave i18n, en lugar de intentar "aproximar".
+
+---
+
+## DOCTRINAS TÉCNICAS
+
+### GLOBALES (OBLIGATORIAS)
+- **R3 (Zero Hex)**: Prohibido `#fff`, `#000`, `#1e1b14`, etc. Solo `var(--theme-*)` y `var(--brand-*)` definidas en `input.css`.
+- **R4 (i18n Estricto)**: Ningún texto visible hardcodeado en lógica. En Web Components autónomos: diccionarios internos ES/PT/EN/FR. En HTML estático: `data-i18n="clave"`.
+- **Vanilla JS Puro**: Sin React, Vue, Svelte, ni librerías de estado. Solo API nativa: `CustomEvent`, `localStorage`, `fetch`, `Web Components`.
+- **Zero-Server / Static Deploy**: Todo debe funcionar con Firebase Hosting + Vercel sin backend dinámico para UI.
+- **Light DOM para Gadgets**: Sin Shadow DOM cerrado para permitir herencia de `var(--theme-*)` desde Tailwind global.
+- **Persistencia Volátil**: Estado de gadgets se mantiene al navegar entre pestañas (show/hide), pero se limpia en F5 (no persistencia en localStorage salvo configuración explícita).
+
+### ESPECÍFICAS DE MI ESPECIALIDAD (EMERGENTES)
+- **Patrón Autonomous Component**: 
+  ```js
+  connectedCallback() {
+    const lang = localStorage.getItem('cpii:locale') || 'es';
+    document.addEventListener('cpii:lang:change', this._onLangChange);
+    this.render();
+  }
+
+Tailwind JIT + CSS Vars: Para que Tailwind CDN no elimine clases con variables CSS, usar sintaxis arbitraria: bg-[var(--theme-surface)], text-[var(--theme-text)].
+Registry-Driven Injection: Los gadgets no se hardcodean en el Tab Manager; se registran en RESOURCE_REGISTRY y se inyectan vía tabManager.open(tagName).
+Idempotencia en Registro: Siempre envolver customElements.define() en if (!customElements.get('tag-name')).
+Limpieza de Event Listeners: En disconnectedCallback, siempre remover listeners de cpii:lang:change para evitar memory leaks.
+INVENTARIO DE LO CONSTRUIDO
+Artefacto
+Qué hace
+Ubicación
+gd-simulador.js
+Web Component skeleton para simulador ROI: título i18n centrado, borde var(--theme-border), diccionarios ES/PT/EN/FR, reactividad a cpii:lang:change.
+gadgets/gd-simulador.js
+gd-calculadora.js
+Web Component skeleton para calculadora: título i18n centrado, borde var(--theme-border), diccionarios ES/PT/EN/FR, reactividad a cpii:lang:change.
+gadgets/gd-calculadora.js
+gd-dashboard.js
+Web Component autónomo con contenido real extraído de Stitch: layout Bento Grid, alerta KYC, tarjetas de resumen, acciones rápidas, feed de inteligencia, asignación de activos. Traducciones ES/PT/EN/FR completas.
+gadgets/gd-dashboard.js
+RESOURCE_REGISTRY (esqueleto conceptual)
+Estructura de datos para indexar gadgets en el Omnibox: { tagName, loader, meta: { category, i18n, keywords, injectMode } }. Pendiente de implementación física.
+core/resource-registry.js (pendiente)
+Diccionarios i18n para nuevos gadgets
+Traducciones técnicas de títulos, descripciones y keywords para tab_simulador, tab_calculadora, dash.* keys.
+Integrado en cada gd-*.js
+DECISIONES DESCARTADAS Y POR QUÉ
+Decisión
+Motivo del descarte
+Usar Shadow DOM cerrado para gadgets
+Bloqueaba la herencia de var(--theme-*) desde Tailwind global, rompiendo el Modo Oscuro. Se adoptó Light DOM con delegación de estilos.
+Inyección destructiva (innerHTML = '') en Tab Manager
+Destruía el estado de inputs y scroll al cambiar de pestaña. Se adoptó patrón hidden=true / display: none para persistencia volátil.
+Hardcodear textos en lógica JS en lugar de diccionarios
+Violaba R4 y hacía imposible la traducción dinámica. Se adoptó el modelo de diccionarios internos por idioma.
+Usar colores hexadecimales como fallback en CSS
+Violaba R3 y generaba inconsistencias visuales en Dark Mode. Se adoptó fallback encadenado: var(--theme-x, var(--theme-y, valor-defecto-seguro)).
+Crear un Tab Manager embebido dentro de gd-manual.js
+Confundía la escala: el manual es un gadget, no un navegador. Se separó: at-tab-manager.js es universal, los gadgets son contenidos.
+Asumir variables CSS no documentadas (--brand-alert)
+Riesgo de que el gadget se vea roto en producción si la variable no existe. Se requiere confirmación previa de Stitch o documento de variables.
+Generar contenido especulativo cuando falta archivo fuente
+Genera deuda técnica y pierde ciclos de revisión. Se adoptó regla: "Bloquear y solicitar input crítico antes de ejecutar".
+DEUDA TÉCNICA DETECTADA
+MÍA (PENDIENTE DE RESOLVER)
+gd-dashboard.js usa var(--brand-alert) y var(--theme-success) que no están documentadas en mi conocimiento de input.css. Si no existen, la alerta KYC y el indicador "Markets Open" se verán rotos.
+Los diccionarios de gd-dashboard.js tienen traducciones técnicas (PT/EN/FR) que no han sido validadas por un traductor nativo o por el Director. Riesgo de errores semánticos en contexto financiero.
+No he implementado la lógica de data-hibernatable="true" para el dashboard; solo está el atributo en el HTML. La persistencia real requiere integración con at-tab-manager.js.
+OBSERVADA (NO MÍA, PERO CRÍTICA)
+input.css no tiene documentación pública de todas las variables --theme-* y --brand-*. Esto obliga a asumir o adivinar, violando la doctrina de cero suposiciones.
+at-tab-manager.js no tiene tests automatizados para verificar que no usa innerHTML = '' destructivo. Riesgo de regresión en persistencia volátil.
+El sistema de eventos cpii:lang:change no tiene documentación de payload esperado (e.detail?.lang). Riesgo de que un gadget mal implementado rompa la reactividad.
+No hay un script de validación R3 automatizado que escanee gadgets/ en busca de hexadecimales antes de deploy. Dependemos de revisión manual.
+RESOURCE_REGISTRY no existe como archivo físico; es un concepto. Sin él, el Omnibox no puede indexar gadgets dinámicamente.
+CONOCIMIENTO TÁCITO DEL PROYECTO
+RESTRICCIONES DE NEGOCIO NO DOCUMENTADAS
+Lux Lusitana es "Private Banking": Cada interacción debe sentirse quirúrgica, premium, sin elementos "SaaS del montón". El UX debe transmitir exclusividad, no funcionalidad genérica.
+El cliente lusófono valora la sobriedad: "Colores fantasía", animaciones exageradas o micro-interacciones distractores son rechazados. El diseño debe ser institucional, casi austero.
+KYC es el gatekeeper absoluto: Ninguna funcionalidad de inversión, mercado o red se habilita hasta que KYC === verified. El UI debe comunicar esto sin frustrar al usuario.
+SENSIBILIDADES DEL CLIENTE
+El Director (Humano) es el General Manager: Puede paralizar cualquier tarea con una sola palabra "stop". No hay autonomía para decisiones estratégicas; solo ejecución táctica.
+Bulldozer es el veterano al mando de Órbita 2: Su palabra sobre estructura de DOM, eventos y persistencia es final. No cuestionar sus decisiones técnicas sin evidencia concreta.
+Stitch (Diseño) es la fuente de verdad visual: Si hay conflicto entre mi implementación y el diseño de Stitch, Stitch gana. Mi rol es adaptar, no reinterpretar.
+PATRONES QUE FUNCIONAN
+Modelo Híbrido Autónomo: Los gadgets con diccionarios internos i18n + escucha de cpii:lang:change son más mantenibles que depender de un motor externo de traducción.
+Registry-Driven Omnibox: Permitir que RESOURCE_REGISTRY defina qué gadgets existen, en lugar de hardcodear if/else en el Tab Manager, escala a 100+ recursos sin deuda.
+Light DOM + Tailwind JIT: Usar bg-[var(--theme-x)] permite que las variables CSS penetren en los gadgets sin Shadow DOM, manteniendo el Modo Oscuro consistente.
+TRAMPAS CONOCIDAS
+Tailwind CDN elimina clases no usadas: Si usas var(--theme-x) en una clase arbitraria bg-[var(--theme-x)], asegúrate de que Tailwind no la purgue. En producción, puede requerir configuración explícita.
+localStorage.getItem('cpii:locale') puede ser null: Siempre proveer fallback 'es' en la lectura inicial para evitar errores en primer render.
+CustomEvent no es soportado en IE11: Pero el proyecto es Zero-Server moderno; si el cliente requiere soporte legacy, habrá que polyfillar.
+Imágenes de Stitch tienen URLs de Googleusercontent con espacios: En el HTML real, los src de imágenes pueden tener espacios en blanco que rompen la carga. Validar y sanitizar antes de inyectar.
+LO QUE UN AGENTE NUEVO NECESITA SABER Y NADIE LE VA A CONTAR
+El proyecto se llama "Polígono Industrial" por una razón: Es una factoría de código con roles estrictos. No eres un "desarrollador full-stack"; eres una pieza en una cadena de montaje. Respeta tu estación.
+La doctrina R3/R4 no es "buena práctica"; es contrato: Violarlas no es un "warning"; es un fallo crítico que detiene la línea de producción.
+El Director valora la honestidad sobre la velocidad: Decir "no tengo el archivo fuente, no puedo proceder" es mejor que entregar algo aproximado que requiere refactorización.
+El ecosistema es cerrado: No asumas que una librería externa está disponible. Si no está en index.html, no existe.
+INPUT REQUISITO PARA SPRINT 3
+Para operar en El Gate desde el primer mensaje del Sprint 3, necesito recibir EXACTAMENTE:
+
+{
+  "required_input": {
+    "file": "css/variables-dictionary.md",
+    "description": "Documento oficial con todas las variables CSS disponibles: --theme-* y --brand-*, con valores de fallback y contexto de uso.",
+    "reason": "Evita que asuma variables no existentes (como --brand-alert) y rompa el UI en producción."
+  },
+  "required_decision": {
+    "topic": "RESOURCE_REGISTRY implementation",
+    "question": "¿Se implementa como módulo ES6 con export default, o como objeto global window.__CPII__.registry?",
+    "reason": "Define cómo los Junior Devs poblarán el registry sin violar la arquitectura de módulos."
+  },
+  "required_criterion": {
+    "name": "Definition of Done para gadgets",
+    "criteria": [
+      "Pasa regex scan R3: cero hexadecimales",
+      "Diccionarios i18n completos: ES/PT/EN/FR",
+      "Light DOM (sin Shadow DOM cerrado)",
+      "Event listener cleanup en disconnectedCallback",
+      "Registro idempotente con customElements.get()",
+      "Traducciones validadas por Stitch o Director"
+    ],
+    "reason": "Establece el estándar de calidad para cerrar tareas sin revisión iterativa."
+  }
+}
+
+Nota: Sin estos tres inputs, operaré bajo modo "bloqueo seguro": solicitaré confirmación antes de cualquier entrega que involucre variables CSS nuevas, registro de recursos o traducciones no validadas.
+FIN DE MEMORY_DUMP_QWEN.md

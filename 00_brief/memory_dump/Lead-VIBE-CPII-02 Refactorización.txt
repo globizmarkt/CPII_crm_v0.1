@@ -1,0 +1,45 @@
+# MEMORY_DUMP_GEMINI.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Rol:** Asistente Backend / Arquitecto de Integración ("El Ingeniero").
+* **Qué hago:** Diseño de esquemas de datos (NoSQL Firestore), reglas de seguridad, Cloud Functions (TypeScript), integración de Firebase SDK v10+ en arquitecturas Vanilla JS (Web Components), y configuración de entornos de despliegue (LEMP/Nginx).
+* **Qué NO hago:** No genero código ciego o monolítico si la lógica de negocio subyacente presenta lagunas de seguridad o inconsistencias. No reescribo archivos completos si la intervención requerida afecta a menos del 90% del código.
+* **Condición de Operación:** Requiere ejecución estricta del protocolo `/ordeño` para desambiguar requerimientos antes de codificar, y del protocolo `/laparoscopia` para intervenciones en código existente, exigiendo coordenadas exactas (balizas `[SEC-XX]`).
+
+### 2. DOCTRINAS TÉCNICAS
+* **Cartografía Quirúrgica v3.1:** Todo archivo debe contar con una Cabecera de Control y un Índice Maestro que divida el código en balizas lógicas `[SEC-XX]`.
+* **Consistencia de Esquema Inmutable (Firestore):** Todo documento que nace en la base de datos debe declarar su esquema completo desde el momento cero (Fase 1 completada, Fase 2 inicializada en `null`) para evitar deudas de migración y fallos de indexación/queries.
+* **Separación de Dominios de Negocio:** Aislamiento total entre la entidad económica/genealógica (`padrino` para Revenue Share) y la entidad operativa/territorial (`club_manager` para gestión y absorción de huérfanos).
+* **Stack Inmutable CPII:** Frontend Vanilla JS + Web Components + Tailwind (vía CDN para assets rápidos en WP), Backend Firebase Gen 2 (Firestore, Auth, Functions), Despliegue en LEMP (Nginx/Ubuntu).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* `project_manifest.json` — Identidad del módulo, roles (inversor, promotor, dueño) y configuración de ventanas de inversión.
+* `firestore.rules` — Esquema inicial de seguridad bloqueando genealogía (inmutable) y limitando lecturas a dueños y gestores.
+* `wd-investment-card.js` — Web Component UI para renderizado de inversiones (estado, monto, fechas).
+* `genealogy-logic.ts` — Cloud Functions para cálculo de comisiones en cascada (L1, L2, L3) y protocolo de `Takeover` (expulsión y reasignación de red).
+* `investor-dashboard.html` — Escena principal del panel de inversor con métricas patrimoniales y renderizado de componentes.
+* `access-form.html` (v1.2.1) — Landing de captación en WordPress con inicialización de Firebase v10 Modular, captura de Fase 1, preparación de Fase 2 (`null`), inyección de Padrino vía URL y ruteo a Gestor Territorial (`CLUB_MANAGER_MAP`).
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Unificar Prescriptor y Responsable de Club:** *Descartado.* Genera conflicto de intereses y cuellos de botella geográficos. Un inversor mexicano invitado por un español debe ser gestionado por LATAM, pero comisionado por España.
+* **Uso de localStorage para persistencia de leads en Producción:** *Descartado.* Riesgo crítico de pérdida de datos. Se sustituyó por integración directa con Firestore Modular SDK.
+* **Omitir campos de Fase 2 (POF, Presupuesto) en la creación inicial del Lead:** *Descartado.* Rompe las queries futuras de Firestore. Se decidió inyectar el objeto `investment_profile` con valores `null` para garantizar la integridad del esquema.
+* **Despliegue ciego a GCE:** *Descartado.* Se detuvo la generación del script de Nginx hasta confirmar el estado del Payload (archivos vs .sql) y la propagación de las DNS (IP `35.184.54.173`).
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Security Rules (Firestore):** La colección `leads` actualmente opera bajo "Modo Prueba" (Start in test mode). Requiere bloqueo inmediato para que solo `roles.cpii == 'dueno'` o el `club_manager` asignado puedan leer/escribir.
+* **Variables de Entorno / Credenciales:** `access-form.html` contiene placeholders (`TU_API_KEY`, `TU_PROJECT_ID`) que causarán un fallo de conexión si se despliegan tal cual.
+* **Placeholder UIDs:** La tabla `CLUB_MANAGER_MAP` contiene UIDs ficticios (`UID_GESTOR_PORTUGAL`, etc.) que resultarán en asignaciones nulas en Firestore.
+* **Infraestructura LEMP:** Bloqueo pendiente por falta de configuración de bloques de servidor en Nginx y firma de Let's Encrypt / Certbot.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Lux Lusitana / CPII:** Perfil de cliente *High Net Worth Individual* (HNWI). La fricción en la Fase 1 del funnel debe ser nula (no preguntar dinero de entrada), pero la captura de datos de contacto debe ser inflexible (obligatoriedad de prefijos internacionales estratégicos).
+* **Arquitectura Híbrida:** La cara pública (Landing / Captación) reside en WordPress (LEMP `clubsocios.digital`), pero la bóveda de datos y lógica transaccional (El Club) reside 100% aislada en Firebase/GCP.
+* **Cultura Operativa:** Tolerancia cero al código no mapeado o "cajas negras". Las instrucciones se manejan como "Órdenes de Producción" o "Intervenciones Quirúrgicas". Todo agente debe justificar sus acciones y mapear el impacto en la arquitectura general antes de tocar una línea de código.
+* **El Protocolo "Huérfano":** Si una rama genealógica se rompe (expulsión), el gestor territorial asume la propiedad operativa, el dueño asume la cascada económica restante.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1.  **Mecanismo de Despliegue Confirmado:** Respuesta binaria: ¿Despliegue manual SSH (`git clone`) o Pipeline CI/CD?
+2.  **Estado del Payload (WordPress):** Confirmación de si el repositorio incluye volcado de base de datos (`.sql`) que requiera comandos WP-CLI para *Search & Replace* de URLs.
+3.  **Estado DNS:** Luz verde de propagación de los registros A (dominio raíz y www) apuntando a la IP `35.184.54.173` para emitir los certificados SSL.
+4.  **Firebase UIDs (Opcional pero crítico):** El diccionario real de los UIDs de los gestores territoriales para sustituir los placeholders en el `CLUB_MANAGER_MAP` antes de subir a producción.

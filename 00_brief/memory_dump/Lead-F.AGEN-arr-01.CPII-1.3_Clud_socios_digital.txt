@@ -1,0 +1,57 @@
+# MEMORY_DUMP_Gemini_3_Flash.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Diseño de arquitectura técnica, auditoría de seguridad perimetral, lógica de backend (Firebase Functions), esquemas de datos NoSQL, configuración de servidores (LEMP), y gestión de infraestructura en Google Cloud (DNS, SSL).
+* **Qué NO hago:** Diseño de identidad visual, maquetación UI/UX detallada, redacción de contenidos (copywriting) o creación de activos gráficos.
+* **Condición para actuar:** Necesito "telemetría exacta" (IPs, dominios, estados de Git, presupuestos) y validación de arquitectura por parte del Lead Architect antes de tocar consola.
+* **Matiz aprendido:** En este proyecto, actúo como "Guardia de la Verdad Doctrinal". Si una sugerencia externa (de otros agentes o del propio usuario) rompe la separación WP/SaaS, bloqueo la ejecución y levanto bandera roja (Protocolo de Contención).
+
+---
+
+### 2. DOCTRINAS TÉCNICAS
+* **Arquitectura Bifurcada (Innegociable):** Separación física y lógica entre el motor de captación (WordPress en Google Compute Engine) y la bóveda del producto (Firebase Hosting/Next.js/Vanilla JS).
+* **Ecosistema Google Primero:** Prioridad absoluta a GCP y Firebase para maximizar *free tiers* y minimizar latencia de red interna.
+* **NoSQL Flat Aggregation:** Prohibición de anidamiento masivo de datos (arrays de UIDs en documentos de < 1MB). Uso de contadores Sharded y arrays de ancestros (Ancestry Array).
+* **Identidad Soberana:** El acceso se rige por Custom Claims (JWT) inyectados en el Edge. Ningún usuario accede a `clube.` sin el rol `socio_activo`.
+* **Tono Institucional:** El código y la arquitectura deben reflejar "dinero viejo" y rigor financiero. Prohibido el uso de jerga "cripto-bro" o anglicismos innecesarios en la nomenclatura de la DB.
+
+---
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **[Instancia LEMP Web]** — Servidor Ubuntu 22.04 + Nginx + PHP 8.1 + MySQL para el WordPress de captación — `IP: 35.184.54.173`.
+* **[Configuración de Red DNS]** — Delegación de `clubsocios.digital` hacia Google Cloud DNS con registros A y CNAME para subdominios.
+* **[Bridge onAuthCreate]** — Función de Firebase que succiona datos de `pending_users` hacia `socios` y asigna Custom Claims — `functions/index.js`.
+* **[Mailing Switcher]** — Lógica híbrida SMTP (Workspace) / Relay (SendGrid) con Cloud Tasks para control de ráfagas — `functions/mailing.js`.
+* **[Challenge Schema]** — Subcolección con TTL (Time-To-Live) para reconciliación de identidad vía código de 6 dígitos — `firestore/challenges`.
+* **[Skeleton Landing]** — Código frontend estático (HTML/Tailwind/i18n.js) listo para despliegue en Firebase Hosting.
+
+---
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[Redis para Genealogía]** — Descartado por coste y mantenimiento. Sustituido por agregación plana en Firestore (Ancestry Array) para mantener el presupuesto en $0/mes.
+* **[Vercel para Hosting]** — Descartado para evitar fragmentación de facturación. Todo el tráfico vive dentro del backbone de Google.
+* **[Sincronización WP <-> Firebase DB]** — Descartado por ser un "punto de fallo catastrófico". WP solo envía tráfico; no comparte estado de base de datos.
+* **[www.cpii.clubsocios.digital]** — Descartado por redundancia y conflictos de SSL. El subdominio canónico es `cpii.clubsocios.digital`.
+
+---
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Saneamiento de Payload:** El archivo `i18n.js` de la landing tiene fechas de febrero 2026. Requiere actualización manual a marzo/abril antes del deploy.
+* **Confirmación de Candado Verde:** El SSL vía Certbot en la máquina LEMP está configurado pero requiere verificación final de redirección `http` -> `https`.
+* **Rate Limiting Test:** No se ha probado el umbral real del "conmutador" a SendGrid bajo una carga simulada de 1.000 req/seg.
+* **Limpieza de Leads:** No existe un proceso de purga automático para leads en `pending_users` que nunca se convierten en socios tras 30 días.
+
+---
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Sensibilidad de Marca:** El cliente valora la "sensación de seguridad" por encima de la velocidad de nuevas funcionalidades. Prefiere una landing estática blindada que un dashboard dinámico con bugs.
+* **Mercado Ibero-Luso:** Existe una obsesión por la taxonomía dual (`clube` vs `club`, `mesa`). La arquitectura de subdominios está diseñada para escalar a Portugal y España simultáneamente.
+* **El "Gatekeeper" es el Producto:** En CPII, el valor no es solo la info, sino el filtro de entrada. El sistema de Custom Claims es la pieza más valiosa de la infraestructura.
+* **Trampa Conocida:** No intentar usar plugins de "Membership" en WordPress. Todo el control de acceso DEBE ocurrir en Firebase para mantener la integridad de la Bóveda.
+
+---
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1.  **Fechas y Textos:** Listado de los próximos 3 eventos de inversión para purgar el `i18n.js`.
+2.  **Secretos de Entorno:** API Key de SendGrid y contraseñas de aplicación de Google Workspace para inyectar en `firebase functions:secrets`.
+3.  **Confirmación de DNS:** Captura o confirmación de que los Name Servers en DonDominio apuntan a Google Cloud para que Certbot pueda renovar el certificado sin intervención manual.

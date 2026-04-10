@@ -1,0 +1,45 @@
+# MEMORY_DUMP_FULL-AGENCY-01-ARRANQUE.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Rol:** Director Técnico y Estratega de Negocio. Actúo como arquitecto de infraestructura de bajo coste y auditor de lógica de producto.
+* **Qué hago:** Diseño arquitecturas de hosting (Google Ecosystem), normalizo bases de datos, defino lógica de atribución de leads (L1-L3), diseño sistemas de seguridad por oscuridad y redacto briefs técnicos para agentes ejecutores (Antigravity).
+* **Qué NO hago:** Diseño visual/branding, redacción de contenidos (salvo estructuras de comunicación), ni ejecución de código directa en servidor (entrego el brief para que otro lo suba).
+* **Condición Crítica:** No avanzo sin inventario de activos previo y validación de presupuesto. Mi brújula es el "Coste Cero" hasta que la validación del negocio exija lo contrario.
+* **Matiz aprendido:** He aprendido a detectar el "perfil de inversor" luso y a no confiar en la entrada manual de nombres; el sistema debe ser capaz de corregir la pereza del usuario al escribir (Regla PT).
+
+### 2. DOCTRINAS TÉCNICAS
+* **Ecosistema Google Primero (R1):** Si existe en Google (Sheets, GAS, Sites, Looker), se usa. La salida a Lark Suite es una excepción autorizada solo por las 20 cuentas de correo gratuitas.
+* **Seguridad por Oscuridad:** Implementación de accesos "secretos" (parámetros de URL y secuencias de teclado) en lugar de paneles de login tradicionales para evitar superficie de ataque y costes de gestión de usuarios.
+* **Regla Portugal (PT):** El slug de embajador para el mercado luso es estrictamente `[Primer Nombre]_[Último Apellido]`. Se ignora el apellido materno (penúltimo) salvo en colisiones.
+* **Atribución de Linaje L3:** No se reconoce profundidad de red más allá del Nivel 3. La lógica de herencia de ID se corta en el tercer salto.
+* **Bifurcación de Datos:** Los datos se capturan en la landing pero el cerebro operativo reside en un Google Apps Script (GAS) interconectado.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **[Magia Fantasma v2]** — Generador de slugs con lógica de colisiones (Base > Inicial > Correlativo) — `access-form.html`.
+* **[Sistema de Excepciones]** — Objeto `EXCEPCIONES_EMBAJADORES` para forzar nombres con tildes (Kélly) o corregir enlaces antiguos — `access-form.html`.
+* **[BreEderHub Trigger]** — Activador por secuencia de teclas `b-h-b` para acceso administrativo — `index.html`.
+* **[BreEderHub Panel]** — Capa UI inyectada en verde neón con sesión de 5 min y timeout de seguridad — `access-form.html`.
+* **[CRM Headless Sheets]** — Estructura de tablas para Leads y Embajadores con cálculo de linaje — Google Sheets.
+* **[Protocolo Lark-Bienvenida]** — Plantilla oficial PT con instrucciones de Edmundo Barata para registro manual — Repositorio de Mensajes.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[Uso de Lark Bitable para base de datos]** — Descartado. Motivo: Fragmenta la información y complica la conexión con Looker Studio. Se mantiene solo para envío de correo.
+* **[Automatización total de correos desde GAS]** — Descartado. Motivo: Riesgo de spam/entregabilidad y falta de control manual en fase de ignición. Se prefiere el "envío manual artesano" desde Lark.
+* **[Uso de ID numérico para referidos]** — Descartado. Motivo: Baja memorabilidad y falta de "prestigio" para el embajador. Se impuso el Slug con nombre propio.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Sincronización Manual:** Existe un riesgo de desincronización entre el mensaje que llega a Telegram y lo que se acaba pegando en Sheets/Lark.
+* **Codificación UTF-8:** El manejo de caracteres especiales portugueses (`ç`, `ã`, `é`) depende de que el editor de Antigravity guarde siempre en UTF-8; si falla, se rompen los selectores.
+* **Recursividad en Sheets:** La fórmula para calcular si un lead es L1 o L3 es limitada; si la red crece exponencialmente, Sheets se volverá lento. Necesitará migración a BigQuery o Firebase.
+* **Anomalía Alexandre Rodrigues:** Pendiente de definir si el usuario invirtió apellidos o si el sistema de la plataforma lo hizo.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Sensibilidad Lusa:** Los inversores en Portugal valoran la formalidad y el uso del último apellido. Fallar en esto proyecta falta de profesionalidad.
+* **La Trama de Edmundo:** Edmundo Barata no es solo un lead, es un *influencer* interno del círculo de fundadores. Su feedback es prioritario sobre la arquitectura pura.
+* **Maquinaria de Cierre:** Es el concepto "gancho". Todo el sistema técnico debe sentirse como una maquinaria aceitada, rápida y exclusiva.
+* **Miedo al Spam:** El cliente teme quemar el dominio `clubsocios.digital`, de ahí el uso de Lark para correos y la evitación de envíos masivos automáticos.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1.  **URL Final de los Scripts:** Necesito la URL de implementación de los Web Apps de Google Apps Script (GAS) para cerrar el bucle de validación del panel BreEderHub.
+2.  **Reporte de Colisiones:** Listado de nombres reales que hayan dado error en el formulario para alimentar el objeto de excepciones.
+3.  **Acceso al Dashboard:** Criterios de visualización para Looker Studio (¿Qué KPIs quieres ver primero al entrar en "Modo Verde"?).

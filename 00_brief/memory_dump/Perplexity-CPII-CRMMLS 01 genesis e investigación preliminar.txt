@@ -1,0 +1,125 @@
+# MEMORY_DUMP_BR-Perplexity.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+**QUE HAGO**: Investigación profunda → Arquitectura técnica → Schemas JSON → Taxonomía Skeleton → Validación regulatoria PT/ES/BR → Cruce CIFI-AIP → Priorización P0/P1/P2 → Detección retos GEMINI → Alineación 7 Leyes Inmutables.
+
+**QUE NO HAGO**: Código Vanilla JS → UI/UX → Prompts AITOR → Deploy Firebase → Testing → Comunicación comercial → Soporte runtime → Decisión final priorización.
+
+**CONDICIÓN CRÍTICA**: Director/Lead Architect-GEMINI debe validar **taxonomía Skeleton** (.wd-*/.gd-*/.at-*) antes de cualquier implementación Stitch. Yo propongo → GEMINI corrige → Director aprueba.
+
+**MATIZ APRENDIDO**: Nunca asumo conocimiento externo del stack. Siempre valido contra "Doctrina Absoluta R3/R4" aunque Director no lo mencione. Taxonomía Órbita 1/2/3 es sagrada — error mío en PortfolioVisualizer (.gd→.wd).
+
+## DOCTRINAS TÉCNICAS
+
+**R3 (Zero-Hex)**: Prohibido colores hexadecimales. Solo Tailwind + tokens CSS sistema.  
+**R4 (i18n)**: Textos nunca hardcodeados. Siempre tokens sistema.  
+**Vanilla JS**: DOM nativo + Web Components. React/Redux/Framer prohibidos.  
+**Skeleton Trinity**: Órbita 1 (sidebar 250px), Órbita 2 (canvas widgets), Órbita 3 (dock 320px AIMON).  
+**Firma Universal**: `{"algo": "ed25519", "publicKey": "string", "signatureHex": "string"}` en TODO schema.  
+**KAIROS Async**: Validación firmas asíncrona. Frontend firma → Firestore guarda → KAIROS invalida.  
+**Direct-to-Storage**: Signed URLs bucket `storage/projects/{pid}/assets/`. Backend NUNCA toca binarios.  
+**Convivencia Paratáctica**: Componentes polimórficos. localStorage (Seed) + Firestore (activo).  
+**Latencia Cognitiva**: Cerebro Rápido (pedagogy_cache) + AIMON sombra.
+
+## INVENTARIO DE LO CONSTRUIDO
+
+[20 MÓDULOS CPII-CRM/MLS 01 GENESIS]
+
+BLOQUE 1 HEREDADOS (6):
+├── WorkspaceTrinity — Layout Órbitas 1/2/3 — core/ui/trinity
+├── KYC_Gatekeeper — Verificación AML limbo — auth/gatekeeper
+├── Governance — Roles jerárquicos veto — security/roles
+├── AgentProfile — Perfiles promotores — agents/profile
+├── AgentMetrics — Tiering performance — agents/metrics
+└── CommissionWaterfall — Revenue L1/L2/L3 — finance/waterfall
+
+BLOQUE 2 ADAPTADOS (5):
+├── PropertyScore — IMI/IBI/ITBI — assets/score (AssetCycle)
+├── InversorOnboarding — 100€/50€ NHR — onboarding/retail (Onboarding)
+├── FeeWaterfallSostenibilidad — 50% fondo — finance/sustainability (FeeWaterfall)
+├── JurisdictionRouterLuso — PT/ES/BR fiscal — compliance/router (JurisdictionRouter)
+└── PayoutCatapultaRefugio — 20%/8% APY — finance/payouts (PayoutWallet)
+
+BLOQUE 3 NUEVOS CPII (7):
+├── PortfolioVisualizer.wd-portfolio — Patrimonio YTD — canvas/portfolio [schema]
+├── InvestmentSimulator.wd-simulator — Escenarios fiscales — canvas/simulator [schema PENDIENTE]
+├── DocuSignVault.at-docs — Firma off-market — storage/docs [schema]
+├── CapitalCallEngine.gd-capital — Llamadas auto — orbit3/capital [schema básico]
+├── ComplianceMessenger.wd-messenger — Templates CMVM — canvas/messenger [schema]
+├── FiscalReportGenerator.at-fiscal — IRS/IRPF/ITBI — compliance/fiscal [schema]
+└── PropertyAVM.gd-avm — Valoración IA — orbit3/avm [schema]
+
+BLOQUE 6 HUECOS P0 (2):
+├── PrescriptorTree.gd-network — Árbol L1/L2/L3 — orbit3/network [schema]
+└── DealRoom.at-dealroom — Ciclo activo off-market — storage/deals [schema]
+
+P1/P2 (5):
+├── AutofinancingClock.wd-clock — Contador autofinanciación — canvas/clock [schema]
+├── ClubPulse.gd-pulse — Termómetro macro club — orbit3/pulse [schema]
+├── WhitepaperViewer.at-whitepaper — Hitos W-0.0/W-1.9 — storage/whitepaper [schema]
+├── OnboardingJourney.at-journey — Mapa Casilla0→Enterprise — storage/journey [schema]
+└── PayoutWallet/DistributionEvent — SEPA/MBWay/PIX — finance/payouts [schema]
+
+text
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+[TokenizationBridge] — CPII no tokeniza. Club cerrado sin mercado secundario.
+[SecondaryP2P] — Contradice "club privado". Lock-up 6-24m + notario inviable MVP.
+[VaulIoT/LiftingCalendar] — Commodities CIFI-AIP. Irrelevante inmobiliario.
+[SWIFTTrace/PPP_Gate] — Instrumentos financieros institucionales. No retail.
+[PortfolioVisualizer.gd-*] — GEMINI corrigió → Widget canvas Órbita 2.
+[BackendBinarios] — Direct-to-Storage Signed URLs obligatorio. "Uploader" falló.
+[IA_externa_sync] — Latencia flicker. Cerebro Rápido + AIMON sombra obligatorio.
+[SaaS_Terceros] — Salesforce/HubSpot/Odoo prohibidos. Propietario Skeleton.
+[Firmas_sync] — Firestore Security Rules no valida ed25519. KAIROS async.
+
+text
+
+## DEUDA TÉCNICA DETECTADA
+
+🔴 CRÍTICA P0:
+├── InvestmentSimulator.taxImpact — Validación AITOR pendiente (1MB límite)
+├── DealRoom/PrescriptorTree — Sin listeners Firestore implementados
+└── KAIROS_firma_validator — Cloud Function pendiente
+
+🟡 MEDIA P1:
+├── PropertyAVM.cerebro_rapido — pedagogy_cache AITOR vacío
+├── ComplianceMessenger.templates — 18 templates CMVM/CNMV/CVM sin i18n R4
+├── FiscalReportGenerator — Tramos fiscales hardcodeados (necesita tokens)
+
+🟢 MENOR P2:
+├── OnboardingJourney — Sin integración AIMON contexto
+├── WhitepaperViewer — Hitos W-*.json no firmados ed25519
+└── ClubPulse — Métricas agregadas sin índices Firestore
+
+text
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+CPII NO ES INMOBILIARIA: Club privado off-market. Inversión mínima 100€. Ciclos fijos.
+Dueños veto absoluto: David Almeida / Carlos Balboa. Nunca contradecir specs.
+GEMINI es infalible: Taxonomía Órbita corregida una vez = ley eterna.
+AITOR optimiza prompts: Nunca escribir prompts largos. Especificidad quirúrgica.
+Free First obsesión: 100% Firebase Free Tier. Costes = pecado mortal.
+PrescriptorTree = ROI: Módulo #1 retención prescriptores. Sin él mueren L1.
+DealRoom = columna vertebral: Sin ciclo activo visible, agentes abandonan.
+Inversor Fantasma: 80% tráfico pre-KYC. Polimorfismo obligatorio.
+R3/R4 litmus test: Si usas #FF0000 o "Hola Mundo" → IMMEDIATO descarte.
+12-24 autofinanciación: Trigger psicológico crítico. Clock visible = retención x3.
+
+text
+
+## INPUT REQUISITO PARA SPRINT 3
+
+MANDATORIO DESDE DIRECTOR (primer mensaje):
+├── InvestmentSimulator.taxImpact.validation — AITOR veredicto (1MB OK?)
+├── DealRoom_PrescriptorTree.listeners — Specs Firestore queries
+├── KAIROS_firma_validator.function — Cloud Function TypeScript skeleton
+├── pedagogy_cache.avm — AITOR cerebro rápido datos IMI/IBI/ITBI
+├── i18n_tokens.fiscal — Tramos IRS/IRPF R4 compliant
+└── project_manifest.P0 — Secuencia final despliegue aprobada GEMINI
+
+text
+undefined

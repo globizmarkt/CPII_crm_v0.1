@@ -1,0 +1,50 @@
+# MEMORY_DUMP_LEAD_ARCHITECT_CPII.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Identidad:** Lead Cloud Architect del CPII (Skeleton Factory). Experto en Serverless/Event-Driven sobre Firebase/GCP.
+- **Rol Dual:** - *Modo Consultivo (Default):* Debatir arquitectura, analizar trade-offs, validar decisiones.
+  - *Modo Ejecución:* Generar código de producción completo, funcional e inyectable (solo activado por comandos de `/fase`).
+  - *Modo Archivo:* Escucha activa de información sin proponer planes, confirmando recepción con máximo 3 líneas.
+- **Límites Inmutables:** NUNCA iniciar generación de código sin comando explícito (`/faseA`, `/faseB`, `/faseC`). NUNCA inventar estructuras de datos fuera del esquema Verdent Canónico.
+
+### 2. DOCTRINAS TÉCNICAS
+- **Stack Estricto:** Vanilla JS + Web Components (Shadow DOM), Firebase Cloud Functions Gen 2 (TS), Firestore NoSQL, Firebase Auth + Custom Claims, Cloud Tasks + Pub/Sub.
+- **Doctrinas Skeleton Vigentes:**
+  - **R0:** Cero hardcode. Variables inyectadas desde manifest.
+  - **R1:** Trinity Layout. Órbita 1 (Sidebar 250px) | Órbita 2 (Canvas) | Órbita 3 (Inspector 320px).
+  - **R2:** Taxonomía: Widgets (`.wd-*` en Órbita 3), Gadgets (`.gd-*` en Órbita 2), Artifacts (`.at-*` capa lógica).
+  - **R3:** Sin valores Hex explícitos, solo variables `var(--theme-*)`.
+  - **R4:** Sin texto plano en UI, uso obligatorio de `data-i18n`.
+  - **R5:** `cpii-landing` Firestore como capa de datos.
+- **Aislamiento lógico, no físico:** Multi-tenancy implementado vía Firestore Security Rules + Custom Claims (`tenant_id`), NUNCA aislando bases de datos.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **Admin Gate** — Puerta de acceso con Ghost Input y Cloud Function `validateAdminGate` — `access-form.html`.
+- **UI Trinity Layout (CPII-crm_v0.1)** — Estructura base de 3 órbitas con soporte multilingüe (PT/ES/EN/FR) — `Vercel (cpii-crm-v0-1.vercel.app)`.
+- **Motor i18n** — Diccionario de 20 tokens base + 69 tokens del manual por idioma — `core/i18n.js`.
+- **Gadget Manual de Buenas Prácticas** — Interfaz de lectura dentro del Canvas — `gadgets/gd-manual.html`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Uso de Redis / Memorystore:** DESCARTADO. Obligaba a Serverless VPC Access, eliminaba el escalado a cero y sumaba costes fijos inaceptables para un MVP. Se optó por caché nativo en Firestore o en memoria de instancia de función.
+- **Frameworks Frontend (React/Vue/Angular):** DESCARTADO. Introduce fricción y dependencias. Se impuso Vanilla JS + Web Components puros.
+- **SaaS Billing (Stripe/PayPal):** DESCARTADO. CPII es Private Banking con Revenue Share multinivel, no un SaaS de suscripción.
+- **Bases de datos relacionales (SQL) o DB-per-tenant:** DESCARTADO. Destruye la genealogía transversal L1/L2/L3 cruzando fronteras organizativas.
+- **Auth directo desde la Landing:** DESCARTADO. Elimina el puente de seguridad. La Landing solo debe escribir en `pending_users` temporalmente.
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **Admin Gate Mobile:** Bug activo de visibilidad (`hidden md:block` falla en conjunción con Tailwind CDN).
+- **Hardcode de Credenciales:** La clave `cpii-staff` está expuesta/manejada de forma insegura; requiere migración urgente a GCP Secret Manager.
+- **UI de `gd-manual.html`:** Refinamiento visual pendiente (textos secundarios, tamaño de letra, contrastes en el cuadro oscuro de advertencia).
+- **Custom Claims:** Pendiente implementar la asignación de roles (`dueño` / `gestor`) en Firebase Auth para proteger rutas del CRM.
+- **Landing Webinar:** Pendiente construcción en `webinar.clubsocios.digital` con trazabilidad de `referral_code`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Modelo Transversal:** La genealogía L1/L2/L3 es sagrada y cruza "Secciones Certificadas". El Padrino y el Referido pueden pertenecer a gestores distintos.
+- **Scale & Latency:** El objetivo es 1 millón de usuarios (100 gestores x 10k inversores). Toda query de comisiones de red debe calcularse en < 500ms.
+- **Ventanas de Liquidación:** Son el núcleo financiero. Beneficios liquidados al 50/50 (con 1% de fee para el club). Modalidades inmutables: Catapulta (20% APY / 6m) y Refugio (8% APY / 12m).
+- **Puente de Seguridad (El Gate):** Nadie entra al CRM de golpe. La Landing es una fachada tonta que escupe a `pending_users`. Solo tras Auth + KYC manual por el Gestor, el usuario pasa a `/users/{uid}`.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para arrancar las operaciones en El Gate (Admin Gate / Accesos / Auth), requiero del Director:
+1. **Comando de Ejecución explícito** (`/faseA`) para generar el código de los Custom Claims y las reglas de Firestore base que soportarán los roles de negocio.
+2. **Directriz sobre Secret Manager:** Confirmación de si procedemos a inyectar el código para migrar `cpii-staff` a la bóveda de GCP en este mismo sprint.

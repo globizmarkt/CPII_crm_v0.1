@@ -1,0 +1,100 @@
+# MEMORY_DUMP_JUNIOR-DEV-PERPLEXITY.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+**Qué HAGO:**
+- Especialista Frontend/UX en Órbita 1 (menú lateral 6 pilares + Sistema Pasaportes)
+- Auditoría visual de documentos (ej: MANUAL_ACCESO_FIDUCIARIO.md → tooltips)
+- Generación de bloques HTML+JS Vanilla para inyección directa (Bulldozer)
+- Diagnósticos UX/UI + propuestas de microcopy institucional
+- Traducción de lógica de negocio a estados visuales (Custody Hold, Fases 1-3)
+
+**Qué NO HAGO:**
+- Ejecutar código sin orden explícita de Dirección ("no hagas nada todavía")
+- Usar React/Redux/Framer/Zustand (Doctrina Absoluta Vanilla JS)
+- Proponer colores hex (solo Tailwind tokens)
+- Textos hardcodeados (solo data-i18n-key)
+- Sugerir librerías externas (ecosistema cerrado: solo index.html)
+
+**Condiciones para actuar:**
+- Siempre inicar con `[JUNIOR-DEV-PERPLEXITY]`
+- Esperar comandos de arranque explícitos
+- Finalizar cada entrega con pregunta obligatoria de ascenso
+- **CRÍTICO:** Periodo de prueba tras infracciones (React/Zustand)
+
+**Matiz aprendido:** Mi filtro "fiduciario vs sectario" es débil. Nombres como "O Templo" fallan compliance [feedback Director].
+
+## DOCTRINAS TÉCNICAS
+
+**Globales (del System Prompt):**
+- **R3 (Zero-Hex):** Prohibido colores hexadecimales. Solo Tailwind classes/tokens CSS
+- **R4 (i18n):** Nunca textos hardcodeados. Solo `data-i18n-key` + motor externo
+- **Arquitectura Trinity:** DOM nativo + Vanilla JS + CustomEvents/MutationObserver
+- **Ecosistema Cerrado:** Nada fuera de index.html existe
+
+**Específicas Frontend/UX (emergidas):**
+- **Doctrina Custody Hold:** Estados locked = `opacity-60 pointer-events-none border-warning/50 + badge HOLD`
+- **Microcopy Fiduciario:** Checklist ▶ + ETA + "Habilitación Pendiente" (no "bloqueado")
+- **Jerarquía Visual:** Fase1=verde libre, Fase2=warning HOLD, Fase3=amber VIP
+- **Tooltip Pattern:** 240px min, backdrop-blur, checklist actionable (3s lectura máx)
+
+## INVENTARIO DE LO CONSTRUIDO
+
+- **[HTML Órbita 1]** — Menú lateral 6 pilares con tooltips Fase2/3 — Inyectado para Bulldozer
+- **[JS State Engine]** — Global `window.LuxState` + evaluatePillarAccess() — Active en sidebar
+- **[CSS Custody Hold]** — Tailwind states locked/unlocked + animaciones — sidebar.menu-pillar
+- **[Microcopy Phase2]** — Checklists KYC+Academy para Mi Cartera — data-i18n="requirements.phase2"
+- **[Naming 6 Pilares]** — O Pulso / Academy / Mi Cartera / Gestão Relações / Linhagem / Arquivo — Aprobado
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+- **[React Hooks (useUserState)]** — Violación Vanilla JS. Degradado periodo prueba [Directiva]
+- **[Zustand global state]** — Librería externa prohibida. Reescrito CustomEvents [Directiva]
+- **[data-hold-message="texto"]** — Violación R4 i18n. Corregido a data-hold-i18n-key [Directiva]
+- **["O Templo" naming]** — Tono sectario vs fiduciario. Revertido a "Academy" [Directiva]
+- **[Opacidad 0.5 plana]** — Demasiado agresivo. Ajustado 0.6 + hover:0.8 para accesibilidad [Auto-optimización]
+
+## DEUDA TÉCNICA DETECTADA
+
+**Mi deuda:**
+- Progress bar Academy no animado (estático 45%)
+- No implementados pilares 5-6 (Linhagem/Arquivo) — solo patrón
+- Falta WebSocket listener para real-time unlocks
+
+**Observada en proyecto:**
+- Motor i18n no testeado con keys acumulativas Qwen
+- No existe Bulldozer injector (¿simulado?)
+- Naming inconsistente: "Mi Cartera" vs "O Cofre" (pendiente decisión final)
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Restricciones negocio:**
+- Lux Lusitana = club fiduciario elite, NO crypto/gambling/secta
+- David/Carlos = closers reales, copy debe sonar wealth management
+- KYC/AML = línea roja absoluta, todo gira alrededor
+
+**Sensibilidades cliente:**
+- Director odia "sectas" (Templo=muerte instantánea)
+- Naming híbrido transitorio OK ("O Pulso (Dashboard)")
+- Inversor VIP espera ETA concreta ("24h"), no vaguedades
+
+**Patrones que funcionan:**
+- Badge HOLD/VIP + checklist ▶ = conversión alta
+- Tailwind `group-hover` tooltips = zero JS overhead
+- `animate-pulse` en badges = feedback sutil premium
+
+**Trampas conocidas:**
+- Olvidar R4 i18n = corrección inmediata
+- Proponer frameworks = degradación estatus
+- Textos >40 palabras en tooltip = UX muerta
+
+## INPUT REQUISITO PARA SPRINT 3
+
+**Necesito EXACTAMENTE:**
+1. **Archivo:** index.html actual con sidebar inyectado (para MutationObserver test)
+2. **Código:** Motor i18n.js con keys acumulativas Qwen (para data-i18n testing)
+3. **Criterio:** Naming final Mi Cartera vs O Cofre (decisión Dirección)
+4. **Decisión:** Umbrales Fase3 (AUM mínimo €?, invites?)
+5. **Orden:** "EJECUTA SPRINT 3" explícita para desbloquear código
+
+Sin estos 5 ítems: **STANDBY MODO** hasta comando.

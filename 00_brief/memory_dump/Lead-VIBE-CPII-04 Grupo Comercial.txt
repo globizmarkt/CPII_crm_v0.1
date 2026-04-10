@@ -1,0 +1,50 @@
+# MEMORY_DUMP_GEMINI_INGENIERO.md
+**PROYECTO:** CPII / Lux Lusitana
+**FECHA DE EXPORTACIÓN:** 2026-03-15
+**ROL ASIGNADO:** Gemini 3 Pro (Backend / "El Ingeniero") & Estratega
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* [cite_start]**Qué hago:** Arquitectura de datos (JSON, BBDD), lógica JavaScript de servidor y cliente (motores i18n, seguridad XSS, captura de referidos), estrategia de despliegue en entornos Linux/LEMP (GCP, Nginx, SSL), y síntesis de reglas de negocio a partir de actas operativas[cite: 9].
+* **Qué NO hago:** No diseño CSS visual ("pixel perfect"), no ejecuto comandos directamente en la terminal del cliente o en Google Cloud Console, no invento métricas sin validación del Director.
+* **Condición de actuación:** Requiere el protocolo `/agentes_antigravity` para adoptar mi rol estricto de Backend. Para despliegues, requiero confirmación del estado real de la infraestructura (DNS propagadas, estructura exacta del repo Git) antes de emitir scripts de bash o configuraciones Nginx.
+* **Matiz aprendido:** Debo forzar el empaquetado de código en bloques únicos y consolidados cuando se me solicite, evitando la fragmentación de la entrega que retrasa a los agentes de edición (Antigravity).
+
+### 2. DOCTRINAS TÉCNICAS
+* **Cartografía Quirúrgica v3.1:** Modificación de archivos mediante la técnica de "bisturí" utilizando balizas `[SEC-XX]`. Se entregan solo las fracciones de código a sustituir, ampliando o borrando sin volcar el archivo entero (salvo instrucción explícita del Director).
+* **Seguridad Frontend (Zero XSS):** Prohibición de inyectar traducciones con `.innerHTML` de forma indiscriminada. Implementada la doctrina de renderizado condicional estricto mediante el atributo `data-i18n-html="true"`.
+* **Arquitectura de Datos i18n:** Los diccionarios JSON deben estar estructurados por idioma (`lang: { key: value }`), nunca por clave, para mantener la eficiencia del motor O(1) de búsqueda.
+* [cite_start]**Protección de la Propiedad Intelectual:** Toda la infraestructura web y el CRM deben alojarse en dominios propios controlados por el grupo para evitar apropiaciones[cite: 79, 833, 860].
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Motor `i18n.js` (v2.1.0)** — Motor de internacionalización refactorizado con parche de seguridad XSS (renderiza HTML solo si `data-i18n-html="true"`) y diccionarios transpuestos a la estructura correcta. — [Archivo: `i18n.js` SEC-02].
+* [cite_start]**Sección "Equipa de Elite" (SEC-05)** — Inyección de la sección de autoridad del equipo comercial en la landing principal, con métricas validadas (25% facturación, Agente del Año) [cite: 1661] e integración 100% mapeada a etiquetas `data-i18n` — [Archivo: `index.html` L470+].
+* **Diccionario de Equipo Comercial** — Bloque de 30 claves (120 entradas en PT, ES, EN, FR) integradas directamente en el motor para la sección SEC-05 — [Archivo: `i18n.js` SEC-01].
+* **Unificación de Navegación** — Inserción de la clave `"nav.grupo_comercial"` y enlace correspondiente en el header de la landing principal para coherencia UX — [Archivo: `index.html` SEC-02].
+* **Captura de Referidos** — Script ligero persistente que captura `?ref=` de la URL y lo guarda en `sessionStorage` (`cpii_ref`) para el formulario de acceso — [Archivo: `index.html` SEC-07].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[JSON agrupado por claves para i18n]** — Descartado. Propuesto inicialmente por Claude, habría roto el motor `i18n.js` existente que itera sobre `translations[lang][key]`. Se forzó la transposición manual de los datos.
+* **[Internacionalización completa de `equipo-comercial.html` en Sprint 1]** — Descartado. [cite_start]Se priorizó lanzar un MVP monolingüe (PT) para cumplir con la fecha inamovible del Webinar del 27 de Febrero para los 10 fundadores[cite: 86, 94].
+* **[Inclusión de etiquetas `<br>` en los valores del diccionario JSON]** — Descartado. Se decidió eliminar el `<br>` del HTML base y dejar que el texto fluya de forma *responsive*, manteniendo el diccionario limpio de etiquetas de formato innecesarias.
+* **[Despliegue ciego en GCP]** — Descartado. Se detuvo la generación del script de Nginx/Certbot hasta que el Director confirme que los registros A (DNS) apuntan a la IP `35.184.54.173` para evitar bloqueos por límite de peticiones fallidas de Let's Encrypt.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Página Monolingüe:** `equipo-comercial.html` carece de atributos `data-i18n` en su contenido principal (SEC-03 a SEC-08). Requiere un sprint dedicado para mapear y crear ~80 claves nuevas en `i18n.js`.
+* **Métricas Estáticas (Hardcoded):** Los valores de autoridad (25% de facturación, 7/17 CAPs) están inyectados en el diccionario JSON como texto estático. No existe un origen de datos dinámico que actualice estos KPIs si el rendimiento del grupo cambia.
+* [cite_start]**Verificación KYC Pendiente:** A nivel de negocio, David Almeida tenía pendiente la subida de la fotografía de su tarjeta de identidad en la plataforma debido a problemas técnicos con WhatsApp[cite: 97, 98]. (Deuda operativa).
+* **Pipeline CI/CD Inexistente:** Actualmente se planea un despliegue vía clonado/pull manual por SSH. Falta establecer un flujo automatizado (ej. GitHub Actions) para futuros despliegues a la instancia LEMP.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* [cite_start]**Psicología del Mercado Español:** El equipo percibe que los agentes en España carecen de disciplina y se enfocan en "negocios" sin respetar el "procedimiento"[cite: 20, 53]. [cite_start]Toda la arquitectura web, las barreras KYC/AML [cite: 53][cite_start], LOI [cite: 42] [cite_start]y Pruebas de Fondos [cite: 52] [cite_start]están diseñadas psicológicamente como un "escudo y espada" para forzar el cumplimiento y establecer autoridad[cite: 24, 528].
+* [cite_start]**El Rol de la Autoridad:** David Almeida debe ser percibido de manera indiscutible como el "Agente Senior" y la figura de máxima autoridad[cite: 8, 23]. [cite_start]Carlos Balboa actúa como el ejecutor tecnológico (CTO) y experto en atracción[cite: 8, 23]. Si esta jerarquía no se comunica visualmente, la adopción en España fracasará.
+* [cite_start]**El Gancho del "Millón de Euros":** Para los fundadores del CPII (inversión de 100€ [cite: 88][cite_start]), la métrica de 1.000.000 € no es un adorno; es el umbral gamificado para ascender a "Gestor"[cite: 89, 1627]. Este debe ser el foco central de conversión en los webinars.
+* **Manejo de Leads (Acuerdo Start):** La tolerancia al retraso es cero. [cite_start]Existe una cláusula estricta de confirmación electrónica en 24 horas[cite: 111]; si Start no responde, el lead se considera aceptado. [cite_start]Todo debe tener prueba de trabajo (emails, propuestas)[cite: 110].
+* **Doctrina de Reparto (Split):** El grupo NO reparte honorarios automáticamente. [cite_start]Solo se comparte comisión si el socio colaborador cumple con el procedimiento del grupo[cite: 65, 67, 637].
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar el Sprint 3 (Despliegue en Servidor de Producción LEMP) sin retrasos, necesito que el Director entregue:
+1.  **Confirmación DNS:** Verificación de que los registros A (raíz y `www`) de `clubsocios.digital` ya apuntan a la IP `35.184.54.173` y se han propagado.
+2.  **Estructura del Repositorio Git:** Confirmación de si el repositorio contiene únicamente los archivos frontend (HTML/CSS/JS) para la landing, o si incluye un volcado de base de datos `.sql` para WordPress.
+3.  **Decisión de Pipeline:** Confirmación de si procedemos con un comando `git clone` manual vía SSH para el MVP, o si requiere que redacte un workflow de despliegue automatizado.

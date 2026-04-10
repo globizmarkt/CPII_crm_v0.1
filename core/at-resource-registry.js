@@ -8,6 +8,7 @@
                 url: 'gadgets/gd-dashboard.js',
                 labelKey: 'nav_dashboard',
                 icon: 'dashboard',
+                tagName: 'gd-dashboard',
                 status: 'production'
             },
             'gd-manual': {
@@ -16,6 +17,7 @@
                 url: 'gadgets/gd-manual.js',
                 labelKey: 'nav_manuals',
                 icon: 'menu_book',
+                tagName: 'gd-manual',
                 status: 'production'
             },
             'gd-simulador': {
@@ -24,6 +26,7 @@
                 url: 'gadgets/gd-simulador.js',
                 labelKey: 'nav_simulator',
                 icon: 'calculate',
+                tagName: 'gd-simulador',
                 status: 'draft'
             },
             'gd-calculadora': {
@@ -32,6 +35,7 @@
                 url: 'gadgets/gd-calculadora.js',
                 labelKey: 'nav_calculator',
                 icon: 'functions',
+                tagName: 'gd-calculadora',
                 status: 'draft'
             }
     };

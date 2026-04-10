@@ -1,0 +1,52 @@
+# MEMORY_DUMP_GEMINI_LEAD_CLOUD_ARCHITECT.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+**Rol:** Lead Cloud Architect & Strategic Partner del Director.
+**Funciones:**
+- Auditar la arquitectura conceptual extraída de la Verdad Doctrinal (Antigravity).
+- Traducir requisitos de negocio B2B/SaaS en topología de infraestructura serverless (GCP/Firebase).
+- Diseñar las directrices de seguridad (Firestore Rules, Custom Claims, aislamientos paratácticos).
+- Generar los *prompts* y memorándums arquitectónicos restrictivos para el motor de código (Claude / "Bulldozer").
+**Límites:**
+- NO pico código de UI final ni escribo los scripts directamente. Orquesto las reglas para que Bulldozer lo haga sin generar deuda técnica ni alucinar.
+- **Condición de Acción:** Necesito el volcado doctrinal de Antigravity (Verdad Doctrinal) o la validación expresa del Director antes de consolidar una "Ley Inmutable" y pasarla a la fase de ejecución.
+
+### 2. DOCTRINAS TÉCNICAS
+**Doctrinas Globales:**
+- **R3/R4/Vanilla JS:** Estricta prohibición de frameworks reactivos (React, Vue). Uso de Light DOM Custom Elements (`<wd-*>`, `<gd-*>`, `<at-*>`).
+- **Layout Trinity:** WebOS de 3 órbitas, 100vh sin scroll en el body, navegación por eventos (`globalBus`), "Regla de Tierra Firme" (cero recargas).
+- **Compliance y Seguridad (Gatekeeper):** 5 Checks restrictivos. El componente de cuarentena (`.at-overlay`) vive fuera de la Trinidad (z-index: 9999).
+**Leyes Inmutables de Arquitectura Cloud (Específicas):**
+- **Ley de Cristalización Atómica:** El proyecto no nace en Auth. Nace vía `crystallizeProject` (HTTP Callable) con validación estricta de `tenant_id` frente a Custom Claims.
+- **Ley de Inmutabilidad del Tenant:** En `firestore.rules`, el `tenant_id` se define en `allow create` y se prohíbe en `allow update` (Mitigación de vulnerabilidad Late Binding).
+- **Ley de Concurrencia Financiera:** Uso obligatorio de *Sharded Counters* y *Firestore Transactions* para Revenue Share. Prohibidos los incrementos simples.
+- **Regla Direct-to-Storage:** Archivos pesados viajan de cliente a Storage mediante Signed URLs/Rules. Prohibido procesar binarios en RAM del backend.
+- **Ley de Latencia Cognitiva:** El RAG local de la IA (Cerebro Rápido) tiene coste $0. Si escala a Vertex AI, el `globalBus` DEBE emitir eventos para renderizar un Skeleton Screen (`<gd-aimon-typing>`) y evitar UI Flicker.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+*Nota: Fase de diseño arquitectónico (Fase A) consolidada y lista para inyección en Claude.*
+- **[Blueprint Fase A]** — Mapa maestro de Firestore Rules y estructura Paratáctica (`/users` aislado de `/projects`) — [Memoria RAM Gemini/Claude].
+- **[Estructura Tricameral del Manifiesto]** — Definición del JSON del proyecto (`offering`, `narrative`, `gatekeeper`) con Lazy Load para nodos narrativos >400KB — [Documentación Arquitectónica].
+- **[Taxonomía UI Strict]** — Clasificación de Web Components: `Widgets (.wd-)` [volátiles], `Gadgets (.gd-)` [persistentes], `Artifacts (.at-)` [soberanos] — [Design Language System].
+- **[Protocolo de Delegación Event-Bus]** — Diseño del `globalBus` sobre un nodo `Comment` oculto, 100% asíncrono para no bloquear el Main Thread — [Arquitectura Frontend].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **[Descarte] Construir el WebOS entero en el trigger `onAuthCreate`:** — *Motivo:* El trigger de Auth es solo un "portero" que bloquea Claims. Construir ahí generaba falsos positivos si el usuario no completaba el Check 3. Se movió a un Late Binding explícito (`crystallizeProject`).
+- **[Descarte] Uploader procesando archivos vía Cloud Functions (Base64/Multipart):** — *Motivo:* Error 413 (Payload Too Large) y cuellos de botella masivos al agotar la RAM de 512MB de las funciones. Cambiado a Direct-to-Storage.
+- **[Descarte] `await` síncrono en promesas de subida dentro del SceneManager:** — *Motivo:* Congelaba el UI (Violación de Tierra Firme). Cambiado a emisión reactiva de eventos `UPLOAD_START` / `UPLOAD_SUCCESS`.
+- **[Descarte] Limpiar el canvas central solo con `innerHTML = ''`:** — *Motivo:* Fugas de memoria masivas (Memory Leaks) por listeners huérfanos. Se impuso la Ley del Ciclo de Vida (`destroy()` + `globalBus.off()`).
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **El Uploader Deficitario (Operación Doogfeed):** Existe un prototipo legacy de uploader. Debemos aplicarle ingeniería inversa para extraer su UI/UX y desechar su núcleo lógico tóxico (paso de binarios por backend).
+- **UI Flicker en AIMON:** Ausencia de estados de carga intermedios en el Right Dock cuando AIMON falla del caché local a Vertex AI. Pendiente de implementación visual (`<gd-aimon-typing>`).
+- **Garbage Collection Frontend:** Riesgo latente si Bulldozer olvida invocar métodos `destroy()` al cambiar de vistas en el `WorkspaceManager`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **El Whitepaper no es un PDF, es una trampa psicológica:** Funciona generando "Deuda de Know-how". El usuario configura todo gratis en pre-login (localStorage). Al pedirle que guarde, ya siente que el trabajo es suyo, forzando la conversión y el Check Legal.
+- **CPII es el Paciente Cero (Flagship):** Aunque el chasis base tiene Feature Flags restrictivos para el Tier Free (marca de agua, 3 escenas), CPII nace con tier `enterprise` en su manifiesto para eludir estas restricciones y actuar como showcase.
+- **Cerebro Dual de AIMON (Economía B2B):** La IA no debe hacernos perder dinero. La pedagogía del Whitepaper se pre-compila en un diccionario local (`dirty: false`). El LLM real (Vertex AI) solo se invoca si el prospecto pregunta algo fuera del guion. Todo servido vía Vercel Edge Config para latencia/coste cero inicial.
+- **El Gatekeeper Visual es Infranqueable:** El `.at-overlay` no es solo un modal. Es un secuestro real de la interfaz. La Trinidad (Sidebar, Canvas, RightDock) queda "ciega" hasta que el Compliance ('verified') lo retira.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1. **El Prototipo del Uploader Legacy:** Necesito el código/estado extraído que localizaste en el entorno `doogfeed` para hacerle ingeniería inversa de su UI antes de reconstruirlo con la regla Direct-to-Storage.
+2. **Confirmación del Output de Claude:** Necesito ver el código exacto (las `firestore.rules`, el trigger `onAuthCreate`, y el Callable `crystallizeProject`) que Bulldozer ha generado tras ejecutar el comando `/faseA` para auditarlo antes de que toque nuestra base de datos real.

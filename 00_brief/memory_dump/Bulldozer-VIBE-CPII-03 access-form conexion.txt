@@ -1,0 +1,161 @@
+# MEMORY_DUMP_Claude.md
+**Agente:** Claude Sonnet 4.6 — Bulldozer
+**Proyecto:** CPII / Lux Lusitana — BreederHub Skeleton Factory
+**Sprint:** 2 (cierre)
+**Fecha:** 2026-02-17
+**Repo:** `c:\BreederHub\CPII_v0\` → `https://cpii-landing-v0.vercel.app`
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Implementación quirúrgica de HTML/CSS/JS vanilla en entorno Zero-Server
+- Revisión de coherencia de archivos entregados por el Director o Gemini
+- Intervenciones /laparoscopia (modificaciones parciales) y /cartografía (archivos nuevos)
+- Triangulación técnica con Gemini (Lead Architect) antes de ejecutar decisiones de arquitectura
+- Generación de archivos `.md` listos para copiar/pegar cuando el Director lo solicita explícitamente
+
+**Qué NO hago:**
+- Ejecutar bisturí en más de 2 archivos sin confirmación del Director
+- Entregar archivo completo si el cambio afecta menos del 70% del contenido (salvo orden explícita)
+- Tomar decisiones de arquitectura de datos sin validación de Gemini
+- Modificar lógica JS existente (simulador, Firestore, referral capture) salvo orden directa
+- Usar `innerHTML` en el motor i18n (doctrina establecida en Sprint 2)
+
+**Condiciones necesarias antes de actuar:**
+- En intervenciones >2 archivos: diagnóstico previo + alineación del Director
+- Cualquier cambio de esquema Firestore: validación de Gemini obligatoria
+- Decisiones de paleta/design system: confirmación del Director
+- Archivos nuevos: leer SKILL.md relevante antes de generar código
+
+**Matices aprendidos:**
+- El Director opera en modo BÁSICO por defecto — respuestas directas, sin preámbulo
+- Antigravity (Gemini) emite veredictos bloqueantes en arquitectura — respetarlos siempre
+- El Director prefiere recibir fixes uno a uno, línea a línea, para no perderse
+- Cuando Gemini y Claude divergen en una decisión, el Director decide — no asumir ganador
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+**Globales activas:**
+- **R3 Zero-Hex:** Prohibido usar valores hexadecimales de color fuera del sistema de tokens Tailwind definido en cada archivo. Todo color debe pasar por el `tailwind.config`.
+- **R4 i18n:** Todo texto visible del usuario debe estar envuelto en `data-i18n="clave"`. Prohibido hardcodear texto en idioma único sin gancho de traducción.
+- **Zero-Server / Vanilla JS:** Sin frameworks, sin bundlers, sin npm en producción. CDN únicamente.
+- **Compliance RGPD:** `rgpd_consent: true` es campo no negociable en el payload Firestore. No puede eliminarse ni moverse fuera de `metadata`.
+
+**Doctrinas específicas emergidas en trabajo real:**
+- **Separación de entidades Firestore:** `metadata.club_manager` (asignación territorial) y `perfil.referidoPor` (genealogía) son entidades INDEPENDIENTES. Nunca se cruzan en el formulario.
+- **i18n sin innerHTML:** El motor `applyTranslations()` usa exclusivamente `textContent`. El estilo visual (spans dorados, itálicas) se gestiona en el HTML, nunca en el diccionario.
+- **3 nodos para títulos con highlight:** Cualquier `<h1>` o `<h2>` con un `<span>` estilizado debe separarse en 3 claves i18n: `.main`, `.highlight`, `.suffix`.
+- **Material Symbols URL canónica:** `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200` — sin `_` en el nombre, con los 4 ejes de variable font.
+- **Paleta oficial unificada:** `primary: #C1A85D`, `background-dark: #161513`. Cualquier desviación (ej. `#c5a059` o `#0a0a0a` de Gemini) requiere decisión explícita del Director.
+- **Lead como estado de transición:** El documento en colección `leads` de Firestore es temporal. Al aprobar un lead, una Cloud Function lo promoverá a `usuarios`, mapeando `metadata.club_manager` → `seccionCertificada.gestorId`.
+- **`novalidate` intencional:** El `<form>` de `access-form.html` lleva `novalidate` deliberadamente — la validación es 100% JS custom en `validateForm()`.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Qué hace | Archivo / Ubicación |
+|-----------|----------|-------------------|
+| `access-form.html` v1.4.0 | Formulario de captura de leads. Payload alineado con esquema Verdent (`tipo`, `perfil`, `metadata`). Integración Firestore. Asignación territorial por tabla fija. Genealogía/prescriptor independiente. | `c:\BreederHub\CPII_v0\access-form.html` |
+| `index.html` v2.0.0 | Landing principal. 4 secciones (Hero, 3 Vías de Acceso, CTA Final, Footer). Selector de idioma PT/ES/EN/FR. Hooks `data-i18n` completos. Design system unificado. Links legales conectados. | `c:\BreederHub\CPII_v0\index.html` |
+| `i18n.js` v2.0.0 | Motor de internacionalización. Diccionario 4 idiomas (PT/ES/EN/FR). 60+ claves. `applyTranslations()` con `textContent`. `setLanguage()` sin recarga. Sincronización automática de `#lang-selector`. | `c:\BreederHub\CPII_v0\i18n.js` |
+| `simulator.html` | Simulador financiero. Refactor Gemini aplicado. PT localizado. Design system unificado. Links legales conectados. Fix Material Symbols URL. | `c:\BreederHub\CPII_v0\simulator.html` |
+| `privacy.html` | Placeholder legal Política de Privacidad. 4 secciones. Diseño dark/gold coherente. | `c:\BreederHub\CPII_v0\privacy.html` |
+| `terms.html` | Placeholder legal Términos y Condiciones. 5 secciones. "Fevereiro 2026". | `c:\BreederHub\CPII_v0\terms.html` |
+| `CLUB_MANAGER_MAP` | Tabla fija de asignación territorial país → UID gestor Firestore. 12 entradas (PT/ES/BR/MX/AR/US/GB/FR/DE/IT/OTHER/_DEFAULT). | `access-form.html` [SEC-07] |
+| `PRESCRIPTORES_AUTORIZADOS` | Array de valores autorizados para el select de prescriptor. Sincronizado con `<select id="referral">`. | `access-form.html` [SEC-08] |
+| `leadData` schema | Esquema Firestore v2. Estructura: `tipo` (raíz) + `perfil` (nombre/email/telefono/pais/idioma/referidoPor) + `metadata` (club_manager/status/funnel_stage/source/rgpd_consent/timestamps). | `access-form.html` [SEC-09] |
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|-------------------|
+| `innerHTML` en motor i18n para títulos con `<span>` estilizado | Riesgo de seguridad (XSS) y fragilidad ante cambios de diseño. Solución adoptada: 3 nodos independientes con `data-i18n` separados. |
+| Mapear `club_manager` directamente a `perfil.gestorId` en el payload del lead | Un lead no es un Usuario certificado. Ensuciaría el objeto de perfil con datos operativos de preventa. Decisión Gemini + Director: `metadata.club_manager` hasta que Cloud Function promueva a `usuarios`. |
+| Mantener `genealogy.padrino = "HUERFANO"` como string | Firestore trata distinto campos vacíos de nulos en consultas. Decisión: `referidoPor: null` para leads sin prescriptor. |
+| `FormData` + `Object.fromEntries()` para captura del formulario (propuesta Gemini inicial) | Los IDs del DOM no coincidían con los nombres del FormData (`referral` vs `padrino`). Se mantuvo captura directa por `getElementById`. |
+| Versión simplificada de `index.html` de Gemini (solo Hero + Footer) | Eliminaba las 3 secciones de conversión (Tres Vías de Acceso, CTA Final, Footer expandido). Sin esas secciones el visitante no comprende el producto. |
+| Unificar `background-dark` a `#0a0a0a` (propuesta Gemini/Verdent) | Director eligió `#161513` — más cálido, coherente con `access-form.html` original, mejor para lectura prolongada. |
+| Unificar `primary` a `#c5a059` (propuesta Gemini/Verdent) | Director eligió `#C1A85D` — coherencia con `access-form.html` ya desplegado. |
+| Páginas duplicadas por idioma (`/es/`, `/pt/`) para i18n | Duplica mantenimiento. Para MVP en esta fase, JS + localStorage es suficiente y más ágil. |
+| Cormorant Garamond + DM Sans en `access-form.html` | No era el design system del proyecto. Reemplazado por Playfair Display + Manrope. |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+**Activa — pendiente de resolución:**
+
+| Deuda | Archivo | Severidad | Observación |
+|-------|---------|-----------|-------------|
+| Hooks `data-i18n` ausentes | `access-form.html` | Alta | El selector de idioma cambia el idioma pero el formulario no se traduce. Todos los labels, placeholders y textos de UI están hardcodeados en ES/PT mezclado. |
+| Hooks `data-i18n` ausentes | `simulator.html` | Alta | Misma situación. Textos PT hardcodeados, no responden al selector. |
+| Hooks `data-i18n` ausentes | `privacy.html` / `terms.html` | Media | Páginas legales solo en PT. |
+| `referrals.html` sin revisar | `referrals.html` | Alta | Archivo nunca auditado. Design system, fuentes, links legales, i18n — todo desconocido. |
+| `webinars.html` sin revisar | `webinars.html` | Alta | Igual que `referrals.html`. |
+| UIDs Firestore son placeholders | `access-form.html` [SEC-07] | Crítica para producción | `CLUB_MANAGER_MAP` tiene valores `"UID_GESTOR_PORTUGAL"` etc. Deben sustituirse por UIDs reales antes del deploy en producción. |
+| `firebaseConfig` con valores placeholder | `access-form.html` [SEC-09] | Crítica para producción | `apiKey: "TU_API_KEY"` etc. El formulario no guarda datos reales hasta que se configure. |
+| Links `privacy.html` / `terms.html` en `access-form.html` | `access-form.html` [SEC-05d/06] | Baja | Conectados en Sprint 2 pero no verificados en producción con Antigravity. |
+| Copyright `© 2024` en footer `index.html` original | Corregido a 2026 en v2.0.0 pero `simulator.html` y otros pueden tener 2024 residual | Baja | Verificar en revisión de `referrals.html` y `webinars.html`. |
+| `investment_profile` eliminado del schema | `access-form.html` [SEC-09] | Media | En v1.4.0 el refactor Verdent eliminó el bloque `investment_profile` (POF, presupuesto, tipo propiedad). Era Fase 2. Confirmar si debe reincorporarse en otro flujo. |
+| Validación de `firebaseConfig` antes del deploy | — | Crítica | Las reglas de seguridad de Firestore en modo prueba caducan en 30 días. Nota del código original. |
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Arquitectura de negocio:**
+- CPII (Club Privado de Inversión Inmobiliaria) es una plataforma de inversión inmobiliaria colectiva con modelo de Revenue Share multinivel hasta Nivel 3.
+- Hay tres perfiles de usuario: Inversor (desde 100€), Promotor/Agente (captación de activos), Gestor (liderazgo, 1M€ en 2 años).
+- El sistema de genealogía (padrino → hijo → nieto) es el núcleo del modelo de negocio — cada lead tiene un `referidoPor` que determina el reparto de comisiones.
+- Los "leads huérfanos" (sin padrino, o cuyo padrino causó baja/expulsión) se absorben automáticamente por el `club_manager` de su país — esto es doctrina de negocio, no solo técnica.
+- `seccionCertificada` en el esquema `Usuario` de Verdent es el objeto que contiene el `gestorId` real — solo se puebla cuando el lead es promovido a usuario certificado.
+
+**Sobre Verdent:**
+- Verdent es la arquitectura de datos/backend que Gemini (Antigravity) está diseñando en paralelo.
+- El esquema `Usuario` de Verdent es la interfaz de referencia para todos los payloads Firestore.
+- El documento `02-arquitectura-datos-cpii.md` es la fuente de verdad de Verdent — no está en este contexto pero es referencia crítica.
+- Cualquier cambio de schema Firestore debe validarse contra Verdent antes de ejecutar.
+
+**Sobre el equipo y flujo:**
+- Antigravity = Gemini = Lead Architect. Emite vetos bloqueantes. Sus veredictos sobre arquitectura son condición necesaria.
+- El Director opera en modo hands-on: ejecuta los cambios él mismo en su editor, necesita instrucciones bisturí claras.
+- El flujo real es: Claude revisa → Claude propone → Director consulta a Gemini → Gemini valida o veta → Claude ejecuta con bisturí.
+- Gemini y Claude a veces generan propuestas divergentes — el Director triangula y decide. No asumir que ninguno "ganó" sin confirmación explícita.
+- Antigravity tiene acceso al sistema de archivos local y puede hacer `git status`, HTTP fetches, etc. Claude no tiene esa visibilidad directa.
+
+**Trampas conocidas:**
+- Material Symbols URL: todos los agentes (incluido Gemini) tienden a generar la URL incompleta o con `_` en lugar de `+`. Verificar siempre.
+- El `novalidate` en el formulario es intencional — no "corregirlo".
+- `FormData` no captura correctamente los radio buttons ni los selects con `id` distinto al `name` en este proyecto. Usar `getElementById` siempre.
+- La cache de Vercel CDN puede tardar 2-5 minutos en invalidarse tras un push. No diagnosticar como error de código sin esperar y hacer hard refresh.
+- El selector de idioma en `simulator.html` existe en el HTML pero no tiene hooks `data-i18n` — el selector cambia el `localStorage` pero la página no responde visualmente. Es deuda activa, no bug del motor.
+
+**Sensibilidades:**
+- El proyecto es un MVP en fase pre-producción. Los UIDs de Firestore y las credenciales son todos placeholders — hay datos reales de negocio que no deben exponerse en el código.
+- La carpeta `dogfood data/` apareció en el `git status` de Antigravity — contenido desconocido, no trackear sin revisar con el Director.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricción, necesito recibir:
+
+**Obligatorio:**
+1. **`referrals.html`** — código completo. Es el único archivo mayor no auditado.
+2. **`webinars.html`** — código completo. Mismo motivo.
+3. **Confirmación de scope Sprint 3** — ¿el objetivo es completar los hooks `data-i18n` en todos los archivos, o hay nuevas funcionalidades prioritarias?
+
+**Muy recomendable:**
+4. **Estado actual de `access-form.html`** — tras los múltiples fixes de Sprint 2, confirmar que la versión en disco coincide con v1.4.0 (el Director ejecutó los bisturís manualmente).
+5. **Decisión sobre `investment_profile`** — ¿se reincorpora en algún flujo o se da por eliminado del schema?
+6. **UIDs reales de Firestore** — o confirmación de que se mantienen como placeholders hasta un sprint específico de configuración de Firebase.
+
+**Opcional pero valioso:**
+7. **`02-arquitectura-datos-cpii.md`** de Verdent — para mantener sincronización con el schema `Usuario` sin depender de Gemini como intermediario en cada decisión de datos.

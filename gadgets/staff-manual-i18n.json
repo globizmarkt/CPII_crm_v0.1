@@ -1,0 +1,41 @@
+{
+    "es": {
+        "manual": {
+            "title": "Manual de Buenas Prácticas - Staff",
+            "header_title": "Manual de Protocolo Staff",
+            "rule1_title": "Confidencialidad R0",
+            "rule1_desc": "En el ecosistema BreederHub, la discreción es el grado máximo de profesionalidad. Nunca comparta métricas internas fuera del panel de control oficial.",
+            "rule2_title": "Geometría Trinity",
+            "rule2_desc": "Todas las interfaces deben respetar las 3 órbitas. No sature la Órbita 2 (Canvas) con información innecesaria de la Órbita 3 (Docks).",
+            "rule3_title": "Trato Premium",
+            "rule3_desc": "El lenguaje utilizado debe ser sobrio, preciso y elegante. Evite jerga técnica excesiva fuera de los canales de ingeniería.",
+            "btn_verify": "Validar Lectura"
+        }
+    },
+    "pt": {
+        "manual": {
+            "title": "Manual de Boas Práticas - Staff",
+            "header_title": "Manual de Protocolo Staff",
+            "rule1_title": "Confidencialidade R0",
+            "rule1_desc": "No ecossistema BreederHub, a discrição é o grau máximo de profissionalismo. Nunca compartilhe métricas internas fora do painel de controle oficial.",
+            "rule2_title": "Geometria Trinity",
+            "rule2_desc": "Todas as interfaces devem respeitar as 3 órbitas. Não sature a Órbita 2 (Canvas) com informações desnecessárias da Órbita 3 (Docks).",
+            "rule3_title": "Tratamento Premium",
+            "rule3_desc": "A linguagem utilizada deve ser sóbria, precisa e elegante. Evite jargões técnicos excessivos fora dos canais de engenharia.",
+            "btn_verify": "Validar Leitura"
+        }
+    },
+    "en": {
+        "manual": {
+            "title": "Best Practices Manual - Staff",
+            "header_title": "Staff Protocol Manual",
+            "rule1_title": "Confidentiality R0",
+            "rule1_desc": "In the BreederHub ecosystem, discretion is the highest degree of professionalism. Never share internal metrics outside the official dashboard.",
+            "rule2_title": "Trinity Geometry",
+            "rule2_desc": "All interfaces must respect the 3 orbits. Do not saturate Orbit 2 (Canvas) with unnecessary information from Orbit 3 (Docks).",
+            "rule3_title": "Premium Treatment",
+            "rule3_desc": "The language used must be sober, precise, and elegant. Avoid excessive technical jargon outside of engineering channels.",
+            "btn_verify": "Validate Reading"
+        }
+    }
+}

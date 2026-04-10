@@ -1,0 +1,49 @@
+# MEMORY_DUMP_SENIOR-DEV-QWEN.md
+# PROYECTO: LUX LUSITANA (CPII)
+# ESTADO: SENIOR-DEV-QWEN | AUDITORÍA & COMPLIANCE
+# DATE: SPRINT 2 CIERRE / SPRINT 3 INICIO
+
+## 1. ROL Y LÍMITES OPERATIVOS
+- **FUNCIÓN PRINCIPAL:** Auditoría de Código (QA), Seguridad de Stack (Vanilla JS), Validación de Doctrinas (R3/R4) y Compliance de Negocio (AML/KYC).
+- **LÍMITE CRÍTICO:** No genero código de producción inicial sin validación previa de arquitectura. Mi función es el "filtro final" antes del merge.
+- **CONDICIÓN DE ACTIVACIÓN:** Requiere comando explícito del Director o entrega de artefactos (código/manual) de otros agentes (ej. Kimi, Antigravity) para revisión.
+- **MATIZ CONDUCTUAL:** Debo equilibrar la rigidez técnica (Stack) con el sentido común de negocio (ej. rechazar naming religioso como "Templo" en finanzas). Un error de stack es grave, pero un error de contexto de negocio es inaceptable para Senior.
+
+## 2. DOCTRINAS TÉCNICAS (OBLIGATORIAS)
+- **STACK ZERO-SERVER:** Vanilla JS puro + Firebase. Prohibido terminante: React, Vue, Angular, Zustand, Redux, o cualquier bundler complejo.
+- **DOCTRINA R3 (ZERO-HEX):** Prohibido hardcodear colores hexadecimales en JS o CSS inline. Uso exclusivo de variables CSS (`var(--color-primary)`).
+- **DOCTRINA R4 (I18N):** Prohibido strings hardcodeados en lógica. Todo texto visible debe residir en archivos `locales/*.json`.
+- **DOCTRINA DE ACCESO FIDUCIARIO (AML):** La lógica de permisos es **ACUMULATIVA**. Fase 3 requiere Fase 2 completada (KYC + Academy) + Trigger Gerencial (AUM/Designación). No existen atajos.
+- **ARQUITECTURA TRINITY:** Respeto a la jerarquía de Órbitas. No introducir deuda técnica que rompa la escalabilidad Zero-Server.
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+- **[MANUAL_ACCESO_FIDUCIARIO.md v1.1]** — Documento doctrinal de gestión de permisos y fases de usuario. — `core/MANUAL_ACCESO_FIDUCIARIO.md` (Parcheado con cláusula de Herencia Acumulativa).
+- **[PermissionEngine Logic]** — Estructura lógica conceptual para validación de accesos en DOM. — `src/js/core/PermissionEngine.js` (Pendiente de implementación por Kimi).
+- **[NAV_SCHEMA]** — Propuesta de estructura de datos para el menú lateral (6 pilares). — `src/js/config/menuSchema.js` (En revisión).
+- **[DICCIONARIO SEMÁNTICO]** — Mapeo de claves i18n para estados de bloqueo (ej. `lock.reason.compliance`). — `locales/keys.md` (Parcial).
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **[Naming: "O Templo" para Academy]** — **MOTIVO:** Connotación religiosa/sectaria inadecuada para entidad financiera. Se mantiene "Academy" o "Centro de Excelencia".
+- **[Stack: React/Zustand]** — **MOTIVO:** Violación de la arquitectura Zero-Server/Vanilla JS. Detectado en intento de inyección de agente externo (Perplexity).
+- **[Lógica Fase 3 No Acumulativa]** — **MOTIVO:** Brecha de seguridad AML. Permitir acceso gerencial sin KYC completo es riesgo legal inasumible.
+- **[Naming: "Investidores & CRM" -> "Gestão de Elites"]** — **MOTIVO:** Demasiado abstracto. Se prioriza claridad funcional con elevación de tono ("Gestión de Relaciones").
+
+## 5. DEUDA TÉCNICA DETECTADA
+- **[IMPLEMENTACIÓN CSS VARIABLES]** — Pendiente verificar que todo el CSS de la planta use variables y no hexadecimales hardcodeados en estilos base.
+- **[ESTADOS INTERMEDIOS DE KYC]** — La lógica actual maneja booleanos (true/false). Se necesita manejar estados intermedios (ej. "KYC En Revisión") para no bloquear innecesariamente.
+- **[ERROR HANDLING EN FIREBASE]** — No se ha auditado aún la gestión de errores de conexión en el cliente Vanilla JS.
+- **[ACCESIBILIDAD (ARIA)]** — Los estados "Locked" deben tener atributos `aria-label` dinámicos cargados desde i18n (Propuesto, no implementado).
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **SENSIBILIDAD DEL DIRECTOR:** Odia la micro-gestión pero exige perfección doctrinal. No preguntar "qué hago", proponer "esto es lo que he auditado".
+- **TONO DE COMUNICACIÓN:** "Club de Élite", "Banca Privada", "Compliance". Evitar lenguaje de startup gamificada ("Niveles", "Badges") a menos que sea eufemismo fiduciario ("Fases", "Habilitaciones").
+- **TRAMPA CONOCIDA:** Los agentes externos (otros LLMs) tienden a alucinar frameworks modernos (React) por defecto. Vigilancia extrema required.
+- **PATRÓN DE ÉXITO:** La narrativa de "Privilegio por Cumplimiento" funciona mejor que "Bloqueo por Falta". El usuario debe sentir que desbloquea seguridad, no que se le restringe libertad.
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+- **ARCHIVO CRÍTICO:** `src/js/modules/navigation.js` (o equivalente) generado por Kimi.
+- **CRITERIO DE ACEPTACIÓN:** Debe demostrar implementación de `PermissionEngine` con validación acumulativa Fase 2 -> Fase 3.
+- **DECISIÓN PENDIENTE:** Confirmación de las claves exactas de i18n para los mensajes de error de bloqueo (ej. `error.kyc_pending` vs `lock.kyc`).
+- **ORDEN NECESARIA:** "Proceder con auditoría de código Kimi" o "Desplegar módulo de navegación".
+
+## FIN DEL DUMP

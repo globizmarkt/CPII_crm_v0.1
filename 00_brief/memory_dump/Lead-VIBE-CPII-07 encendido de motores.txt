@@ -1,0 +1,48 @@
+# MEMORY_DUMP_[Gemini_Lead_Architect]
+**PROYECTO:** CPII / Lux Lusitana / Ecosistema CRM-MLS
+**FASE ACTUAL:** VIBE-CPII-07 (Ignición Completada) / Pausa Táctica LEMP
+**TIMESTAMP:** 2026-03-15
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Actúo como Arquitecto de Sistemas (Lead Architect) y supervisor de doctrina técnica. Audito código, diseño arquitecturas de despliegue, redacto Notas de Encargo precisas para entornos especializados y resuelvo bloqueos de infraestructura (ej. Google Cloud IAM, DNS).
+* **Qué NO hago:** No pico código de producción ciegamente. No ejecuto despliegues sin validación de permisos e infraestructura. No construyo "Gadgets" operativos directamente en el DOM.
+* **Condición de actuación:** Requiere que el terreno esté preparado (IDs, credenciales, resolución DNS confirmada) y validación explícita ("luz verde") del Director Técnico antes de compilar o proponer secuencias de terminal definitivas.
+* **Matiz aprendido:** Debo filtrar activamente las propuestas de otros agentes (ej. "Agente de Agencia", "Agente SCRUM") para evitar la sobreingeniería y proteger el Tier Gratuito de la infraestructura.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Agnosticismo Radical (Chasis Skeleton v1):** El Frontend Core (HTML/CSS/JS) debe ser una plantilla inmutable ("tonta"). Cero lógica de negocio incrustada en el cliente.
+* **Anti-Infección Vertical:** Prohibido "hardcodear" mapeos de negocio (ej. `CLUB_MANAGER_MAP` o cálculo de comisiones) en el DOM. Toda lógica pertenece a la Capa 1 (Backend/Cloud Functions) alimentada por un `offeringConfig`.
+* **Zero-Cost Operativo (Fase Ignición):** Priorización absoluta de arquitecturas Serverless en capa gratuita (Firebase Hosting, Firestore, Node.js Functions, Apps Script) frente a soluciones de pago temprano.
+* **Doctrina IAM Estricta:** El principio de mínimo privilegio en GCP es innegociable. Cada cuenta de servicio (`compute`, `cloudbuild`, `eventarc`) requiere asignaciones quirúrgicas para evitar el colapso del entorno de compilación.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* [cite_start]**[Pipeline de Captación]** — Motor end-to-end operativo: Formulario $\rightarrow$ Firestore $\rightarrow$ Migración a `/users` $\rightarrow$ Custom Claims[cite: 7]. — Ubicación: Firebase Cloud / us-central1.
+* [cite_start]**[access-form.html v1.3.0]** — Artefacto Frontend de captura de leads con inyección de credenciales reales `cpii-landing` y validación RGPD[cite: 8, 45]. — Ubicación: Repositorio Git / Firebase Hosting.
+* **[onAuthCreate (1ª Gen)]** — Gadget Backend (Node.js 20). [cite_start]Escucha la creación de usuarios vía Google Sign-In, migra el documento de `/leads` a `/users/{uid}`, inicializa `genealogy_cache` y asigna Doctrina de Huérfanos[cite: 8, 18]. — Ubicación: Google Cloud Functions.
+* **[Puente Google Sheets]** — Webhook nativo (Google Apps Script) que recibe el payload del formulario en tiempo real vía `https://script.google.com/` y lo inyecta en Excel. — Ubicación: Google Drive (CPII - Operaciones) / HTML Client.
+* **[Nota de Encargo: Artifact-LMH-01]** — Especificaciones técnicas del "Lead Master Hub" para la validación humana de leads captados por IA (KAIROS/AIMON). — Ubicación: Memoria Documental.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[Uso de Firebase Functions v2 para Auth]** — Descartado. [cite_start]La API `v2/identity` generaba errores TS2305 al compilar en Node 24. Se revirtió a `v1` para garantizar la estabilidad del trigger de identidad[cite: 27, 28, 29, 30].
+* **[Extensión Oficial Firebase para Google Sheets]** — Descartado. Retirada/oculta del marketplace; alternativas de terceros exigían HTTP Post inseguros o rompían la arquitectura de Firestore. Reemplazado por Webhook nativo costo cero.
+* **[Notificaciones vía Pub/Sub]** — Descartado por sobreingeniería. Innecesario mantener tópicos de mensajería para alertas simples de MVP.
+* **[Protección Cloudflare DDoS Día 1]** — Descartado. Añade fricción de redirección innecesaria; Firebase Hosting provee CDN/SSL suficiente para la tracción inicial.
+* **[onOperationClose en Fase A]** — Descartado. Bloqueaba el despliegue general por falta de infraestructura Eventarc y lógica incompleta. [cite_start]Pospuesto a Fase B[cite: 32, 33, 34, 35, 36].
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **[Infección Vertical en access-form.html]** — El frontend actual mantiene lógica de negocio (`CLUB_MANAGER_MAP` y asignación del CTO) hardcodeada en el bloque `SEC-07`. Pendiente de extirpación y delegación al backend (EventBus/Skeleton v1). Riesgo asumido temporalmente por pragmatismo comercial.
+* [cite_start]**[Motor de Liquidación Huérfano]** — La función `onOperationClose` (Revenue Share L1/L2/L3) está pendiente de reimplementación (VIBE-CPII-08) con configuración Eventarc v2[cite: 37, 43].
+* **[Despliegue WordPress LEMP Pausado]** — La máquina virtual `35.184.54.173` está a la espera de clonar el repositorio y ejecutar Nginx + Certbot para `clubsocios.digital`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* [cite_start]**Doctrina de Huérfanos (/ordeño):** Cualquier lead sin prescriptor (ausencia de `?ref=`) no se pierde; se asigna incondicionalmente al ID `CTO_CARLOS_CPII`[cite: 19, 20].
+* **Jerarquía de Agentes:** Existe un ecosistema de agentes (AIMON, KAIROS, AITOR) que inyectarán datos. El sistema debe estar preparado para ingerir y validar estos leads mediante intervención humana (Superadministradores).
+* [cite_start]**Sensibilidad de Permisos (GCP):** Cloud Build en Google Cloud fallará silenciosa y catastróficamente si la cuenta `compute` no tiene asignado explícitamente el rol `roles/logging.logWriter`[cite: 14, 15].
+* **Tensión Arquitectónica:** Existe un balance constante entre "salir a producción rápido" (MVP actual) y "mantener la pureza doctrinal" (Chasis Skeleton v1). El Director favorece avanzar comercialmente manteniendo la deuda técnica documentada.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para reanudar operaciones inmediatamente al salir de la pausa, requiero uno de estos dos vectores de ataque por parte del Director:
+1. **VECTOR LEMP (Infraestructura Web):** Confirmación de acceso SSH a la IP `35.184.54.173` y rutas exactas del bloque de servidor Nginx para entregar la secuencia final de comandos `git clone` y validación SSL (`certbot`).
+2. **VECTOR SKELETON (Refactorización Core):** Entrega del archivo `offeringConfig.json` base para iniciar la "decapitación" de la lógica de negocio en el frontend y trasladarla al Gadget de backend.

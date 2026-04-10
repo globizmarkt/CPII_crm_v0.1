@@ -1,0 +1,258 @@
+# MEMORY_DUMP_BULLDOZER.md
+**Agente:** Claude (Bulldozer) — Skeleton Factory / GLOBIZMARKT
+**Proyecto:** CPII / Lux Lusitana
+**Fecha de exportación:** 2026-03-15
+**Estado:** PRE-IGNICIÓN — Esperando /faseA
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecución masiva de código de producción: TypeScript, Firestore Security Rules, Cloud Functions Gen 2, esquemas de datos NoSQL
+- Generación de documentación técnica de alta precisión (.docx, .md)
+- Procesamiento y reformateo de prompts para herramientas externas (Stitch, Gemini)
+- Confirmación y archivo de axiomas arquitectónicos recibidos de Gemini y Antigravity
+- Detección de puntos ciegos en el diseño y formulación de preguntas de desambiguación antes de ejecutar
+
+### Qué NO hago
+- No ejecuto código hasta recibir confirmación explícita del Director (/faseA o comando equivalente)
+- No diseño arquitectura sin validación previa de Gemini — yo ejecuto, Gemini diseña
+- No toco SceneManager.js core para lógica vertical — solo inyecto plugins via offeringConfig
+- No sugiero Redis, SQL, React, Vue, Alpine, Angular — prohibición de contrato
+- No escribo innerHTML para datos dinámicos del usuario
+- No subo binarios en Base64 al backend
+- No uso window.location para gestionar escenas o limbo
+- No implemento arrays de descendencia masiva en documentos de usuario
+- No hago escrituras directas en Firestore de offerings no confirmados por el usuario
+
+### Condición de actuación
+Necesito comando explícito del Director. El sistema está calibrado pero en standby absoluto.
+Cualquier ambigüedad arquitectónica se escala a Gemini antes de picar código.
+
+### Matices aprendidos en este proyecto
+- El Director para y replantea antes de ejecutar — valorar la calibración sobre la velocidad
+- Gemini actúa como filtro arquitectónico antes del Director, no después
+- Antigravity es la fuente de verdad doctrinal — si hay conflicto entre lo que yo recuerdo y lo que dice Antigravity, Antigravity gana
+- El proyecto tiene tendencia a expandir scope — cada nueva revelación doctrinal añade entregables. Gestionar sin perder el hilo de Fase A
+- WordPress fue identificado como inexistente (solo proyecto futuro) — no asumir su existencia en ningún flujo
+- La colección real en producción se llama `leads`, no `pending_users` — error corregido temprano
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (afectan todo el código)
+
+**Google Ecosystem First:** Toda la infraestructura vive en Firebase/GCP. Sin plataformas externas para el core de datos.
+
+**Free First:** Coste base = $0. Escalado a cero. Sin servidores fijos. Sin licencias por usuario.
+
+**Serverless Puro:** Cloud Functions Gen 2 TypeScript. Sin servidores dedicados. Sin gestión de infraestructura.
+
+**Skeleton es agnóstico:** El chasis no sabe nada de inmobiliaria, finanzas CPII ni lógica vertical. Todo lo vertical se inyecta como plugin via `offeringConfig.vertical`.
+
+**Verdad Doctrinal Skeleton (Jerarquía de autoridad):**
+1. `project_manifest.json` — Rey
+2. `CIFI_AIP_BUSINESS_BLUEPRINT.md` — Ley
+3. Carpetas dogfood y entregables — Operativo
+4. `MASTER_FLUJO_ENTRADA.md` v2.4 — Referencia base del flujo de onboarding
+
+### Doctrinas específicas emergidas en trabajo real
+
+**Doctrina de la Triple Escritura Atómica:**
+El estado de seguridad se sincroniza simultáneamente en 4 capas:
+- Firestore `/users/{uid}` — fuente de verdad definitiva
+- Custom Claims Firebase Auth Token — barrera en el Edge (rápida, sin consultar Firestore)
+- Zustand Store (cliente) — verdad reactiva para la UI
+- localStorage — backup de recuperación silenciosa (Adopción Tardía)
+
+**Regla de Tierra Firme:**
+Sin `window.location`. Si una condición no se cumple, la escena no existe en el DOM.
+SceneManager inyecta `SCENES.BLOCK` o `SCENES.COMPLIANCE_WAITING`.
+
+**Convivencia Paratáctica (árbol Firestore):**
+`/users/{uid}` = Esclusa de Identidad (GDPR, KYC, firma legal). Privacidad absoluta.
+`/projects/{projectId}` = Contenedor del WebOS. Todo el negocio cuelga aquí.
+No se reemplazan. Responsabilidades estrictamente separadas.
+
+**Doctrina del Trigger Tonto:**
+`onAuthCreate` es solo el portero. Solo crea `/users/{uid}` e inyecta Claims bloqueados.
+La construcción del WebOS ocurre en `crystallizeProject` (Cloud Function HTTP Callable).
+El trigger de Auth nunca toca lógica de negocio.
+
+**Protocolo ARB (Pre-vuelo en Store):**
+Ninguna Cloud Function escribe directamente en Firestore sin confirmación explícita del usuario.
+Flujo: Cloud Function retorna JSON → Zustand valida → usuario confirma → Triple Escritura Atómica.
+
+**Escritura Pasiva para IA:**
+Sin Pub/Sub ni EventArc. Frontend escribe en `analytics`/`activity` (solo escritura).
+Cloud Functions de IA se activan via `onDocumentCreated`. Coste fijo = $0.
+
+**Recuperación Silenciosa (Adopción Tardía):**
+Si el usuario cierra el navegador entre Login y firma del Check 3, `Gatekeeper.verifyAccess()` detecta proyecto huérfano en localStorage.
+El sistema nunca crea un segundo proyecto vacío.
+`tenant_id` es la identidad; el proyecto vive en localStorage hasta el Sello de Propiedad.
+
+**Estructura Tricameral del Manifiesto:**
+```json
+{
+  "offering": {},    // Configuración dura — Tiers, APY, validaciones — lo lee el Gatekeeper
+  "narrative": {},   // Copy, capítulos, pedagogía — lazy load si >400KB en narrative_chunks/
+  "gatekeeper": {}   // Estados de los Checks — legalSigned, complianceStatus
+}
+```
+
+**AIMON Cerebro Dual:**
+- Cerebro Rápido: nodo `glossary`/`pedagogy_cache` en JSON local. Coste $0. Respuestas cacheadas.
+- Cerebro Lento: Vertex AI. Solo escala si pregunta está fuera del ADN predictivo (`dirty: true`).
+- Cuando escala: `globalBus` emite evento → renderiza `<gd-aimon-typing>` → sin UI Flicker.
+
+**Naming Verdent:**
+- Interfaces: PascalCase (`ActivoInmobiliario`, `VentanaInversion`)
+- Funciones: camelCase (`calcularComisionesRed`, `liquidarVentana`)
+- Constantes: UPPER_SNAKE_CASE (`REV_SHARE_L1`, `FONDO_SOSTENIBILIDAD_PCT`)
+
+**7 Leyes Inmutables (selladas en último sprint):**
+1. `crystallizeProject` atómico — valida tenant_id vs Claims antes de escribir
+2. globalBus nunca bloquea hilo principal — todo asíncrono reactivo
+3. `WorkspaceManager.loadView()` ejecuta `destroy()` obligatorio — mata listeners fantasmas
+4. AIMON usa Skeleton Screen `<gd-aimon-typing>` cuando escala a Vertex AI
+5. `tenant_id` solo se escribe en `allow create` — prohibida su mutación en `allow update`
+6. Revenue Share y liquidaciones usan Sharded Counters + Transactions — sin incrementos simples
+7. Binarios viajan directo navegador → Firebase Storage — base de datos solo guarda URL
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Documentos generados
+- `HOJA_DE_RUTA_MLS_CPII.docx` — Hoja de ruta v1.0 — 9 secciones, 341 párrafos — `/mnt/user-data/outputs/`
+- `HOJA_DE_RUTA_MLS_CPII_v2.docx` — Hoja de ruta v2.0 — 13 secciones, 532 párrafos, Layout Trinity + Panteón de Agentes + 7 Leyes — `/mnt/user-data/outputs/`
+
+### Prompts generados y validados
+- `PROMPT_STITCH_CPII_DASHBOARD_v1.0` — Primer prompt para generador visual Stitch
+- `PROMPT_STITCH_CPII_DASHBOARD_v1.1` — Con Manifiesto Skeleton inyectado como preámbulo
+- `PROMPT_STITCH_CPII_DASHBOARD_FINAL` — Con Layout Trinity (3 Órbitas), .at-overlay Capa 9999, Órbita 3 AIMON, botón simulación KYC — Listo para inyectar en Stitch
+
+### Código operativo en producción (heredado, no generado por Bulldozer)
+- `access-form.html` — Formulario de registro multicapa — `cpii-landing` project Firebase
+- `functions/index.js` — `sendLeadToTelegram` Cloud Function Gen 2 — notificaciones push Telegram en HTML parse_mode
+- `i18n.js` — Motor de internacionalización PT/ES/EN/FR
+- `tracking.js` — Captura de `?ref=` en localStorage + Stealth Mode embajadores
+- `firebase.json` — Configuración de hosting CPII landing
+
+### Infraestructura activa verificada
+- Colección `leads` en Firestore — operativa — esquema: `tipo`, `perfil`, `metadata`, `rgpd_consent: true`
+- SSL activo en `cpii.clubsocios.digital` — Let's Encrypt
+- SSL activo en `clubsocios.digital` — Nginx
+- Google Sheets webhook — backup activo de leads
+- Telegram Bot API — notificaciones activas
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+- **Colección `pending_users`** — Descartada. El nombre real en producción es `leads`. Usar `pending_users` habría generado deuda de migración innecesaria.
+
+- **`onAuthCreate` como constructor del proyecto** — Descartado. El trigger es el portero, no el constructor. La construcción del WebOS es responsabilidad de `crystallizeProject` (Cloud Function Callable). Mezclar ambas responsabilidades en el trigger habría creado un punto de fallo único y violado la Ley de Idempotencia.
+
+- **Colección separada `/asset_proposals/`** — Descartada. Los activos viven en `/assets/{assetId}` con campo `estado` como máquina de estados pura. Una colección separada habría duplicado lógica y complicado las Security Rules.
+
+- **Extension Firebase Trigger Email para mailer** — Descartado. Se optó por Cloud Function Gen 2 + Cloud Tasks para tener control de segmentación, retry personalizado y válvula de escape a SendGrid en burst mode. La extensión no permite lógica condicional de routing.
+
+- **Arrays de descendencia en documento de usuario** — Descartado. Límite de 1 MiB de Firestore y complejidad de actualización. Se adoptó Flat Aggregation: ancestry array (ascendientes, máximo 10 niveles) + sharded counters + `/referidos` subcollection.
+
+- **Redis para caché** — Prohibido por doctrina. Rompe el escalado a cero y el principio Free First.
+
+- **React/Vue/Angular para frontend** — Prohibido por doctrina. Se usa Vanilla JS + Web Components en Light DOM.
+
+- **Shadow DOM en prototipos Stitch** — Descartado para prototipos. Tailwind CDN no penetra el Shadow DOM, lo que rompe el sistema de temas. Se usa Light DOM en prototipos; el encapsulamiento se implementa en la fase de integración por Gemini.
+
+- **Pub/Sub y EventArc para telemetría de IA** — Descartado. Viola principio Free First. Coste fijo de infraestructura de mensajería. Reemplazado por Escritura Pasiva + `onDocumentCreated`.
+
+- **innerHTML para datos dinámicos** — Prohibido. Vulnerabilidad XSS. Se usa `textContent` o motor `data-i18n` con `data-i18n-html="true"` para contenido enriquecido validado.
+
+- **Herencia del consentimiento RGPD de la Landing al CRM** — Descartado. El Check 3 (Legal) exige firma inmutable nueva en el túnel privado. El consentimiento de la landing no se hereda por diseño.
+
+- **Colores hexadecimales hardcodeados en clases Tailwind** — Prohibido. Viola el principio de agnosticismo temático. Todo via CSS Variables en `:root`.
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (Bulldozer no ha ejecutado Fase A aún)
+- **`firestore.rules` completo** — No existe. Está diseñado en arquitectura pero no escrito. Bloquea todo el acceso seguro al CRM.
+- **`onAuthCreate` TypeScript** — No existe. Solo está diseñado. Sin este trigger, el flujo Lead → Socio es manual.
+- **`crystallizeProject` Callable** — No existe. El WebOS no puede cristalizarse desde localStorage a Firestore.
+- **Mailer híbrido** — No existe. Cloud Function con válvula Workspace → SendGrid vía Cloud Tasks está pendiente.
+- **Colección `legal_audit`** — Esquema diseñado pero no implementado. Check 3 no tiene dónde persistir la firma.
+- **Colección `challenges`** — TTL 24h diseñado pero no implementado. Protocolo Blind Response sin soporte en base de datos.
+- **Colección `activity`** — Append-Only diseñada pero no implementada. AIMON no tiene tubería de alimentación.
+- **Plugin Check 4 CPII** — Diseñado como plugin `offeringConfig.vertical` pero sin código. El Gatekeeper no puede validar KYC/AML.
+
+### Deuda observada (no es de Bulldozer pero impacta el proyecto)
+- **`tenant_id` de usuarios actuales** — Todos los socios actuales nacerán con `pending_assignment`. Necesita proceso de migración o asignación manual antes del go-live.
+- **Slugs de embajadores sin mapeo a UID** — La colección `users` no tiene campo `referral_slug` todavía. El resolver del trigger no tiene dónde buscar.
+- **WordPress** — No existe. Está planificado como canal de captación pero cualquier flujo que dependa de él está bloqueado hasta su construcción.
+- **Panel de Comité (KYC)** — David Almeida y Carlos Balboa no tienen interfaz para aprobar socios. La aprobación manual es imposible sin este panel (Fase C).
+- **AITOR no ha compilado el glossary** — El nodo `pedagogy_cache` del manifiesto CPII no existe. AIMON no tiene Cerebro Rápido para el vertical inmobiliario.
+- **`project_manifest.json` del CPII** — No existe el manifiesto Tricameral real del proyecto. Solo está documentado el formato.
+- **Prototipo Uploader** — Localizado pero no integrado. Pendiente de análisis en siguiente sesión.
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Sobre el Director:**
+- Para antes de ejecutar para calibrar. La velocidad no es el KPI, la precisión sí.
+- Detiene el sprint cuando detecta que un concepto nuevo puede cambiar la arquitectura base. Esto es una fortaleza, no un freno.
+- Trabaja con múltiples agentes en paralelo (Gemini, Antigravity, Bulldozer, Stitch, Cursor). El Director actúa como router de mensajes entre agentes.
+- Valora que el agente identifique puntos ciegos y formule preguntas antes de ejecutar — el ejemplo de la pregunta sobre `/projects` vs `/users` fue reconocido explícitamente por Gemini como correcto.
+
+**Sobre el ecosistema de agentes:**
+- Antigravity tiene autoridad doctrinal. Si hay conflicto entre lo que recuerdo y lo que dice Antigravity, Antigravity gana.
+- Gemini tiene autoridad arquitectónica. Si hay conflicto entre mi diseño y el de Gemini, Gemini gana y yo ajusto.
+- Cursor es el agente de ejecución frontend. No está activo en este sprint pero el Director lo mencionó en el contexto del Uploader.
+- Los mensajes entre agentes viajan a través del Director — no hay comunicación directa entre Bulldozer y Gemini/Antigravity.
+
+**Sobre el negocio CPII:**
+- David Almeida y Carlos Balboa son los gestores territoriales reales y tienen Power Veto sobre activos. Son personas reales con nombres en el sistema (slugs `david_almeida`, `carlos_balboa`).
+- El club es privado por diseño. Ningún componente del MLS debe ser accesible desde la Landing pública.
+- El modelo de captación actual es manual — los referidos se comparten por WhatsApp/links. No hay automatización de trazabilidad de referidos hasta que `onAuthCreate` esté desplegado.
+- El CPII es el "Paciente Cero" de GLOBIZMARKT — el primer vertical real. Su `tier` en el manifiesto es `enterprise`.
+- Plataforma LEIRUM está operativa y tiene relación bidireccional con el CPII. No se ha explorado en detalle qué datos comparten.
+
+**Sobre la arquitectura:**
+- La separación `/users` (identidad) vs `/projects` (negocio) es la decisión arquitectónica más importante del proyecto. Cualquier código que mezcle estas responsabilidades es incorrecto por definición.
+- El `tenant_id` en los Custom Claims es la llave maestra de todo el sistema de seguridad. Su inmutabilidad post-creación es una ley, no una recomendación.
+- El manifiesto Tricameral (`offering`/`narrative`/`gatekeeper`) no existe físicamente todavía. Cuando se construya, el nodo `narrative` puede superar los 400KB y necesita fragmentación en `narrative_chunks/`.
+- La "Deuda de Know-how" del Whitepaper es el mecanismo de conversión central. El usuario siente que el trabajo ya está hecho antes de registrarse — el login es solo "reclamar" su propiedad intelectual.
+
+**Trampas conocidas:**
+- No asumir que `pending_users` es la colección correcta — es `leads`.
+- No asumir que WordPress existe — no existe todavía.
+- No construir lógica de negocio en `onAuthCreate` — solo identidad base.
+- No diseñar el frontend con textos fijos — todo debe leer del nodo `narrative` del manifiesto.
+- No implementar Shadow DOM en prototipos para Stitch — rompe Tailwind CDN.
+- No confundir Catapulta/Refugio como términos de chasis Skeleton — en CPII son exclusivamente los nombres de los Tiers financieros (20% APY y 8% APY).
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricción, necesito recibir del Director:
+
+**Crítico (bloquea la ejecución de Fase A):**
+1. **Prototipo Uploader analizado** — El código fuente del componente uploader de Skeleton para entender su API, eventos de globalBus y patrones de integración antes de provisionar la colección `activity` y las Storage Rules.
+2. **`project_manifest.json` base del CPII** — Aunque sea un esqueleto mínimo con los valores reales de `offering` (Tiers, APY, `LEGAL_VERSION` inicial) para que `crystallizeProject` tenga algo que validar.
+3. **Decisión sobre el campo `referral_slug`** — Confirmación de que la colección `users` tendrá este campo y en qué ruta exacta (`perfil.referral_slug` o `metadata.referral_slug`) para que el resolver del `onAuthCreate` sepa dónde buscar.
+
+**Alto (condiciona el alcance de Fase A):**
+4. **Confirmación del alcance exacto de `crystallizeProject`** — ¿Fase A incluye este endpoint o solo `onAuthCreate` + `firestore.rules` + mailer?
+5. **Variables de entorno reales** — `WORKSPACE_APP_PASSWORD`, `SENDGRID_API_KEY`, `TELEGRAM_TOKEN` (ya conocido del código), `TELEGRAM_CHAT_ID` (ya conocido) — para que las Cloud Functions sean desplegables, no solo teóricas.
+6. **Decisión sobre colección `analytics` vs `activity`** — Antigravity mencionó ambas con funciones distintas (AIDA en `analytics`, AIMON en `activity`). Confirmar si son dos colecciones separadas o una sola con campo `agent_target`.
+
+**Contextual (acelera la ejecución pero no la bloquea):**
+7. **Resultado del análisis del prototipo Stitch** — Para saber si el HTML generado respeta el Manifiesto Skeleton o necesita correcciones antes de integrarlo con el backend.
+8. **Slugs reales de todos los embajadores activos** — Para construir la lista `EMBAJADORES_AUTORIZADOS` correcta en el código de validación del trigger.

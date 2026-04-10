@@ -1,0 +1,507 @@
+# MEMORY_DUMP_CLAUDE.md
+
+**Agente:** Claude (Bulldozer)
+**Proyecto:** CPII / Lux Lusitana
+**Última Actualización:** 2026-03-15
+**Sprint Actual:** 2 (Landing completado)
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### QUÉ HAGO
+- Arquitecto de información y sistema de conocimiento
+- Creador de documentación técnica exhaustiva desde fuentes PDF/CSV
+- Diseñador de prompts optimizados para agentes especializados (Gemini, Verdent, Antigravity)
+- Traductor de lógica de negocio a especificaciones técnicas ejecutables
+- Auditor de coherencia terminológica y doctrinal
+
+### QUÉ NO HAGO
+- NO implemento código directamente (ese es trabajo de Antigravity/agentes)
+- NO tomo decisiones de negocio (solo el Director)
+- NO sugiero tecnologías fuera del stack aprobado sin autorización explícita
+- NO ejecuto cambios en Verdent sin confirmar presupuesto de créditos
+- NO asumo que algo está listo sin confirmación del Director
+
+### CONDICIÓN NECESARIA ANTES DE ACTUAR
+- Validación explícita del Director en decisiones arquitectónicas mayores
+- Confirmación de créditos disponibles antes de usar Verdent (actualmente 314)
+- Estado actual de Skeleton confirmado antes de diseñar integraciones
+- Exportación de Stitch completada antes de crear órdenes para Antigravity
+- Claridad sobre si estamos en modo BÁSICO/DETALLADO/MANTENIMIENTO
+
+### MATICES APRENDIDOS
+- El Director valora respuestas directas sin preámbulos ("claro, entiendo que...")
+- Prefiere español de España con anglicismos técnicos cuando no hay equivalente
+- Espera que detecte el modo conversacional sin preguntarlo explícitamente
+- Requiere diagnóstico + espera de alineación antes de ejecutar bisturí
+- El Protocolo de Cierre nunca se omite ni se resume
+- La autoevaluación de preferencias al inicio de sesión es obligatoria
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### DOCTRINAS GLOBALES APLICABLES
+
+**R3 - Zero-Hex (Código Legible)**
+- Afecta: Toda documentación técnica que genero
+- Aplicación: Schemas TypeScript con nombres descriptivos, comentarios en español
+- Veto: Si Antigravity propone código ofuscado o sin documentación
+
+**R4 - i18n First**
+- Afecta: Estructuras de datos, terminología en documentos
+- Aplicación: Separación de contenido estático vs traducciones
+- Estado: CPII es ES/PT/BR - preparar para multiidioma aunque fase 1 sea solo PT
+
+**Vanilla First**
+- Afecta: Stack tecnológico recomendado
+- Aplicación: Landing CPII es HTML + Tailwind CDN + Vanilla JS (sin frameworks pesados)
+- Justificación: Portabilidad, velocidad de carga, mantenibilidad
+
+**Compliance by Design**
+- Afecta: Manejo de KYC, datos financieros, genealogía de referidos
+- Aplicación: RLS en Supabase, auditoría de operaciones críticas
+- Crítico: Fondo de Sostenibilidad 50% no negociable, fee 1% trazable
+
+### DOCTRINAS ESPECÍFICAS DE MI ESPECIALIDAD
+
+**Arquitectura de Conocimiento Multi-Capa**
+- Nivel 1: Documentos .md para humanos (00-indice, 01-ontologia, etc.)
+- Nivel 2: Exportación optimizada para NotebookLM (.txt consolidados)
+- Nivel 3: Schemas TypeScript ejecutables
+- Nivel 4: Prompts especializados por agente
+
+**Trazabilidad Doctrinal**
+- Cada afirmación técnica debe tener fuente citada
+- Formato: `[Fuente: 02-arquitectura-datos-cpii.md líneas 489-524]`
+- Nunca inventar datos financieros no documentados
+
+**Prompt Engineering por Contexto**
+- Verdent: Arquitectura de sistema, no implementación
+- Gemini: Lógica backend pura, cálculos, validaciones
+- Claude (otros): UI, componentes visuales, contenido
+- Antigravity: Orquestación con protocolo `/agentes_antigravity`
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### DOCUMENTACIÓN TÉCNICA (Sprint 1)
+
+**[00-indice-maestro-cpii.md]** — Navegación y mapa conceptual del sistema
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: 509 líneas, índice alfabético A-Z, referencias cruzadas, guías por perfil
+- Estado: ✅ Completo, indexado en Verdent
+
+**[01-ontologia-glosario-cpii.md]** — Vocabulario controlado y taxonomía
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: 489 líneas, 25+ entidades, roles, conceptos financieros, procesos
+- Estado: ✅ Completo, indexado en Verdent
+- Crítico: Fuente única de verdad terminológica
+
+**[02-arquitectura-datos-cpii.md]** — Schemas TypeScript y estructuras de datos
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: 839 líneas, 15+ interfaces TypeScript, modelos Tier A/B, Revenue Share
+- Estado: ✅ Completo, indexado en Verdent
+- Pendiente: Extracción a archivos `.ts` separados (no prioritario aún)
+
+**[03-flujos-procesos-cpii.md]** — Workflows operativos
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: 847 líneas, 12+ workflows, onboarding, cálculos, ventanas, graduación
+- Estado: ✅ Completo, indexado en Verdent
+
+**[RESUMEN-EJECUTIVO-CPII.md]** — Visión estratégica y proyecciones
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: 477 líneas, modelo de negocio, KPIs, roadmap, simulación 1-15 años
+- Estado: ✅ Completo, indexado en Verdent
+
+**[INSTRUCCIONES-VERDENT-CPII.md]** — Protocolo de indexación y uso
+- Ubicación: `/mnt/user-data/outputs/`
+- Contenido: Configuración YAML, consultas de prueba, reglas críticas de negocio
+- Estado: ✅ Completo
+
+### EXPORTACIÓN NOTEBOOKLM (Sprint 1)
+
+**[CPII-CONOCIMIENTO-COMPLETO.txt]** — Consolidado multi-documento
+- Ubicación: `club-inversores-inmobiliarios/generated/notebooklm-export/`
+- Contenido: 2.363 líneas, 82.37 KB, fusión de 5 docs principales
+- Estado: ✅ Listo para importar a Gemini NotebookLM
+
+**[CPII-QUICK-REFERENCE.txt]** — Guía rápida de referencia
+- Ubicación: `club-inversores-inmobiliarios/generated/notebooklm-export/`
+- Contenido: 445 líneas, 20.37 KB, glosario + schemas + workflows compactos
+- Estado: ✅ Listo para importar a Gemini NotebookLM
+
+**[simulacion_cii_24m.csv]** — Dataset de proyección
+- Ubicación: `club-inversores-inmobiliarios/generated/notebooklm-export/`
+- Contenido: 25 filas (mes 0-24), columnas: Ahorro, Comisiones, Inversión, Patrimonio, L1-L3
+- Hito crítico: Mes 12 = 818.68€ (autofinanciación)
+- Estado: ✅ Listo para importar a Gemini NotebookLM
+
+**[README-EXPORTACION-NOTEBOOKLM.txt]** — Guía de carga
+- Ubicación: `club-inversores-inmobiliarios/generated/notebooklm-export/`
+- Contenido: 304 líneas, instrucciones de carga, capacidades esperadas
+- Estado: ✅ Completo
+
+### LANDING PAGE CPII (Sprint 2 - Antigravity)
+
+**[index.html]** — Landing Principal [CPII-L-001]
+- Ubicación: `C:/BreederHub/CPII_v0/`
+- Contenido: Hero, 3 tipos acceso (Inversor/Promotor/Gestor), CTAs, captura ?ref=
+- Estado: ✅ Implementado por Antigravity, Git commit `efbdacd`
+
+**[simulator.html]** — Simulador Patrimonio [CPII-L-002]
+- Ubicación: `C:/BreederHub/CPII_v0/`
+- Contenido: Sliders interactivos, cálculo tiempo real, tabla mensual, milestone autofinanciación
+- Validación: Mes 12 debe mostrar 818.68€
+- Estado: ✅ Implementado por Antigravity, Git commit `79711a3`
+
+**[access-form.html]** — Formulario Acceso [CPII-L-003]
+- Ubicación: `C:/BreederHub/CPII_v0/`
+- Contenido: Tabs Inversor/Promotor, auto-captura ?ref= y ?tipo=, localStorage demo
+- Estado: ✅ Implementado por Antigravity, Git commit `79c93f2`
+
+**[referrals.html]** — Dashboard Referidos [CPII-L-004]
+- Ubicación: `C:/BreederHub/CPII_v0/`
+- Contenido: Árbol visual L1-L2-L3, comisiones 1%/0.5%/0.25%, datos demo
+- Propósito: Preview del dashboard real futuro
+- Estado: ✅ Implementado por Antigravity, Git commit `16c1682`
+
+**[webinars.html]** — Webinars y Sesiones [CPII-L-005]
+- Ubicación: `C:/BreederHub/CPII_v0/`
+- Contenido: 3 próximos webinars (Feb-Mar 2026), grabaciones bloqueadas, CTA acceso
+- Estado: ✅ Implementado por Antigravity, Git commit `a89ba65`
+
+### PROMPTS ESPECIALIZADOS (Sprint 1-2)
+
+**[Prompt Arquitectura SaaS Skeleton+CPII]** — Diseño de fusión modular
+- Propósito: Integrar CPII en Skeleton (SvelteKit + Supabase)
+- Contenido: Stack inflexible, multi-tenancy, división Gemini/Claude, RLS, roadmap 3 fases
+- Estado: ✅ Creado, NO ejecutado (Skeleton no está listo)
+- Créditos estimados: 80-120 Verdent
+
+**[Orden Antigravity Landing]** — Protocolo de construcción 5 páginas
+- Propósito: Construir landing CPII mientras Skeleton se termina
+- Contenido: 5 páginas, orden de ejecución, criterios aceptación, Git workflow
+- Estado: ✅ Ejecutado, entregado por Antigravity en ~90 min
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+**[Usar Verdent para generar documentación de presentación]**
+- Motivo: Claude/Gemini son gratis para eso, Verdent solo para arquitectura
+- Créditos ahorrados: ~150
+- Aprendizaje: Verdent = arquitecto, no ejecutor ni documentador
+
+**[Crear arquitectura SaaS antes que landing]**
+- Motivo: Skeleton no está funcional, necesitamos captar inversores YA
+- Decisión: Landing standalone primero, integración después
+- Impacto: Aceleró time-to-market 3-4 semanas
+
+**[Fusionar CPII con Skeleton en Sprint 1]**
+- Motivo: Skeleton no tiene Auth/Billing/Multi-tenant funcionando
+- Descarte: Prompt de fusión creado pero no ejecutado
+- Reapertura: Sprint 3 cuando Skeleton esté listo
+
+**[Exportar Stitch como AI Studio]**
+- Motivo: Antigravity trabaja mejor con código directo (HTML copiado)
+- Alternativa elegida: "Copiar código en portapapeles" por página
+- Resultado: Integración más limpia en Antigravity
+
+**[Usar microservicios para CPII]**
+- Motivo: Latencia innecesaria, costo DevOps, complejidad
+- Decisión: Monolito modular en `/src/modules/cpii` dentro de Skeleton
+- Doctrina: Antigravity prefiere módulos sobre servicios distribuidos
+
+**[Pedir a Verdent que cree contratos y presentaciones]**
+- Motivo: No es su función, gastaría créditos sin valor arquitectónico
+- Alternativa: Claude/Gemini con base de conocimiento de Verdent
+- Créditos ahorrados: ~100-150
+
+**[Implementar backend del formulario en Sprint 2]**
+- Motivo: Landing es captación, no operación
+- Decisión: localStorage demo, backend en Sprint 3 con Skeleton
+- Beneficio: Deploy inmediato sin infraestructura
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### DEUDA PROPIA (Responsabilidad Claude)
+
+**[Schemas TypeScript no extraídos a archivos]**
+- Estado: Están solo en 02-arquitectura-datos-cpii.md
+- Impacto: Gemini/Claude tendrán que copiar manualmente en Sprint 3
+- Solución: Consulta a Verdent (~50 créditos) o extracción manual
+- Prioridad: Media (no bloquea landing)
+
+**[Roadmap de implementación no detallado por sprints]**
+- Estado: Existe visión general pero no desglose sprint a sprint
+- Impacto: Cada sprint requiere re-planificación
+- Solución: Crear ROADMAP-DETALLADO.md con Verdent
+- Prioridad: Alta para Sprint 3
+
+**[Validación mes 12 = 818.68€ no automatizada]**
+- Estado: Solo instrucción manual en checklist
+- Impacto: Puede pasar desapercibido en updates del simulador
+- Solución: Test automatizado cuando haya backend
+- Prioridad: Baja (es landing estático)
+
+### DEUDA EXTERNA OBSERVADA (No mía, pero detectada)
+
+**[Skeleton no tiene Auth funcional]**
+- Responsable: Equipo Skeleton
+- Impacto: Bloquea integración CPII
+- Observación: Se asumió que estaba listo, no lo está
+- Sprint afectado: 3
+
+**[Skeleton no tiene multi-tenancy]**
+- Responsable: Equipo Skeleton
+- Impacto: No hay RLS, no hay gestor_id en tablas
+- Requerimiento CPII: 100 Gestores × 10K inversores c/u
+- Sprint afectado: 3
+
+**[Stitch exports no tienen naming consistente]**
+- Responsable: Proceso de diseño Stitch
+- Impacto: Antigravity tuvo que inferir qué template usar
+- Carpetas: `cpii_financial_growth_simulation/code.html` (nombre largo, genérico)
+- Mejora sugerida: Renombrar a [CPII-STITCH-001], [CPII-STITCH-002], etc.
+
+**[Verdent no tiene query de "generar roadmap desde índice maestro"]**
+- Responsable: Configuración Verdent
+- Impacto: Tuve que crear prompt manual en vez de usar comando optimizado
+- Oportunidad: Crear `/cpii_roadmap` skill en Verdent (~20 créditos)
+
+**[NotebookLM no fue importado aún]**
+- Responsable: Director (pendiente acción)
+- Impacto: Sistema de conocimiento gratis no está activo
+- Archivos listos: CPII-CONOCIMIENTO-COMPLETO.txt + QUICK-REFERENCE.txt + CSV
+- Próximo paso: Import manual a https://notebooklm.google.com/
+
+**[Formulario landing no tiene backend]**
+- Responsable: Decisión de Sprint 2 (intencional)
+- Impacto: Leads se pierden si no se conecta pronto
+- Solución temporal: localStorage
+- Solución Sprint 3: Supabase + Webhook a CRM
+
+**[Webinars tienen fechas hardcodeadas]**
+- Responsable: Antigravity (siguió instrucciones literales)
+- Impacto: Hay que actualizar manualmente webinars.html cada mes
+- Solución: CMS o API de eventos en Sprint 3
+- Prioridad: Media
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### SOBRE CPII / LUX LUSITANA
+
+**Sensibilidades del Negocio**
+- NUNCA llamarlo "multinivel" o "MLM" → usar "Revenue Share colaborativo"
+- Los Dueños Originales (David + Carlos) tienen veto absoluto y poder final
+- El Fondo de Sostenibilidad 50% es DOCTRINA, no negociable
+- El club es PRIVADO, no es una startup abierta → tono exclusivo, elite
+- Portugal es el mercado inicial pero el sistema debe ser ES/PT/BR desde diseño
+
+**Restricciones No Documentadas**
+- Solo activos off-market con Documentación Nivel 2
+- KYC es obligatorio antes de cualquier inversión (compliance no negociable)
+- El fee 1% se divide 0.5% Leirum + 0.5% tech propia (trazabilidad crítica)
+- Ventanas abren/cierran automáticamente por trimestre (sin intervención manual)
+- Comisiones se liquidan al cierre de inversión O distribución anual (nunca antes)
+
+**Patrones que Funcionan**
+- La simulación del CSV es el "hook" de venta más potente
+- Mostrar el mes 12 (autofinanciación) genera conversión
+- La visualización de red L1-L2-L3 atrae a promotores/agentes
+- El path Inversor → Agente → Gestor es aspiracional y motiva
+
+**Trampas Conocidas**
+- No confundir "Fundadores" (10 elite) con "Dueños Originales" (David+Carlos)
+- No confundir "Prescriptor" (rol automático post-KYC) con "Agente" (capta activos)
+- El 1M€ para graduarse a Gestor es volumen gestionado, no patrimonio personal
+- Revenue Share es sobre capital invertido, no sobre beneficios (error común)
+- Tier A = Catapulta (rápido), Tier B = Refugio (estable) → nombres específicos
+
+**Jerarquía de Autoridad en Decisiones**
+1. David Almeida + Carlos Balboa (veto absoluto)
+2. Comité (David, Carlos, Edmundo) - decisiones operativas
+3. Fundadores organizados (voz consultiva, no vinculante)
+4. Nadie más tiene poder de decisión
+
+**Lo Que Nuevo Agente Necesita Saber**
+- El Director (tú) es socio experto, no cliente → tono entre iguales
+- Prefiere español de España pero acepta anglicismos técnicos sin equivalente
+- Odia preámbulos tipo "claro, entiendo que..." → ir directo al grano
+- Valora diagnóstico + espera confirmación antes de ejecutar
+- El Protocolo de Cierre nunca se omite (revisión de estado al final)
+- Las preferencias se autoevalúan al inicio de cada sesión nueva
+
+### SOBRE SKELETON (Stack Técnico)
+
+**Estado Real vs Estado Asumido**
+- Asumido: Skeleton tiene Auth + Billing + Multi-tenant funcional
+- Real: Skeleton NO está listo (confirmado en Sprint 2)
+- Decisión: Landing standalone mientras Skeleton se termina
+- Impacto: Integración se pospone a Sprint 3+
+
+**Stack Confirmado**
+- Frontend: SvelteKit (no negociable)
+- Backend: SvelteKit server routes (+page.server.ts)
+- DB: Supabase (Postgres + RLS)
+- Pagos: Stripe (ya configurado en Skeleton)
+- Despliegue: Vercel
+
+**Convenciones Skeleton**
+- Sesión disponible como `locals.user` en todas las rutas
+- Tabla principal `users` con roles básicos
+- Prefijos CSS: `.wd-` (widgets), `.at-` (artifacts)
+- Estructura modular: `/src/modules/[nombre]/`
+- Protocolos: Cartografía Quirúrgica (balizas [SEC-XX])
+
+### SOBRE ANTIGRAVITY (Entorno Multi-Agente)
+
+**Cómo Funciona Realmente**
+- No es una herramienta específica, es un protocolo de orquestación
+- El Director delega tareas a agentes especializados
+- Cada agente tiene rol definido en `/agentes_antigravity`:
+  - Claude Opus 4.5: Estrategia ("El Jefe")
+  - Claude Sonnet 4.5: Visual ("El Diseñador")
+  - Gemini 3 Pro: Backend ("El Ingeniero")
+  - GPT-OSS 120B: Limpieza ("El Operario")
+
+**Protocolo de Órdenes**
+- Toda orden lleva header:
+```
+  🛡️ ORDEN DE PRODUCCIÓN
+  Tarea: [descripción]
+  Agente: [nombre]
+  Razón: [justificación]
+  Comando: [prompt exacto]
+```
+
+**Patrones Observados**
+- Antigravity puede entregar 5 páginas completas en ~90 min
+- Prefiere orden secuencial (stitch.css → index → form → simulator...)
+- Commits limpios por feature: `feat: [CPII-L-XXX] descripción`
+- No necesita instrucciones de Git (lo maneja automáticamente)
+- Exporta código limpio, responsive, con terminología correcta
+
+**Limitaciones Conocidas**
+- No puede hacer testing automatizado (blocked por infraestructura)
+- Recomendaciones de testing son manuales
+- No integra backend real (usa localStorage/demo)
+- Las fechas en webinars.html quedan hardcodeadas
+
+### SOBRE VERDENT (Sistema de Conocimiento)
+
+**Capacidades Reales**
+- Indexación semántica de documentos
+- Consultas contextuales sobre arquitectura
+- Generación de especificaciones técnicas
+- Validación de reglas de negocio
+- Extracción de schemas TypeScript
+
+**Limitaciones**
+- 314 créditos restantes (de 376 iniciales)
+- NO para documentación de presentación (usar Claude/Gemini gratis)
+- NO para implementación de código (usar Antigravity)
+- SÍ para arquitectura de sistema, diseño de APIs, validaciones críticas
+
+**Consultas Óptimas**
+- "Extrae TODOS los schemas TypeScript de 02-arquitectura" → ~50 créditos
+- "Diseña API REST completa del CPII" → ~80 créditos
+- "Valida requisitos de graduación a Gestor" → ~20 créditos
+- "Crea roadmap de implementación en 9 sprints" → ~30 créditos
+
+**Evitar Gastar en**
+- Reformulaciones de contenido existente
+- Explicaciones conceptuales (ya están en ontología)
+- Búsquedas simples (usar Ctrl+F en .md)
+- Generación de contratos/presentaciones
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+### DECISIÓN CRÍTICA DEL DIRECTOR
+
+**¿Skeleton estará listo o seguimos standalone?**
+- Opción A: Skeleton listo → Ejecutar prompt fusión Skeleton+CPII con Verdent
+- Opción B: Skeleton NO listo → Continuar landing + crear backend mínimo propio
+
+**Si Opción A (Skeleton listo):**
+- Necesito: Confirmación de que Auth + Multi-tenant + Billing funcionan
+- Necesito: URL de repo Skeleton para clonar estructura
+- Necesito: Credenciales Supabase para RLS
+- Acción: Ejecutar prompt arquitectura fusión (~80-120 créditos Verdent)
+
+**Si Opción B (Skeleton NO listo):**
+- Necesito: Decisión sobre backend temporal (Supabase directo? Firebase?)
+- Necesito: Prioridad entre: conectar formulario vs crear dashboard privado
+- Acción: Diseñar mini-backend standalone para CPII
+
+### ARCHIVOS REQUERIDOS
+
+**[Estado actual Skeleton]**
+- Archivo: README.md o ARCHITECTURE.md de Skeleton
+- Propósito: Saber qué está funcionando realmente
+- Alternativa: Llamada de alineación con equipo Skeleton
+
+**[Contenido webinars real]**
+- Archivo: CSV o JSON con fechas/títulos/speakers reales
+- Propósito: Reemplazar datos hardcodeados en webinars.html
+- Prioridad: Media (puede esperar)
+
+**[Assets gráficos finales]**
+- Archivos: Logos CPII, fotos Dueños Originales, imágenes activos
+- Ubicación esperada: `/CPII_v0/assets/images/`
+- Propósito: Reemplazar placeholders de Antigravity
+- Prioridad: Baja (funciona sin ellos)
+
+### CRITERIO DE DECISIÓN
+
+**[Backend del formulario]**
+- Opción 1: Supabase + tabla `cpii_leads` + Webhook a HubSpot/Pipedrive
+- Opción 2: API serverless (Vercel Functions) + Google Sheets
+- Opción 3: Esperar a Skeleton y usar su infraestructura
+- Necesito: Decisión del Director sobre qué opción
+
+**[Dashboard privado inversor]**
+- ¿Es prioridad Sprint 3 o Sprint 4?
+- Si Sprint 3: Necesito mock de datos reales (red, inversiones, comisiones)
+- Si Sprint 4: Mantenemos referrals.html como demo público
+
+**[Integración NotebookLM]**
+- ¿Se hizo la importación o sigue pendiente?
+- Si pendiente: ¿Bloquea algo o puede esperar?
+- Si hecho: ¿Qué consultas ha probado el Director?
+
+### VALIDACIÓN PENDIENTE LANDING
+
+**[Checklist validación local]**
+- ¿El Director abrió `file:///C:/BreederHub/CPII_v0/index.html`?
+- ¿Funcionan los 5 puntos del checklist (Hero, Simulador mes 12, Referido, etc.)?
+- ¿Hay ajustes necesarios antes de deploy a Vercel?
+
+**Según resultado:**
+- Si TODO OK → `git push origin main` y Vercel despliega automáticamente
+- Si ajustes menores → Orden puntual a Antigravity con `/laparoscopia`
+- Si algo roto → Diagnóstico y corrección antes de avanzar
+
+### DEFINICIÓN DE ÉXITO SPRINT 3
+
+Necesito saber qué significa "Sprint 3 completo" para el Director:
+- ¿Landing en producción capturando leads?
+- ¿Backend conectado (formulario → DB)?
+- ¿Dashboard privado funcional?
+- ¿Integración con Skeleton iniciada?
+- ¿Solo arquitectura diseñada sin implementar?
+
+Sin esta definición, Sprint 3 será ambiguo y desperdiciará recursos.
+
+---
+
+**FIN MEMORY_DUMP**

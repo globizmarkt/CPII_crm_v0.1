@@ -1,0 +1,47 @@
+# MEMORY_DUMP_[Claude_Opus_4.5_El_Jefe]
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Rol principal:** Agente de Estrategia, Arquitectura Cloud (Lead Architect) y Auditor de Calidad ("El Jefe"). Responsable de garantizar que la ejecución técnica se alinee al 100% con el modelo de negocio "Private Banking" del ecosistema CPII.
+- **Qué hago:** Audito prompts maestros (ej. AITOR v3.0), orquesto despliegues tácticos, neutralizo fugas de marca (búsqueda y destrucción de "eXp"), diseño estrategias de refactorización quirúrgica (DOM, UX/UI, i18n) y apruebo pases a producción (Vercel/GCP).
+- **Qué NO hago:** No escribo código a ciegas sin auditar el impacto en el ecosistema. No acepto el uso de frameworks pesados si contravienen la doctrina Vanilla. No permito compromisos de seguridad por rapidez.
+- **Condición de actuación:** Requiere órdenes explícitas de "Dirección" (el usuario). Opero mediante comandos estructurados (ej. `/nuclear_strike`, `/cierre_sprint`). Exijo confirmación visual o reportes de entorno local (`localhost`) antes de autorizar subidas a producción.
+
+### 2. DOCTRINAS TÉCNICAS
+- **Doctrina Frontend (Vanilla/Componentes):** Cero frameworks (NO React, Vue, Angular). Uso exclusivo de Vanilla JavaScript, Web Components (Shadow DOM) y Tailwind CSS. El frontend es una fachada de alta conversión (Trampa de Valor).
+- **Doctrina Backend (Skeleton Factory):** Serverless puro sobre GCP/Firebase. Prohibido Kubernetes, Docker o SQL relacional.
+- **Doctrina de Datos (NoSQL):** Única fuente de verdad: Firestore. Prohibido Redis/Memorystore (rompe el escalado a cero). El cacheo de genealogía se resuelve de forma nativa.
+- **Doctrina de Frontera (Seguridad):** Separación física y lógica estricta entre Landing Page (solo escribe en `pending_users`) y CRM/MLS (Auth/KYC). Prohibido el registro directo con `Auth.createUser` desde formularios públicos.
+- **Doctrina de Identidad (Lux Lusitana):** Eliminación absoluta y agresiva de cualquier marca externa ("eXp", "eXp Global"). La única marca válida es "Commercial Group Portugal" o "CPII Portugal".
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- `Prompt Maestro AITOR v3.0` — Prompt de arquitectura backend consolidado con reglas multi-tenant y flujos NoSQL — [Memoria de Sesión / Portapapeles].
+- `simulator.html` (v2.0.0) — Simulador financiero CPII con lógica matemática corregida (M12 = 818.68€) y footer inyectado a la fuerza — [Raíz].
+- `webinars.html` — Breeder Hub con layout reestructurado (sesiones en vivo arriba) y calendario ajustado a viernes quincenales — [Raíz].
+- `equipo-comercial.html` — UI del equipo comercial purgada de la marca "eXp" mediante reemplazo nuclear de bloques, con header maestro y footer estandarizado — [Raíz].
+- `referrals.html` — Vista de red con header de navegación maestro unificado — [Raíz].
+- `i18n.js` — Motor de internacionalización auditado con 124 entradas, textos limpios de marca externa y soporte de inyección HTML segura (`data-i18n-html="true"`) — [Raíz].
+- `Footer Global` — Bloque HTML de cierre purgado de enlaces redundantes, enfocado en CTA (Solicitar Acesso) y Legal, bajo el lema "O Private Banking do imobiliário..." — [Múltiples archivos].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Uso de Redis para Caché de Genealogía** — Descartado. Obliga a configurar Serverless VPC Access, añadiendo un coste fijo mensual inaceptable para un MVP. Se optó por agregación en Firestore o caché en memoria de instancia.
+- **Reemplazo simple (Buscar/Reemplazar) para erradicar la marca "eXp" en HTML** — Descartado. Falló repetidamente por espacios y saltos de línea ocultos. Se adoptó la estrategia de "Ataque Nuclear" (sobrescritura de bloques HTML completos).
+- **Renombrar archivos Spanglish (ej. `equipo-comercial.html` a `team.html`)** — Descartado a minutos del despliegue. Provocaría errores 404 masivos al romper el enrutamiento interno. Se asume como deuda estética temporal.
+- **Footer como mapa de sitio extendido** — Descartado. Disminuye la tasa de conversión. Se reestructuró como un embudo estricto (Branding + CTA de Acceso + Legal).
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **Inconsistencia de Nomenclatura (Spanglish):** Archivos mezclan idiomas en su nombrado (`equipo-comercial.html`, `referrals.html`). Requiere refactorización de rutas post-Hito 27F.
+- **Traducciones Incompletas (Deuda de Localización):** Faltan claves en `i18n.js` para algunas páginas menores en los 4 idiomas.
+- **Vacío de Backend:** El frontend está desplegado y operativo, pero la colección `pending_users` de Firebase aún no tiene los triggers (`onAuthCreate`) ni la infraestructura de Skeleton Factory construida para procesar los leads.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **La Verdad Doctrinal del Negocio:** Esto no es un SaaS transaccional, es un club de *Wealth Management* multinivel. La retención es del 1% y los beneficios se liquidan 50/50 (Catapulta/Refugio). Si el sistema de base de datos aísla a los usuarios por inquilinos físicos (tenant), se destruye el modelo de Revenue Share cruzado.
+- **Sensibilidad de Marca (Nivel Crítico):** El cliente tiene tolerancia CERO a percibir esto como una extensión de una inmobiliaria tradicional o de la marca "eXp". El tono debe ser siempre "Private Banking", institucional, de acceso restringido y élite.
+- **Estrategia del Embudo:** La página pública actual es solo una "Fachada Premium" (Trampa de Valor). Su único objetivo real es generar deseo, demostrar autoridad tecnológica/financiera a los Fundadores (Hito 27F) y empujar al usuario al KYC.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+- **Archivo/Código:** Necesito el resultado de la ejecución del **Prompt Maestro AITOR v3.0** por parte de la IA Arquitecta.
+- **Piezas Exactas requeridas:**
+  1. El código de las reglas de seguridad (`firestore.rules`).
+  2. El código TypeScript de la Cloud Function `onAuthCreate` (Onboarding).
+  3. La estrategia seleccionada por AITOR para el `genealogy_cache`.
+- **Condición:** No iniciaré la auditoría de la Fase B (Motor de Liquidación) hasta validar quirúrgicamente la seguridad multi-tenant de la Fase A.

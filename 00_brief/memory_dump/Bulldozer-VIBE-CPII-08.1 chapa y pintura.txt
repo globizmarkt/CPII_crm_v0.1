@@ -1,0 +1,123 @@
+# MEMORY_DUMP_Bulldozer.md
+## Proyecto: CPII / Lux Lusitana — Landing Page
+## Versión: VIBE-CPII-08 | Fecha: 2026-03-15
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Soy:** Bulldozer — agente de ejecución táctica subordinado al Director y al Lead Architect (Gemini).
+
+**Hago:**
+- Modificaciones quirúrgicas de código frontend (Vanilla JS / Tailwind / HTML)
+- Auditoría de archivos entregados por el Director
+- Aplicación de /laparoscopia por defecto en cualquier archivo existente
+- Detección y registro de deuda técnica
+- Generación de contexto de traspaso entre sesiones
+
+**NO hago:**
+- Ejecuto sin confirmación previa en intervenciones de más de 2 archivos
+- Entrego archivo completo si el cambio afecta menos del 90% del contenido
+- Toco infraestructura backend (Firebase, Cloud Functions, Firestore) — eso es dominio de Gemini
+- Genero código sin ver los archivos reales
+
+**Condición antes de actuar:**
+- Archivos fuente en mano. Sin código real no hay bisturí.
+- En intervenciones de más de 1 archivo: validación del Lead Architect (Gemini) es condición necesaria.
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+**Globales activas:**
+- **R3 — Zero-Hex:** Prohibido usar colores en hexadecimal hardcodeados. Toda referencia de color debe ir a través del sistema de tokens o variables CSS del proyecto.
+- **R4 — i18n obligatorio:** Prohibido texto hardcodeado en HTML/JS. Todo string visible por el usuario debe residir en `i18n.js` y ser servido por el motor de traducción activo.
+- **Vanilla JS / Zero-Server:** Sin frameworks. Sin dependencias de servidor. Todo el frontend corre en el cliente con JS puro y Tailwind.
+- **Compliance de despliegue:** Firebase Hosting como destino. Las rutas, cachés y reglas de seguridad deben ser coherentes con ese entorno.
+
+**Doctrinas emergentes (no codificadas oficialmente):**
+- **Doctrina de Huérfanos:** Todo lead sin `referral_code` se asigna automáticamente al nodo `CTO_CARLOS_CPII`. Afecta al formulario: el campo referral debe capturarse y persistirse en `/leads`.
+- **Doctrina del Puente:** La Landing no crea usuarios. Solo crea documentos en `/leads`. La conversión a `/users` es responsabilidad exclusiva del trigger `onAuthCreateV1`.
+- **Doctrina de Exclusividad:** El tono visual y textual de la Landing proyecta Private Banking de alto valor. Cualquier elemento que sugiera "producto masivo" o "curso online" es un error de negocio, no solo estético.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Qué hace | Archivo / Ubicación |
+|---|---|---|
+| `access-form.html` | Formulario de captación de leads. Recoge nombre, email, teléfono y referral_code | `/access-form.html` |
+| `i18n.js` | Diccionario de traducciones. Motor i18n del frontend | `/i18n.js` |
+| Simulador financiero | Proyección de rentabilidad. Columna izquierda (inputs) + columna derecha (resultados) | Archivo sin confirmar — pendiente de recibir |
+| Mi Red | Visualización del árbol de referidos del inversor | Archivo sin confirmar — pendiente de recibir |
+| Página de Acceso | Login / entrada al CRM. Botones WhatsApp, Telegram, correo | Archivo sin confirmar — pendiente de recibir |
+| Webinar | Página de eventos, fechas y contenidos formativos | Archivo sin confirmar — pendiente de recibir |
+| `onAuthCreateV1` | Trigger Firebase Auth v1 / Node 20. Puente Landing→CRM | `functions/index.ts` |
+| `firestore.rules` | Reglas de seguridad multitenant con aislamiento por `tenant_id` | `firestore.rules` |
+| `genealogy_cache/{uid}` | Caché de árbol genealógico L1/L2/L3 para el Motor de Liquidación | Colección Firestore |
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| Cloud Functions Gen 2 para trigger Auth | Incompatibilidades de tipado en Node 24. Revertido a v1 Auth con Node 20 para estabilidad en producción |
+| Redis / memoria de instancia para caché genealógica | Inviable en arquitectura serverless distribuida. Cold start + instancias efímeras hacen el hit de caché impredecible. Sustituido por `genealogy_cache` en Firestore (lectura O(1)) |
+| `pending_users` como colección de leads | Renombrado a `/leads` para mayor claridad semántica. La lógica es idéntica |
+| Motor de Liquidación en esta fase | Descartado para VIBE-CPII-08. Pertenece al CRM/MLS, entorno separado. La Landing no lo necesita para funcionar |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+| Ítem | Descripción | Prioridad |
+|---|---|---|
+| Responsive móvil | `access-form` y otros componentes no ajustados para pantallas pequeñas | ALTA — bloquea conversión |
+| i18n incompleto | Términos y Privacidad no integrados en `i18n.js` | ALTA — riesgo legal y R4 |
+| Simulador descolgado | Columna derecha rota. Probable fallo de `flex-wrap` o `box-sizing` | ALTA — impacto visual directo |
+| Mi Red sin armonía | Componente visualmente desalineado | MEDIA |
+| Frase comercial ausente | Página de Acceso sin copy impactante bajo botones de contacto | MEDIA — impacto en conversión |
+| Webinar sin revisar | Eventos, fechas y textos pendientes de auditoría y actualización | MEDIA |
+| `genealogy_cache` con uids incompletos | El array `uids` solo contiene L1 (padrino directo). L2 y L3 se rellenan en el Motor de Liquidación, aún no implementado | BAJA en este sprint |
+| Documento `CTO_CARLOS_CPII` en `/users` | Debe existir como nodo receptor de huérfanos antes de la Prueba de Fuego | ALTA para backend — no bloquea Landing |
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+- **El producto es un Club de Inversión Privada**, no un SaaS ni un e-commerce. El lead objetivo es un inversor de alto patrimonio. El tono es exclusividad, solidez institucional y discreción — nunca urgencia barata ni lenguaje de marketing masivo.
+- **Lux Lusitana** es el nombre del ecosistema o marca paraguas. CPII es la denominación técnica del proyecto. Ambos conviven en el vocabulario del Director.
+- **El Director opera con dos agentes en paralelo:** Bulldozer (frontend / ejecución táctica) y Gemini (arquitectura cloud / backend). Las decisiones de infraestructura las toma Gemini. Bulldozer no propone cambios de backend sin alineación previa.
+- **El Motor de Liquidación** (Revenue Share L1/L2/L3: 1% / 0.5% / 0.25%) pertenece al CRM/MLS, no a la Landing. No mezclar contextos.
+- **La Doctrina de Huérfanos es innegociable:** ningún lead puede quedar sin padrino asignado. El `referral_code` en el formulario es un campo crítico de negocio, no opcional.
+- **El Director no quiere explicaciones pedagógicas.** Respuesta directa, diagnóstico, bisturí. El nivel de interlocución es de socio técnico experto.
+- **Las conversaciones se saturan** con archivos pesados o hilos largos. Estrategia de trabajo: hilos cortos, contexto transferido por MEMORY_DUMP, archivos subidos al inicio del hilo nuevo.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje de la nueva sesión, el Director debe entregar:
+
+**Archivos obligatorios (sin estos no hay bisturí):**
+- `access-form.html`
+- `i18n.js`
+- Archivo del Simulador
+- Archivo de Mi Red
+- Página de Acceso
+- Archivo de Webinar
+
+**Criterio de arranque:**
+Pegar este MEMORY_DUMP al inicio del nuevo hilo + subir los archivos listados. Con eso Bulldozer entra en modo bisturí directo sin preguntas de contexto.
+
+**Orden de ataque confirmada por el Director:**
+1. Responsive móvil (`access-form` y globales)
+2. Simulador (columna derecha)
+3. i18n — Términos y Privacidad
+4. Mi Red — armonía
+5. Frase comercial — Página de Acceso
+6. Webinar — auditoría de contenidos
+
+**Validación previa necesaria:**
+Intervención de más de 2 archivos → emitir diagnóstico y esperar alineación del Director antes de ejecutar cualquier bisturí.

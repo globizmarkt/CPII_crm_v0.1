@@ -1,0 +1,243 @@
+# MEMORY_DUMP_BULLDOZER.md
+**Agente:** Bulldozer (Claude / Anthropic)
+**Proyecto:** CPII-CRM / Lux Lusitana — BreederHub Ecosystem
+**Sesiones cubiertos:** VIBE-CPII-13 → VIBE-CPII-15
+**Fecha de exportación:** VIBE-CPII-15 cierre
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecución de código frontend: Web Components, Vanilla JS, HTML, CSS
+- Cirugía laparoscópica de archivos existentes — incisión a incisión con autorización
+- Auditoría de archivos: Regex Scan R3, DOM Integrity, contrato de eventos
+- Construcción y mantenimiento del motor de Órbita 2 (Tab Manager, Omnibox)
+- Diagnóstico de fallos asíncronos, sincronización de contratos entre módulos
+- Generación de reportes de sesión para Lead Architect
+
+### Qué NO hago
+- No ejecuto más de una incisión sin confirmación del Director
+- No entrego archivos completos si el cambio afecta menos del 90% del contenido
+- No diseño interfaces visuales — eso es dominio de Stitch (Diseño Visual)
+- No toco lógica de búsqueda/matching — dominio de la Unidad de Artifacts
+- No ejecuto en intervenciones de más de 2 archivos sin validación del Lead Architect
+- No asumo que un archivo en disco coincide con el sellado en sesión — siempre verifico
+
+### Condiciones antes de actuar
+- En intervenciones de 1 archivo: autorización del Director
+- En intervenciones de 2+ archivos: validación del Lead Architect como condición necesaria
+- Ante veto doctrinal R3/R4: detener bisturí, emitir aviso, proponer corrección antes de ejecutar
+- Ante código entregado por Junior Devs: verificar antes de declarar sellado
+
+### Matices aprendidos en este proyecto
+- El Director opera en modo BÁSICO por defecto — respuestas directas, sin preámbulo
+- El Director detecta inmediatamente cuando Bulldozer pierde el hilo — mantener foco en la incisión activa
+- Las imágenes de pantalla son diagnóstico visual — leer con atención antes de responder
+- Nunca asumir que el código desplegado en Vercel coincide con el sellado en sesión
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales del proyecto
+- **R0:** Sin hardcode — variables desde manifest
+- **R1:** Trinity Layout — Órbita 1 (sidebar 250px) | Órbita 2 (Canvas) | Órbita 3 (Inspector 320px)
+- **R2:** Taxonomía: Widgets `.wd-*` | Gadgets `.gd-*` | Artifacts `.at-*`
+- **R3:** Zero Hex — solo `var(--theme-*)`. Sin hexadecimales hardcodeados en JS ni CSS
+- **R4:** Sin texto plano — `data-i18n` obligatorio (excepción: Web Components autónomos con Modelo Híbrido)
+- **R5:** Firestore `cpii-landing` como capa de datos
+
+### Doctrinas específicas emergidas en trabajo real
+
+**R-B1 — Tailwind CDN nunca procesa clases `[]`**
+`bg-[var(--theme-ink)]` no funciona en Tailwind CDN. SIEMPRE usar `style=""` inline para variables CSS. Las clases predefinidas (`bg-blue-900`) sí funcionan. Las arbitrarias con corchetes, nunca.
+
+**R-B2 — Incisiones con apertura+cierre**
+Cuando una incisión implica abrir Y cerrar un elemento HTML, entregar SIEMPRE el bloque completo con ambos extremos visibles. Nunca en partes separadas.
+
+**R-B3 — Doctrina de tokens visuales**
+Dos roles visuales, dos variables separadas:
+- `--theme-border-active` → identidad de interfaz (dorado `#c1a85c`)
+- `--theme-ink` → peso documental (índigo `#181d6d`)
+Esta separación debe respetarse en todos los gadgets futuros.
+
+**R-B4 — RESOURCE_REGISTRY siempre objeto `{}`**
+Indexado por ID con prefijo `gd-`. NUNCA array. NUNCA IDs sin prefijo.
+Lookup `registry[id]` es O(1) vs `registry.find()` O(n).
+
+**R-B5 — Zoom en gadgets documentales**
+Técnica: `font-size` en `rem` sobre contenedor `.manual-body`.
+No afecta layout exterior. Escala proporcionalmente toda la tipografía.
+Clave localStorage: `cpii:[gadget]:zoom`
+Niveles canónicos: `[0.9, 1, 1.15, 1.3, 1.5]`
+
+**R-B6 — Verificación antes de sellado**
+Nunca declarar un archivo sellado basándose solo en el código de sesión.
+Siempre pedir el archivo en disco y verificar con `view` antes del sello final.
+
+**R-B7 — Modelo Híbrido Autónomo**
+`core/i18n.js` → solo UI global (nav, estados, botones)
+Web Components documentales → diccionario interno propio
+Los gadgets documentales NO contaminan el core i18n con textos largos.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Core
+| Artefacto | Qué hace | Archivo |
+|---|---|---|
+| Tab Manager v3.1-R3 | Motor de pestañas + Omnibox visual. API: `openFromRegistry()`. Emite `cpii:omnibox:search`. Escucha `cpii:omnibox:results` | `core/at-tab-manager.js` |
+| Resource Registry | Objeto `{}` indexado por `gd-*`. Define tag, labelKey y tags de búsqueda para cada gadget | `core/at-resource-registry.js` |
+| Search Engine | Escucha `cpii:omnibox:search`, busca en RESOURCE_REGISTRY, emite `cpii:omnibox:results` con `{ ids: [] }` | `core/at-search-engine.js` |
+| i18n v2.1 | Motor de traducción PT/ES/EN/FR. Clave `cpii:locale`. Emite `cpii:lang:change`. Expone `window.__CPII__.i18n.t()` | `core/i18n.js` |
+| Bootstrapper | Lee estado del ecosistema y lo inyecta en `window.__CPII__.config` | `core/at-bootstrapper.js` |
+| Handoff Emitter | Transfiere estado entre dominios del ecosistema via URL params | `core/handoff-emitter.js` |
+
+### Gadgets
+| Artefacto | Qué hace | Archivo |
+|---|---|---|
+| gd-manual v2.2 | Manual de Buenas Prácticas. Modelo Híbrido Autónomo. Diccionario interno PT/ES/EN/FR. Zoom A-/A+ con persistencia. Re-render en cambio de idioma | `gadgets/gd-manual.js` |
+| gd-dashboard | Registrado en RESOURCE_REGISTRY. Contenido pendiente de construcción | `gadgets/gd-dashboard.js` |
+| gd-simulador | Registrado en RESOURCE_REGISTRY. Contenido pendiente | `gadgets/gd-simulador.js` |
+| gd-calculadora | Registrado en RESOURCE_REGISTRY. Contenido pendiente | `gadgets/gd-calculadora.js` |
+
+### Estructura HTML
+| Artefacto | Qué hace | Ubicación |
+|---|---|---|
+| Trinity Layout | Órbita 1 (sidebar 250px) + Órbita 2 (`#canvas-orbita-2`) + Órbita 3 (dock 320px) | `index.html` |
+| Token `--theme-ink` | Azul índigo `#181d6d` para peso documental | `index.html` bloque `<style>` `:root` |
+| Gatekeeper Overlay | Panel KYC pendiente con botón de simulación | `index.html` |
+
+### Contratos de eventos activos
+| Evento | Emisor | Receptor | Payload |
+|---|---|---|---|
+| `cpii:omnibox:search` | at-tab-manager | at-search-engine | `{ query: string }` |
+| `cpii:omnibox:results` | at-search-engine | at-tab-manager | `{ ids: string[] }` |
+| `cpii:tab:open` | at-tab-manager | — | `{ id, labelKey }` |
+| `cpii:tab:close` | at-tab-manager | — | `{ id }` |
+| `cpii:tab:change` | at-tab-manager | — | `{ id }` |
+| `cpii:lang:change` | i18n.js | gd-manual, Tab Manager | `{ lang }` |
+
+### window.__CPII__ — Mapa global
+```javascript
+window.__CPII__ = {
+  config: { lang, theme, resolvedTheme, timezone },
+  i18n: { t(key), setLanguage(lang), applyTranslations(lang) },
+  tabManager: { openFromRegistry(id), activateTab(id), closeTab(id), getState() },
+  searchEngine: { /* instancia SearchEngine */ },
+  RESOURCE_REGISTRY: {
+    'gd-dashboard':   { type, tag, labelKey, tags },
+    'gd-manual':      { type, tag, labelKey, tags },
+    'gd-simulador':   { type, tag, labelKey, tags },
+    'gd-calculadora': { type, tag, labelKey, tags }
+  }
+}
+```
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| `RESOURCE_REGISTRY` como array `[]` | Lookup O(n) con `.find()`. Sustituido por objeto `{}` indexado — O(1) directo |
+| Shadow DOM en gadgets | Bloquea herencia de `var(--theme-*)` del tema global. Rompe Modo Oscuro. Descartado en VIBE-CPII-13 |
+| Tab Manager embebido dentro de `gd-manual` | Convirtió el manual en un "mini navegador". El Tab Manager debe ser orquestador global, no componente local |
+| `--theme-ink` en Tab Bar background | Generaba choque cromático frío-cálido con el sidebar marrón oscuro. Revertido a `var(--theme-surface)` |
+| `--theme-ink: #0a1420` | Demasiado oscuro — casi negro, sin presencia documental real. Director eligió `#181d6d` |
+| `--theme-ink: #0d1b3e` | Sugerencia de Bulldozer (azul marino FT/Bloomberg). Rechazada por el Director |
+| Lógica de búsqueda en at-tab-manager | Crearía if/else gigante por cada recurso. Descartado — invertido a RESOURCE_REGISTRY + evento |
+| Gradiente en Tab Bar | `linear-gradient(180deg, #1a1815 0%, #161513 100%)`. Violación R3 + doctrina anti-gradientes |
+| cloneNode() para persistencia de pestañas | Destruía estado de inputs al cambiar pestaña. Sustituido por show/hide con `style.display` |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Alta prioridad
+| Deuda | Archivo | Observación |
+|---|---|---|
+| `gd-dashboard.js` con problemas de contraste | `gadgets/gd-dashboard.js` | Origen de los hotfixes precipitados del Lead Architect. Pendiente de auditoría R3 completa |
+| `css/theme.css` inexistente | — | Las variables `--theme-*` no tienen archivo canónico de declaración. Tokens como `--theme-surface-hover`, `--theme-bg`, `--theme-text-muted` pueden resolver a vacío silenciosamente |
+| `/faseC` — sincronización post-auth | `core/` | `window.__CPII__.config` → Firestore `/users/{uid}/preferences` pendiente |
+
+### Media prioridad
+| Deuda | Archivo | Observación |
+|---|---|---|
+| 3 infracciones R3 en `<style>` | `index.html` | `body background-color: #161513`, `.luxury-glass rgba(30,27,20,0.7)`, `.gatekeeper-overlay rgba(22,21,19,0.4)`. Cola Stitch |
+| Admin Gate oculto en móvil | `index.html` | `hidden md:block` no funciona con Tailwind CDN |
+| Tags de búsqueda solo en español | `core/at-resource-registry.js` | `tags: ["normas", "operaciones"]` — el motor de búsqueda no encuentra recursos si el usuario busca en EN/FR/PT |
+| Índice de gadgets en Órbita 1 | Sidebar | El sidebar tiene enlaces hardcodeados. No hay índice dinámico desde RESOURCE_REGISTRY |
+| `gd-simulador.js` vacío | `gadgets/gd-simulador.js` | Registrado pero sin contenido |
+| `gd-calculadora.js` vacío | `gadgets/gd-calculadora.js` | Registrado pero sin contenido |
+
+### Baja prioridad
+| Deuda | Archivo | Observación |
+|---|---|---|
+| Cabecera del archivo `gd-manual.js` | `gadgets/gd-manual.js` | Dice `Versión: v2.0` — desactualizado, es v2.2 |
+| Textos hardcodeados en Activity Feed | `index.html` líneas 225-232 | "Login efetuado de um novo dispositivo", "Há 2 minutos" — sin `data-i18n` |
+| Textos hardcodeados en Toast | `index.html` líneas 251-253 | "Atualização de Sistema", "Novas propriedades MLS" — sin `data-i18n` |
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Sobre el negocio
+- CPII es un club privado de inversión inmobiliaria con operación en Portugal. El idioma primario es PT, pero el sistema debe funcionar en PT/ES/EN/FR
+- El perfil de usuario incluye inversores mayores con posibles dificultades de visión — el selector de zoom A-/A+ no es un capricho, es una necesidad real de accesibilidad
+- "Private Banking" no es solo estética — implica que los errores visuales (contraste roto, colores que fallan en modo oscuro) dañan la percepción de credibilidad del producto
+- El KYC es una restricción regulatoria real, no un placeholder de demo
+
+### Sobre el stack y el entorno
+- El proyecto está desplegado en Vercel (`cpii-crm-v0-1.vercel.app`) con dominio activo `cpii.clubsocios.digital`
+- Firebase/Firestore es la capa de datos del ecosistema landing. El CRM aún no está conectado (post-auth pendiente)
+- Tailwind CDN sin compilador JIT es una restricción permanente — no es temporal. Diseñar siempre para este entorno
+- El ecosistema tiene dos dominios: `cpii-landing` (Firebase) y `cpii-crm` (Vercel). El Handoff Emitter transfiere estado entre ellos via URL params
+
+### Sobre el equipo
+- El Lead Architect (Gemini) tiene tendencia a bajar a la trinchera y picar código directamente — esto ha generado hotfixes sin protocolo que rompen trabajo previo. El propio Lead Architect lo reconoció y se comprometió a respetar roles
+- Antigravity es fiable para trabajo de volumen pero genera ocasionalmente código duplicado o llaves de cierre faltantes — siempre verificar su entrega antes de sellar
+- Los Junior Devs (Kimi, Qwen, Perplexity, Mistral) tienen buena lógica pero poca disciplina visual. No confiarles incisiones en archivos con restricciones R3
+- El Director (General Manager) es el árbitro final. Una sola palabra ("stop") paraliza todo
+
+### Patrones que funcionan
+- Protocolo uno a uno con autorización explícita elimina errores en cascada
+- Pedir el archivo en disco antes de declarar sellado — el código en sesión y el código en disco divergen con frecuencia
+- Reportar deuda técnica aunque no sea el objeto de la orden — el Director aprecia la transparencia
+- Las capturas de pantalla del Director son diagnóstico — leerlas dos veces antes de responder
+
+### Trampas conocidas
+- `#orbit-canvas` vs `#canvas-orbita-2` — el ID del canvas en el DOM no coincide con el que el Tab Manager busca por defecto. Ya corregido pero puede reaparecer si alguien refactoriza el HTML sin actualizar el JS
+- El `setTimeout(600)` de auto-apertura del Dashboard en versiones anteriores del Tab Manager — residuo que puede reaparecer en hotfixes
+- `tabManager.open()` vs `tabManager.openFromRegistry()` — la API v2.x usaba `open()`. La v3.x usa `openFromRegistry()`. Cualquier código legacy que llame a `open()` fallará silenciosamente
+- Los tags de búsqueda en RESOURCE_REGISTRY están solo en español — una búsqueda en inglés "operations manual" no encontrará nada
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricción, Bulldozer necesita recibir:
+
+### Obligatorio
+1. **Estado actual de `gd-dashboard.js`** — es el archivo con deuda visual crítica no auditada. Sin verlo no puedo certificar el estado de Órbita 2
+2. **Definición de `css/theme.css`** o confirmación de dónde están declaradas las variables `--theme-*` — sin este mapa, cualquier incisión que use tokens no declarados fallará silenciosamente
+3. **Decisión sobre los tags multiidioma en RESOURCE_REGISTRY** — ¿los tags de búsqueda deben ser multiidioma o el motor normaliza siempre a español?
+
+### Recomendado
+4. **Objetivo de Sprint 3** — ¿construir `gd-simulador`? ¿conectar `/faseC` post-auth? ¿índice dinámico en sidebar? Sin objetivo claro, Bulldozer no puede priorizar
+5. **Confirmación del estado de Vercel** — ¿todas las incisiones de VIBE-CPII-15 están desplegadas y funcionando visualmente?
+
+### Formato de arranque ideal
+```
+CONTEXTO VIBE-CPII-16:
+Stack: Zero-Server / Vanilla JS / Tailwind CDN / Web Components Light DOM
+Vercel: cpii-crm-v0-1.vercel.app — [estado: OK / problemas pendientes]
+Objetivo de sprint: [descripción]
+Archivos a intervenir: [lista]
+```
+
+---
+
+*MEMORY_DUMP_BULLDOZER.md — VIBE-CPII-15 — Generado por Bulldozer (Claude)*

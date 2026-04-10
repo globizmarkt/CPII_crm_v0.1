@@ -1,0 +1,41 @@
+# MEMORY_DUMP_GEM-BR.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* [cite_start]**Rol:** Socio estratégico de marketing y ejecutor para emprendedores solitarios[cite: 104, 107].
+* [cite_start]**Alcance:** Definición de estrategia, redacción de copys (webinars, emails, ads) y diseño de embudos de conversión[cite: 103, 235, 262].
+* [cite_start]**Condición Previa:** Necesito validar presupuesto (orientativo) y canales activos antes de cualquier propuesta táctica[cite: 105, 106].
+* [cite_start]**Límites:** No reemplazo a asesores legales ni técnicos; en proyectos de inversión, añado advertencias de riesgo regulatorio[cite: 115, 116, 180].
+* [cite_start]**Matiz de Comportamiento:** En este proyecto actúo bajo el voltaje **PROFESIONAL**, priorizando la autoridad y la estructura sobre la informalidad[cite: 103].
+
+### 2. DOCTRINAS TÉCNICAS
+* [cite_start]**Privacidad Selectiva (Exclusividad):** Prohibida la publicidad en abierto (Facebook/Vallas); el crecimiento es 1-a-1 por recomendación[cite: 106, 112, 141, 151].
+* [cite_start]**Principio Isabel (Anti-ruido):** El prescriptor nunca explica el negocio; su única función es enviar el vídeo y conectar al prospecto con el sistema oficial (webinar)[cite: 248, 253, 255].
+* [cite_start]**Ahorro Inteligente vs. Enriquecimiento Rápido:** Narrativa centrada en proteger el patrimonio de la inflación mediante activos reales en Portugal, no en promesas mágicas[cite: 98, 116, 117, 165].
+* [cite_start]**Compliance de Inversión:** Advertencia obligatoria sobre revisión legal de términos y promesas de rentabilidad en sectores regulados[cite: 180].
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* [cite_start]**Estructura Webinar CPII:** Guion de 8 diapositivas (Dolor/Inflación, Mitos, Solución/Portugal, Club de Coinversión)[cite: 1, 17, 43, 78].
+* [cite_start]**Manual de Buenas Prácticas:** Sistema de 5 pasos (Vídeo -> Webinar -> Formulario -> Registro -> Onboarding)[cite: 235, 237, 241, 245].
+* [cite_start]**Segmentación de Audiencia:** Definición de Línea A (Profesionales/Productores) y Línea B (Ahorradores/Inversores)[cite: 264, 266].
+* [cite_start]**Mapa de Trazabilidad:** Uso de formularios obligatorios para identificar quién invita a quién y asegurar la red del club[cite: 241, 242, 254].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* [cite_start]**Publicidad Retail Masiva:** Descartada para evitar atraer perfiles no cualificados y proteger el carácter de "Club Privado"[cite: 112, 141].
+* [cite_start]**Venta de "Ladrillo" Directa:** Descartada para evitar la imagen de casero tradicional; se vende "Estructura de Inversión Profesional"[cite: 57, 58, 63].
+* [cite_start]**Explicación Descentralizada:** Se eliminó la libertad de los socios para explicar el club para evitar que "barallen todo" el mensaje[cite: 247, 251, 253].
+
+### 5. DEUDA TÉCNICA DETECTADA
+* [cite_start]**Secuencia de Automatización:** Pendiente la redacción de los 3 emails clave: Bienvenida (Boas-vindas), Acompañamiento Técnico y Newsletter[cite: 258, 259, 261].
+* [cite_start]**Interfaz de Acceso:** Falta definir el UX Copy y los mensajes de estado del `access-form.html` para el panel de administración[cite: 118, 218].
+* [cite_start]**Material de Apoyo (Paso 1):** El vídeo corto de presentación mencionado por David requiere validación o revisión de guion para asegurar el gancho[cite: 236, 237].
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* [cite_start]**Sensibilidad al Fraude:** Al operar con tickets bajos (50€), existe el riesgo de ser confundido con esquemas piramidales; se combate con la figura de David Almeida y la transparencia del dashboard[cite: 109, 152, 179].
+* [cite_start]**Vínculo Emocional:** El club se apoya en la confianza personal previa (familia, amigos, colegas) más que en métricas frías iniciales[cite: 107, 157, 159].
+* [cite_start]**Trampa de Portugal:** Se debe enfatizar la demanda real y no solo la "oportunidad fiscal" para evitar la percepción de burbuja[cite: 61, 62, 113, 161].
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+* **Decisión Táctica:** Confirmación de cuál es la pieza prioritaria para empezar:
+    1.  [cite_start]Redacción de la **secuencia de 3 emails automáticos**[cite: 259].
+    2.  [cite_start]Definición de **UX Copy para la puerta de acceso (`access-form.html`)**[cite: 118, 218].
+* [cite_start]**Criterio:** Validación de si el webinar se lanzará primero para la Línea A (Profesionales) o Línea B (Inversores)[cite: 264, 266].

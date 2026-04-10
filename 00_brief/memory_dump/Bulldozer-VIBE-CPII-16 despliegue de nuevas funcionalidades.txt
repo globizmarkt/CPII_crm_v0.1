@@ -1,0 +1,297 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Proyecto: CPII / Lux Lusitana — BreederHub Skeleton Factory
+## Agente: Bulldozer (Ejecutor Quirúrgico)
+## Fecha de exportación: 2026-03-14
+## Sprint cubierto: VIBE-CPII-16 + Sprint 2 (parcial)
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecuto intervenciones quirúrgicas sobre archivos existentes siguiendo el Protocolo /laparoscopia
+- Emito diagnóstico técnico antes de cualquier intervención
+- Traduzco decisiones arquitectónicas del Lead Architect en código ejecutable
+- Mantengo la trazabilidad cartográfica (cabeceras, balizas [SEC-XX], versiones)
+- Detecto y señalo deuda técnica aunque no sea el objeto de la orden
+- Actualizo el Cuadro de Mando autónomamente al cierre de cada orden
+- Emito tabla de verificación bisturí a bisturí antes de declarar una orden cerrada
+- Autoevalúo mis preferencias al inicio de cada sesión
+
+### Qué NO hago
+- No ejecuto código sin diagnóstico previo aprobado en intervenciones de más de 2 archivos
+- No entrego archivos completos si el cambio afecta menos del 90% del contenido
+  (salvo orden explícita del Director)
+- No inyecto hexadecimales directos — Doctrina R3 absoluta
+- No inyecto variables de spacing, radius, fonts o transitions en :root
+  (Tailwind lo gestiona nativamente)
+- No diseño arquitectura de sistemas — eso es dominio del Lead Architect
+- No redacto contenido narrativo ni UX copy — eso es dominio de Stitch/Kimi
+- No implemento motores JS de lógica de negocio — eso es dominio de Kimi
+- No avanzo sobre órdenes del Lead Architect sin su validación cuando
+  la intervención afecta más de 1 archivo
+
+### Condiciones necesarias antes de actuar
+- Diagnóstico emitido y alineado con el Director
+- Validación del Lead Architect en intervenciones multi-archivo
+- Archivo fuente disponible y confirmado como versión en producción
+- Nomenclatura técnica (IDs, claves i18n) cerrada antes de primer bisturí
+
+### Matices aprendidos en el proyecto
+- El Lead Architect puede vetar parcialmente una propuesta — nunca asumir
+  aprobación total sin respuesta explícita
+- "Hecho" del Director = orden cerrada, pasar a siguiente
+- Cuando el Director sube un archivo, confirmar siempre si es la versión
+  en producción o una versión de trabajo
+- La planta tiene múltiples agentes (Kimi, Qwen, Stitch, Antigravity SC,
+  Perplexity) — Bulldozer solo ejecuta su dominio, nunca invade el ajeno
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (afectan a todo el proyecto)
+- **R3 — Zero Hex**: Cero hexadecimales en CSS. Solo var(--theme-*).
+  Para rgba() usar tripletes RGB: rgba(var(--theme-primary-rgb), 0.1)
+- **R4 — i18n Obligatorio**: Cero strings hardcodeados visibles al usuario.
+  Todo texto pasa por data-i18n y el motor window.__CPII__.i18n.t()
+- **Zero-Server / Vanilla**: Sin Node.js, sin frameworks, sin compilación.
+  HTML + JS Vanilla + Tailwind CDN únicamente
+- **Doctrina del Registro**: La visibilidad de gadgets se gestiona por
+  status en at-resource-registry.js, nunca por ramas de Git
+
+### Doctrinas emergentes (no codificadas oficialmente)
+- **Patrón RGB Triplete**: Para cualquier uso de rgba() con tokens,
+  declarar versión RGB en :root: --theme-X-rgb: R, G, B
+  Tokens activos: --theme-bg-rgb, --theme-surface-rgb, --theme-primary-rgb
+- **Separación JS/CSS**: Los estilos nunca van como style.cssText inline
+  en el JS. El JS asigna clases, el CSS define los estilos
+- **Textos en JS via Tailwind**: Cuando el CSS necesita color de texto
+  en elementos inyectados por JS, usar clases Tailwind directamente
+  (text-slate-100, text-slate-400) en lugar de crear tokens de texto
+- **IDs técnicos neutros**: Los IDs del registry (gd-dashboard, gd-vault)
+  son inmutables. Los labelKey y nombres visuales pueden evolucionar
+  sin tocar la arquitectura
+- **Protocolo de Cierre de Orden**: Toda orden se cierra con tabla de
+  verificación bisturí a bisturí. Sin tabla = orden no cerrada
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Archivos modificados y estado final
+
+**`index.html` — v1.5.0**
+Entry point Trinity Architecture. Contiene:
+- [SEC-01] Head: meta, fuentes, scripts core
+- [SEC-02] Tailwind Config: 6 colores + ink mapeados a var(--theme-*)
+- [SEC-03] :root Design Token System: 9 tokens sólidos + 3 tripletes RGB
+  + 6 tokens semánticos para tab-manager.css
+- [SEC-04] Gatekeeper Overlay KYC
+- [SEC-05] Trinity Layout contenedor
+- [SEC-06] Órbita 1 Sidebar: 6 pilares fiduciarios con data-phase,
+  data-requires, menu-pillar-wrapper por fase
+- [SEC-07] Órbita 2 Canvas (#canvas-orbita-2)
+- [SEC-08] Órbita 3 Dock: perfil, gatekeeper status, AIMON panel
+- [SEC-09] Notification Toast
+- [SEC-10] Bootstrap Scripts: tabManager wiring + passport-engine.js
+
+**`core/at-tab-manager.js` — v3.6.0**
+Motor de pestañas y Canvas Órbita 2:
+- [SEC-01] Estado y referencias persistentes
+- [SEC-02] syncPlaceholder(): Empty State DOM-limpio con #cpii-empty-state,
+  reactivo a cpii:lang:change, botón Explore abre gd-dashboard
+- [SEC-03] createOmnibox(): buscador con clases .cpii-omnibox,
+  icono Material Symbols, placeholder dinámico via i18n,
+  dropdown .cpii-omnibox__dropdown con clases CSS
+- [SEC-04] buildInterface(): tabBarRef con .cpii-tab-bar,
+  contentAreaRef con .cpii-workspace
+- [SEC-05] openFromRegistry(): usa res.tagName || 'div' (bug fix),
+  tabEl con .cpii-tab, activateTab con classList.toggle is-active
+- [SEC-06] init(): auto-apertura 'gd-dashboard' (bug fix clave corregida)
+
+**`core/at-resource-registry.js` — v1.0 (sin modificar)**
+Registro de gadgets. Estado actual:
+- gd-dashboard: status production
+- gd-manual: status production
+- gd-simulador: status draft
+- gd-calculadora: status draft
+Campo tagName ausente — resuelto en tabManager con fallback 'div'
+
+**`core/i18n.js` — v2.2**
+Motor de traducción. Cambios en esta sesión:
+- brand_name: Gestor de Relações/Relaciones/Relationship Manager/
+  Gestionnaire de Relations
+- brand_subtitle: Clube/Club Privado / Private Club / Club Privé
+  (eliminado prefijo CPII)
+- brand_tooltip_text: texto Inteligencia Patrimonial en 4 idiomas
+- nav_*: 6 pilares fiduciarios finales en 4 idiomas
+  (nav_dashboard, nav_vault, nav_crm, nav_network, nav_academy, nav_audit)
+Deuda: claves nav_mls y nav_history huérfanas, pendiente de barrido
+
+**`css/tab-manager.css` — v1.2.0**
+Estilos Órbita 2:
+- [SEC-01] Canvas Órbita 2
+- [SEC-02] Tab Bar + Tab individual (.cpii-tab, .is-active, .cpii-tab__close)
+- [SEC-03] Workspace (.cpii-workspace)
+- [SEC-04] gd-manual
+- [SEC-05] Omnibox (.cpii-omnibox, .cpii-omnibox__input-wrapper,
+  .cpii-omnibox__icon, .cpii-omnibox__input, .cpii-omnibox__dropdown,
+  .cpii-omnibox__item, .cpii-omnibox__empty)
+- [SEC-06] Empty State (.cpii-empty-state, __icon, __body, __title,
+  __desc, __btn)
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+**Ramas Git para ocultar prototipos**
+Descartado por el Lead Architect. Genera infiernos de merge y
+desincronización de cartografía. Reemplazado por campo status
+en at-resource-registry.js.
+
+**Bloque de tokens extendido en :root (20+ variables)**
+Propuesto por Bulldozer en Orden 6. Vetado por Lead Architect
+por violar R3 (hex directos) y duplicar trabajo de Tailwind
+(spacing, radius, fonts, transitions). Reducido a 6 tokens semánticos
+construidos exclusivamente desde tripletes RGB existentes.
+
+**Tokens de color de texto en :root**
+(--theme-text-primary: #f1f5f9, --theme-text-secondary: #94a3b8)
+Vetado por R3. Solución adoptada: clases Tailwind directas
+(text-slate-100, text-slate-400) asignadas desde JS.
+
+**style.cssText inline en at-tab-manager.js**
+Patrón heredado de versión 3.1. Eliminado progresivamente en
+órdenes 6, 6.1 y 7. Todo estilo delegado a clases CSS.
+
+**mouseenter/mouseleave handlers en dropdown omnibox**
+Eliminados al migrar a clases CSS. El hover queda en
+.cpii-omnibox__item:hover en el CSS — más limpio y mantenible.
+
+**Naming "El Templo" para Academy**
+Descartado por el Director. "Roza lo sectario y aleja al
+inversor institucional." Mantenido el nombre neutro "Academy".
+
+**Columna Lead Architect de renaming (Terminal de Comando,
+O Cofre, Linhagem, etc.)**
+Descartada parcialmente por el Director. Solo "Academy" sobrevivió.
+La nomenclatura fiduciaria final es institucional, no evocadora.
+
+**Bloque de tokens de naming anterior (O Pulso, El Portfolio, etc.)**
+Sustituido en segunda iteración por nomenclatura fiduciaria definitiva
+(Global Position / Posição Global, Private Assets / Meus Ativos, etc.)
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+**[CRÍTICA] Claves nav_mls y nav_history huérfanas en i18n.js**
+Quedan en el diccionario pero ya no tienen referencia en el DOM.
+Riesgo bajo a corto plazo, confusión garantizada a largo plazo.
+Pendiente: barrido en Sprint 3.
+
+**[MEDIA] at-resource-registry.js sin campo tagName**
+El fallback 'div' en tabManager funciona pero es un parche.
+Los gadgets deberían declarar su tagName explícitamente en el registro.
+Pendiente: actualizar registro cuando se creen gadgets como
+Web Components reales.
+
+**[MEDIA] Gatekeeper Overlay — Orden 5 en Backlog**
+El overlay KYC no se renderiza en producción. Desplazado a
+Fase 2 por decisión de arquitectura. Código presente pero inactivo.
+
+**[MEDIA] createOmnibox() desconectado de at-search-engine.js**
+El omnibox emite eventos cpii:omnibox:search pero el motor de
+búsqueda no está conectado/verificado. Pendiente wiring con
+at-search-engine.js.
+
+**[BAJA] Versión en cabecera de tab-manager.css acumulada**
+Las versiones intermedias (v3.3→v3.4→v3.5) quedaron registradas
+en una entrega. Corregido en verificación pero patrón a vigilar.
+
+**[BAJA] Tooltip brand_tooltip_text sin CSS de posicionamiento**
+La clave i18n está inyectada y el HTML tiene el contenedor con
+group-hover/brand, pero no se ha verificado en producción que
+el tooltip se renderice correctamente.
+
+**[BAJA] nav_manuals / nav_settings fuera del sistema de 6 pilares**
+Siguen en el sidebar (Definições/Settings) pero no tienen
+data-phase ni data-requires. Decisión pendiente: ¿son pilares
+del sistema de pasaportes o son elementos de UI permanentes?
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Estructura de poder real**
+- Director: decisión final, siempre. Su "hecho" cierra órdenes.
+- Lead Architect (Gemini): veto bloqueante en arquitectura y doctrina.
+  Sus validaciones son condición necesaria, no opcional.
+- Bulldozer: ejecución quirúrgica. No opina sobre negocio ni UX.
+- Kimi: motor JS de lógica de negocio y UX interactivo.
+- Stitch: narrativa, UX copy, diseño visual.
+- Qwen: compliance, verificación normativa (AML/KYC).
+- Antigravity SC / Perplexity: análisis, investigación, propuestas.
+
+**Sensibilidades del cliente**
+- El producto es un club de inversión inmobiliaria privado (Lux Lusitana).
+  El tono es banca privada institucional, nunca startup ni fintech casual.
+- El inversor objetivo rechaza lo que suene sectario, místico o gamificado
+  de forma obvia. El sistema de pasaportes debe sentirse como
+  "protocolo regulatorio", no como un videojuego.
+- Hay dos perfiles de usuario: David y Carlos (operadores/gestores)
+  e inversores externos. El CRM es para David y Carlos, no para inversores.
+
+**Patrones que funcionan**
+- Diagnóstico antes de bisturí: el Director lo valora y el Lead Architect
+  lo exige. Nunca saltar este paso.
+- Proponer la corrección del error antes de ejecutar: en esta sesión se
+  detectaron errores en datos entregados por otros agentes (formato
+  anidado i18n, typo "para" en FR) y detener la operación generó
+  confianza, no fricción.
+- Separar ID técnico de label visual desde el inicio ahorra
+  4 bisturís retroactivos.
+
+**Trampas conocidas**
+- Los archivos subidos por el Director pueden no ser la versión
+  en producción. Siempre confirmar.
+- El CSS de tab-manager.css tenía clases bien estructuradas que el JS
+  ignoraba completamente. Antes de proponer nuevo CSS, verificar
+  siempre si ya existe la clase.
+- Tailwind CDN no compila clases dinámicas. Las clases deben estar
+  presentes en el HTML estático o en el JS como strings completos,
+  nunca construidas dinámicamente (ej: 'text-' + color).
+- El motor i18n usa clave canónica 'cpii:locale' en localStorage,
+  no 'cpii_crm_lang' (migración v1→v2). Cualquier script nuevo debe
+  usar la clave correcta.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje del Sprint 3 necesito recibir:
+
+**Archivos en producción actualizados (versiones post-Sprint 2):**
+- `index.html` — confirmar v1.5.0 con Órbita 1 electrificada
+- `core/at-tab-manager.js` — confirmar v3.6.0
+- `core/i18n.js` — confirmar v2.2 con nomenclatura fiduciaria
+- `css/tab-manager.css` — confirmar v1.2.0
+- `core/passport-engine.js` — archivo nuevo de Kimi, nunca visto
+  por Bulldozer. Necesario para entender qué expone al DOM
+  antes de cualquier intervención relacionada con el sistema
+  de pasaportes.
+
+**Decisiones pendientes de cierre:**
+- ¿nav_settings y nav_manuals entran en el sistema de pasaportes
+  o son UI permanente? Define data-phase o exención explícita.
+- ¿Se autoriza el barrido de claves huérfanas nav_mls y nav_history
+  en i18n.js como primera orden del Sprint 3?
+- Umbral AUM exacto para Fase 3 (actualmente hardcodeado como
+  aum:500000 en el HTML). ¿Es el valor definitivo o provisional?
+
+**Criterio arquitectónico pendiente:**
+- ¿Los gadgets futuros (gd-vault, gd-crm, gd-network, gd-academy,
+  gd-audit) se crean como Web Components reales con tagName propio
+  o siguen usando el fallback 'div' del tabManager?
+  Esta decisión afecta directamente a at-resource-registry.js.

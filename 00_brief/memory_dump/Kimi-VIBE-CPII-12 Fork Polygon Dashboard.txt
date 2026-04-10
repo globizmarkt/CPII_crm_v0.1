@@ -1,0 +1,133 @@
+# MEMORY_DUMP_KimiK25.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Arquitectura de sistemas distribuidos con Firebase (Auth, Firestore, Functions)
+- Patrones de comunicación inter-componente en Vanilla JS/Web Components
+- Diseño de seguridad multi-tenant con Custom Claims y Firestore.rules
+- Análisis de riesgos y mitigaciones en tiempo real
+- Generación de código de producción listo para implementación
+- Documentación técnica densa y accionable
+
+**Qué NO hago:**
+- No genero archivos descargables (PDF, DOCX, XLSX, PPT) - redirijo a https://www.kimi.com/agent
+- No implemento servidores backend persistentes ni infraestructura de red
+- No accedo a repositorios de código externos ni realizo clones
+- No ejecuto operaciones de escritura en bases de datos de producción
+- No proporciono asesoramiento médico, legal o financiero de alta consecuencia sin disclaimer
+
+**Condición necesaria antes de actuar:**
+- Requiero contexto explícito del dominio: "Polygon Dashboard" = WebOS transversal sobre verticales (Productividad, Documental, Formación)
+- Necesito confirmación de stack tecnológico: Firebase v9+ modular, Vanilla JS, Shadow DOM, CSS Grid
+- Debo verificar nivel de criticidad: "Revenue Share" = datos sensibles de monetización, requiere máxima restricción en reglas de seguridad
+- Espero definición de interfaz: nombres de clases CSS (.gd-trinity-layout, .wd-ai-dock) y contratos de eventos antes de generar implementaciones
+
+**Matices de comportamiento aprendidos:**
+- Priorizo la "doble vía" de seguridad: claims persistentes + tokens de emergencia para latencia cero en incidentes críticos
+- Tendencia a sobre-documentar firestore.rules con funciones auxiliares explícitas para auditoría futura
+- Alerta automática ante menciones de "propagación asíncrona" en Firebase - siempre propongo mirror de claims o tokens temporales
+- Refuerzo: nunca propongo Redux/Zustand para estado global - el proyecto exige Vanilla JS + CustomEvent nativo
+
+---
+
+## DOCTRINAS TÉCNICAS
+
+**Globales R3/R4/Vanilla/Compliance:**
+- **R3 (Resilient, Reactive, Robust):** Tolerancia a fallos de red, retry con backoff exponencial, timeouts explícitos en todas las llamadas a Firebase
+- **R4 (Real-time, Responsive, Reactive, Resilient):** Streams de Firestore con manejo de desconexión, UI states (loading/error/success) obligatorios
+- **Vanilla Mandate:** Cero dependencias de framework. CustomEvent + EventTarget para arquitectura de eventos. Shadow DOM para encapsulación de componentes.
+- **Compliance:** Audit logs inmutables para toda operación de escritura. GDPR/CCPA: derecho al olvido implementado via soft-delete con anonymization.
+
+**Doctrinas específicas emergidas:**
+
+**Doctrina "Claims Hot-Swap":**
+- Custom Claims estándar son insuficientes para operaciones críticas por latencia de propagación (1h)
+- Solución: HTTP Callable Functions que emiten Custom Tokens de emergencia con claims inmediatos
+- Duración máxima: 15 minutos, JTI único, expiración server-side enforceada
+
+**Doctrina "Tenant Boundary Fortress":**
+- `tenant_id` nunca opcional en documentos de vertical
+- Polygon operators cruzan fronteras SOLO via `audit_access` explícito o tokens de emergencia
+- Revenue Share: campo `related_alert_id` vincula token de emergencia a documento específico, previniendo escalación de privilegios
+
+**Doctrina "Event Composability":**
+- Todos los eventos cross-component deben usar `composed: true` para cruzar Shadow DOM
+- Namespace obligatorio: `polygon:[acción]` para eventos globales, `[vertical]:[acción]` para internos
+- Payload estructurado: `{vertical, timestamp, correlationId, payload}`
+
+---
+
+## INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Qué hace | Ubicación |
+|-----------|----------|-----------|
+| **EventBus Pattern** | Comunicación AIMON/KAIROS ↔ Canvas usando EventTarget singleton + CustomEvent con `composed: true` | Documentado en ticket 2026-03-11, sección 1 |
+| **Firestore.rules Híbrida** | Reglas de seguridad con doble verificación: claims estándar + tokens de emergencia (`isValidEmergencyAccess`) | Documentado en ticket 2026-03-11, sección 2 y 3 |
+| **EmergencyAccessService** | Clase Vanilla JS para adquirir tokens de emergencia via `signInWithCustomToken`, gestión de sesión temporal, auto-revoke | `polygon-dashboard/src/services/EmergencyAccessService.js` (pendiente de creación) |
+| **grantEmergencyAuditAccess** | Cloud Function HTTP Callable: validación síncrona contra Firestore, generación de custom token con claims inmediatos, logging de auditoría | `functions/src/polygonEmergencyAudit.js` (pendiente de creación) |
+| **forceTokenRefreshAfterClaimUpdate** | Utilidad de polling con backoff exponencial para refresco proactivo de claims estándar | Documentado en ticket 2026-03-11, optimización |
+| **CSS Grid Layout Trinity** | Estructura `.gd-trinity-layout` con areas definidas (sidebar-left, main, dock-right, dock-ai) y estados data-attribute | Documentado en ticket 2026-03-11, sección 3 |
+| **LayoutState Manager** | State machine en Vanilla JS para gestión de paneles (open/closed/minimized) sin librerías externas | Documentado en ticket 2026-03-11, sección 3 |
+
+---
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|---------------------|
+| **Redux/Zustand para estado global** | Violación del mandato Vanilla. El proyecto exige zero-dependency para el core del WebOS. Reemplazado por EventTarget singleton nativo. |
+| **Claims estándar únicos para acceso de emergencia** | Latencia de propagación de 1h inaceptable para alertas críticas de Revenue Share. Reemplazado por arquitectura de doble vía (claims persistentes + tokens de emergencia). |
+| **Escritura directa en Firestore desde cliente con claims actualizados** | Riesgo de race condition: cliente intenta escribir antes de que claims propaguen a los servidores de Firebase. Reemplazado por validación server-side en Cloud Function. |
+| **Session Cookies para acceso transversal** | Introduciría estado server-side, violando la arquitectura serverless del proyecto. Reemplazado por Custom Tokens de Firebase Auth. |
+| **Array de strings `audit_access: ["cpii", "productividad"]`** | Riesgo de exceder límite de 1000 bytes del token JWT si el número de verticales crece. Alternativa propuesta: máscara de bits (`audit_mask: 0b1010`) o referencias a documento de configuración. |
+| **Mirror Firestore ↔ Custom Claims como única fuente de verdad** | Añade complejidad de sincronización y posibles inconsistencias temporales. Reservado solo para casos de alta frecuencia de cambio de roles, no para emergencias puntuales. |
+
+---
+
+## DEUDA TÉCNICA DETECTADA
+
+**Deuda propia (generada en este sprint):**
+- `EmergencyAccessService` no implementa re-autenticación automática de la sesión original tras revocación de emergencia - requiere decisión de política de seguridad (re-login vs. token refresh)
+- Falta implementación de `jti` (JWT ID) blacklist en Firestore para revocación proactiva de tokens de emergencia comprometidos
+- No se ha definido rate limiting en `grantEmergencyAuditAccess` - riesgo de abuso de generación de tokens
+
+**Deuda observada (no mía, crítica):**
+- **Revenue Share:** No se ha confirmado si existe campo `related_alert_id` en la colección - necesario para vinculación segura en tokens de emergencia
+- **Firestore.rules actuales:** Probablemente no incluyen función `isValidEmergencyAccess` - requiere despliegue coordinado con código de Cloud Function
+- **Client SDK:** Versión de Firebase no confirmada - el código propuesto asume v9+ modular, si el proyecto usa v8 compat requiere adaptación
+- **AIMON/KAIROS:** No se ha definido contrato de eventos específico para `polygon:alert-selected` - riesgo de desacoplamiento entre equipos
+
+---
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Restricciones de negocio:**
+- "Revenue Share" = datos financieros sensibles entre CPII y Lux Lusitana. Cualquier acceso de Polygon a esta colección requiere justificación de alerta específica y logging inmutable.
+- "Polygon Dashboard" posicionado "por encima" de verticales pero sin autoridad de modificación - rol de auditor/observador, nunca operador.
+- "Productividad, Documental, Formación" = verticales con tenant_id estricto. CPII es la vertical de referencia para patrones de aislamiento.
+
+**Sensibilidades del cliente:**
+- Latencia es crítica en flujos de emergencia - el cliente mencionó explícitamente "on-the-fly" y "urgente". Soluciones con delay &gt; 5s serán rechazadas.
+- Compliance y auditoría son no-negociables. Todo acceso transversal debe dejar rastro forense (IP, user-agent, timestamp, justificación).
+- Aversión a dependencias externas: el mandato "Vanilla JS" sugiere preocupación por bundle size, supply chain attacks o mantenimiento a largo plazo.
+
+**Patrones que funcionan:**
+- CustomEvent con `composed: true` para comunicación Shadow DOM - validado en múltiples iteraciones de arquitectura.
+- HTTP Callable Functions para operaciones privilegiadas - el equipo confía en este patrón para validación server-side síncrona.
+- CSS Grid con `grid-template-areas` para layouts complejos - mencionado explícitamente `.gd-trinity-layout` como estándar.
+
+**Trampas conocidas:**
+- **La trampa de los claims "casi inmediatos":** Firebase documenta "hasta 1 hora" pero en práctica puede ser minutos. No confiar en tiempos parciales, siempre implementar fallback.
+- **La trampa del `tenant_id` nulo:** Un `polygon_operator` con `tenant_id: null` en claims podría teóricamente acceder a documentos con `resource.data.tenant_id == null` si las reglas no son estrictas. Siempre usar `audit_access` explícito.
+- **La trampa del refresh token:** `signInWithCustomToken` crea una sesión completa nueva. Si no se gestiona correctamente, el refresh token de la sesión de emergencia podría persistir más allá de la expiración del custom token (15 min).
+
+---
+
+## INPUT REQUISITO PARA SPRINT 3
+
+**Pieza exacta requerida:** Archivo de configuración de despliegue `firebase.json` y `firestore.rules` actuales del entorno de staging, más especificación del contrato de eventos entre `.wd-ai-dock` y `.wd-production-radar` (formato: nombre de evento, payload esperado, dirección de flujo).
+
+**Criterio de aceptación para operar:** Confirmación explícita de que la colección `revenue_share` contiene campo `related_alert_id` de tipo string, y autorización para implementar la Cloud Function `grantEmergencyAuditAuditAccess` en región `europe-west1` (asumiendo GDPR).
+
+**Decisión pendiente del Director:** Política de sesión post-emergencia: ¿Requerir re-login completo del operador tras revocación de acceso de emergencia, o permitir refresh automático del token original previo?

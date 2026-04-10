@@ -1,0 +1,56 @@
+# MEMORY_DUMP_GEMINI_LEAD_ARCHITECT
+
+### 1. ROL Y LÍMITES OPERATIVOS
+**Rol:** Lead Cloud Architect / "El Ingeniero" en GLOBIZMARKT para la vertical CPII (Clube Privado de Investidores Imobiliários). Custodio de la Skeleton Doctrine v2.5.0 y del Mapa Firestore v1.1.
+**Qué hago:** Diseño arquitectura cloud, valido esquemas de datos (JSON con firmas ed25519), aplico las restricciones del sistema operativo web (WebOS), aseguro el Agnosticismo Radical y gestiono la viabilidad de escalabilidad y costes (ej. mitigación de lecturas en Firestore).
+**Qué NO hago:** No escribo código visual front-end (tarea de Stitch). No investigo plataformas de mercado sin delegar en Perplexity/Kimi/Qwen. No elimino el "sustrato pedagógico" (hardcode de vertical) de las skins sin antes mapear su adaptación estructural.
+**Condición para actuar:** Protocolo de "Dirección Ultra Fina". Requiere validación explícita del Director o de Bulldozer-Claude antes de sellar una arquitectura. Silencio operativo (Standby / Modo Archivo) hasta recibir la totalidad de los datos.
+**Matiz aprendido:** "Soberbia algorítmica". La tendencia de anticipar la solución destruye la Meta-Factoría. La disciplina es ir despacio para llegar más lejos, evaluando la "Atmósfera sobre Estructura" antes de generar un solo JSON o instrucción.
+
+### 2. DOCTRINAS TÉCNICAS
+**Oficiales codificadas:**
+* **R0 (Agnosticismo Radical):** Cero hardcode de cliente/vertical. Todo debe inyectarse vía `offeringConfig` o `data-i18n`.
+* **R1-R2 (Vanilla & Light DOM):** Cero frameworks JS (React, Vue prohibidos). Componentes web nativos renderizados en Light DOM para compatibilidad con Tailwind CDN.
+* **R3 (Tematización Lux Lusitana):** Variables CSS estrictas (`--theme-bg: #161513`). Cero colores hexadecimales directos en el código.
+* **R4-R5 (i18n Global):** Atributos `data-i18n` y `data-i18n-html` para inyección de traducciones (PT/ES/EN/FR).
+* **R6 (SceneManager):** Navegación sin recargas, prohibidos los enlaces `<a href=".html">`.
+* **R7 (Tierra Firme):** Si un check del Gatekeeper falla (ej. `kyc_status != 'verified'`), la escena no se oculta con CSS, directamente no existe en el DOM.
+
+**Tácitas / Emergentes (Aprendizaje de Sprint):**
+* **Lienzo Flotante (Atmósfera):** El Layout Trinity (250px LSB / flex Canvas / 320px RSB) no debe tener bordes duros. El espacio y las sombras (`shadow-lg`) separan las zonas.
+* **Sistema de Pestañas Independientes (TDI):** Gestión de memoria mediante estados "Activo" (en el DOM) e "Hibernado" (serializado, coste 0 memoria).
+* **Doctrina Free First:** `localStorage` primero como buffer. Firestore solo recibe datos cuando hay que sincronizar (Escritura Pasiva o mutaciones críticas).
+* **Triple Escritura Atómica:** Todo cambio crítico afecta simultáneamente a Firestore → Custom Claims → Zustand Store mediante transacciones o batches.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* [SKELETON-DOCTRINE-v2.5] — Constitución del WebOS, modelo de licencias y reglas del chasis — [Memoria / Documento PDF].
+* [Mapa Firestore v1.1] — Reglas de enrutamiento de colecciones (Negocio, Privado Inversor, Audit inmutable) — [Memoria Arquitectura].
+* [AgentMetrics + CommissionWaterfall] — Schema de score dual (Operacional/Administrativo) y cascada L1/L2/L3 — [JSON ed25519].
+* [AutofinancingClock] — Schema dual (Catapulta/Refugio) para contador de progreso de inversión — [JSON ed25519].
+* [ClubPulse] — Schema de snapshot agregado (AUM, APY, inversores) calculado vía cron — [JSON ed25519].
+* [WhitepaperViewer] — Schema inmutable de hitos públicos (W-0.0 a W-1.9) auditado por KAIROS — [JSON ed25519].
+* [PrescriptorTree] — Schema de red multinivel optimizado para D3.js sin listeners masivos — [JSON ed25519].
+* [DealRoom] — Schema de pipeline de activos con validación estricta de Gatekeeper (Checks 3 y 4) — [JSON ed25519].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* [Caché en Redis / Memorystore para Autofinancing] — Descartado porque el stack CPII está cerrado en Firebase/GCP puro. Se usa Firestore con TTL nativo (`expireAt`).
+* [500 listeners simultáneos para PrescriptorTree] — Descartado por coste prohibitivo en lecturas de Firestore. Se usa 1 listener en snapshot agregado y lazy loading por nodo.
+* [Cloud Function intermediaria para mostrar Whitepaper] — Descartado por latencia (cold starts) y coste de egress. Se usa Storage con `allow read: if true` e inmutabilidad garantizada por hash/firma.
+* [Campo "availableToKycLevels" en DealRoom] — Descartado por ser semánticamente débil. Se reemplazó por `gatekeeperChecksRequired: [3, 4]` para forzar la firma de T&C y KYC verificado.
+* [Borrar código hardcodeado (CIFI-AIP) de inmediato] — Descartado. El "sustrato pedagógico" es necesario visualmente para los dueños. Se aborda como un "Desanclaje Estructural" posterior.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Skins 01-07 (CIFI-AIP pre-fork):** Totalmente infectadas de colores hexadecimales quemados y literales no internacionalizados (0% de cumplimiento 7D7 real para v2.5). Requieren la auditoría final de Antigravity para extraer el "gap estructural".
+* **Skin 14 (AutofinancingClock visual):** Requiere verificación de limpieza de hex hardcodeados.
+* **i18n.js:** Esqueleto preparado, pero diccionarios vacíos para ES, EN y FR.
+* **Interfaces TypeScript:** Pendientes de generación rigurosa para la `/faseA` (Cloud Functions).
+* **Navegación Sucia:** Múltiples componentes visuales actuales usan `href="#"` en lugar del puente `SceneManager.goTo()`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **La Trampa del Whitepaper:** No es un folleto de ventas. Es el ADN auditable ("Proof of Work") del modelo de incubadora. El campo `visibility` siempre es "PUBLIC", restringiendo el acceso internamente solo a ciertas secciones, no al documento raíz.
+* **Sensibilidad del Inversor (CPII):** El sistema debe transmitir "exclusividad flotante". Un inversor retail (desde 100€) debe sentir que entra a un club privado de ultra-lujo, no a un SaaS contable.
+* **Dependencia Positiva (Monetización):** El upgrade de Freemium a Enterprise se logra por "autoconvencimiento", no por paywalls agresivos. El sistema enseña a ganar dinero, y cuando el usuario necesita escalar, paga voluntariamente.
+* **El Veto de KAIROS:** KAIROS no es solo un auditor, tiene poder de veto real mediante validación de firmas `ed25519`. Ninguna escritura crítica pasa al sistema si falla la validación criptográfica asíncrona.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Necesito el **Informe de Auditoría de Antigravity** sobre el estado estructural exacto de las Skins 01-07 en la carpeta `Skeleton v1`, o en su defecto, las **Instrucciones de Bifurcación (Fork)** detalladas por el Director para configurar el código base de la Skin 07 e integrar el Gatekeeper en el entorno real.

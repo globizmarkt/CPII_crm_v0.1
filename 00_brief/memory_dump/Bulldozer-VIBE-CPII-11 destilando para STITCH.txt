@@ -1,0 +1,319 @@
+# MEMORY_DUMP_BULLDOZER-CLAUDE.md
+Sesión: VIBE-CPII-13 | 2026-03-11 | Salamanca, ES
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Validación técnica y gaps doctrinales
+- Diagnóstico antes de ejecutar
+- Redacción de órdenes para otros agentes
+- Destilación de investigaciones externas
+- Veto doctrinal R3/R4 — detengo el bisturí
+  si una orden viola las reglas
+
+**Qué NO hago:**
+- No ejecuto código en producción
+- No muevo archivos físicos — eso es Antigravity
+- No diseño visualmente — eso es Stitch
+- No defino arquitectura cloud — eso es Gemini
+- No investigo mercado — eso es Perplexity/Kimi/Qwen
+
+**Condiciones antes de actuar:**
+- Diagnóstico explícito antes de cualquier 
+  bisturí en más de 2 archivos
+- Validación de Gemini en intervenciones 
+  de más de 1 archivo
+- Nunca ejecuto sin confirmación del Director
+  en operaciones complejas
+- /laparoscopia por defecto en modificaciones
+  de archivos existentes
+
+**Matices aprendidos:**
+- El Director detecta inmediatamente cuando
+  un agente fabrica respuestas — no tolera
+  inventarios falsos ni auditorías ficticias
+- "Uno a uno" es una regla operativa real,
+  no una preferencia — aplicar siempre
+- El Director no necesita explicaciones
+  previas — respuesta directa siempre
+- Stitch no tiene acceso real al sistema
+  de archivos — sus listados son inferencias
+- Antigravity-SC sí tiene acceso físico
+  verificado a C:\BreederHub\
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+**Globales R0-R7:**
+- R0: Agnosticismo radical — cero hardcode
+- R1: HTML5 + Tailwind CDN + Vanilla JS
+      PROHIBIDO: React, Vue, Angular, Alpine
+- R2: Web Components Light DOM
+      PROHIBIDO: attachShadow()
+- R3: Variables CSS en :root — patrón v2.5
+- R4: data-i18n="modulo.clave" — separador punto
+- R5: data-i18n-html="true" para HTML interno
+- R6: SceneManager.goTo() — PROHIBIDO href .html
+- R7: .skeleton-blur + flag manifest
+
+**Patrón canónico v2.5 innegociable:**
+- :root con variables — nunca hex en tailwind.config
+- Layout Trinity: w-sidebar(250px) / flex-1 / w-dock(320px)
+- overflow-hidden en body
+- overflow-y-auto SOLO en Órbita 2
+- PROHIBIDO: max-w-* como contenedor principal
+  min-h-screen en body · w-64 · w-80
+
+**Doctrinas emergentes del trabajo real:**
+- Los 4 fallos sistémicos de Stitch:
+  F1: overflow en órbitas 1/3
+  F2: hex en tailwind.config local
+  F3: texto quemado sin data-i18n
+  F4: DOM monolítico sin selectores
+- F5 exclusivo DealRoom: 4ª columna camuflada
+  → solución: overlay fixed inset-0 z-50
+- Stitch genera inventarios plausibles
+  cuando no puede acceder físicamente
+  a los archivos — nunca confiar en sus
+  listados sin verificación de Antigravity
+- Un componente solo va a .cumplen reglas\
+  después de F1-F5 + 7D7 completo
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+**Documentos doctrinales:**
+- SKELETON-DOCTRINE-v2.5.docx
+  — doctrina completa WebOS, TDI, licencias
+  — /mnt/user-data/outputs/
+
+- ADAPTABILITY_MAP_V2.5.md
+  — auditoría skins CIFI-AIP (7 skins)
+  — C:\BreederHub\MetaFactory\inbox\
+    CPII-CRM-MLS\01_arquitectura\
+
+- ADAPTABILITY_MAP_CPII_v2.5.md
+  — auditoría 6 módulos P1 CPII
+  — C:\BreederHub\CPII-crm_v0.1\
+    diseños stitch\
+
+- SESSION_LOG.md
+  — log de sesión VIBE-CPII-12
+  — C:\BreederHub\CPII-crm_v0.1\
+    diseños stitch\
+
+- ANTIGRAVITY_MEMORY.md
+  — memoria persistente Antigravity-SC
+  — C:\BreederHub\.agents\antigravity\
+
+- ANTIGRAVITY_RULES.md
+  — 7 reglas operativas Antigravity-SC
+  — C:\BreederHub\.agents\antigravity\
+
+**Prompts y órdenes selladas:**
+- Prompt maestro Perplexity CPII
+- Prompt universal GLOBIZMARKT
+- Instrucción maestra AITOR v1.0
+- Instrucción arranque Stitch v2.5
+- Orden auditoría Antigravity (canónica)
+- Brief refactorización F1-F5 (6 módulos)
+- Orden auditoría 7D7 (canónica)
+
+**Componentes certificados 7D7:**
+- cpii_agentmetrics.at_agent_v2.5_refactored
+- cpii_autofinancingclock.wd_clock_v2.5_refactored
+- cpii_clubpulse.gd_pulse_v2.5_refactored_final
+- cpii_compliancemessenger.wd_messenger_v2.5_refactored
+- cpii_dealroom.at_dealroom_v2.5_featured_deal
+- cpii_prescriptortree.gd_network_v2.5_refactored
+  Ubicación: C:\BreederHub\CPII-crm_v0.1\
+  diseños stitch\.cumplen reglas\
+
+**Schemas JSON sellados con ed25519:**
+- AgentMetrics + CommissionWaterfall
+- AutofinancingClock (dual: catapulta + refugio)
+- ClubPulse (singleton con snapshot horario)
+- WhitepaperViewer (público inmutable)
+- PrescriptorNode + NetworkTree
+- DealRoom + DealStateTransition
+
+**Mapa Firestore v1.1:**
+- /projects/{tenantId}/assets/...
+- /projects/{tenantId}/assets/{propertyId}/
+  avm_evaluations/{avmId}
+- /users/{uid}/fiscal_history/{reportId}
+- /users/{uid}/legal_vault/{messageId}
+- /audit/kairos_signatures/{signatureId}
+- system_cache/autofinancing_{userId} (efímera)
+- Índices compuestos: 4 definidos por Gemini
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+- Redis/Memorystore para caché AutofinancingClock
+  → stack cerrado en Firebase/GCP nativo
+  → solución: colección efímera con TTL nativo
+
+- Cloud Function intermediaria para URLs Whitepaper
+  → mata rendimiento + coste de egress
+  → solución: Firebase Storage público directo
+
+- 500 listeners Firestore para PrescriptorTree
+  → coste inaceptable + presión sobre Firestore
+  → solución: 1 listener sobre snapshot + 
+    paginación 25-50 L1 + lazy loading
+
+- availableToKycLevels en DealRoom schema
+  → demasiado genérico, no expresa Check 3
+  → solución: gatekeeperChecksRequired: [3, 4]
+
+- GEM única para Gemini (ejecutor + oyente)
+  → fricción constante — Gemini proponía
+    planes sin que nadie se los pidiera
+  → solución: § 8 MODO ARCHIVO instalado
+    en instrucciones raíz de Gemini
+
+- Auditoría de los 17 componentes completos
+  → innecesario — esta fase solo necesita
+    los 6 módulos P1
+  → solución: alcance reducido a lo que
+    entra en la fase actual
+
+- Confiar en listados de Stitch como
+  inventarios reales de archivos
+  → Stitch genera respuestas plausibles
+    sin acceso físico real
+  → solución: siempre verificar con
+    Antigravity-SC antes de actuar
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+**CPII — pendiente de refactorización:**
+- 11 componentes en diseños stitch\ raíz
+  sin certificación 7D7:
+  cpii_dividendtracker.gd_dividend
+  cpii_fiscal_report_generator
+  cpii_integrated_dashboard
+  cpii_investment_simulator
+  cpii_kyc_gatekeeper_flow
+  cpii_layout_trinity
+  cpii_onboardingjourney.at_journey
+  cpii_payoutwallet.wd_payout
+  cpii_portfolio_visualizer
+  cpii_propertyavm_gadget
+  cpii_whitepaperviewer.at_whitepaper
+
+**Pendientes de /faseA con Gemini:**
+- Interfaces TypeScript + Cloud Functions
+- i18n.js completo PT/ES/EN/FR
+- project_manifest.json ADN CPII completo
+
+**Bridge de trabajo — sin respuesta:**
+- 12 preguntas sobre AIP_v01 enviadas
+  a SC — pendientes de respuesta
+
+**Encoding en ADAPTABILITY_MAP:**
+- El documento tiene caracteres corruptos
+  (Ã­, â, ï¸) en las skins 01-07
+  — problema de encoding UTF-8
+  — no afecta al trabajo pero
+    necesita limpieza
+
+**Polygon Dashboard:**
+- Concepto aprobado hoy por el Director
+- Taxonomía de módulos pendiente
+  de validación por Gemini
+- Ningún componente construido aún
+
+---
+
+## 6. CONOCIMIENTO TÁCTICO DEL PROYECTO
+
+**Sobre el Director:**
+- Detecta inmediatamente respuestas
+  fabricadas — tolerancia cero
+- "Uno a uno" no es negociable
+- Responde mejor a diagnósticos directos
+  que a listas de opciones
+- Cuando dice "tú mandas" espera
+  que ejecutes sin preguntar más
+- Trabaja con múltiples agentes en
+  paralelo — necesita coordinación
+  clara entre ellos
+
+**Sobre el ecosistema de agentes:**
+- Gemini: brillante en arquitectura,
+  tiende a proponer antes de escuchar
+  — § 8 resuelve esto
+- Stitch: excelente ejecutor visual,
+  no tiene acceso físico real al FS
+- Antigravity-SC: único con acceso
+  físico verificado a C:\BreederHub\
+- Perplexity/Kimi/Qwen: trío de
+  investigación — cada uno tiene
+  su punto fuerte distinto
+- AITOR: coordinador entre Stitch
+  y Perplexity — filtro de calidad
+
+**Sobre CIFI-AIP:**
+- Es sustrato pedagógico — NUNCA modificar
+- Es la plataforma hermana sobre la que
+  se aprendió antes de construir CPII
+- Comparte chasis Skeleton pero tiene
+  ADN visual y semántico diferente
+
+**Sobre Skeleton Doctrine:**
+- El fallo más común de Stitch es F2
+  (hex en tailwind.config) — siempre
+  presente en componentes nuevos
+- Trinity es innegociable pero Stitch
+  la abandona en componentes complejos
+- El § 8 de Gemini es crítico para
+  sesiones de dirección — sin él
+  Gemini interrumpe con propuestas
+
+**Sobre el negocio CPII:**
+- Mercado lusófono: PT/ES/BR
+- Inversión mínima accesible: 100€/50€ mes
+- El argumento de venta más potente:
+  autofinanciación mes 12-24
+- El módulo de captación más potente:
+  PrescriptorTree (red L1/L2/L3)
+- KYC es un gate real — Tierra Firme:
+  si no pasa Check 4 el deal
+  no existe en el DOM
+
+---
+
+## 7. INPUT REQUISITO PARA PRÓXIMO SPRINT
+
+Para operar desde el primer mensaje
+necesito recibir del Director:
+
+**CRÍTICO — sin esto no puedo arrancar:**
+- Confirmación del alcance de la sesión:
+  ¿11 componentes pendientes, /faseA,
+  Polygon Dashboard o los tres?
+- Documento de traspaso actualizado
+  o SESSION_LOG de Antigravity
+
+**IMPORTANTE — acelera la sesión:**
+- Respuestas de SC a las 12 preguntas
+  sobre AIP_v01
+- Estado actual de Gemini tras
+  el error 503 de hoy
+- Confirmación de si Polygon Dashboard
+  tiene luz verde de Gemini
+
+**ÚTIL — si está disponible:**
+- Cualquier output de Perplexity
+  sobre módulos P1 adicionales
+- Estado del fork CPII en Stitch
+  tras la sesión de hoy

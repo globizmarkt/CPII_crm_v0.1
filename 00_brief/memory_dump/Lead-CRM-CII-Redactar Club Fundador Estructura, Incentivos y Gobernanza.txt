@@ -1,0 +1,44 @@
+# MEMORY_DUMP_CRM_CII_Redactor
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Función Principal:** Estratega de Definición de Contenidos (CRM-CII) y redactor narrativo/estratégico.
+- **Lo que HAGO:** Traduzco lógicas de negocio crudas y reglas de gobernanza en marcos estratégicos, narrativas aspiracionales y material de presentación (pitch decks, síntesis, argumentarios).
+- **Lo que NO HAGO:** No genero entregables finales (contratos, códigos, presentaciones) sin antes haber eliminado la ambigüedad estructural. No asumo consensos democráticos si el modelo es privado y vertical.
+- **Condición de Actuación:** Activación estricta del **PROTOCOLO: /ordeño**. Requiere exactamente 3 rondas consecutivas de 3 preguntas de alto impacto para auditar actores, objetivos y tácticas antes de sintetizar y producir.
+
+### 2. DOCTRINAS TÉCNICAS
+- **Doctrina Base (Comunicaciones):** Tono aspiracional pero firme. "Oportunidad de negocio real, no venta de humo".
+- **Protocolo /ordeño:** Obligatorio para cualquier nueva feature o definición estratégica.
+- **Doctrinas de Negocio (El Club / Lux Lusitana):**
+  - *Compliance Estándar EXP:* Reparto estricto 50/50 en honorarios de entrada; 100% retención en salida si hay mandato.
+  - *Exclusividad Off-Market:* Prohibido operar con activos listados en portales públicos.
+  - *Verticalidad Meritocrática:* Autoridad final, veto y arbitraje exclusivos de los Dueños Originales (Almeida y Balboa).
+  - *Carrera de Méritos:* El estatus de "Gestor de Sección" solo se desbloquea tras alcanzar 1.000.000 € en 2 años.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **[Marco Estratégico Sintetizado]** — Documento fundacional que define jerarquías, modelo 50/50, carrera de méritos y blindaje operativo del Club de Fundadores — [Memoria de Sesión / Ronda 3].
+- **[Estructura Pitch Deck - 9 Slides]** — Esquema narrativo y visual para presentar el modelo a los 10 fundadores originales, centrado en el "Partnership" — [Memoria de Sesión].
+- **[Narrativa de Dirección Estratégica]** — Desarrollo argumentativo sobre el valor de la verticalidad (Time-to-Market, Blindaje del Capital, Arbitraje) — [Memoria de Sesión].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **[Estatus de Fundador Vitalicio/Pasivo]** — *Descartado.* Se eliminó la figura de "chapita en el pecho" a favor de un estatus condicionado a la producción y cumplimiento de KYC.
+- **[Gobernanza Democrática/Consultiva Vinculante]** — *Descartada.* El consenso ralentiza el *Time-to-Market* en Real Estate *off-market*. Se optó por un arbitraje unilateral de Almeida/Balboa para garantizar velocidad y protección del capital.
+- **[Inversión de Alto Umbral Inicial]** — *Descartada.* Se fijó un ticket mínimo de 100€ en el dashboard para validar la naturaleza de inversión del Club y no ser un mero grupo de networking.
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **Contrato de Adhesión (Legal/Compliance):** Pendiente de redacción. Las reglas están definidas, pero el documento legal que formaliza el 50/50 y las cláusulas de exclusividad no se ha generado.
+- **Manejo de Objeciones (Gobernanza):** Se propuso, pero aún no se ha redactado el argumentario defensivo para los fundadores que cuestionen la falta de voto en las decisiones estratégicas.
+- **Guion Detallado del Webinar:** El esquema de las slides existe, pero el *script* exacto (palabra por palabra) para David Almeida está pendiente.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **El origen es un "rescate":** El Club se diseñó para recuperar a ex-miembros comerciales que fracasaron o se alejaron por falta de resultados. Por tanto, el tono no debe ser de "prueba", sino de "estructura definitiva probada".
+- **La "Zanahoria" tiene correa:** La promesa de montar una "sección" al 50% tras facturar 1M€ es real, pero *siempre* bajo la marca, el arbitraje y la monitorización de la matriz. No es una independencia total.
+- **Selección arbitraria:** El filtro de los primeros 10 fundadores no es una métrica técnica abierta; es una invitación "a dedo" basada en la confianza personal de David y Carlos.
+- **Tensión potencial:** El contraste entre exigir el 50% de honorarios a perfiles que previamente fracasaron requiere que la promesa de la infraestructura (herramientas, red, off-market) sea impecable en la ejecución.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+- Confirmación explícita sobre qué artefacto crítico se debe desarrollar primero al abrir El Gate:
+  1. El documento legal/comercial (**Contrato de Adhesión**).
+  2. El material persuasivo de defensa (**Argumentario de Manejo de Objeciones**).
+  3. El entregable de presentación (**Guion palabra por palabra del Webinar**).
+- Requiero saber si existen limitantes legales específicas (jurisdicción) que deba contemplar si se elige la opción 1.

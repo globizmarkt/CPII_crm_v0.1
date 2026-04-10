@@ -1,0 +1,49 @@
+# MEMORY_DUMP_GEMINI_ARCHITECT
+
+### 1. ROL Y LÍMITES OPERATIVOS
+**Rol:** Lead Cloud Architect & Central Memory para el ecosistema VIBE-CPII (Skeleton Factory / Lux Lusitana).
+**Qué hago:** Diseño arquitectura Serverless/Event-Driven, defino modelos de datos NoSQL, audito propuestas de agentes ejecutores (Bulldozer/Antigravity), y mantengo la cohesión estricta de la doctrina del proyecto.
+**Qué NO hago:** No genero código de producción masivo sin orden explícita (fases/comandos). No ejecuto acciones en entornos externos (DNS, servidores físicos). No asumo infraestructura que viole el principio de coste cero base.
+**Límites y Condiciones:** Opere por defecto en modo consultivo/auditor. Requiero la instrucción explícita del Director (ej. "CONTINUAR" o comandos de Fase) para transicionar de la validación arquitectónica a la generación de artefactos técnicos. Mi memoria es el punto de verdad; si un agente propone una desviación, la bloqueo.
+
+### 2. DOCTRINAS TÉCNICAS
+**Globales (Skeleton Factory):**
+* **Zero-Cost Baseline:** Infraestructura puramente Serverless (escala a cero). Sin costes fijos.
+* **Stack Inmutable:** Firebase Cloud Functions Gen 2 (TypeScript), Firestore (NoSQL), Firebase Auth.
+* **Frontend Vanilla:** Prohibición absoluta de React, Vue o Angular. Interfaz basada 100% en Vanilla JS y Web Components (Shadow DOM).
+* **Compliance Rgpd:** Todo documento de entrada pública exige el flag `rgpd_consent: true` validado a nivel de base de datos.
+**Específicas (Surgidas en operativa):**
+* **Frontera Estricta:** Separación total entre Landing (Captura/WP) y CRM (Bóveda). Solo se tocan a través de la colección `pending_users`.
+* **Multitenencia Lógica (No Física):** Uso de Custom Claims (`tenant_id`, `role`) + Prefijos en IDs de Firestore (ej. `mesa_tenant1_uid`) para aislamiento. Prohibido "database-per-tenant" para no romper el motor de Revenue Share.
+* **Latencia de Acoplamiento:** Toda función en el flujo de registro/login debe resolverse en < 500ms.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **[Frontera Pública / SSL]** — Servidor Nginx/WordPress securizado con Let's Encrypt para evitar bloqueos CORS de Google Auth — [IP: 35.184.54.173 / clubsocios.digital].
+* **[Esquema NoSQL / Opción A]** — Modelo de "Agregación Plana" para usuarios. Implementa `ancestry` (linaje ascendente) y `network_stats` en lugar de arrays masivos — [Documento Teórico Firestore: `/users/{uid}`].
+* **[Reglas de Seguridad Firestore Guardián V1]** — Aislamiento mediante lectura de Custom Claims y validación de prefijos de documento. Impide lecturas cruzadas entre secciones, permitiendo al Admin SDK operar libremente — [Código: `firestore.rules` propuesto por Agente 01].
+* **[Trigger onAuthCreateBridge]** — Lógica de reconciliación de identidad. Succiona leads o crea "Challenges" (TTL de 24h) si el email de Google Sign-In no coincide con la captura inicial — [Código TS propuesto por Agente 03].
+* **[Mailer Híbrido / Válvula de Escape]** — Sistema de envío que conmuta entre Google Workspace (Trust Mode) y SendGrid (Burst Mode > 500 en cola) — [Código TS propuesto por Agente 03].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[Descarte] Redis / Memorystore:** Abandonado porque rompe el "escala a cero" e introduce costes fijos de VPC. Reemplazado por caché nativa en Firestore (Agregación Plana).
+* **[Descarte] Array de Descendencia (Lineage):** Abandonado porque un embajador con miles de referidos colapsaría el límite de 1 MiB por documento en Firestore. Reemplazado por Array de Ascendencia (finito).
+* **[Descarte] Extensión "Trigger Email" de Firebase:** Abandonada por rigidez. No permite inyectar lógica de negocio compleja ni conmutar a SendGrid en lanzamientos masivos. Reemplazada por Cloud Function dedicada + Cloud Tasks.
+* **[Descarte] Mensaje de "Email ya existe" en recuperación/login:** Abandonado para evitar ataques de enumeración (Brute-Force). Reemplazado por protocolo de "Respuesta Ciega" (Hash + Challenge).
+* **[Descarte] BBDD Física separada por Sección (Aulas/Mesas):** Abandonado porque destruiría la genealogía transversal y el cálculo L1/L2/L3 entre fronteras de la organización.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Pérdida de Trazabilidad (`?ref=`):** En la captura manual o tráfico disperso, si el usuario pierde la sesión antes del registro, se rompe la genealogía. Falta implementar persistencia dura en LocalStorage desde el primer clic.
+* **Purga de Huérfanos:** No existe aún el Cron Job (Cloud Scheduler) para purgar documentos en `pending_users` que superen las 72 horas sin completar el Google Sign-In.
+* **Contadores Sharded (Genealogía):** El modelo de datos está definido, pero faltan las Cloud Functions que incrementan/decrementan los `network_stats` de los ancestros de forma atómica al confirmar un KYC.
+* **Textos de Febrero:** Detectada la necesidad de purgar `i18n.js` de textos heredados ("Saneamiento del Payload") para alinear el tono con la autoridad institucional requerida.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **El "Vibe" CPII / Lux Lusitana:** No es un SaaS genérico. Es Private Banking. El tono, la UI y los correos deben destilar exclusividad, seguridad y alto ticket. Términos como "Prescriptor" han sido baneados en favor de "Embajador".
+* **El "Limbo" es la zona de muerte:** La brecha entre rellenar el formulario inicial y hacer el Google Sign-In es el mayor riesgo del negocio. Cualquier error aquí cuesta dinero y reputación. La "Reconciliación de Identidad" es crítica.
+* **Modelo de Monetización:** Sin Stripe, sin pagos recurrentes de tarjeta. Se retiene 1% de honorarios y se liquida en ventanas trimestrales (Catapulta 20% APY / Refugio 8% APY). El sistema es transaccional/financiero, no de suscripción.
+* **Dinámica de Mando:** El ecosistema de agentes (Bulldozer para fuerza bruta/código, Antigravity para cirugía/monitorización, Gemini para arquitectura/ley) funciona mejor cuando la orden centraliza las restricciones inmutables antes de permitir la ejecución.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar operaciones en "El Gate" (El Gatekeeper / Frontend del Área Privada), necesito recibir:
+1.  **Código Final Fase A Consolidado:** El bloque TypeScript de Bulldozer (`onAuthCreateBridge`, `Mailer`, Reglas) ya validado, para asegurar que la estructura de Custom Claims (`request.auth.token`) que leerá el frontend es inmutable.
+2.  **Definición del DOM de El Gate:** El esqueleto inicial o wireframe lógico del Web Component `<investor-dashboard>` en Vanilla JS, incluyendo qué vistas debe renderizar el Shadow DOM dependiendo del estado (`kyc_pending` vs `socio_activo`).

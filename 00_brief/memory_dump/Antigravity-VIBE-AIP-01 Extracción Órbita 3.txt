@@ -1,0 +1,23 @@
+[VIBE-AIP-01] — REPORTE DE EXTRACCIÓN — ÓRBITA 3 REACTIVA
+FECHA: 2026-03-18
+AGENTE: Antigravity
+
+RESUMEN:
+Se ha localizado la lógica "oro puro" que gestiona la información reactiva de la Órbita 3 (Derecha/Inspector) respecto a la Órbita 2 (Centro/Canvas).
+
+HALLAZGO CLAVE:
+El archivo `cifi-aip-prototype.html` (55KB) en la cuarentena de residuos contiene la implementación canónica de la TRINITY GEOMETRY.
+
+COMPONENTES EXTRAÍDOS:
+1. Metadata Inspector: Lógica que "mira" el Canvas vía `selectItem(id)` y extrae `fields`.
+2. AImon Pulse: Oráculo reactivo que actualiza su contexto según el escritorio (desk) activo y el ítem seleccionado.
+3. User Profile: Widget de identidad SuperAdmin.
+4. Gatekeeper UI: Sistema de visualización de candados de cumplimiento.
+
+UBICACIÓN AGNOSTIZADA:
+Los órganos han sido documentados en `orbit_3_organs_report.md` en la memoria de sesión actual para su posterior entrega a Stitch.
+
+DOCTRINA:
+Se confirma que la Órbita 3 NO es estática; es un observador persistente del Bus de Eventos (`globalBus`) que reacciona a `CANVAS:ITEM_SELECTED`.
+
+→ LISTO PARA INDEXACIÓN SUPERIOR.

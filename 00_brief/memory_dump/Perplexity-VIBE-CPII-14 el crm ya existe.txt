@@ -1,0 +1,75 @@
+# MEMORY_DUMP_PERPLEXITY.md
+
+## ROL Y LÍMITES OPERATIVOS
+**Qué hago**: Desarrollo lógica pura Vanilla JS para Artifacts (gestores de estado, Web Components encapsulados, handoff universal). Especialista en separación lógica/visual, persistencia volátil DOM, i18n estática via `data-i18n`. Soporte para Canvas inyectado.
+
+**Qué NO hago**: 
+- Nada visual: prohibido colores hex, estilos inline, Shadow DOM cerrado. Todo `--theme-*` de `input.css`.
+- No asumo estructura: Canvas es lienzo blanco, no invento HTML global.
+- No frameworks: Zero-Server, solo DOM nativo.
+- No back-end: textos estáticos, no DB.
+
+**Condiciones para actuar**: 
+- Recibir planos explícitos del Lead Architect/Bulldozer (doctrinas, mockups).
+- Contexto de sesión anterior via memory dump.
+- Confirmación de R3/R4 compliance antes de entregar código.
+
+**Matiz aprendido**: Escucho primero, codifico después. Asumir = colapso. Bulldozer gana por exigir cartografía antes de picar código.
+
+## DOCTRINAS TÉCNICAS
+**Globales**:
+- **R3 (Zero-Hex)**: Cero colores hexadecimales. Solo `var(--theme-surface-strong)`, etc. de `input.css`.
+- **R4 (i18n)**: Textos via `<span data-i18n="clave">`. Hook `updateI18n(translations)`.
+- **Vanilla JS**: DOM nativo, Custom Elements, CSSStyleSheet. No React/Redux/externos.
+- **Doctrina Skeleton**: Lógica 100% separada de visual. Artifacts = estado puro.
+
+**Específicas de mi especialidad**:
+- **Persistencia Volátil**: DOM sobrevive navegación pestañas (display:none/block), muere en F5.
+- **Handoff Universal**: Gestores globales accesibles via `window.globalTabManager`.
+- **Canvas Inyección**: `document.createElement('gd-manual')`, no markup fijo.
+- **Navegador Moderno**: Tabs + cierre + "+" + teclado (Arrow/Home/End).
+
+## INVENTARIO DE LO CONSTRUIDO
+- **[at-tab-manager.js]** — Gestor estado global pestañas (open/close/activate/move). Ubicación: `/src/artifacts/`. Estado: prototipo v1.1, necesita aprobación Bulldozer.
+- **[gd-manual.js v3.0]** — Web Component estático: warning box + textarea persistente. i18n-ready. Ubicación: `/src/components/`. Estado: aprobado para Canvas.
+- **[input.css snippet]** — Variables R3 para manual (surface-strong, destructive-container, etc.). Ubicación: integrado en input.css global.
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+- **[Shadow DOM con innerHTML recreado]** — Destruye persistencia textarea al cambiar pestañas. Descartado: viola volatilidad.
+- **[Colores hex en <style> Web Component]** — Rompe R3/Modo Oscuro. Descartado: Lead Architect penalizó severamente.
+- **[Tab Manager embebido en gd-manual]** — Invierte escala (manual no es navegador). Descartado: gestor debe ser global para todos gadgets.
+- **[cloneNode(true) para contenido]** — Borra estado usuario. Descartado: solo display toggle.
+- **[window.globalTabManager hardcodeado]** — Falta flexibilidad inyección. Descartado: usar constructor params.
+
+## DEUDA TÉCNICA DETECTADA
+- **Tab Manager incompleto**: Falta renderizador global de tabs (botón "+", drag&drop futuro). Pendiente: código Bulldozer.
+- **i18n no hookeado**: `updateI18n()` implementado pero sin caller global.
+- **Accesibilidad parcial**: Teclado básico, falta ARIA-live para cambios tabs.
+- **Responsive Canvas**: Manual responsive, pero gestor pestañas no testeado <480px.
+- **Observada (no mía)**: input.css global necesita `--theme-*` completos para destructive/accent.
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+- **CPII / Lux Lusitana**: Ecosistema cerrado. “Si no está en index.html, no existe”. No sugerir terceros.
+- **Sensibilidades**: Director/Lead Architect odian asunciones. Preguntar planos primero. Bulldozer es el benchmark: exige contexto antes de código.
+- **Patrones que funcionan**: 
+  - Separar estado (Artifacts) de visual (input.css + componentes).
+  - `CSSStyleSheet()` + `adoptedStyleSheets` para temas cascading sin romper R3.
+  - `dataset.gadgetId` para registro automático en gestor global.
+- **Trampas conocidas**: 
+  - Shadow DOM 'closed' bloquea temas globales.
+  - F5 resetea todo: no guardar en localStorage sin orden explícita.
+  - Reclutas penalizados por “buena lógica, mala disciplina visual”.
+
+## INPUT REQUISITO PARA SPRINT 3
+Código definitivo de at-tab-manager.js de Bulldozer (línea por línea).
+
+Estructura exacta del Canvas Órbita 2 (#canvas-orbita-2 y siblings).
+
+input.css completo con todas las --theme-* usadas en gd-manual.
+
+Lista de gadgets futuros (calculadora, logs) con sus data-gadget-id.
+
+Confirmación: ¿gestor global va en window o inyectado via constructor?
+
+text
+undefined

@@ -1,0 +1,32 @@
+# 🧠 MEMORY DUMP: ANTIGRAVITY-VIBE-AIP-02
+═══════════════════════════════════════════════════════════════
+ASUNTO:     Extracción Órbita 2 (Canvas Central)
+AGENTES:    Antigravity (Deep Drive Specialist)
+PROYECTO:   AIP v0.1 (Trinity Geometry)
+ESTADO:     Extraído / Agnostizado
+═══════════════════════════════════════════════════════════════
+
+### 🚀 HALLAZGOS CORE (THE ORGANS)
+
+1. **DINAMIC CONTAINER (TabManager):**
+   - Archivo: `CPII_crm_v0.1/core/at-tab-manager.js`
+   - Función: Gestiona la apertura de "Gadgets" en el `#canvas-orbita-2`.
+   - Mecánica: Utiliza `RESOURCE_REGISTRY` para inyección bajo demanda y patrón Show/Hide (R5).
+
+2. **CONTEXT EMITTER (The Trigger):**
+   - Origen: `MetaFactory/.../cifi-aip-prototype.html`
+   - Lógica: Función `selectItem(id)` que dispara `renderInspector(item)` y actualiza el `aimon-text`.
+   - AIP Spec: Evolucionado a evento global `Skeleton:Orbit2:ItemSelected`.
+
+3. **VIEW COMPONENTS (Gadgets):**
+   - Archivos: `gd-dashboard.js`, `gd-manual.js`.
+   - Estructura: Basada en Tailwind con `data-i18n` (R4 Doctrina).
+
+### 📐 ESPECIFICACIONES PARA STITCH
+- El Canvas debe ser el receptor de la señal de Órbita 1.
+- Debe emitir context-events al `globalBus` para alimentar la Órbita 3.
+- Fondo crema / profesional para la zona de trabajo (Canvas) vs oscuro para las Órbitas 1 y 3.
+
+### 🔗 REFERENCIAS
+- Reporte detallado: `orbit_2_canvas_report.md` (BR-53)
+- Índice Maestro: `CONVERSATION_INDEX.md` [VIBE-AIP-02]

@@ -1,0 +1,37 @@
+# MEMORY_DUMP_MARKETING-emprend-
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Aliado creativo y ejecutor de marketing digital. Traduzco ideas vagas en piezas accionables (copy, planes, convocatorias).
+* **Qué NO hago:** No utilizo lenguaje corporativo genérico ni tecnicismos innecesarios. No opero fuera del ámbito de la comunicación y el marketing.
+* **Condición Crítica:** Si el objetivo no es nítido, detengo la ejecución para hacer exactamente 2 preguntas: (1) Objetivo/Plazo y (2) Audiencia/Canales.
+* **Matiz de comportamiento:** En este proyecto (CPII), actúo en modo **EJECUCIÓN**. El usuario demanda brevedad extrema y asertividad; la duda o la pregunta abierta se percibe como fricción.
+
+### 2. DOCTRINAS TÉCNICAS
+* **PT-PT Compliance (Estricta):** Prohibido el uso de términos en español o brasileño. La credibilidad del Club depende de la precisión lingüística (ej. "Investidores" vs "Inversores").
+* **Direct-to-Action:** Priorizar mensajes que quepan en una pantalla de móvil sin scroll.
+* **Mentalidad de Fundador:** El marketing debe pivotar siempre sobre la exclusividad y la co-creación del club, no solo sobre la inversión.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* [WhatsApp Hook V1] — Invitación directa para contactos conocidos — Chat actual.
+* [WhatsApp Hook V2] — Invitación asertiva con cierre de compromiso para Webinar — Chat actual.
+* [Filtro Lingüístico CPII] — Corrección terminológica de "Inversores" a "Investidores" y validación de "Clube" vs "Club" — Activo en memoria de sesión.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Uso de "Inversores"** — Descartado por ser un error lingüístico en Portugal que destruye la autoridad del emisor.
+* **CTAs abiertos (¿Quieres información?)** — Sustituidos por afirmaciones de envío ("Vou enviar-te o link") para forzar una respuesta de confirmación de asistencia.
+* **Explicaciones largas sobre el concepto "Club"** — El usuario prefiere la ejecución del texto corregido sobre la teoría lingüística.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Enlace de Google Meet:** Pendiente de integración una vez finalizado el diseño.
+* **Flujo de Respuesta Positiva:** Falta el copy exacto para cuando el inversor diga "Sí, confirmo asistencia".
+* **Mensaje de Recordatorio (Viernes):** Pendiente de redacción para asegurar el ratio de asistencia al webinar del sábado 10:00.
+* **Validación de Canales:** Aún no se ha definido si habrá apoyo en LinkedIn/Ads, lo que limita la escala del copy.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Lux Lusitana / CPII:** Se percibe como un proyecto de alta exclusividad en el mercado portugués. El tono debe ser profesional pero ágil (WhatsApp).
+* **Sensibilidad del Cliente:** El usuario es impaciente con la teoría y valora la corrección inmediata.
+* **Patrón de éxito:** Mensajes que impliquen que el grupo de "Fundadores" se está cerrando generan mayor tracción.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+* **El Link de Google Meet:** Indispensable para cerrar el mensaje de convocatoria.
+* **Confirmación de Presupuesto/Canales:** Para decidir si el próximo material es un PDF de venta, un formulario de cualificación o simplemente un mensaje de seguimiento manual.

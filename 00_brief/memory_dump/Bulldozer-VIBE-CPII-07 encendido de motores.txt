@@ -1,0 +1,160 @@
+# MEMORY_DUMP_BULLDOZER.md
+**Agente:** Claude / Bulldozer
+**Proyecto:** CPII — Club Privado de Inversión Inmobiliaria
+**Exportación:** Sprint 2 → Sprint 3
+**Fecha:** 24 Feb 2026
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecutor de bisturí: implemento código, archivos y configuraciones con precisión quirúrgica
+- Aplico `/laparoscopia` por defecto en modificaciones — nunca entrego archivo completo si el cambio afecta <90% del contenido
+- Emito diagnóstico antes de ejecutar en intervenciones >2 archivos y espero alineación del Director
+- Detecto y señalo deuda técnica aunque no sea el objeto de la orden
+- Actualizo el Cuadro de Mando autónomamente al cierre de cada orden
+
+### Qué NO hago
+- No ejecuto código sin confirmación previa en intervenciones de más de 2 archivos
+- No ignoro vetos doctrinales R3/R4 — los emito y propongo corrección antes de continuar
+- No entrego archivo completo cuando el cambio es parcial (salvo orden explícita del Director)
+- No improviso formatos — sigo la estructura exacta del GEM
+
+### Condiciones necesarias antes de actuar
+- En intervenciones >1 archivo: validación del Lead Architect (Gemini) como condición necesaria
+- En bisturís de >2 archivos: alineación explícita del Director antes de ejecutar
+- Ante veto doctrinal: replantear desde cero, nunca forzar el enfoque original con adaptaciones cosméticas
+
+### Matices aprendidos en este proyecto
+- Gemini opera como Lead Architect con más contexto histórico acumulado — sus diagnósticos IAM y de usabilidad han sido correctos y deben integrarse sin resistencia
+- El Director prefiere comandos ejecutables paso a paso cuando no tiene `gcloud` instalado (Windows / PowerShell)
+- Los errores de Google Cloud Build son en cascada: cada permiso desbloqueado revela el siguiente. No iterar sobre permisos sin ver el log real de Cloud Build primero
+- La consola de Firebase y la de Google Cloud son entornos separados — confundirlos genera pasos en falso
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (afectan a Bulldozer directamente)
+- **R3 — Zero-Hex:** Prohibido usar valores hexadecimales de color directamente en HTML/CSS. Usar variables Tailwind o CSS custom properties. *Nota: el proyecto CPII usa Tailwind config con colores nombrados (gold, carbon, etc.) — cualquier adición de color debe ir al config, no inline.*
+- **R4 — i18n obligatorio:** Todo texto visible al usuario debe pasar por el sistema `data-i18n`. Prohibido hardcodear strings en español/portugués/inglés directamente en el HTML. El archivo `i18n.js` es la fuente de verdad.
+- **Vanilla JS / Zero-Server:** No introducir frameworks (React, Vue, Angular) ni dependencias de servidor. El stack es HTML + Tailwind CDN + Vanilla JS + Firebase SDK vía CDN.
+- **Compliance RGPD:** El campo `rgpd_consent` es obligatorio y siempre `true` en el schema del lead — validado tanto en frontend como en Firestore Rules.
+
+### Doctrinas específicas emergidas en trabajo real
+- **Doctrina de Huérfanos (Protocolo /ordeño):** Todo lead sin `referidoPor` válido se asigna automáticamente a `CTO_CARLOS_CPII` como padre de red. Esto aplica tanto en el frontend (`CLUB_MANAGER_MAP._DEFAULT`) como en la Cloud Function (`onAuthCreate`).
+- **Separación club_manager / referidoPor:** Son entidades INDEPENDIENTES. `club_manager` = gestor territorial por país. `referidoPor` = genealogía de red (prescriptor). No mezclar ni colapsar en una sola variable.
+- **Colección canónica = /leads:** La documentación inicial usaba `pending_users`. En producción la colección es `/leads`. Cualquier referencia a `pending_users` es deuda histórica.
+- **Firebase Auth v1 para triggers de Auth:** `firebase-functions/v2/identity` no existe como módulo estable. Usar siempre `functions.auth.user().onCreate()` de la API v1.
+- **Eventarc = infraestructura separada:** Los triggers Firestore v2 (2ª generación) requieren Eventarc + Cloud Run configurados. No mezclar en el mismo despliegue con funciones v1 sin validar la infraestructura primero.
+- **Node.js 20 en producción:** El entorno local del Director es Node.js v24.13.1. Firebase Functions se despliega en Node 20. Las discrepancias de engine generan warnings pero no bloquean si el código es compatible.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Frontend
+- `access-form.html` v1.4.0 — Landing de captación de leads CPII. Formulario con validación, i18n, Firestore SDK, tabla CLUB_MANAGER_MAP, captura de prescriptor por URL `?ref=`. — `apps/cpii/scenes/access-form.html`
+- `i18n.js` — Sistema de internacionalización (PT/ES/EN/FR). Referenciado en access-form.html como script externo. — `apps/cpii/scenes/i18n.js` *(archivo no generado en este sprint — preexistente o pendiente)*
+
+### Backend — Firebase Cloud Functions
+- `functions/src/index.ts` v1.2.0 — Cloud Function `onAuthCreate`. Trigger: `functions.auth.user().onCreate()`. Flujo: busca email en `/leads` → migra a `/users/{uid}` → borra lead → asigna Custom Claims → inicializa `genealogy_cache/{uid}`. — `functions/src/index.ts`
+- `functions/package.json` — Dependencias: `firebase-admin ^12.1.0`, `firebase-functions ^5.1.0`, `typescript ^5.4.5`, engine Node 20. — `functions/package.json`
+- `functions/tsconfig.json` — `esModuleInterop: true`, `include: ["src"]`. — `functions/tsconfig.json`
+- `firebase.json` — Configuración multi-servicio (functions + hosting). — `firebase.json`
+
+### Infraestructura GCP activa
+- **Firebase Authentication** — Proveedor Google habilitado. Email de soporte: `admin@breederhub.store`. Proyecto: `cpii-landing`.
+- **Firestore** — Colección `/leads` activa con Rules desplegadas. Colección `/users` creada por `onAuthCreate`. Colección `genealogy_cache` inicializada por `onAuthCreate`.
+- **Cloud Function onAuthCreate** — Desplegada en `us-central1`, Node.js 20 (1ª Gen). Estado: ✅ operativa.
+- **IAM configurado** — Cuenta `963765788097-compute@developer.gserviceaccount.com` con roles: Storage.objectAdmin, Eventarc.serviceAgent, logging.logWriter, run.invoker, eventarc.eventReceiver, iam.serviceAccountUser, artifactregistry.writer, storage.objectViewer.
+
+### Documentación
+- `CPII_Auditoria_VIBE-CPII-07.docx` — Informe de auditoría técnica Sprint 2. 7 secciones: resumen ejecutivo, cronología de 8 errores, IAM final, arquitectura, decisiones técnicas, pendientes, archivos entregados.
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+- **firebase-functions/v2/identity para onAuthCreate** — Descartado. El módulo `v2/identity` no exporta `onUserCreated` en el SDK v5 con Node 24. Error TS2305 en compilación + TypeError en runtime. Solución: API v1 estable.
+- **onOperationClose como función v2 Firestore** — Descartado temporalmente. Requiere infraestructura Eventarc que genera conflictos de permisos en cascada no resueltos en este sprint. Era un placeholder sin lógica real — su valor en producción era cero. Diferida a VIBE-CPII-08.
+- **Configurar permisos IAM via `gcloud` CLI** — Descartado. El Director no tiene `gcloud` instalado en Windows. Todo el IAM se gestionó via Google Cloud Console (interfaz web) paso a paso.
+- **Iterar sobre permisos IAM sin ver el log de Cloud Build** — Patrón identificado como ineficiente. Los primeros 3 intentos de permisos se hicieron a ciegas. La solución correcta: abrir el log del build fallido en Cloud Build Console y leer el error exacto antes de actuar.
+- **Borrar node_modules manualmente antes de reintentar** — Descartado como práctica. El Director borró `node_modules`, `lib` y `package-lock.json` manualmente, causando que `tsc` desapareciera del PATH. La solución correcta: nunca borrar `node_modules` manualmente; usar `npm install` para restaurar.
+- **Deploy con `firebase deploy --only functions firestore hosting` en PowerShell** — Descartado. PowerShell no acepta espacios como separadores de targets. Usar `--only functions` por separado o comillas: `--only "functions,firestore"`.
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Alta prioridad
+- **UIDs reales en CLUB_MANAGER_MAP** — Los campos `UID_GESTOR_PORTUGAL`, `UID_GESTOR_ESPANA`, `UID_GESTOR_BRASIL`, `UID_GESTOR_MEXICO`, `UID_GESTOR_ARGENTINA` son placeholders. Hasta que no se sustituyan por UIDs reales de Firebase Auth, todos los leads de esos países quedan con un `club_manager` inválido.
+- **Prueba de fuego end-to-end no ejecutada** — El pipeline formulario → Firestore → Sign-In → migración a `/users` no ha sido testado en producción real con un lead de verdad. La función está desplegada pero no validada funcionalmente.
+- **access-form.html no subida a servidor de producción** — El archivo v1.4.0 está listo pero no desplegado. El destino de hosting no fue confirmado en este sprint.
+
+### Media prioridad
+- **i18n.js no verificado** — El HTML lo referencia como `<script src="i18n.js">` pero el archivo no fue generado ni revisado en este sprint. Si no existe o está incompleto, todos los `data-i18n` renderizan vacíos.
+- **Prescriptores hardcodeados en HTML** — `david_almeida` y `carlos_balboa` están hardcodeados en el `<select>` del formulario. Debería venir de Firestore o de un archivo de config externo para facilitar la gestión sin tocar HTML.
+- **`created_at` como ISO string, no Firestore Timestamp** — En `leadData.metadata`, `created_at` se almacena como `new Date().toISOString()`. La función `onAuthCreate` usa `admin.firestore.FieldValue.serverTimestamp()`. Inconsistencia de tipos entre frontend y backend.
+- **Node.js 20 deprecation** — Firebase avisa que Node.js 20 se descomisionará el 2026-10-30. Migrar a Node 22 antes de esa fecha.
+
+### Baja prioridad / observada pero no bloqueante
+- **`punycode` DeprecationWarning** — Aparece en cada ejecución de Firebase CLI en Node 24. Es un warning de la CLI, no del código propio. Se resolverá al actualizar firebase-tools.
+- **firebase-functions desactualizado** — La CLI sugiere `npm install --save firebase-functions@latest` en cada deploy. Aplazar hasta que se confirme compatibilidad con el código existente.
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Estructura del ecosistema
+- **CPII** es el nombre del club de inversión. **Lux Lusitana** aparece como nombre alternativo o subbrand — no está claro si son el mismo proyecto o hay bifurcación. Aclarar antes del Sprint 3.
+- El proyecto tiene una **arquitectura de tres capas**: Landing (captación) → Firebase (backend) → Panel de gestión (pendiente). Este sprint completó las dos primeras.
+- El **Revenue Share es multinivel hasta L3**: L1=1%, L2=0.5%, L3=0.25%, máx red=1.75%. El reparto del beneficio neto es 50/50 entre Fundadores y Gestor después de descontar red + tecnología + marketing.
+
+### Sensibilidades y restricciones de negocio
+- El **CTO Carlos** (`CTO_CARLOS_CPII`) es el fallback universal — tanto para leads huérfanos como para países sin gestor asignado. Es una figura real, no un placeholder técnico.
+- Los **prescriptores son un sistema cerrado** — solo aparecen en el formulario los autorizados por CPII. No es un sistema abierto de referidos. La lista actual (david_almeida, carlos_balboa) es corta y probablemente crecerá.
+- **club_manager y referidoPor son independientes** — Esta distinción es crítica para el modelo de negocio: el gestor cobra por conversión territorial, el prescriptor cobra Revenue Share por red genealógica. Mezclarlos rompe la contabilidad.
+- El **KYC no está implementado** — Todos los usuarios entran con `status: kyc_pending`. No hay flujo de verificación todavía. Los Custom Claims asignan `role: inversor` sin verificación real.
+- El proyecto usa **Firebase plan Blaze** (pago por uso) — confirmado por la captura de consola. Hay coste real por cada Cloud Function invocada.
+
+### Patrones que funcionan
+- Gemini diagnostica → Bulldozer ejecuta. Este flujo fue el más eficiente en el sprint.
+- Cuando Google Cloud da "unexpected error" en Cloud Build, el 100% de las veces el error real está en el log del paso fallido — nunca en el resumen.
+- Los permisos IAM tardan entre 30-60 segundos en propagarse. Ejecutar el deploy inmediatamente después de guardar un permiso garantiza un fallo innecesario.
+
+### Trampas conocidas
+- **PowerShell vs bash:** Los comandos de Firebase CLI con múltiples targets usan sintaxis diferente en PowerShell. Siempre dar los comandos adaptados a PowerShell cuando el Director opera desde Windows.
+- **Firebase Console vs Google Cloud Console:** Son interfaces distintas. Firebase Auth, Firestore y Hosting se gestionan en `console.firebase.google.com`. IAM, Cloud Build, Cloud Functions avanzado y Artifact Registry se gestionan en `console.cloud.google.com`. Confundirlas genera pasos en falso.
+- **El selector de prefijo telefónico en móvil:** Resuelto en v1.4.0 pero fue un punto de fricción real. En pantallas <375px el layout colapsaba.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje del Sprint 3 sin fricción, el Director debe proveer:
+
+### Bloqueantes absolutos
+1. **UIDs reales de Firebase Auth** para los gestores territoriales — necesario para completar `CLUB_MANAGER_MAP`:
+   - `UID_GESTOR_PORTUGAL`
+   - `UID_GESTOR_ESPANA`
+   - `UID_GESTOR_BRASIL`
+   - `UID_GESTOR_MEXICO`
+   - `UID_GESTOR_ARGENTINA`
+
+2. **Destino de hosting para access-form.html** — ¿Firebase Hosting, Vercel, cPanel, otro? Sin esto el pipeline de captación no puede ser probado en producción.
+
+3. **Confirmación o corrección sobre CPII vs Lux Lusitana** — ¿Son el mismo proyecto? ¿Hay bifurcación de branding? Afecta a naming de colecciones, dominios y configuración de Auth.
+
+### Necesarios para VIBE-CPII-08
+4. **Decisión sobre onOperationClose** — ¿Se reimplementa en v2 con Eventarc configurado desde cero, o se mantiene en v1 como trigger Firestore estándar? La arquitectura del Motor de Liquidación depende de esta decisión.
+
+5. **Resultado de la prueba de fuego** — Ejecutar: rellenar formulario → verificar `/leads` en Firestore → Sign-In con Google → verificar `/users/{uid}` creado y lead borrado. El resultado determina si hay bugs en `onAuthCreate` que bloqueen el Sprint 3.
+
+6. **Lista completa de prescriptores autorizados** — La lista actual (david_almeida, carlos_balboa) probablemente no es definitiva. Necesaria antes de pasar a producción real.
+
+---
+
+*MEMORY_DUMP_BULLDOZER.md — Exportación completa Sprint 2 — cpii-landing / VIBE-CPII-07*
+*Estado del sistema al cierre: onAuthCreate ✅ desplegada | access-form.html v1.4.0 ✅ lista | Hosting ⏳ pendiente*

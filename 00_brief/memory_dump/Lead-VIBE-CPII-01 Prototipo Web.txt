@@ -1,0 +1,45 @@
+# MEMORY_DUMP_[Gemini_Lead_Architect]
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Rol:** Lead Architect, Asistente Técnico y Guardián del VIBE / Identidad para el ecosistema Skeleton Factory y CPII (Lux Lusitana).
+* **Lo que hago:** Diseño arquitectura, redacto código (Vanilla JS, Web Components, Firebase TS), aplico protocolos de intervención quirúrgica (/cartografía, /laparoscopia) y aseguro la coherencia entre negocio, identidad y tecnología.
+* **Lo que NO hago:** No ejecuto código en entornos locales, no accedo a paneles de control externos (DNS, GCP, DonDominio) y no avanzo a fases de backend/datos si el frontend/UI presenta fracturas ("No se construyen tuberías sobre un embudo agrietado").
+* **Límites del entorno:** Ceguera inducida para la lectura de imágenes subidas en el chat. 
+* **Condición de actuación:** Dependo de la telemetría textual (copiar/pegar logs de consola, errores F12 o salidas de terminal) para diagnosticar y generar parches. Para despliegues en infraestructura, exijo confirmación explícita del estado de red/servidor (ej. propagación DNS) antes de emitir comandos.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Doctrina Skeleton Factory:** Frontend Vanilla JS + Web Components (Custom Elements API). Cero frameworks pesados. Tailwind CSS vía utility classes para el styling.
+* **Doctrina Backend/Datos:** Bóveda aislada en Firebase (Cloud Functions Gen 2, Firestore, Auth). Master State local.
+* **Doctrina de Identidad (Lux Lusitana):** Estética de Private Banking. Colores: Carbon Black (#1C1C1C), Gold (#C1A85D), Ivory White (#FDFBF6). Tipografías: Cormorant (Serif), Lato/Inter (Sans). Dark mode por defecto.
+* **Doctrina Compliance (Verdent):** Prohibición de terminología multinivel o cripto. Uso estricto de: "Revenue Share", "Autofinanciación", "Ventanas de Inversión", "Tier A (Catapulta)", "Tier B (Refugio)".
+* **Doctrina de Infraestructura (Actual):** Capa de presentación (Landing) hosteada en LEMP stack (Nginx/Ubuntu) en GCP, separada de la base de datos de operaciones (Firebase).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* `project_manifest.json` — Identidad core, roles, revenue share (L1-L3) y theme base — [Capa Configuración].
+* `firestore.rules` — Políticas de seguridad y segregación de lectura/escritura por roles — [Capa Firebase].
+* `wd-investment-card.js` — Web Component autónomo para visualización de estado de activos — [Capa Componentes].
+* `genealogy-logic.ts` & `takeover-protocol.ts` — Cloud Functions para cálculo de Revenue Share y reasignación de red por expulsión — [Capa Backend].
+* `index.html` — Landing Principal con Theme Lux Lusitana y CTAs de segmentación — [Capa Presentación/Vercel/LEMP].
+* `simulator.html` — Simulador de riqueza interactivo con cálculo en tiempo real basado en CSV — [Capa Presentación].
+* `access-form.html` — Formulario embudo con auto-captura de URL params (`?ref=`), parcheado para accesibilidad y Google Fonts — [Capa Presentación].
+* `referrals.html` & `webinars.html` — Dashboards de preview para tracción de leads — [Capa Presentación].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Descartado:** Guardar leads de `access-form.html` en `localStorage` como solución definitiva. *Motivo:* Solo válido para mock/demo. Genera pérdida total de datos en producción.
+* **Descartado:** Avanzar a la conexión de Firestore con la UI del formulario lanzando errores. *Motivo:* Contamina la base de datos y rompe la experiencia móvil. Se aplicó el protocolo /laparoscopia primero.
+* **Descartado:** Vercel como entorno de producción final para el frontend. *Motivo:* Pivotado hacia servidor dedicado LEMP (`35.184.54.173`) para integración bajo el dominio `clubsocios.digital` y ecosistema WordPress.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Lead Capture Roto:** `access-form.html` actualmente solo hace `console.log` y guarda en `localStorage`. Falta la inyección del SDK de Firebase y la escritura en Firestore (`cpii_onboarding`).
+* **Falsa Seguridad (Auth):** Las páginas estáticas (ej. `referrals.html`) son accesibles por URL directa. Falta implementar el módulo `gatekeeper.js` / Firebase Auth para bloquear el acceso a no miembros.
+* **Simulador Estático:** El simulador opera con lógica hardcodeada en el cliente basada en un CSV. A futuro requerirá validación de cálculos via Cloud Functions para evitar manipulación en el frontend.
+* **Integración LEMP Pendiente:** El código estático debe ser adaptado al entorno Nginx/WordPress (Stand-alone vs. WP Theme Templates).
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **El Sistema de Invitaciones es Sagrado:** La auto-captura del `?ref=` es el motor comercial del Tier Promotor. Si el script falla al leer la URL o el sessionStorage, el modelo de negocio se cae.
+* **Psicología del Usuario:** El proyecto debe transmitir "estabilidad institucional" y "exclusividad". Cualquier error visual (como tipografías rotas o superposiciones) destruye la confianza del perfil inversor de alto patrimonio.
+* **Filtrado de Interfaz:** He aprendido que no puedo procesar imágenes en este hilo operativo. Cualquier depuración visual debe traducirse a texto (F12 > Consola) por parte del operador humano.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1.  **Confirmación DNS:** Verificación afirmativa de que los registros A (clubsocios.digital y www) ya resuelven hacia la IP `35.184.54.173`. (Bloqueo crítico para SSL/Certbot).
+2.  **Decisión de Arquitectura Nginx/WP:** Definición clara de si los 5 archivos HTML se servirán estáticos en una subcarpeta (Vía A) o si deben ser refactorizados como plantillas `.php` de WordPress (Vía B).

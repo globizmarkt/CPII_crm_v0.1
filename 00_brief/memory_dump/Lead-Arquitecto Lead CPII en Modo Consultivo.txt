@@ -1,0 +1,72 @@
+# MEMORY_DUMP_Gemini_LeadArchitect.md
+**Proyecto:** CPII / Lux Lusitana (Ecosistema Skeleton Factory)  
+**Versión:** 4.0  
+**Estado:** Auditoría de Transición - Marzo 2026  
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Identidad:** Arquitecto Lead del CPII. Experto en infraestructuras Serverless/Event-Driven (Firebase/GCP).  
+* **Modo Consultivo (Default):** Debate arquitectura, analiza trade-offs (ej. Caché L1/L2/L3) y valida decisiones estratégicas.  
+* **Modo Ejecución (Trigger):** Solo se activa mediante comandos explícitos (`/faseA`, `/faseB`, `/faseC`).  
+* **Lo que NO hago:** No inicio fases de código por cuenta propia. No uso frameworks (React/Vue). No implemento bases de datos relacionales ni Redis.  
+* **Matiz aprendido:** Mi efectividad depende de la "Frontera Estricta". Si el código mezcla lógica de la Landing con lógica del CRM, mi sistema de seguridad (Security Rules) genera alertas de conflicto doctrinal.  
+
+---
+
+### 2. DOCTRINAS TÉCNICAS
+* **Globales (Mandatos R0-R5):**
+    * **R0:** Prohibido el Hardcode. Todo debe ser dinámico o vía config.
+    * **R1 (Trinity Alignment):** Layout de 3 columnas con anchos fijos tokenizados.
+    * **R2 (Stitch Pattern):** Componentes aislados (ej. `.wd-manual`) inyectables en Órbitas.
+    * **R3 (Cero Hex):** Uso exclusivo de `var(--theme-*)`. Prohibido `#000000`.
+    * **R4 (i18n Total):** Prohibido texto plano. Uso de `data-i18n` en todos los nodos.
+    * **R5 (Integridad):** Persistencia directa en Firestore `cpii-landing` (Proyecto central).
+* **Específicas de Especialidad:**
+    * **Principio del Profano:** La interfaz debe ser operable por alguien sin conocimientos técnicos (Fase de Captación).
+    * **El Experto toma el relevo:** La complejidad técnica vive en las Cloud Functions, nunca en el cliente.
+    * **Zero-Server / Pure Static:** El frontend es un WebOS estático; la inteligencia es distribuida.
+
+---
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **[.wd-admin-gate]** — Trigger de acceso administrativo con Ghost Input (Terminal Green) — `access-form.html` (línea 152).
+* **[i18n.js Admin Tokens]** — Diccionarios PT/ES/EN/FR para el portal de acceso — `i18n.js`.
+* **[Prescriptor Engine Blueprint]** — Lógica de trazabilidad de referidos L1-L3 — Conceptual / Script de Captación.
+* **[Manual de Buenas Prácticas v1.0]** — Guía operativa de captación y webinars — `manual_buenas_practicas_club.docx`.
+* **[BreEderHub v4.0 Logic]** — Sistema de acceso modo dios con timeout de 5 min y limpieza de URL — Inyectado en `index.html` / `access-form.html`.
+
+---
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **[Iframe de Admin en Órbita 3]** — DESCARTADO: Se decidió que el CRM debe vivir en una **Ruta Nueva** separada para garantizar el aislamiento total de datos sensibles y mejorar el rendimiento de carga.
+* **[Redis para Genealogía]** — DESCARTADO: El coste fijo y la necesidad de VPC Access eliminan el "Escalado a Cero". Se optó por Agregación en Firestore o Caché en memoria de instancia.
+* **[Uso de Parámetros URL para Admin]** — DESCARTADO: Considerado "Legacy" y poco seguro. Se sustituyó por validación vía Cloud Function + Secret Manager.
+* **[Database-per-tenant]** — DESCARTADO: Destruye el motor de Revenue Share transversal (MLN) donde el Padrino y el Referido pueden estar en secciones distintas.
+
+---
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **[SKELETON_24 Key]** — CRÍTICO: Detectada clave hardcodeada en el frontend (línea 638) y bypass de localhost. Pendiente de migración a Secret Manager.
+* **[Nomenclatura 'leads']** — INCONSISTENCIA: Algunos scripts usan `leads` mientras la doctrina exige `pending_users` para la colección temporal de captación.
+* **[FirebaseConfig]** — R0 VIOLATION: Las credenciales de Firebase están grabadas en el HTML. Deben moverse a un manifest o configuración inyectada.
+* **[Validation Bypass]** — La validación de formulario es puramente cliente (fácil de saltar). Falta validación server-side en la persistencia R5.
+
+---
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Sensibilidad del 1%:** El Club no es un SaaS; es un vehículo de inversión. Cualquier error en el cálculo del 1% de honorarios o el 50/50 de beneficios es una crisis de confianza, no un bug de software.
+* **Dualidad de Kelly/David:** David marca el rumbo (Estratégico/Notas de Audio), Kelly ejecuta (Operativo/IA). El sistema debe facilitar que Kelly apruebe contenidos que David propone.
+* **Trampa del Multitenancy:** El usuario cree que está en un club cerrado, pero el backend es una red única. El aislamiento debe ser LÓGICO (vía Security Rules), nunca físico.
+* **Patrón de Éxito:** El vídeo de presentación es el único "convencedor". El prescriptor solo "abre la puerta". Si el software intenta vender, falla.
+
+---
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+1. **Archivo final `access-form.html`:** Para limpiar el bypass local y la clave hardcodeada.
+2. **Confirmación de Ruta CRM:** La URL definitiva o el entorno de Vercel para configurar la redirección post-validación.
+3. **Acceso a Secret Manager:** Confirmación de que la `MASTER_KEY` ha sido creada en la consola de GCP.
+4. **Criterio de 'Sección Certificada':** Definir el `tenant_id` por defecto para los primeros 100 gestores.
+
+---
+**[FIN DEL VOLCADO]**

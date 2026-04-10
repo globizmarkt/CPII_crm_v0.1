@@ -1,0 +1,51 @@
+# MEMORY_DUMP_LeadCloudArchitect.md
+**Fecha de Volcado:** 2026-03-15
+**Proyecto:** CPII / Lux Lusitana / GLOBIZMARKT (Polygon Dashboard)
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Identidad:** Arquitecto Lead del CPII, especialista en infraestructuras Serverless/Event-Driven sobre Firebase/GCP y ecosistema "Skeleton Factory".
+* **Modo Consultivo (Por defecto):** Analizo trade-offs, debato arquitectura, respondo dudas técnicas sin generar código masivo no solicitado.
+* **Modo Ejecución (Trigger estricto):** Se activa *únicamente* mediante comandos de `/fase` (/faseA, /faseB, /faseC). Aquí genero código de producción 100% funcional, sin pseudocódigo, inyectable en el repositorio.
+* **Modo Archivo:** Escucha activa pura. Recibo contexto, confirmo en < 3 líneas y me abstengo de proponer o analizar hasta recibir orden explícita ("Abandona el modo archivo" o comando de fase).
+* **Lo que NO hago:** No inicio fases de generación de código por iniciativa propia. No propongo el uso de frameworks no autorizados. No debato las restricciones inmutables del proyecto.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Globales Inmutables:** * Frontend: 100% Vanilla JS + Web Components (Custom Elements API) + Shadow DOM. Cero React/Vue/Angular.
+    * Backend: Firebase Cloud Functions Gen 2 (TypeScript) + Firestore NoSQL + Cloud Tasks + Auth.
+    * Aislamiento: Multi-tenancy lógico vía Custom Claims (`tenant_id`), nunca aislamiento físico de base de datos que rompa la genealogía.
+* **Doctrinas Emergentes (Polygon Dashboard - WebOS):**
+    * *Comunicaciones UI:* Uso estricto de `EventTarget` nativos instanciados como singletons ("Canales") para el EventBus transversal. Prohibido usar el objeto global `window` para evitar cuellos de botella. Los eventos cruzan el Shadow DOM con `{ bubbles: true, composed: true }`.
+    * *UI Rendering a 60 FPS:* Para componentes dinámicos como los *splitters* del Layout Trinity, es doctrina obligatoria desacoplar el input del renderizado usando `requestAnimationFrame`, interpolación lineal (Lerp) y CSS `contain: layout` para evitar *layout thrashing*.
+    * *Seguridad Transversal (Hot Path vs Warm Path):* Los accesos de super-admin/auditor entre tenants requieren Custom Claims (Warm Path - 1h latencia) y *Custom Tokens Temporales* generados por Cloud Functions Callable (Hot Path - <2s latencia, expiración 15m) para emergencias auditables.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Esquema Canónico Verdent** — Definición de interface TypeScript para `Usuario` (roles base en UI, lógica de negocio en Custom Claims) — *[Documentación Arquitectura]*.
+* **Flujo de Onboarding (Puente de Seguridad)** — Pipeline diseñado: `pending_users` -> trigger `onAuthCreate` -> `/users/{uid}` con `kyc_pending` — *[Especificación Blueprint]*.
+* **Taxonomía WebOS GLOBIZMARKT** — Estructura de componentes Skeleton v2.5 (`.wd-polygon-shell`, `.gd-trinity-layout`, `.wd-ai-dock`, `.wd-production-radar`, etc.) — *[Especificación VIBE-CPII-12]*.
+* **Mapa Firestore Polygon (P0)** — Definición de colecciones transversales: `polygon_notes` (Productividad), `polygon_alerts` (Radar), `polygon_doctrine` (Formación) — *[Documentación DB]*.
+* **Plano de Alineación Bulldozer** — Prompt maestro de contexto técnico purificado para transferir directivas de ejecución a Claude — *[Caché de Sesión actual]*.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Redis para caché de genealogía** — *Descartado* porque requiere Serverless VPC Access, rompe el escalado a cero (scale-to-zero) y añade un coste fijo inaceptable para un MVP. Se sustituye por Aggregation Docs en Firestore o Caché en memoria de instancia de Cloud Function.
+* **Modelos Database-per-tenant o Schema-per-tenant** — *Descartados* porque la red (L1, L2, L3) cruza fronteras organizativas. Separar físicamente las bases de datos destruye el motor transversal de cálculo de Revenue Share (< 500ms).
+* **SaaS Billing (Stripe/PayPal)** — *Descartado*. El modelo de negocio no es suscripción B2B, es retención de honorarios (1%) y liquidación de beneficios (Catapulta/Refugio).
+* **Registro directo Auth desde Landing** — *Descartado*. Elimina la barrera de seguridad pública/privada. La landing solo puede escribir en un payload temporal (`pending_users`).
+* **Despacho de eventos al objeto global `window` en el WebOS** — *Descartado*. Generaría colisiones y problemas de rendimiento con 50+ módulos. Se reemplaza por el patrón "Canales" (`getChannel('topic')`).
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Validación de Security Rules Híbridas:** El cruce de roles `polygon_operator` hacia colecciones de `tenant_id` específicos (CPII) requiere pruebas exhaustivas en entorno de Staging, especialmente la protección anti-escritura en la colección `revenue_share`.
+* **Implementación Motor Financiero:** Las Cloud Functions de la fase B (`liquidateWindow` con Cloud Tasks y `calculateRevShareOnInvestment`) están diseñadas conceptualmente pero pendientes de generación de código TypeScript.
+* **Gestión de Expiración (Token Refresh):** Falta implementar el cliente de *polling inteligente* con *backoff exponencial* para forzar la actualización del token JWT tras la asignación de un Custom Claim, mitigando la latencia de 1 hora de Firebase.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* *Revenue Share dicta la infraestructura:* Cualquier propuesta técnica que ralentice la travesía del árbol de prescriptores (L1/L2/L3) o introduzca asincronía incontrolable en el cálculo de comisiones será rechazada.
+* *El "Puente de Seguridad" es sagrado:* El CRM/MLS es una fortaleza. El frontend público (Landing) es "tonto". Nunca se deben mezclar contextos; la frontera es el KYC manual del Gestor.
+* *Jerarquía de componentes:* Polygon Dashboard no es una herramienta más, es el sistema operativo que envuelve todo. Debe ser agnóstico de si debajo corre CPII o CIFI-AIP.
+* *Sensibilidad del Auditor:* Un operador de Polygon necesita acceso a datos de verticales *ahora*, no en una hora. Por eso el patrón de *Emergency Token* es crítico para la operativa diaria.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar la ejecución (Fase A - Arquitectura Base del WebOS) de forma inmediata y generar código de producción, necesito:
+1.  **El Comando:** La orden explícita `/faseA`.
+2.  **Destino del Código:** Confirmación de las rutas de archivo del repositorio (ej. `functions/src/` para backend y `src/components/` para frontend) donde Bulldozer Claude o yo inyectaremos los Web Components y las Cloud Functions.

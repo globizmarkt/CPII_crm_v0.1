@@ -1,0 +1,48 @@
+# MEMORY_DUMP_GEMINI
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Rol:** Asistente técnico avanzado, arquitecto de sistemas y ejecutor de despliegues en infraestructura Google Cloud/Firebase. Actitud de "precisión quirúrgica" y grado institucional.
+- **Límites:** - Regla de oro: "Verificar antes de intervenir". No sobrescribo reglas de seguridad (ej. Firestore) ni arquitecturas sin diagnosticar el código existente primero.
+  - No ejecuto comandos en la terminal del usuario directamente; proporciono los comandos exactos (`firebase deploy --only functions`, etc.) para que el Director los valide y lance.
+  - Me detengo inmediatamente ante la orden de "pausa".
+- **Condición de actuación:** Requiere confirmación visual (capturas, logs de terminal, o confirmación explícita del Director) de que el paso anterior fue exitoso (ej. `+ Deploy complete!`) antes de avanzar al siguiente eslabón de la cadena.
+
+### 2. DOCTRINAS TÉCNICAS
+- **Vanilla / Single-File Architecture:** Priorización de JavaScript nativo y archivos HTML autocontenidos (`access-form.html`) sobre frameworks complejos que añadan fricción de mantenimiento.
+- **Compliance Institucional (Léxico):** Sustitución estricta de términos multinivel clásicos ("Prescriptor", "Padrino") por nomenclatura institucional ("Embajador", "Responsable de Club") en código, UI y bases de datos en 4 idiomas (PT, ES, EN, FR).
+- **Seguridad por Diseño (Firestore [SEC-01 a SEC-04]):** Validación estricta en el lado del servidor. Ningún documento entra a la base de datos si no cumple el contrato exacto de datos (ej. exigencia inquebrantable de `metadata.rgpd_consent == true`).
+- **Resiliencia de Integración (Doctrina de Caja Negra):** Transición de formatos frágiles (Markdown) a formatos robustos (HTML) en integraciones de terceros (Telegram) para evitar caídas del sistema por inputs de usuario no sanitizados (ej. guiones bajos en nombres).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **Formulario de Captación Principal** — Frontend HTML/JS con validación, selector de idiomas y lógica de atribución de referidos. — `access-form.html` (v1.4.1).
+- **Diccionario de Internacionalización** — Objeto JS que gestiona las traducciones dinámicas (PT, ES, EN, FR) garantizando el léxico institucional. — `i18n.js`.
+- **Motor de Notificaciones Nivel 2** — Cloud Function (Node.js 24) que recibe peticiones POST de la web y envía alertas parseadas en HTML al bot de Telegram `@cpii_alertas_bot`. — `functions/index.js` (Servicio: `sendleadtotelegram`).
+- **Reglas de Seguridad Firestore** — Bloqueo de BBDD que exige estructura de datos específica, perfiles válidos ('inversor', 'promotor') y consentimiento RGPD para permitir escrituras. — Consola Firebase (Firestore Rules).
+- **Satélite Administrativo** — Webhook POST nativo (fetch) conectado a Google Sheets para respaldo fuera del ecosistema Firebase. — Integrado en `access-form.html`.
+- **Candado de Atribución (En Standby)** — Script inyectable que lee el parámetro `?ref=`, lo guarda en `localStorage`, autoselecciona al Embajador y bloquea visual y funcionalmente el input para evitar robo de leads. — Desarrollado, pendiente de despliegue.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Descarte:** Parseo en "Markdown" para el Bot de Telegram.
+  - **Motivo:** Un embajador con un guion bajo en su ID (`carlos_balboa`) provocaba un Error 400 (Bad Request) porque Telegram esperaba el cierre de la etiqueta de cursiva. Se migró a `parse_mode: "HTML"`.
+- **Descarte:** Confiar en el despliegue automático de permisos IAM vía Firebase CLI (`--no-allow-unauthenticated`).
+  - **Motivo:** Las políticas de la organización en Google Cloud bloquean la asignación pública automática. Se documentó el protocolo manual: Cloud Run -> Seguridad -> Agregar `allUsers` como `Cloud Run Invoker`.
+- **Descarte:** Múltiples landings personalizadas por Embajador.
+  - **Motivo:** Infierno de mantenimiento. Se optó por una única URL maestra con paso de parámetros (`?ref=`) acoplada a un script de bloqueo.
+- **Descarte:** Sobrescribir las reglas de Firestore para hacer funcionar el primer código de prueba.
+  - **Motivo:** Las reglas del cliente eran superiores (Grado Institucional). Se adaptó el payload del frontend (añadiendo `rgpd_consent: true`) para respetar la BBDD.
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **Tailwind en Producción:** El HTML inyecta Tailwind vía CDN (`<script src="https://cdn.tailwindcss.com..."></script>`). La consola del navegador arroja un warning explícito indicando que no debe usarse en producción. Requiere compilación mediante PostCSS/CLI.
+- **Radar de Atribución Global:** Se propuso un script para `index.html` que capture el `?ref=` antes de que el usuario llegue al formulario, pero aún no se ha inyectado. Riesgo de pérdida de trazabilidad si el usuario no aterriza directamente en `access-form.html`.
+- **Despliegue Pendiente (Stealth Referral):** El código final del "Candado Fantasma" (que oculta a embajadores menores de la vista pública pero los inyecta si hay URL paramétrica) está aprobado pero pausado antes del `firebase deploy`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Navegación en Google Cloud:** Existe un riesgo alto de confusión de entornos. El proyecto actual es `cpii-landing`, pero el usuario tiene acceso a proyectos legacy/paralelos como `clubsocios-prod`. Siempre hay que verificar el ID del proyecto en la URL de GCP.
+- **Sensibilidad de la Red de Afiliados:** La protección de la atribución del lead ("Candado Inteligente") no es solo una feature técnica, es el pilar de la confianza de los Embajadores. Visualizar el campo como "bloqueado" (`cursor-not-allowed`) transmite seguridad al afiliado que comparte el link.
+- **Política de Privacidad y RGPD:** No es un trámite legal secundario. Es un bloqueador duro a nivel de arquitectura (Firestore). Cualquier futuro formulario o integración externa fracasará silenciosamente si no envía el flag `rgpd_consent: true`.
+- **Jerarquía de Errores Frontend:** Si el frontend arroja "Error al procesar" y el lead llega a Sheets pero no a Telegram, el problema está en la capa Nivel 2 (Cloud Function / Telegram API). Si no llega a ningún lado, el bloqueo está en Firestore (Reglas).
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para reanudar operaciones de forma inmediata en El Gate, necesito:
+1. **Confirmación de Estado:** ¿Se procede a desplegar el bloque `[SEC-08]` en modo "Candado Fantasma" (Stealth Referral) en `access-form.html`?
+2. **Directiva de Siguiente Feature:** Especificar si el Sprint 3 abordará la deuda técnica (compilación de Tailwind), la propagación del Radar de Atribución a `index.html`, o la apertura de un nuevo frente (ej. automatización de correos de bienvenida o Dashboard de Embajadores).

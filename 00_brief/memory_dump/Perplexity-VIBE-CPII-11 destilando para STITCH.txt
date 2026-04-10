@@ -1,0 +1,147 @@
+# MEMORY_DUMP_PERPLEXITY-BR-SEARCHER.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+**Qué HAGO:**
+- Investigación profunda de plataformas de inversión privada, CRM/MLS inmobiliarios, fiscalidad PT/ES/BR, compliance CMVM/CNMV/CVM
+- Benchmarking competitivo de Juniper Square, Addepar, iCapital, Cadre, Fundrise, EquityMultiple (2024-2025)
+- Generación de schemas JSON con firma ed25519 obligatoria para todos los artefactos CPII
+- Análisis UX empresarial para dashboards financieros, trees genealógicos, lifecycle managers
+- Validación de alineación con Stack Skeleton (Firebase/Firestore, Vanilla JS, Tailwind, Cloud Functions TS Gen2)
+
+**Qué NO HAGO:**
+- Código de implementación (solo schemas y arquitectura lógica)
+- Decisiones de negocio final (solo investigación para que Director/AITOR decida)
+- Propuestas fuera del stack técnico cerrado (nada de React/Redux/D3.js como librería, solo Vanilla)
+- Especulación sobre datos no investigados (siempre cito fuentes 2024-2025)
+- Colores hex ni textos hardcodeados (solo Tailwind + tokens R3/R4)
+
+**CONDICIÓN PARA ACTUAR:**
+- Instrucción explícita del Director con formato ENTREGA X + criterios claros
+- Confirmación previa de módulos pendientes cuando hay múltiples opciones P1/P2
+- Aprobación de Lead Architect-Gemini/AITOR para cambios de taxonomía (.wd/.gd/.at)
+
+## DOCTRINAS TÉCNICAS
+
+**Globales (R3/R4/Vanilla/Compliance):**
+R3(Zero-Hex): Prohibidos colores hexadecimales. Solo Tailwind + tokens CSS sistema
+R4(i18n): Textos nunca hardcodeados. Siempre data-attributes o servidor
+Vanilla JS: DOM nativo exclusivo. Arquitectura Trinity obligatoria
+Compliance-First: Todos los schemas llevan signature.ed25519 (KAIROS valida async)
+
+text
+
+**Específicas de Perplexity-BR-Searcher:**
+Doctrina de Auditabilidad: Cada schema debe ser autónomo + inmutable + firmado
+Ley de Latencia Cognitiva: Cerebro Rápido (pedagogycache) → AIMON en sombra
+Convivencia Paratáctica: Componentes polimórficos (seed/animado → activo)
+Free First: Cloud Functions async, nunca sync CPU-heavy validations
+Estructura Tricameral: offering/narrative separadas en manifiesto
+
+text
+
+## INVENTARIO DE LO CONSTRUIDO
+
+[FiscalReportGenerator.at-fiscal] — Reportes IRS/IMT/IBI/ITBI automáticos — file:1
+[PropertyAVM.gd-avm] — Valoración IA off-market ±12.5% MAE — file:1
+[ComplianceMessenger.wd-messenger] — Templates CMVM/CNMV/CVM — file:1
+[PayoutWallet] — SEPA/MBWay/PIX con retención origen — file:1
+[AgentMetrics.gd-agent] — Operational/Administrative dual-score agente — convo:2026-03-10
+[CommissionWaterfall] — Cascada L1 1%/L2 0.5%/L3 0.25% — convo:2026-03-10
+[AutofinancingClock.wd-clock] — Contador autofinanciación mes 12-24 — convo:2026-03-10
+[ClubPulse.gd-pulse] — Termómetro club (capital/rendimiento/liquidity) — convo:2026-03-10
+[WhitepaperViewer.at-whitepaper] — Versionado público W-0.0→W-1.9 — convo:2026-03-10
+[PrescriptorTree.gd-network] — Árbol genealógico L1/L2/L3 real-time — convo:2026-03-10
+[DealRoom.at-dealroom] — Lifecycle off-market (Captado→Cerrado) — convo:2026-03-10
+
+text
+
+**Total: 20 módulos P0-P2 validados, 12 schemas JSON firmados**
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+[Tokenization Bridge] — CPII no tokeniza, vehículos cerrados sin mercado secundario
+[Secondary P2P] — Contradice modelo club privado, complejidad notarial lock-up 6-24m
+[Vault IoT/Lifting Calendar] — Específico commodities RWA, irrelevante inmobiliario
+[PortfolioVisualizer como .gd-portfolio] — Corrección Gemini: debe ser .wd-portfolio (Órbita 2)
+[D3.js como librería] — Stack Vanilla puro. Solo DOM nativo + Canvas/SVG manual
+[Listeners Firestore por cada L1 en PrescriptorTree] — Coste prohibitivo (500 listeners)
+[Validación sync ed25519 en Security Rules] — Viola Free First, KAIROS valida async
+
+text
+
+## DEUDA TÉCNICA DETECTADA
+
+🔴 CRÍTICA:
+
+InvestmentSimulator.taxImpact PT/ES/BR: pendiente validación AITOR (límite 1MB doc)
+
+TESTINGSTRATEGY.md: falta test suite para Inversor Fantasma (PortfolioVisualizer)
+
+Gatekeeper Check 3+4 integración explícita en DealRoom visibility
+
+🟡 MEDIA:
+
+CapitalCallEngine: ubicación taxonómica pendiente (.gd Órbita 3 vs .wd Canvas)
+
+Jurisdiction Router: delta IMT/IBI/ITBI requiere nuevo schema vs mutar existente
+
+PrescriptorTree: lazy-loading/paginación L1 pendientes de especificación píxel-perfect
+
+🟢 MENOR:
+
+ClubPulse cron: frecuencia exacta (hora vs 4h) pendiente decisión de coste
+
+text
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+BUSINESS:
+
+CPII ≠ inmobiliaria tradicional = club privado ingeniería financiera off-market
+
+Dueños Originales (David/Carlos) = veto absoluto, incluso sobre Fundadores
+
+Fondo Sostenibilidad 50% beneficio = dogma innegociable del modelo
+
+Autofinanciación mes 12-24 = hook retención #1 del club
+
+SENSIBILIDADES:
+
+Director = Carlos Balboa. Máxima precisión técnica, cero especulación
+
+Lead Architect-Gemini = autoridad taxonomía (.wd vs .gd vs .at)
+
+AITOR = optimizador prompts + precompilador glossary pedagógico
+
+Bulldozer-br-claude = valida para STITCH (ejecución)
+
+TRAMPAS:
+
+Nunca mezclar lógica offering/narrative en mismo documento Firestore
+
+PortfolioVisualizer debe ser polimórfico (localStorage seed → Firestore activo)
+
+DocuSignVault = Direct-to-Storage Signed URLs, NUNCA backend binarios
+
+KAIROS async = única vía para validaciones criptográficas/heavy CPU
+
+text
+
+## INPUT REQUISITO PARA SPRINT 3
+
+ARCHIVO: "VIBE-CPII-11 destilando para STITCH" — respuesta Bulldozer-br-claude
+
+DECISIÓN: InvestmentSimulator.taxImpact — validado por AITOR (1MB OK?)
+
+CRITERIO: CapitalCallEngine taxonomía final (.gd vs .wd) + trigger (manual/auto)
+
+DECISIÓN: Jurisdiction Router — nuevo schema vs mutar JurisdictionRule existente
+
+ARCHIVO: TESTINGSTRATEGY.md actualizado con Inversor Fantasma test suite
+
+FRECUENCIA: ClubPulse cron confirmada (hora/4h) + listeners real-time permitidos
+
+text
+
+Estado: **LISTO PARA AUDITORÍA EXPORT / Sprint 3 bloqueado por 6 inputs**

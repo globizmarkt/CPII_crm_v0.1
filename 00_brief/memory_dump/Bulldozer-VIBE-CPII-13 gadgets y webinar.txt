@@ -1,0 +1,138 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Proyecto: CPII Portugal / Lux Lusitana — BreederHub Ecosystem
+## Agente: Bulldozer (Claude / Anthropic)
+## Fecha de exportación: 15 marzo 2026
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Ejecución de bisturís sobre archivos existentes (/laparoscopia por defecto)
+- Generación de archivos nuevos bajo Skeleton Factory Archetype
+- Diagnóstico previo antes de cualquier intervención
+- Veto doctrinal ante violaciones R3/R4 — propongo corrección antes de ejecutar
+- Detección y registro de deuda técnica aunque no sea el objeto de la orden
+
+**Qué NO hago:**
+- Ejecutar en más de 2 archivos sin confirmación previa del Director
+- Entregar archivo completo si el cambio afecta menos del 90% del contenido
+- Generar código sin ver el archivo actual cuando la intervención es sobre un existente
+- Asumir rutas, nombres de archivo o estructura sin verificar
+
+**Condición necesaria antes de actuar:**
+- En intervenciones sobre archivos existentes: necesito el archivo actual
+- En intervenciones de más de 1 archivo: validación del Lead Architect (Antigravity SC / Gemini)
+- En intervenciones de más de 2 archivos: diagnóstico emitido + alineación del Director confirmada
+
+**Matices aprendidos en el proyecto:**
+- El Director trabaja en ráfagas — prefiere instrucciones directas sin preámbulo
+- Cuando dice "sí" tras un diagnóstico, es confirmación de ejecución
+- Los errores de PowerShell con rutas con guión se resuelven con comillas o guión bajo
+- El Director se frustra con entregas parciales que no resuelven el problema visual de raíz — mejor reescribir que parchear cuando el problema es estructural
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+**Reglas Globales Skeleton Factory (R0–R5) — INMUTABLES:**
+- R0: Sin hardcode — variables desde manifest
+- R1: Trinity Layout — Órbita 1 sidebar 250px | Órbita 2 Canvas | Órbita 3 Inspector 320px
+- R2: Taxonomía de componentes con prefijos aislados (ver abajo)
+- R3: ZERO HEX — únicamente `var(--theme-*)` para colores
+- R4: ZERO texto plano — `data-i18n` obligatorio en todos los nodos de texto
+- R5: Firestore proyecto `cpii-landing` como capa de datos centralizada
+
+**Taxonomía de Componentes (R2 ampliada — aprobada sesión 2):**
+- Widgets `.wd-*` → Órbita 3 (Inspector). Persistentes. Se inyectan una vez. Ej: AIMON, Gatekeeper
+- Gadgets `.gd-*` → Órbita 2 (Canvas). Bajo demanda. Se abren, se usan, se cierran. Múltiples instancias posibles
+- Artifacts `.at-*` → Capa lógica profunda. Sin UI directa. Orquestadores. Ej: bootstrapper, tab-manager, signer, uploader
+
+**Doctrinas emergentes no codificadas oficialmente:**
+- Los gadgets deben preservar estado (scroll, inputs) al cambiar de pestaña — show/hide, nunca destroy/recreate
+- El Canvas es un navegador moderno: Tab Bar superior, gadgets como pestañas
+- i18n se aplica también después de inyección dinámica — siempre llamar `applyTranslations(lang)` tras `innerHTML =`
+- Rutas de fetch en Vercel son relativas sin `../` — `fetch('gadgets/gd-manual.html')` no `fetch('../gadgets/...')`
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+**Landing CPII:**
+- `access-form.html` v1.4.1+ — Formulario de acceso con Admin Gate inyectado — `apps/cpii/scenes/access-form.html` en Firebase `cpii-landing`
+- `.wd-admin-gate` — Ghost Input con validación via Cloud Function — inline en `access-form.html`
+- `i18n.js` (landing) — Tokens PT/ES/EN/FR incluyendo `admin.access_portal` y `admin.placeholder_key`
+
+**Cloud Functions:**
+- `validateAdminGate` — Valida clave `cpii-staff`, retorna URL del CRM — `https://us-central1-cpii-landing.cloudfunctions.net/validateAdminGate` — `C:\BreederHub\CPII_v1.0\functions\index.js`
+
+**CRM CPII:**
+- `index.html` — Trinity Layout base con selector PT/ES/EN/FR funcional, canvas crema, KYC overlay con dismiss — `C:\BreederHub\CPII_crm_v0.1\index.html`
+- `core/i18n.js` — Motor i18n con 20 tokens base + 69 tokens manual × 4 idiomas — `C:\BreederHub\CPII_crm_v0.1\core\i18n.js`
+- `gadgets/gd-manual.html` — Manual de Buenas Prácticas como gadget Canvas, 7 secciones — `C:\BreederHub\CPII_crm_v0.1\gadgets\gd-manual.html`
+- `manifest.offering_config` — Config base del proyecto — `C:\BreederHub\CPII_crm_v0.1\manifest.offering_config`
+- `at-bootstrapper.js` — Receptor handoff universal, inyección anti-FOUC, validación IANA relajada — ubicación exacta pendiente de confirmar
+- `handoff-emitter.js` — Interceptor de enlaces, respeta `target="_blank"` — ubicación exacta pendiente de confirmar
+
+**Documentos:**
+- `manual_buenas_practicas_club.docx` — Manual 8 secciones para equipo — entregado como descarga
+
+**Dominios activos:**
+- `cpii.clubsocios.digital` → Firebase `cpii-landing.web.app` (CNAME activo en Dondominio)
+- `cpii-crm-v0-1.vercel.app` → CRM en Vercel (GitHub repo: `globizmarkt/CPII-crm_v0.1`)
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+- **`hidden md:block` para ocultar Admin Gate en móvil** — Tailwind CDN no compila clases responsivas dinámicas. Descartado. Pendiente resolución con inline style o detección JS
+- **Sección 8 del manual (textarea de valoraciones)** — Descartada por el Director. El canal oficial de feedback es nota de audio por WhatsApp, no formulario en el CRM
+- **`../gadgets/wd-manual.html` como ruta de fetch** — Ruta relativa incorrecta en Vercel. Corregida a `gadgets/gd-manual.html`
+- **Prefijo `wd-` para el manual** — Incorrecto taxonómicamente. El manual es un gadget (Órbita 2 bajo demanda), no un widget (Órbita 3 persistente). Renombrado a `gd-manual`
+- **Tema oscuro para el Canvas** — El Director quiere zona de estudio con fondo crema y texto oscuro. El Canvas usa `bg-background-light`
+- **Destroy/recreate de gadgets al cambiar pestaña** — Patrón descartado en favor de show/hide para preservar estado
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+**Prioridad alta:**
+- `gd-manual.html` tema visual incompleto — texto secundario con bajo contraste, cuadro de advertencia oscuro sobre fondo crema, tamaño de letra insuficiente (+2/3pt pendiente)
+- Admin Gate invisible en móvil — `hidden md:block` no funciona con Tailwind CDN
+- Clave `cpii-staff` hardcodeada en Cloud Function — debe migrarse a GCP Secret Manager
+- `at-tab-manager.js` — no construido aún. Es el próximo hito del sprint
+
+**Prioridad media:**
+- Custom Claims Firebase Auth (`role: 'dueño'` / `role: 'gestor'`) — sin esto el CRM no filtra datos por rol
+- Colección `leads` → debe renombrarse a `pending_users` (WARNING de auditoría Antigravity activo)
+- `at-bootstrapper.js` y `handoff-emitter.js` — ubicación exacta en el repo no confirmada por el Director
+
+**Prioridad baja / estratégica:**
+- Landing `webinar.clubsocios.digital` — formulario con trazabilidad (nombre/teléfono/email/¿quién invita?), Firestore `cpii-landing`, retorno a blog WordPress
+- Fase C sincronización post-auth — inyección `window.__CPII__.config` → Firestore `/users/{uid}/preferences` — en pausa hasta decisión de negocio
+- Automatización onboarding — `firestore.rules` V2 + Cloud Function `onAuthCreate` — en pausa hasta abandono del MVP manual Telegram
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+- **El "Principio del Profano"** es el concepto rector del negocio: el prescriptor no explica, solo abre la puerta. El experto toma el relevo en el webinar. Todo el sistema de captación gira alrededor de esto
+- **Dos tipos de webinar, dos audiencias distintas** — Webinar A para profesionales del sector (agentes/gestores/promotores), Webinar B para inversores externos. No mezclar mensajes entre audiencias es crítico
+- **El MVP de onboarding es manual vía Telegram** — No hay automatización todavía. El equipo gestiona altas manualmente hasta que el negocio lo decida
+- **El Director es el único que aprueba cambios doctrinales** — El Lead Architect (Antigravity SC) emite vetos bloqueantes pero no aprueba sin el Director
+- **La identidad visual es gold-luxury sobre oscuro** en el CRM (Órbitas 1 y 3) y crema profesional en el Canvas (Órbita 2)
+- **El proyecto tiene múltiples agentes** — Bulldozer (ejecución), Antigravity SC/Gemini (arquitectura), AITOR (memoria). El Director coordina todos. No asumir que el otro agente tiene contexto — siempre verificar
+- **Dondominio** es el registrador del dominio `clubsocios.digital`. La propagación DNS tarda 15-30 minutos en la práctica
+- **El repo GitHub es público**: `github.com/globizmarkt/CPII-crm_v0.1`
+- **El Director trabaja en sesiones cortas e intensas** — prefiere cerrar hitos concretos en cada sesión antes de abrir nuevos frentes
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje necesito recibir:
+
+1. **`index.html` actual** del CRM (`C:\BreederHub\CPII_crm_v0.1\index.html`) — es la pieza sobre la que se inyecta el Tab Manager y sin ella cualquier bisturí es ciego
+2. **Confirmación de ubicación** de `at-bootstrapper.js` y `handoff-emitter.js` en el repo — para no duplicar ni colisionar
+3. **Criterio de apertura de pestañas** — ¿el Tab Bar aparece solo cuando hay 2+ gadgets abiertos, o siempre visible desde el arranque?
+4. **Decisión sobre el `gd-manual.html`** — ¿resolvemos primero el tema visual pendiente o lo dejamos para después del Tab Manager?

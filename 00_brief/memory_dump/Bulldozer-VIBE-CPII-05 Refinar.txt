@@ -1,0 +1,235 @@
+# MEMORY_DUMP_Bulldozer.md
+**Agente:** Claude Sonnet 4.6 — Bulldozer  
+**Proyecto:** CPII / Lux Lusitana — Skeleton Factory  
+**Fecha de volcado:** 2026-02-21  
+**Versión:** 1.0.0
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Construcción y refactorización de HTML/CSS/JS Vanilla bajo el Design System Lux Lusitana
+- Inyección y mantenimiento del motor i18n.js (PT/ES/EN/FR)
+- Aplicación del protocolo /laparoscopia en modificaciones de archivos existentes
+- Aplicación del protocolo /cartografía en creación de archivos nuevos
+- Diagnóstico previo + tabla de verificación bisturí a bisturí antes de declarar orden cerrada
+- Detección y registro de deuda técnica aunque no sea el objeto de la orden
+- Actualización autónoma del Cuadro de Mando al cierre de cada orden
+
+### Qué NO hago
+- No ejecuto código sin diagnóstico previo en intervenciones de más de 2 archivos
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido (salvo orden explícita)
+- No genero lógica de backend, Cloud Functions ni reglas Firestore — solo el contrato de datos que las alimenta
+- No toco el motor de i18n.js (funciones applyTranslations / setLanguage / DOMContentLoaded) — son territorio del Lead Architect
+- No calculo comisiones ni niveles de Revenue Share en el frontend
+- No accedo a datos reales del MLS desde páginas públicas
+- No construyo claves i18n con prefijo distinto al establecido por página (webinars.*, equipo.*, etc.)
+
+### Condiciones previas para actuar
+- En intervenciones de más de 1 archivo: requiero validación del Lead Architect (Gemini) como condición necesaria
+- En intervenciones de más de 2 archivos: emito diagnóstico y espero alineación explícita del Director antes de ejecutar
+- Para cualquier modificación de archivo existente: requiero el archivo actual como input — no opero sobre versiones recordadas
+- Ante veto doctrinal R3 (Zero-Hex) o R4 (i18n): detengo bisturí, emito aviso, replanteo desde cero
+
+### Matices aprendidos en el proyecto
+- El Director trabaja con Gemini en paralelo — sus entregas pueden llegar como versiones alternativas del mismo artefacto. Debo comparar, no ignorar
+- El Director prefiere decisiones rápidas con opciones comparadas sobre preguntas abiertas
+- Cuando el Director dice "hay muchos gaps", significa inventario antes de bisturí
+- Los nombres de archivo usan guión medio, no underscore: `access-form.html`, no `access_form.html`
+- El proyecto tiene momentum de evento (27F) — la urgencia es real, no retórica
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales que me afectan directamente
+
+**R3 — Zero-Hex:** Prohibido usar valores hexadecimales de color hardcodeados fuera del bloque `tailwind.config`. Todos los colores deben referenciar tokens semánticos (`text-primary`, `bg-card-dark`, etc.). Violación detectada históricamente en archivos Stitch v1 (`#0a0a0a`, `#eebd2b`, `#181611`).
+
+**R4 — i18n Obligatorio:** Ningún texto visible en HTML puede ser texto plano sin `data-i18n`. Excepción única: textos dinámicos generados por JS (ej. countdown "AO VIVO"). Violación activa en `access-form.html` y `equipo-comercial.html`.
+
+**Vanilla JS / Zero-Server:** Sin frameworks, sin bundlers, sin npm. Todo CDN. Tailwind via `cdn.tailwindcss.com`, fuentes via Google Fonts, iconos via Material Symbols Outlined.
+
+**Compliance XSS:** `innerHTML` solo permitido si el elemento tiene `data-i18n-html="true"` explícito. Implementado en i18n.js v2.1.0+. Afecta a claves con HTML enriquecido: `team.da.bio`, `team.cb.bio`.
+
+### Doctrinas específicas emergidas en trabajo real
+
+**Herencia de Header/Footer:** Toda página nueva debe copiar byte a byte el header y footer de `index.html` v2.0.0. Nunca reinterpretar — heredar. El selector `#lang-selector` con `onchange="setLanguage(this.value)"` es invariable.
+
+**Prefijos i18n por página:** Cada página tiene su namespace de claves:
+- `index.html` → sin prefijo (claves raíz: `hero.*`, `card.*`, `team.*`, `footer.*`, `nav.*`, `btn.*`)
+- `webinars.html` → `webinars.*`
+- `equipo-comercial.html` → sin prefijo propio aún (usa claves `team.*` de index)
+- Páginas futuras → prefijo = nombre de archivo sin extensión
+
+**Página activa en nav:** El enlace de la página actual lleva `class="text-primary border-b border-primary pb-1 text-sm font-semibold"`. Los demás: `class="text-text-secondary hover:text-primary transition-colors text-sm font-medium"`.
+
+**Countdown target:** Todos los countdowns del proyecto apuntan a `new Date("2026-02-27T19:00:00Z")` — hora confirmada 19:00 WET (no 18:00, error histórico de Gemini corregido en webinars.html v1.1.0).
+
+**Trampa de valor (grabaciones bloqueadas):** El bloque de grabaciones bloqueadas es un dispositivo de conversión, no decorativo. Su diseño (blur + candado grande + CTA) es intocable salvo orden explícita del Director. Diseño Gemini conservado en webinars.html v1.1.0.
+
+**Referral capture:** Todas las páginas deben incluir el script de captura al final del body:
+```javascript
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get("ref");
+if (ref) { sessionStorage.setItem("cpii_ref", ref); }
+```
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Archivos activos en producción
+
+**`index.html` v2.0.0** — Landing principal CPII. Hero + 3 vías de acceso (Inversor/Promotor/Gestor) + sección Equipo Comercial + CTA dual. Lux Lusitana completo. i18n 4 idiomas. Referral capture. — `/index.html`
+
+**`access-form.html` v1.3.0** — Formulario de solicitud de acceso. Selector de rol 3 columnas (inversor/agente/prescriptor). Escribe en colección `pending_users` (no `leads`). Payload CPII Data Contract. Anti-duplicación por email. CLUB_MANAGER_MAP [SEC-07] + PRESCRIPTORES_AUTORIZADOS [SEC-08]. Captura `?tipo=` y `?ref=` desde URL. — `/access-form.html`
+
+**`equipo-comercial.html` v1.0.0** — Presentación del Grupo Comercial eXp Portugal. David Almeida (Agente del Año 2025, 25% facturación) + Carlos Balboa (CTO). Metodología LOI/KYC/PoF. Lux Lusitana. Sin i18n (pendiente). — `/equipo-comercial.html`
+
+**`webinars.html` v1.1.0** — Breeder Hub. Hero + Masterclasses Tier A/Tier B + Calendario (27F destacado + Mar + Abr) + Grabaciones bloqueadas (+25). Countdown en tiempo real al 27F. i18n 4 idiomas con prefijo `webinars.*`. — `/webinars.html`
+
+**`i18n.js` v2.2.0** — Motor de internacionalización. 4 idiomas (PT/ES/EN/FR). Claves: nav.* / btn.* / hero.* / preview.* / section.* / card.* / team.* / cta.* / footer.* / webinars.*. Parche XSS (data-i18n-html). `applyTranslations()` + `setLanguage()` + DOMContentLoaded init. — `/i18n.js`
+
+**`privacy.html` v1.0.0** — Página legal estática. Elimina errores 404 en links del footer. Sin i18n. Sin Lux Lusitana. — `/privacy.html`
+
+**`terms.html` v1.0.0** — Página legal estática. Mismo estado que privacy.html. — `/terms.html`
+
+### Archivos en deuda activa (Stitch v1, no migrados)
+
+**`simulator.html` v1.0.0** — Simulador de rentabilidad. Dataset: `simulacion_cii_24m.csv`. Paleta `#0a0a0a/#c5a059`. Sin i18n. Sin selector de idioma. — `/simulator.html`
+
+**`webinars.html` v1.0.0 (REEMPLAZADO)** — Versión Stitch v1. Paleta `#181611/#eebd2b`. Tipografía Noto Sans. Copyright 2024. Links footer rotos. — OBSOLETO, reemplazado por v1.1.0
+
+**`referrals.html` v1.0.0** — Página "Mi Red". Paleta `#1C1C1C`. Tipografía Inter. Copyright 2024. Links footer rotos. Sin i18n. — `/referrals.html`
+
+### Documentos de arquitectura
+
+**`INDEX.md` v1.0.0** — Mapa de memoria del proyecto. Catálogo de sesiones BR-01 a BR-04. Estado técnico de los 9 componentes. Backlog priorizado. — `session_memory/INDEX.md` (generado por Antigravity)
+
+**`CPII_Landing_Copywriting_ES.docx`** — Estructura completa de landing 5 bloques. Diseño del formulario de acceso. Payload contract. — outputs anteriores
+
+**`CPII_Email_GoogleAuth_ES.docx`** — Template email bienvenida. Arquitectura Cloud Functions. Diagrama de estados del flujo Google Auth. — outputs anteriores
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+**[Mantener prefijo `web.*` en webinars.html]** — Se generó una versión con prefijo `web.*` (~50 claves). Descartado porque Gemini entregó la versión paralela con prefijo `webinars.*` y las claves ya traducidas a 4 idiomas. Se adoptó `webinars.*` como estándar para mantener coherencia entre agentes y evitar reescribir el diccionario.
+
+**[Construir webinars.html desde cero con diseño propio]** — La versión Claude v1.0.0 fue más densa (5 secciones, countdown, grid de sesiones, grabaciones con overlays individuales). Descartado en favor de la base Gemini porque: (a) el candado centralizado de Gemini es más impactante como trampa de valor, (b) las claves i18n ya estaban escritas y listas para el 27F, (c) reducir deuda de integración.
+
+**[Corregir access-form.html con Cormorant Serif]** — El brief de identidad especifica Cormorant Serif para display. El `access-form.html` usa Playfair Display. Se detectó la desviación pero se aplazó la corrección para no bloquear el sprint del 27F. Pendiente en backlog.
+
+**[Construir design-tokens.css como archivo central]** — Propuesto como opción para homogeneizar la identidad. Descartado por el Director a favor de continuar con el sistema de tokens Tailwind inline (`tailwind.config` en cada página). Razón: Zero-Server, sin build step, sin imports CSS externos.
+
+**[KYC screen dentro de Skeleton]** — Al cierre de la sesión anterior se asumía que el siguiente paso era construir una pantalla KYC. Descartado: el KYC ocurre en la plataforma CPII externa, no en Skeleton. Skeleton = CRM/MLS. CPII = plataforma separada con su propio flujo de autenticación.
+
+**[Conectar la página de promoción personal a la landing actual]** — Decisión del Director: no conectar hasta que la landing esté terminada. Congelado hasta nuevo aviso.
+
+**[Tres roles en access-form: inversor/agente/prescriptor]** — La versión v1.2.0 tenía 2 roles (inversor/promotor). v1.3.0 expandió a 3. Sin embargo, el `index.html` v2.0.0 mantiene las 3 vías como Inversor/Promotor/Gestor. Hay inconsistencia de nomenclatura entre los dos archivos. No resuelta. Registrada como deuda.
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (generada en sprints anteriores)
+
+**[DT-01] `access-form.html` sin i18n** — El formulario de acceso más crítico del embudo no tiene `data-i18n` en ningún elemento. Idioma hardcodeado en español/portugués mezclado. Impacto: usuarios EN/FR ven texto en idioma incorrecto.
+
+**[DT-02] `equipo-comercial.html` sin i18n** — La página de autoridad del equipo no está internacionalizada. La Opción A (i18n completa) fue explícitamente aplazada en BR-04. Impacto: mismo que DT-01.
+
+**[DT-03] Tipografía Playfair vs Cormorant** — La identidad "Lux Lusitana" oficial especifica Cormorant Serif para display. Todo el proyecto usa Playfair Display (decisión de BR-02). La desviación está documentada pero no resuelta. Impacto: branding no alineado con el brief oficial.
+
+**[DT-04] Inconsistencia de roles entre páginas** — `access-form.html` v1.3.0 define roles: `inversor / agente / prescriptor`. `index.html` v2.0.0 presenta vías: `Inversor / Promotor/Agente / Gestor`. Ninguna página refleja exactamente la misma nomenclatura. El payload de Firestore usa `intent_role: "inversor" | "agente" | "prescriptor"`. Impacto: confusión en el usuario y posible inconsistencia en el CRM.
+
+**[DT-05] `access-form.html` sin selector de idioma** — El header del formulario no incluye `#lang-selector`. Un usuario que cambia de idioma en `index.html` llega al formulario en el idioma por defecto. El `localStorage("cpii_lang")` está disponible pero ningún elemento del form lo consume.
+
+### Deuda observada (no generada por mí)
+
+**[DT-06] `simulator.html` — Stitch v1 completo** — Paleta `#0a0a0a/#c5a059`, tipografía desconocida, sin i18n, sin selector de idioma, copyright 2024 (confirmado en INDEX.md). Alta prioridad post-27F.
+
+**[DT-07] `referrals.html` — Stitch v1 completo** — Paleta `#1C1C1C`, tipografía Inter, copyright 2024, links footer rotos. Sin i18n. El nombre "Mi Red" sugiere que debería ser una página autenticada, pero actualmente es pública. Ambigüedad arquitectónica no resuelta.
+
+**[DT-08] `privacy.html` y `terms.html` sin Lux Lusitana** — Son páginas legales funcionales pero visualmente inconsistentes con el resto del ecosistema. Bajo impacto en conversión pero alto impacto en credibilidad institucional ("Private Banking").
+
+**[DT-09] CLUB_MANAGER_MAP con placeholders** — El `access-form.html` [SEC-07] tiene UIDs de ejemplo. En producción, los leads se asignarán a UIDs incorrectos. Bloqueante para go-live real.
+
+**[DT-10] Firebase config con placeholders** — El `access-form.html` [SEC-09] tiene `apiKey`, `authDomain`, `projectId` como strings de placeholder. No es funcional en producción.
+
+**[DT-11] `footer.links.red` apunta a `referrals.html`** — Presente en `index.html`, `webinars.html` y `equipo-comercial.html`. `referrals.html` tiene links de footer rotos (#). Un clic desde el footer activo lleva a una página rota.
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Arquitectura real vs arquitectura nominal
+
+El proyecto opera bajo **dos contextos paralelos** que nunca deben mezclarse:
+- **Landing CPII** (pública): `index.html`, `webinars.html`, `equipo-comercial.html`, `simulator.html`. Zona de captación. Solo escribe en `pending_users`.
+- **Skeleton CRM/MLS** (privado, autenticado): no construido aún en este proyecto. Es una herramienta separada. El Director lo mencionó pero no hay HTML de Skeleton en el repositorio actual.
+- **Plataforma CPII** (externa): donde ocurre el KYC real. No es responsabilidad de este proyecto construirla.
+
+### Sensibilidades del cliente
+
+- **David Almeida** es el ancla de autoridad. Su métrica "Agente del Año 2025" y "25% de facturación eXp Portugal" son sagradas — no se modifican, no se relativizan, no se omiten.
+- **El evento 27F** (Webinar de Fundadores, 10 plazas) es el hito de negocio real de este sprint. Todo lo construido debe estar presentable para ese evento.
+- **"Private Banking"** es el tono rector. Si algo parece de "chiringuito", está mal. Si parece institucional y exclusivo, está bien.
+- El Director trabaja con **múltiples agentes en paralelo** (Gemini = Lead Architect, Claude = Bulldozer, posiblemente GPT-OSS para tareas operativas). Las entregas pueden llegar como versiones alternativas del mismo artefacto. La decisión de qué versión usar siempre es del Director.
+- El Director **no quiere preguntas innecesarias**. Si tengo los datos suficientes para decidir, decido y documento. Solo pregunto cuando hay ambigüedad bloqueante.
+
+### Patrones que funcionan
+
+- **Comparativa de versiones en tabla** antes de recomendar una opción: el Director toma decisiones mejor con información estructurada que con texto argumentativo.
+- **Diagnóstico antes de bisturí**: el Director aprueba el diagnóstico, luego ejecuto. Nunca al revés.
+- **Protocolo /laparoscopia** en modificaciones: incisiones numeradas, sin reescribir lo que no cambia. El Director lee los diffs, no los archivos completos.
+- **Auditorías de claves i18n** al cierre de cada entrega HTML: detectar claves huérfanas antes de que lleguen al browser.
+
+### Trampas conocidas
+
+- **El blur/candado de grabaciones bloqueadas es CSS puro** — no hay JS que bloquee realmente el acceso. Es visual. Si algún agente intenta "mejorar" el bloqueo con JS, romperá la UX sin añadir seguridad real (el archivo no existe).
+- **`setLanguage()` no hace reload de página** — aplica traducciones en tiempo real via DOM. Cualquier texto generado dinámicamente por JS después del DOMContentLoaded no será traducido automáticamente. El countdown "AO VIVO" tiene esta limitación por diseño.
+- **`simulacion_cii_24m.csv`** es el dataset del simulador. Sin él, el `simulator.html` no funciona. Nadie ha verificado si el archivo existe en el repositorio real.
+- **El `?ref=` en URLs** se guarda en `sessionStorage`, no `localStorage`. Se pierde si el usuario abre en nueva pestaña. Decisión de arquitectura tomada anteriormente. No cambiar sin consultar al Lead Architect.
+- **El motor i18n carga antes de que exista el DOM** — la inicialización se hace en `DOMContentLoaded`, no en el `<script>` inline. Si alguien mueve el `<script src="i18n.js">` al final del body sin leer el código, romperá el selector de idioma en pages con header dinámico.
+
+### Sobre la metodología CPII (conocimiento de negocio)
+
+- **Tier A (Catapulta):** Ciclos 6 meses, hasta 20% APY, agresivo, escala rápida via Revenue Share
+- **Tier B (Refugio):** Ciclos anuales, 8% APY, preservación de capital, riesgo mínimo
+- **Revenue Share:** Multinivel L1/L2/L3. El cálculo vive exclusivamente en Cloud Functions — nunca en el frontend
+- **Autofinanciamiento:** Hito en Mes 12 donde el patrimonio supera el ahorro acumulado. Dato clave de conversión en el hero
+- **LOI / KYC / AML / PoF:** Son los 4 pilares de rigor metodológico que diferencian al CPII de "plataformas amateur". Siempre mencionarlos juntos cuando se habla de compliance
+- **Los 10 Fundadores** del webinar 27F son inversores cualificados, no leads fríos. El tono hacia ellos es de socio, no de prospecto
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricción, necesito recibir del Director **uno o más** de los siguientes inputs según el objetivo del sprint:
+
+### Si el objetivo es migrar `simulator.html` a Lux Lusitana:
+- El archivo `simulator.html` actual (versión Stitch v1 completa)
+- El archivo `simulacion_cii_24m.csv` o confirmación de que existe en el repo y sus columnas
+- Confirmación de si la lógica del simulador se mantiene o se reescribe
+
+### Si el objetivo es migrar `referrals.html` a Lux Lusitana:
+- El archivo `referrals.html` actual (versión Stitch v1 completa)
+- Decisión arquitectónica: ¿es una página pública o requiere autenticación?
+- Qué datos muestra la red (L1/L2/L3, comisiones, estado de miembros)
+
+### Si el objetivo es añadir i18n a `access-form.html` o `equipo-comercial.html`:
+- El archivo actual que se va a intervenir
+- Confirmación de si se resuelve también DT-04 (inconsistencia de roles) en el mismo sprint
+
+### Si el objetivo es construir la página de promoción personal:
+- Decisión sobre su naturaleza: ¿URL pública `?ref=uid`? ¿Mini-sitio autogenerado? ¿Sección privada del CRM?
+- Qué datos del usuario de Skeleton se exponen en ella
+- Si hereda la landing actual o tiene diseño propio
+
+### En cualquier caso, siempre necesito:
+- El `i18n.js` actual del repositorio (puede haber divergencias entre mi versión entregada y la desplegada)
+- Confirmación de qué versión de cada archivo está activa en producción (puede diferir de mis últimas entregas)
+- Cualquier feedback del evento 27F que haya modificado requisitos o prioridades
+

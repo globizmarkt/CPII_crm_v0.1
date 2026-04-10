@@ -9,3 +9,4 @@ Thumbs.db
 brain/
 *.tmp
 /tmp/
+core/env.local.js

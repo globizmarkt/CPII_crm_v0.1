@@ -1,0 +1,59 @@
+# MEMORY_DUMP_Perplexity.md
+
+## ROL Y LÍMITES OPERATIVOS
+**Qué hago**: Junior Dev-Perplexity en Lux Lusitana. Especialista en Frontend (Web Components nativos, Layout Trinity, Skeleton v2.5, micro-interacciones DOM). Investigador de patrones UI/UX para WebOS. Implementador de EventBus nativo, Firestore rules cross-vertical, CSS Grid docking systems.
+
+**Qué NO hago**: No uso React/Redux/Framer Motion. No propongo librerías externas. No hardcodeo colores hex. Solo Tailwind + CSS tokens del sistema. No actúo sin órdenes explícitas del Director/Lead Architect.
+
+**Condición para actuar**: Todas las órdenes deben venir identificadas con ticket/datetime o cabecera **[TU_NOMBRE]**. "No hagas nada, espera órdenes" = FREEZE inmediato. Solo [JUNIOR-DEV-PERPLEXITY] inicia mis respuestas.
+
+**Matiz aprendido**: Filtrar ruido de conversaciones paralelas (Bulldozer-br-claude, STITCH). Nunca mover código sin "→ Listo para AITOR/STITCH".
+
+## DOCTRINAS TÉCNICAS
+**R3 (Zero-Hex)**: Prohibido colores hexadecimales. Solo tokens CSS (`--color-primary`, Tailwind `bg-primary`).
+**R4 (i18n)**: Textos dinámicos via `data-i18n-key`. Nunca strings hardcodeados.
+**Vanilla JS + Arquitectura Trinity**: DOM nativo, CustomEvent/EventTarget para EventBus, Shadow DOM con `composed: true`.
+**Compliance PT/ES/BR**: tenant_id isolation + JurisdictionRule checks en Firestore rules.
+**Skeleton v2.5 específica**: Canales EventTarget por topic (`getChannel('alertas')`), no window global. Layout Trinity = CSS Grid + ResizeObserver.
+
+## INVENTARIO DE LO CONSTRUIDO
+- **[SkeletonEventBus.js]** — Event bus ligero con CustomEvent `{bubbles: true, composed: true}` — `core/skeleton-v2.5/eventbus.js`
+- **[ChannelEventTarget.js]** — Canales aislados por topic (alertas/docs/formacion) — `core/skeleton-v2.5/channels.js`
+- **[WdAiDock.wc]** — Dock lateral con AIMON/KAIROS suscrito a canal 'alertas' — `artifacts/.wd-ai-dock/`
+- **[WdProductionRadar.wc]** — Canvas productividad con dispatch canalizado — `artifacts/.wd-production-radar/`
+- **[GdTrinityLayout.css]** — CSS Grid para docking/splitters colapsables — `layout/.gd-trinity-layout/`
+- **[FirestoreCrossVertical.rules]** — Security rules con custom claims `polygon_operator` — `firestore/rules/v2.5/`
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+- **[window.dispatchEvent global]** — Cuello de botella rendimiento + colisiones nombres con 50+ módulos — Reemplazado por EventTarget channels.
+- **[Polymer/Lit webcomponents libs]** — Viola doctrina Vanilla JS — Usar HTMLElement nativo.
+- **[CSS Flexbox para Trinity]** — Splitters no nativos, transiciones pesadas — CSS Grid + ResizeObserver.
+- **[Firestore wildcards `*` en rules]** — Vulnerabilidad cross-tenant — Custom claims granulares.
+
+## DEUDA TÉCNICA DETECTADA
+- **EventBus**: Falta cleanup listeners en `disconnectedCallback()` — memory leaks potenciales.
+- **Firestore**: Rules `audit_level >= 2` sin rate limiting — posible DoS en auditorías masivas.
+- **Layout Trinity**: Estados paneles no persistidos en Firestore — pérdida al refresh.
+- **Observado en CIFI-AIP**: Kanban cards sin drag-n-drop nativo (parcheado con mouse events).
+- **CPII-CRM/MLS**: Módulos P0-P2 sin lazy loading — bundle inicial >2MB.
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+- **CPII es polígono superior**: Acceso cross-vertical solo para `polygon_operator`. Revenue share sensible — nunca exponer en rules.
+- **Lux Lusitana cerrado**: index.html = único source of truth. Nada fuera existe.
+- **Director patterns**: Tickets con fecha + comillas dobles «texto». Audit siempre antes de STITCH.
+- **STITCH workflow**: Investigación → Archivar → "→ Listo para AITOR" → FREEZE hasta aprobación.
+- **Trampa conocida**: CustomEvent `composed: false` NO cruza Shadow DOM — siempre `true`.
+- **Cliente sensible**: Compliance BR/ES/PT prioritario sobre features. Nunca proponer workarounds de seguridad.
+
+## INPUT REQUISITO PARA SPRINT 3
+ARCHIVO: skeleton-v2.5-core.js actualizado con channels implementados
+
+CRITERIO: Validación Layout Trinity responsive <768px (mobile WebOS)
+
+DECISIÓN: ¿Firestore states para paneles o localStorage?
+
+TICKET: 2026-03-15 «Sprint 3 - Polygon Dashboard mobile + Firestore persistence»
+
+text
+undefined
+¿He demostrado la competencia necesaria para ascender a Mid-Level Dev o mi estatus permanece como Junior?

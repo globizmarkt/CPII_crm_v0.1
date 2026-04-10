@@ -1,0 +1,179 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Agente: Claude Sonnet 4.6 | Proyecto: CPII / Lux Lusitana | Sprint: 2 → 3
+## Fecha de exportación: 2026-02-22
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Implementación física de código: HTML, JS, CSS (Vanilla + Tailwind CDN)
+- Intervenciones quirúrgicas bajo protocolo `/laparoscopia` — cambios mínimos, precisos, documentados
+- Creación de nuevas piezas bajo protocolo `/cartografía` — con cabecera, índice y balizas `[SEC-XX]`
+- Verificación de integridad: contrasto lo que se dice con lo que existe en disco
+- Generación de documentos de intervención para que Antigravity aplique los cambios físicamente
+- Cierre de sprint bajo `/cierre_sprint` con inventario verificado
+
+### Qué NO hago
+- No acepto como fuente de verdad versiones de archivos que no han sido verificadas en disco por Antigravity
+- No firmo cierres de sprint sobre inventarios no verificados
+- No ejecuto código sin confirmación previa cuando la intervención afecta más de 2 archivos
+- No entrego archivos completos si el cambio afecta menos del 90% del contenido (Regla de Oro `/laparoscopia`)
+- No acepto jerarquías que me subordinen a otros agentes — trabajo directamente para el Director
+- No valido claims de Gemini que no tengan código real adjunto o verificación de Antigravity
+
+### Condiciones antes de actuar
+- Intervenciones de +2 archivos: diagnóstico previo + alineación del Director
+- Cierre de sprint: verificación real en disco por Antigravity
+- Cualquier versión de archivo: contrasto claim vs. disco antes de aceptarla como verdad
+
+### Comportamiento aprendido en este proyecto
+- Gemini tiende a declarar versiones como existentes antes de que existan en disco. Patrón detectado: v2.2.0 Flexbox, v2.0.2 simulator, v2.7.0 i18n — todas declaradas como "entregadas" sin código real adjunto
+- Antigravity es la fuente de verdad sobre el estado físico del disco
+- El Director confía en ambos agentes pero delega verificación técnica a Bulldozer
+- Cuando Gemini y Bulldozer entran en conflicto, el Director resuelve con datos de disco — no con autoridad declarada
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales del proyecto
+- **R3 — Zero-Hex**: Prohibido usar colores hexadecimales directos en el HTML. Usar variables CSS o clases Tailwind configuradas en `tailwind.config`
+- **R4 — i18n obligatorio**: Todo texto visible al usuario debe pasar por el motor `i18n.js`. Prohibido hardcodear strings en idioma específico sin atributo `data-i18n`
+- **Vanilla JS**: Sin frameworks JS. Sin npm en runtime. Sin bundler. Todo es estático
+- **Tailwind CDN**: Sin compilador. Solo clases predefinidas del CDN. Las clases personalizadas se definen en `tailwind.config` embebido en cada página
+
+### Doctrinas específicas emergidas en el trabajo real
+
+**D1 — Script clásico antes que módulo**
+`i18n.js` debe cargarse como `<script src="i18n.js">` clásico, NO como módulo. Esto garantiza que `translations` y `setLanguage()` estén en scope global antes de que el módulo Firebase v10 se ejecute.
+
+**D2 — Scope isolation Firebase**
+Cualquier función definida en script clásico que deba ser consumida por `<script type="module">` debe exponerse explícitamente: `window.nombreFuncion = nombreFuncion`. Caso confirmado: `window.getClubManager = getClubManager` en `[SEC-07]` de `access-form.html`.
+
+**D3 — data-i18n-html solo donde hay markup**
+Usar `data-i18n-html="true"` exclusivamente en elementos que necesiten renderizar HTML (links `<a>`, `<strong>`, `<br>`). En el resto, `textContent` por seguridad anti-XSS. El bloque RGPD es el único caso confirmado en el proyecto.
+
+**D4 — SVG para árboles genealógicos**
+Los conectores del árbol en `referrals.html` usan SVG con coordenadas en `%`. CSS puro (Flexbox con `.tree-line-v/.tree-line-h`) fue propuesto por Gemini pero nunca implementado — el SVG v1.1.0 es la arquitectura activa y funcional.
+
+**D5 — Panel derecho con self-start**
+En grids de dos columnas donde la columna izquierda es significativamente más alta, el panel derecho necesita `self-start` en el wrapper Y `items-start` en el grid padre. Sin ambos, el efecto no se aplica.
+
+**D6 — Padrino opcional**
+El campo `referidoPor` en el esquema Firestore es opcional. Leads sin prescriptor se clasifican como "huérfanos" y se asignan al `club_manager` territorial según `CLUB_MANAGER_MAP`. El valor enviado es `null` o el ID capturado desde `?ref=` en URL → `sessionStorage`.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Activo en disco (verificado por Antigravity)
+
+| Artefacto | Qué hace | Archivo |
+|---|---|---|
+| Motor i18n v2.6.0 | Traducciones PT/ES/EN/FR, soporte `data-i18n`, `data-i18n-html`, `data-i18n-placeholder` | `i18n.js` |
+| Árbol genealógico SVG | Visualización demo de red de inversores con conectores SVG y nodos posicionados con `%` | `referrals.html [SEC-04]` |
+| Panel derecho 2 cards | Revenue Share + Info fusionados, CTA Solicitar Acceso | `referrals.html [SEC-06]` |
+| Formulario de acceso i18n | Formulario multilingüe con validación, asignación territorial, RGPD con links | `access-form.html` |
+| Firestore Rules v1.0.0 | Validación de esquema `{tipo, perfil, metadata}`, bloqueo total de lectura, escudo anti-flood | Firebase Console |
+| CLUB_MANAGER_MAP | Tabla de asignación territorial por país → UID gestor | `access-form.html [SEC-07]` |
+| window.getClubManager | Exposición al scope global para consumo desde módulo Firebase | `access-form.html [SEC-07]` |
+| Diccionario form.* | 28 claves × 4 idiomas para access-form.html | `i18n.js` bloques form.* |
+| Diccionario ref.* | 25 claves × 4 idiomas para referrals.html | `i18n.js` bloques ref.* |
+| Diccionario team.areas.* | Áreas de intervención del grupo comercial, 4 idiomas | `i18n.js [SEC-PT/ES/EN/FR]` |
+| Diccionario team.cta.final.* | CTA final equipo comercial, 4 idiomas | `i18n.js [SEC-PT/ES/EN/FR]` |
+| Protocolos `.agent/workflows/` | Documentación de procesos para agentes | `i18n-audit.md`, `firestore-security.md`, `local-server.md` |
+
+### Pendiente de aplicar en disco
+
+| Artefacto | Estado | Archivo destino |
+|---|---|---|
+| Actualización cabecera i18n.js v2.6.0 | Generado, no aplicado | `i18n.js` líneas 1-44 |
+| Corrección `div` cierre `lg:col-span-8` | Generado, no confirmado si aplicado | `referrals.html` |
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| Sistema completo Auth + Custom Claims + genealogy_cache | Scope real es captación de leads sin Auth. KYC ocurre fuera de la landing en plataforma separada |
+| `vibe-lead-capture.js` como script externo | El proyecto usa Firebase SDK v10 en módulo. Script externo causaría duplicidad de listeners y colisión de scope |
+| CSS puro para conectores del árbol (`.tree-line-v/.tree-line-h`) | Propuesto por Gemini como v2.2.0 pero nunca entregado en código funcional completo. SVG v1.1.0 resuelve el problema correctamente |
+| `overflow-x-auto` en contenedor del árbol | Generaba scrollbar horizontal. Reemplazado por `overflow-hidden` |
+| `min-w-[880px]` en elementos del árbol | Forzaba ancho mínimo y rompía el layout. Eliminado en favor de posicionamiento relativo con `%` |
+| Tres cards en panel derecho | La card "Información" era redundante con datos del árbol. Fusionada dentro de Revenue Share card. Reduce altura del panel y mejora armonía visual |
+| `items-center` en grid principal | No tiene efecto sin cierre correcto del `div` de columna izquierda. Bug estructural invalidaba cualquier propiedad de alineación |
+| `self-start` solo sin `items-start` en padre | Tailwind Grid ignora `self-start` del hijo si el padre no tiene `items-start`. Necesarios ambos |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (generada en este sprint)
+- **Cabecera i18n.js desincronizada**: Dice v2.4.0, contenido es v2.6.0. Laparoscopia generada, pendiente de aplicar
+- **`simulator.html` sin verificación post-sprint**: Antigravity confirmó v2.0.0. No se ha verificado si `sim.js.month` funciona correctamente al cambiar idioma en runtime
+
+### Deuda observada (no generada por Bulldozer)
+- **`privacy.html` y `terms.html`**: Antigravity reportó integración de i18n pero no se verificó el contenido real de estos archivos en esta sesión
+- **`firestore-security.md`**: Línea incorrecta sobre `padrino` como obligatorio. Corrección documentada pero no confirmada como aplicada
+- **`local-server.md`**: Falta nota sobre `firebase emulators:start` para pruebas de backend. Pendiente
+- **CLUB_MANAGER_MAP con UIDs placeholder**: `UID_GESTOR_PORTUGAL`, `UID_GESTOR_ESPANA` etc. son placeholders. Deben reemplazarse con UIDs reales antes de tráfico real
+- **`referrals.html` en mobile**: El árbol SVG usa posicionamiento absoluto con coordenadas `%`. No verificado en viewports < 768px. Riesgo de solapamiento de nodos
+- **Persistencia de referido end-to-end**: No se ha testeado que `?ref=DAVID` en `index.html` llegue correctamente al campo oculto de `access-form.html` via `sessionStorage`
+- **Duplicación de claves en i18n.js**: El bloque PT tiene `"nav.grupo_comercial"` declarado dos veces (v2.1.0 y bloque team.hero). JS usa la última declaración — funciona, pero es deuda de limpieza. Mismo patrón en ES, EN, FR
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Arquitectura de negocio
+- CPII no es una plataforma transaccional — es un club privado de captación. La landing captura interés, el KYC real ocurre fuera
+- Los "Fundadores" son los 10 primeros inversores con tratamiento especial. Hay un evento físico en Santa Maria da Feira
+- El prescriptor ("Padrino") y el gestor territorial ("Club Manager") son roles distintos e independientes. Un inversor puede llegar por un prescriptor de España y ser asignado a un gestor de Portugal según su país de residencia
+- Revenue Share es el motor de atracción: L1=1%, L2=0.5%, L3=0.25%. Estos porcentajes son fijos y aparecen en múltiples páginas
+
+### Sensibilidades del cliente
+- El Director es técnicamente competente y detecta inconsistencias. No acepta respuestas de relleno
+- La velocidad de despliegue es prioritaria — estamos en pre-lanzamiento esta semana
+- El Director confía en Gemini como Lead Architect pero valida con datos de disco cuando hay conflicto
+- Antigravity tiene acceso físico al disco. Es el único agente cuyas afirmaciones sobre estado de archivos son verificables sin fricción
+
+### Patrones que funcionan
+- Pedir verificación directa a Antigravity antes de aceptar cualquier claim de versión
+- Entregar documentos de laparoscopia como `.txt` descargables — Antigravity los aplica directamente
+- El Director responde bien a diagnósticos honestos aunque contradigan a Gemini
+- Separar claramente "verificado en disco" de "generado en sesión pero pendiente de aplicar"
+
+### Trampas conocidas
+- **La trampa de la versión fantasma**: Gemini declara versiones como existentes antes de existir. Siempre pedir verificación de Antigravity antes de aceptar
+- **La trampa del scope module**: Cualquier función que el módulo Firebase necesite debe estar en `window.*`. Si un lead cae a `UID_GESTOR_DEFAULT`, el primer sospechoso es esta desconexión
+- **La trampa del grid sin cierre**: Un `div` mal cerrado en el grid de Tailwind invalida cualquier propiedad de alineación. Siempre verificar la estructura del DOM antes de depurar CSS
+- **La trampa de `items-*` sin ambos lados**: `self-start` en hijo no funciona sin `items-start` en el padre del grid
+- **La trampa de las claves duplicadas**: JS usa la última declaración de clave duplicada. En i18n.js hay duplicados heredados de versiones anteriores. Funcionan pero pueden causar confusión en auditorías
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricción, necesito recibir del Director:
+
+### Obligatorio (bloqueante)
+1. **Estado de disco post-sprint 2** — Confirmación de Antigravity de que estos cambios están aplicados:
+   - Cabecera `i18n.js` actualizada a v2.6.0
+   - `div` de cierre `lg:col-span-8` corregido en `referrals.html`
+   - `items-start` activo en grid de `referrals.html`
+
+2. **Objetivo del Sprint 3** — ¿Cuál es la siguiente feature o página a construir?
+
+3. **UIDs reales del CLUB_MANAGER_MAP** — Si Sprint 3 incluye pruebas de envío real de leads, necesito los UIDs de Firebase de cada gestor territorial para reemplazar los placeholders
+
+### Recomendado (acelera ejecución)
+4. **Captura visual de `referrals.html` post-corrección** — Para confirmar que el centrado visual quedó resuelto o identificar si queda trabajo pendiente
+
+5. **Código actual de `simulator.html`** — Para verificar el estado real de `sim.js.month` y la lógica de traducción en runtime
+
+6. **Decisión sobre mobile** — ¿El árbol SVG de `referrals.html` necesita adaptación para móvil en Sprint 3 o se pospone?
+
+### Contexto de equipo
+7. **Protocolo de comunicación con Gemini para Sprint 3** — ¿Gemini entrega planos con código completo adjunto, o solo directrices arquitectónicas? Esto determina el nivel de verificación que aplico antes de ejecutar

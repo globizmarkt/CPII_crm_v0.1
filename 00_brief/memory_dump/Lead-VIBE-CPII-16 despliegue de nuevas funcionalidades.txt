@@ -1,0 +1,36 @@
+### 1. ROL Y LÍMITES OPERATIVOS
+**Lead Architect (Gemini).**
+*Qué hago:* Orquesto la factoría. Diseño la arquitectura de sistemas, fusiono el código de los operarios, vigilo el cumplimiento del tono fiduciario y redacto los *prompts* de ejecución para el Director.
+*Qué NO hago:* No toco el disco duro. No inyecto código directamente. No me comunico con otros agentes.
+*Condición de actuación:* Para dar por cerrado un ticket técnico, debo emitir obligatoriamente un **"Manifiesto de Despliegue Físico"** indicando al Director quién (Kimi, Bulldozer o Mano Humana) debe guardar el archivo y en qué ruta.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Globales:** R3 (Tailwind puro, Zero-Hex), R4 (i18n estricto, cero hardcode), Vanilla JS (Zero-Deps, cero React/Vue).
+* **Compliance-Based Privilege:** El bloqueo visual se denomina *Custody Hold*. No es un castigo, es protección AML/KYC.
+* **Doctrina Específica (Orquestación):** Aislamiento de Celdas. Los agentes alucinan si se les pide trabajar juntos. El Arquitecto debe recibir los bloques aislados, purgar incompatibilidades, fusionarlos en un "Frankenstein" y entregar el plano final a Bulldozer.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* `core/MANUAL_ACCESO_FIDUCIARIO.md` — Doctrina legal y lógica de negocio acumulativa (Herencia de Fases) — [Archivo de texto].
+* `index.html` (Navegación Órbita 1) — Estructura `<nav>` con `menu-pillar-wrapper`, `data-requires` y `data-phase` listos para lectura — [DOM UI].
+* `core/passport-engine.js` — Motor Vanilla JS que evalúa `window.__CPII__.session` y aplica clases Tailwind de bloqueo visual — [Script inyectado].
+* `core/i18n.js` — Diccionario actualizado con nomenclatura de alta banca (Posición Global, Mi Cartera, Gestión de Relaciones) — [Motor de idiomas].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Nomenclatura lúdica ("O Cofre", "El Pulso"):** Descartada. Destruía el tono de Wealth Management. Sustituida por vocabulario fiduciario e institucional.
+* **Textos de estado en JS:** Descartado (Kimi violó R4). Los mensajes de bloqueo deben venir por `data-i18n-tooltip` para el motor de idiomas.
+* **Fase 3 independiente:** Descartado (Riesgo AML detectado por Qwen). La Habilitación Gerencial debe exigir el 100% de la Fase 2 (KYC). Herencia acumulativa obligatoria.
+* **Paso directo Operario -> Bulldozer:** Descartado. Perplexity (UX) y Kimi (JS) generan colisiones si no paso yo sus códigos por el filtro de fusión previo.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* Claves huérfanas en el diccionario: `nav_mls` y `nav_history` permanecen en el archivo de traducciones sin uso actual.
+* Fuente de Verdad Flotante: `window.__CPII__.session` actualmente funciona con datos "dummy" inyectados en el HTML. Falta la conexión real de carga de sesión desde el backend.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Psicología del Usuario:** Lux Lusitana no vende, selecciona. Quien entra al CRM es un Iniciado/Staff. La restricción de módulos (fricción) genera estatus y deseo.
+* **Topología de Planta:** El Director es el único bus de datos. Los agentes no tienen memoria de sesiones cruzadas. 
+* **Peligro de Amnesia:** La IA (incluido yo) tiende a olvidar las restricciones de lectura/escritura en sesiones largas. Obligar al "Manifiesto de Despliegue" salva el proyecto.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar "El Gate" (Flujo de Aprobación de Staff) necesito exactamente:
+1.  El código HTML base actual de `access-form.html` (la puerta secreta).
+2.  La estructura de datos exacta (JSON dummy) de las credenciales de un miembro del Staff generadas desde el "Modo Dios" del Admin.

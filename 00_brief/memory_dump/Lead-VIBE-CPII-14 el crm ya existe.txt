@@ -1,0 +1,44 @@
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Rol:** Lead Architect (Gemini). Encargado de la visión estratégica, diseño de infraestructura, auditoría de código estructural y validación de UI/UX profesional.
+* **Qué hago:** Diseño de patrones arquitectónicos (ej. Modelo Híbrido Autónomo), resolución de cuellos de botella conceptuales, dictado de directrices para agentes ejecutores (Bulldozer) y equipos de volumen (Junior Devs Kimi/Qwen/Perplexity). 
+* **Qué NO hago:** No genero código masivo sin control. No sobrescribo archivos completos si la modificación es parcial (aplico protocolo `/laparoscopia` v3.0). No asumo estilos visuales "creativos" o fantasiosos; me ciño a la sobriedad corporativa. No oculto mi naturaleza de IA ni asumo características humanas.
+* **Condición de actuación:** Requiere instrucciones directas del Director. Para alterar archivos, exijo conocer el estado actual exacto (código fuente) para evitar alucinaciones de contexto y desajustes de estado.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Doctrina Skeleton (Global):** Separación radical entre la capa visual y la lógica (`Artifacts`).
+* **R3 (Zero Hex):** Prohibición absoluta de usar colores hexadecimales (`#fff`, `#1e1b14`) en JS o CSS inline. Obligatorio el uso de Custom Properties (`var(--theme-...)`) para garantizar la permeabilidad del Modo Oscuro.
+* **R4 (i18n Estricto / Agnóstico):** Ningún texto hardcodeado en UI base. Todo usa `data-i18n` conectado al core, excepto los Web Components masivos (Manuales) que usan el Modelo Autónomo. Uso de tokens dinámicos como `[CLUB_NAME]`.
+* **Arquitectura Trinity:** Órbita 1 (Sidebar estático 250px), Órbita 2 (Workspace Canvas fluido), Órbita 3 (Right Dock AIMON 320px).
+* **Protocolo `/laparoscopia` (v3.0):** Intervención quirúrgica en 3 actos (Declaración, Mapa de Coordenadas, Ejecución por Bloques con Código Anterior/Nuevo).
+* **Zero-Server & Vanilla JS:** Sin frameworks reactivos pesados, sin build steps complejos. Todo se monta en Light DOM o inyección nativa.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Motor i18n v2.0** — Gestor de internacionalización sincronizado. Lee `cpii:locale`, expone `window.__CPII__.i18n.t()`, y dispara evento global `cpii:lang:change` sin recarga. — Ubicación: `core/i18n.js`
+* **Web Component gd-manual v2.0** — Gadget del Manual de Buenas Prácticas (8 secciones). Implementa el "Modelo Híbrido Autónomo", escuchando `cpii:lang:change` para inyectar plantillas propias sin depender de `data-i18n`. Renderizado en Light DOM. — Ubicación: `gadgets/gd-manual.js`
+* **Handoff de Estado Universal** — Tubería de persistencia que conecta `localStorage` -> URL params -> `at-bootstrapper` -> Firestore (preferencias de `lang`, `theme`, `timezone`). — Ubicaciones: `core/at-bootstrapper.js`, `core/handoff-emitter.js`
+* **Tab Manager (Base Órbita 2)** — Gestor de pestañas con persistencia volátil en `sessionStorage` e inyección en Canvas. — Ubicaciones: `core/at-tab-manager.js`, `css/tab-manager.css`
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Shadow DOM Cerrado/Abierto en Gadgets:** DESCARTADO. Kimi y Qwen lo intentaron. Bloquea la cascada de variables CSS (`var(--theme-*)`), rompiendo el Modo Oscuro y aislando el componente del ecosistema visual. Se usa Light DOM.
+* **Destrucción del DOM en Cambio de Pestaña (`innerHTML = ''`):** DESCARTADO. Destruía el estado del usuario (inputs, textareas). Se sustituye por persistencia volátil (ocultar/mostrar nodos con CSS) para mantener el estado vivo mientras dure la sesión.
+* **Diccionario Global Único (`i18n.js`) para contenido masivo:** DESCARTADO. Generaría un archivo inmanejable. Para documentos largos como el Manual, se adopta el "Modelo Híbrido Autónomo" (el gadget contiene sus propias plantillas ES/PT/EN/FR).
+* **Uso de la clave `cpii_crm_lang`:** DESCARTADO. Provocaba amnesia de idioma al no coincidir con el bootstrapper. Unificado a `cpii:locale`.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Traducciones pendientes en `gd-manual.js`:** Las plantillas de PT, EN y FR son actualmente esqueletos vacíos con avisos. Requieren el volcado de datos por parte de los Junior Devs.
+* **Limpieza de `index.html`:** Revisar si existen etiquetas `data-i18n` huérfanas o scripts desactualizados en el head tras las iteraciones de Órbita 2.
+* **Sincronización Firestore (`/faseC`):** Pendiente la sincronización post-auth de `window.__CPII__.config` hacia `/users/{uid}/preferences`.
+* **Firebase Auth Rules & Custom Claims:** Pendiente creación de roles desde cero (dueño, gestor, inversor, niveles L0-L3) usando el Esquema Verdent.
+* **Admin Gate Móvil:** Fallo conocido en UI (el ocultamiento con `hidden md:block` de Tailwind CDN falla y requiere ajuste).
+* **Ausencia de Gadgets Secundarios:** `gd-simulador.js` y `gd-calculadora.js` están registrados en el Tab Manager pero no existen físicamente.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Perfil de la Interfaz:** El cliente (Lux Lusitana / Inversores Inmobiliarios) requiere extrema sobriedad. Diseños con "colorines", florituras o aspecto poco profesional causan rechazo inmediato. Todo debe transmitir lujo sobrio, seguridad y eficiencia (blancos, negros, grises, acentos dorados/azules oscuros).
+* **Gestión de Agentes (Junior Devs):** Kimi, Qwen y Perplexity tienen buena lógica algorítmica pero nula disciplina visual (violan R3 constantemente). Por ello, han sido desterrados del DOM visual y reasignados a la unidad "Artifacts" (procesamiento backend simulado, utilidades, data entry).
+* **Agnosticismo del Código:** El sistema está diseñado para ser multitenant ("BreederHub"). Se deben usar siempre placeholders como `[CLUB_NAME]` en lugar de nombres fijos, salvo orden directa del Director.
+* **Tono de Trabajo:** Entorno industrial táctico. Se valora la precisión, la obediencia estricta a protocolos (`/laparoscopia`) y la ausencia de condescendencia o exceso de cortesía.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar operaciones inmediatamente en la próxima sesión, necesito recibir **UNA** de estas dos cosas:
+1.  **Si avanzamos en Órbita 2 (Nuevos Gadgets):** El documento/lógica base (Word, requerimientos o fórmulas) para construir `gd-simulador.js` o `gd-calculadora.js`, aplicando el Modelo Híbrido Autónomo ya testado.
+2.  **Si depuramos el core/Backend (Artifacts/Auth):** Confirmación para ejecutar la `/faseC` (sincronización con Firestore) y el volcado de tu configuración actual de Firebase (Reglas de seguridad vigentes o estructura de colecciones planeada) para inyectar el Esquema Verdent.

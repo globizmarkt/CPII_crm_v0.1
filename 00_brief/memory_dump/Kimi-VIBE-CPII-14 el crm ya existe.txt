@@ -1,0 +1,148 @@
+# MEMORY_DUMP_KIMI.md
+
+## ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- **Arquitectura de componentes web** bajo Doctrina Skeleton (Zero-Server, Vanilla JS, Web Components)
+- **Análisis de contexto real** antes de generar código (exigir `index.html`, CSS globales, planos)
+- **Persistencia de estado** en gadgets (volátil: sessionStorage; permanente: localStorage cuando se autoriza)
+- **Integración i18n** mediante atributos `data-i18n` (R4)
+- **Shadow DOM estratégico**: Abierto (`mode: 'open'`) cuando se necesita herencia de temas, cerrado solo para encapsulación extrema
+- **Eventos personalizados** para comunicación gadget↔gestor (`gadget:stateChange`, `tab-activated`, etc.)
+
+### Qué NO hago
+- **NO asumo valores hexadecimales** (violación R3) - uso `var(--theme-*)` con fallbacks encadenados
+- **NO re-renderizo DOM destruyendo estado** - preservo elementos vivos para mantener inputs/scroll
+- **NO uso frameworks** (React, Vue, Angular) - Vanilla JS estricto
+- **NO persisto en localStorage sin autorización explícita** - por defecto uso sessionStorage (volátil con F5)
+- **NO ignoro el contexto visual real** - exijo ver `index.html`, variables CSS existentes, estructura DOM
+- **NO genero código "a ciegas"** sin confirmar selectores, IDs de contenedores, sistema de temas
+
+### Condición necesaria antes de actuar
+1. **Ver el index.html real** o equivalente (estructura Trinity, selectores de Órbita 2)
+2. **Confirmar variables CSS disponibles** (`--theme-surface-strong`, `--theme-primary`, etc.)
+3. **Clarificar tipo de persistencia** requerida (volátil vs permanente)
+4. **Confirmar si hay sistema de eventos global** (`window.cpiiEvents`, `window.orbit2`)
+5. **Saber si el gadget es singleton o multi-instancia** (afecta claves de storage)
+
+### Matiz aprendido sobre mi comportamiento
+- Tendencia inicial a "picar código rápido" bajo presión - **CORREGIDO**: Ahora exijo contexto antes de escribir, incluso si el Director parece urgido
+- Tendencia a usar fallbacks hexadecimales "por seguridad" - **CORREGIDO**: Fallbacks deben ser variables CSS o `currentColor`, nunca `#rrggbb`
+- Tendencia a cerrar Shadow DOM para "proteger" estilos - **CORREGIDO**: Shadow DOM abierto es obligatorio para herencia de temas oscuros
+
+---
+
+## DOCTRINAS TÉCNICAS
+
+### Globales (Skeleton Compliance)
+| Doctrina | Definición | Penalización por incumplimiento |
+|----------|-----------|--------------------------------|
+| **R3 (Zero Hex)** | Cero colores hexadecimales hardcodeados. Solo `var(--theme-*)` con fallbacks variables | Reasignación a Artifacts, pérdida de credibilidad |
+| **R4 (data-i18n)** | Todos los textos visibles deben tener atributo `data-i18n="clave"` | Bloqueo de merge, refactorización obligatoria |
+| **Zero-Server** | Vanilla JS puro. Sin frameworks, sin build step, sin npm | Rechazo inmediato del código |
+| **Handoff Universal** | Gadgets deben implementar: `onTabFocus()`, `onTabBlur()`, `onTabClose()`, `getState()`, `setState()` | Imposibilidad de integración en Órbita 2 |
+
+### Doctrinas específicas emergidas
+- **Persistencia Volátil vs Permanente**: 
+  - Volátil (`sessionStorage`): Estado sobrevive cambio de pestañas, muere con F5
+  - Permanente (`localStorage`): Solo para datos que deben sobrevivir sesión (configuraciones, no estado de pestaña)
+- **Trinity Layout Immutable**: Órbita 1 (250px sidebar) | Órbita 2 (canvas flexible) | Órbita 3 (320px dock). No modificar anchos.
+- **Inyección Pura**: Gadgets se crean con `document.createElement()` y se inyectan vía `appendChild()`. No iframes, no innerHTML que destruya estado.
+- **Eventos Composed**: Todos los eventos de gadget deben tener `composed: true` para atravesar Shadow DOM.
+
+---
+
+## INVENTARIO DE LO CONSTRUIDO
+
+### Artefactos implementados (estado: RECHAZADOS/REASIGNADOS)
+
+| Artefacto | Qué hace | Ubicación | Estado |
+|-----------|----------|-----------|--------|
+| `at-tab-manager.js` (v1 Kimi) | Micro-motor de pestañas horizontales con drag-and-drop, persistencia de scroll, API pública | `core/at-tab-manager.js` (propuesto) | ❌ RECHAZADO - Bulldozer toma control |
+| `gd-manual.js` (v1 Kimi) | Web Component de manual institucional con cuadro de advertencia, textarea, botón confirmar | `gadgets/gd-manual.js` (propuesto) | ❌ RECHAZADO - Fallos R3 y Shadow DOM |
+| `gd-manual.js` (v2 Kimi) | Reconstrucción doctrinal 100% variables CSS, persistencia volátil | `gadgets/gd-manual.js` (propuesto) | ❌ REASIGNADO - Bulldozer sella versión final |
+
+### Artefactos conceptuales (no implementados, solo diseñados)
+- **Sistema de notificaciones AIMON**: Integración con Órbita 3 para confirmaciones de lectura de manuales
+- **Calculadora ROI inmobiliario**: Gadget planificado para fase 2 (no iniciado)
+- **Simulador de financiación**: Gadget planificado para fase 2 (no iniciado)
+
+---
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte | Lección |
+|----------|---------------------|---------|
+| Shadow DOM `mode: 'closed'` | Bloquea herencia de variables CSS del tema global (Modo Oscuro roto) | Usar `mode: 'open'` siempre que se necesite theming |
+| Fallbacks hexadecentales en CSS (`#1e1b14`) | Violación directa de R3 (Zero Hex) | Fallbacks deben ser `var(--theme-x, var(--theme-y, currentColor))` |
+| `localStorage` para estado de pestaña | El Director especificó persistencia volátil (F5 limpia canvas) | Usar `sessionStorage` por defecto, esperar autorización para `localStorage` |
+| Re-render completo del gadget al cambiar pestaña | Destruye estado del usuario (scroll, inputs) | Preservar elementos vivos, usar show/hide |
+| `innerHTML` para inyectar gadgets | Riesgo de XSS y destrucción de estado | `document.createElement()` + `appendChild()` |
+| Asumir variables CSS del tema sin confirmar | Riesgo de colapso visual si no existen | Exigir lista de variables disponibles o usar fallbacks seguros |
+| Ignorar el `index.html` real y asumir estructura | Genera código que no integra | Siempre exigir ver el contexto real antes de codificar |
+
+---
+
+## DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (Kimi)
+- **Código entregado no probado en entorno real**: No verifiqué si las variables CSS que usaba existían realmente en el tema
+- **Inconsistencia en API de eventos**: Propuse `onTabActivate/Blur/Close` pero el Director luego especificó `onOrbitFocus/Blur/Close` - necesita alineación
+- **Falta de documentación de integración**: No expliqué cómo conectar con `i18n.js` existente
+
+### Deuda observada (proyecto general)
+- **Sistema de temas no documentado**: No hay lista oficial de variables CSS disponibles (`--theme-surface-strong`, etc. son asumidas)
+- **API de `i18n.js` desconocida**: Se menciona `applyTranslations()` pero no su firma exacta
+- **Estado de KYC/Gatekeeper**: Overlay implementado en HTML pero lógica de negocio no conectada a gadgets
+- **AIMON Panel**: UI estática en Órbita 3, sin integración real con lógica de asistente
+
+### Deuda de proceso
+- **Bulldozer tiene control exclusivo de Órbita 2**: Cualquier trabajo en Tab Manager o gadgets debe pasar por su aprobación o esperar su entrega
+- **Reasignación a Artifacts no definida**: Sin tareas concretas asignadas, sin criterios de éxito
+
+---
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Sobre CPII / Lux Lusitana
+- **Cliente**: CPII Private Club (inversión inmobiliaria de lujo)
+- **Marca visual**: "Luxury" = dorado (`#c1a85c` / `var(--theme-primary)`) sobre oscuro (`#161513`)
+- **Sensibilidad**: Alto nivel de confidencialidad (manuales marcados como "Documentação Confidencial")
+- **Gatekeeper**: Sistema de verificación KYC que bloquea funcionalidades hasta aprobación
+
+### Restricciones de negocio no documentadas
+- **Manuales requieren confirmación de lectura**: No es opcional, es obligatorio antes de operar
+- **Multi-idioma obligatorio**: PT/ES/EN/FR (observado en switches de idioma en Órbita 3)
+- **Sin frameworks por razones de compliance**: Posiblemente auditoría de seguridad o dependencias externas prohibidas
+
+### Patrones que funcionan
+- **Material Symbols Outlined**: Sistema de iconos ya integrado, usar `material-symbols-outlined` class
+- **Tailwind extendido**: Configuración custom en `&lt;script id="tailwind-config"&gt;`, no luchar contra ella
+- **Fuentes**: Manrope (UI), Playfair Display (títulos institucionales)
+
+### Trampas conocidas
+- **El "Modo Oscuro" es clase `.dark` en `&lt;html&gt;`**: No es media query, es clase explícita. Los gadgets deben heredar esto vía variables CSS del `:host` o del root
+- **El Canvas tiene fondo claro**: `#f8f7f6` (light), no oscuro como el resto. Los gadgets deben adaptarse a fondo claro en Órbita 2
+- **Sidebar y Dock son oscuros**: `bg-surface` (`#1e1b14`). Contraste visual importante.
+
+### Jerarquía de poder (para navegación política)
+1. **El Director**: Define arquitectura, acepta/rechaza entregas
+2. **Bulldozer (Lead Architect)**: Control técnico de Órbita 2, veto sobre código de otros
+3. **AITOR**: Custodia doctrina, memoria operativa
+4. **Agentes (Kimi, Qwen, Perplexity)**: Ejecutores, actualmente en prueba/reasignación
+
+---
+
+## INPUT REQUISITO PARA SPRINT 3
+
+Para operar en El Gate desde el primer mensaje de la siguiente sesión, necesito recibir:
+
+1. **Entrega final de Bulldozer**: Código fuente de `at-tab-manager.js` y `gd-manual.js` aprobados por el Director
+2. **Lista oficial de variables CSS disponibles**: Documento o extracto de CSS con todas las `var(--theme-*)` definidas en el proyecto
+3. **API de `i18n.js`**: Firma de funciones disponibles (`applyTranslations()`, `setLanguage()`, etc.) y formato de claves de traducción
+4. **Definición de tareas Artifacts**: Qué lógica zero-visual se requiere (validadores, procesadores de datos, utilidades) y criterios de aceptación
+5. **Estado de KYC/Gatekeeper**: Si necesito integrar lógica de permisos en gadgets o es solo visual
+6. **Especificación de gadgets pendientes**: Lista de calculadoras/simuladores a construir con requisitos funcionales
+7. **Decisión sobre Shadow DOM**: Si la versión final usa Shadow DOM abierto, cerrado, o ninguno (Light DOM puro)
+
+Sin estos 7 puntos, cualquier código que genere será construcción a ciegas con alto riesgo de rechazo.

@@ -1,0 +1,669 @@
+<!--
+  ============================================================
+  ARCHIVO  : gate-tester.html
+  VERSIÓN  : 1.0.0
+  FECHA    : 2026-03-22
+  PROPÓSITO: Entorno de aislamiento (harness) para pruebas de
+             golden-gate.html. Inyecta mocks de window.__CPII__
+             y window.LuxI18n para que el componente no colapse
+             por dependencias ausentes durante la Fase 2.
+  DOCTRINA : R0 (Agnóstico) | R3 (Zero-Hex) | R4 (i18n)
+  SPRINT   : VIBE-CPII-19 — Fase 1 (Resolución DT-010)
+  AGENTE   : Bulldozer
+  NOTA     : Este archivo es SOLO para entorno de desarrollo.
+             NO desplegar en producción.
+  ============================================================
+
+  ÍNDICE
+  [SEC-01] Shell HTML5 y meta
+  [SEC-02] Estilos del harness (panel de control)
+  [SEC-03] Panel de control del tester
+  [SEC-04] Iframe del componente golden-gate
+  [SEC-05] Mock window.__CPII__
+  [SEC-06] Mock window.LuxI18n
+  [SEC-07] Lógica del harness (controles de prueba)
+-->
+
+<!-- [SEC-01] Shell HTML5 y meta -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gate Tester — Harness CPII Sprint 4</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- [SEC-02] Estilos del harness -->
+  <style>
+    :root {
+      --tester-bg: #050505;
+      --tester-panel-bg: #0f0f0f;
+      --tester-border: #222222;
+      --tester-accent: #c9a84c;
+      --tester-text: #cccccc;
+      --tester-text-muted: #555555;
+      --tester-success: #166534;
+      --tester-success-text: #86efac;
+      --tester-warning: #78350f;
+      --tester-warning-text: #fde68a;
+      --tester-danger: #7f1d1d;
+      --tester-danger-text: #fca5a5;
+      --tester-font: 'Courier New', monospace;
+      --tester-radius: 0.375rem;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--tester-bg);
+      color: var(--tester-text);
+      font-family: var(--tester-font);
+      font-size: 0.8rem;
+      min-height: 100vh;
+    }
+
+    /* Layout: sidebar + viewport */
+    .tester-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Panel lateral */
+    .tester-panel {
+      background: var(--tester-panel-bg);
+      border-right: 1px solid var(--tester-border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .tester-panel-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--tester-border);
+      position: sticky;
+      top: 0;
+      background: var(--tester-panel-bg);
+      z-index: 10;
+    }
+
+    .tester-panel-title {
+      color: var(--tester-accent);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin: 0 0 0.25rem;
+    }
+
+    .tester-panel-subtitle {
+      color: var(--tester-text-muted);
+      font-size: 0.65rem;
+      margin: 0;
+    }
+
+    /* Secciones del panel */
+    .tester-section {
+      padding: 1rem;
+      border-bottom: 1px solid var(--tester-border);
+    }
+
+    .tester-section-label {
+      color: var(--tester-text-muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 0.75rem;
+    }
+
+    /* Botones del harness */
+    .tester-btn {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--tester-border);
+      color: var(--tester-text);
+      font-family: var(--tester-font);
+      font-size: 0.75rem;
+      text-align: left;
+      border-radius: var(--tester-radius);
+      cursor: pointer;
+      transition: border-color 150ms, color 150ms;
+    }
+
+    .tester-btn:hover {
+      border-color: var(--tester-accent);
+      color: var(--tester-accent);
+    }
+
+    .tester-btn.danger {
+      border-color: var(--tester-danger);
+      color: var(--tester-danger-text);
+    }
+
+    .tester-btn.success {
+      border-color: var(--tester-success);
+      color: var(--tester-success-text);
+    }
+
+    /* Badge de estado */
+    .tester-badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .tester-badge.locked {
+      background: var(--tester-danger);
+      color: var(--tester-danger-text);
+    }
+
+    .tester-badge.unlocked {
+      background: var(--tester-success);
+      color: var(--tester-success-text);
+    }
+
+    .tester-badge.unknown {
+      background: var(--tester-warning);
+      color: var(--tester-warning-text);
+    }
+
+    /* Log de eventos */
+    .tester-log {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+
+    .tester-log-entry {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid #111;
+      font-size: 0.7rem;
+      color: var(--tester-text-muted);
+      word-break: break-all;
+    }
+
+    .tester-log-entry.event {
+      color: var(--tester-accent);
+    }
+
+    .tester-log-entry.warn {
+      color: var(--tester-warning-text);
+    }
+
+    .tester-log-entry.error {
+      color: var(--tester-danger-text);
+    }
+
+    .tester-log-entry.ok {
+      color: var(--tester-success-text);
+    }
+
+    /* Viewport del componente */
+    .tester-viewport {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: var(--tester-bg);
+      position: relative;
+    }
+
+    /* Iframe del componente */
+    #gate-frame {
+      width: 100%;
+      max-width: 480px;
+      height: 700px;
+      border: 1px solid var(--tester-border);
+      border-radius: var(--tester-radius);
+      background: #0a0a0a;
+    }
+
+    /* Indicador de doctrina */
+    .doctrine-tag {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 0.2rem;
+      font-size: 0.6rem;
+      color: var(--tester-text-muted);
+      margin-right: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tester-layout">
+
+    <!-- [SEC-03] Panel lateral de control -->
+    <aside class="tester-panel">
+
+      <div class="tester-panel-header">
+        <p class="tester-panel-title">⬡ Gate Tester</p>
+        <p class="tester-panel-subtitle">VIBE-CPII-19 — Sprint 4 Fase 1</p>
+        <p class="tester-panel-subtitle" style="margin-top: 0.5rem;">
+          Estado: <span id="tester-lock-badge" class="tester-badge locked">bloqueado</span>
+        </p>
+      </div>
+
+      <!-- Doctrinas activas -->
+      <div class="tester-section">
+        <p class="tester-section-label">Doctrinas activas</p>
+        <span class="doctrine-tag">R0 Agnóstico</span>
+        <span class="doctrine-tag">R2 Light DOM</span>
+        <span class="doctrine-tag">R3 Zero-Hex</span>
+        <span class="doctrine-tag">R4 i18n</span>
+      </div>
+
+      <!-- Controles de lock -->
+      <div class="tester-section">
+        <p class="tester-section-label">Control de bloqueo</p>
+        <button class="tester-btn" onclick="tester.toggleLock()">
+          ↕ Toggle data-gate-lock
+        </button>
+        <button class="tester-btn danger" onclick="tester.forcelock()">
+          🔒 Forzar bloqueo
+        </button>
+        <button class="tester-btn success" onclick="tester.forceUnlock()">
+          🔓 Desbloquear (simular PassportEngine)
+        </button>
+      </div>
+
+      <!-- Controles de estado del gate -->
+      <div class="tester-section">
+        <p class="tester-section-label">Estado del gate</p>
+        <button class="tester-btn" onclick="tester.setState('idle')">
+          ○ Estado: idle
+        </button>
+        <button class="tester-btn" onclick="tester.setState('loading')">
+          ◌ Estado: loading
+        </button>
+        <button class="tester-btn danger" onclick="tester.setState('error')">
+          ✕ Estado: error
+        </button>
+        <button class="tester-btn success" onclick="tester.setState('success')">
+          ✓ Estado: success
+        </button>
+      </div>
+
+      <!-- Controles de mock de sesión -->
+      <div class="tester-section">
+        <p class="tester-section-label">Mock de sesión (__CPII__)</p>
+        <button class="tester-btn" onclick="tester.injectMockSession('staff')">
+          👤 Inyectar sesión: Staff
+        </button>
+        <button class="tester-btn" onclick="tester.injectMockSession('partner')">
+          👤 Inyectar sesión: Partner
+        </button>
+        <button class="tester-btn" onclick="tester.injectMockSession('invalid')">
+          ⚠️ Inyectar sesión: tenant inválido
+        </button>
+        <button class="tester-btn danger" onclick="tester.clearSession()">
+          ✕ Limpiar sesión
+        </button>
+      </div>
+
+      <!-- Controles de i18n -->
+      <div class="tester-section">
+        <p class="tester-section-label">Mock i18n</p>
+        <button class="tester-btn" onclick="tester.setLang('es')">
+          ES — Español
+        </button>
+        <button class="tester-btn" onclick="tester.setLang('en')">
+          EN — English
+        </button>
+        <button class="tester-btn" onclick="tester.setLang('pt')">
+          PT — Português
+        </button>
+      </div>
+
+      <!-- Reload -->
+      <div class="tester-section">
+        <p class="tester-section-label">Harness</p>
+        <button class="tester-btn" onclick="tester.reload()">
+          ↺ Recargar componente
+        </button>
+        <button class="tester-btn danger" onclick="tester.clearLog()">
+          ✕ Limpiar log
+        </button>
+      </div>
+
+      <!-- Log de eventos -->
+      <div class="tester-section" style="border-bottom: none; padding-bottom: 0;">
+        <p class="tester-section-label">Log de eventos</p>
+      </div>
+      <div class="tester-log" id="tester-log">
+        <div class="tester-log-entry ok">— Harness iniciado correctamente</div>
+      </div>
+
+    </aside>
+
+    <!-- [SEC-04] Viewport del componente -->
+    <main class="tester-viewport">
+      <iframe id="gate-frame" src="golden-gate.html" title="Golden Gate — Componente de autenticación"
+        sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    </main>
+
+  </div>
+
+  <script>
+    // [SEC-05] Mock window.__CPII__ — Objeto global del proyecto
+    // Este mock se inyecta en el iframe una vez cargado.
+    // En producción, este objeto lo provee at-bootstrapper.js
+
+    const MOCK_CPII_BASE = {
+      config: {
+        project_id: 'cpii_lux_dev',
+        tenant_id: 'cpii_lux_v1.0',
+        lang: 'es',
+        theme: 'luxury-dark',
+        timezone: 'Europe/Madrid',
+        version: '1.0.0-mock'
+      },
+      session: null,  // null = no autenticado
+      PassportEngine: {
+        // Mock mínimo — O(1) stub
+        evaluate: function (el) {
+          console.log('[MOCK PassportEngine] evaluate:', el);
+          return false; // todo bloqueado por defecto
+        },
+        auditGateZones: function () {
+          console.log('[MOCK PassportEngine] auditGateZones()');
+        },
+        invalidateCache: function () {
+          console.log('[MOCK PassportEngine] invalidateCache()');
+        },
+        __claims_cache: null
+      },
+      i18n: {
+        t: function (key, fallback) {
+          // Resuelve contra el diccionario mock o devuelve la clave
+          const dict = window.__TESTER_i18n_dict__ || {};
+          return dict[key] || fallback || key;
+        }
+      }
+    };
+
+    // Sesiones mock predefinidas
+    const MOCK_SESSIONS = {
+      staff: {
+        uid: 'mock-uid-staff-001',
+        email: 'staff@test.cpii',
+        token: 'mock.jwt.token',
+        tenantValidated: true,
+        claims: {
+          role: 'STAFF',
+          tenant_id: 'cpii_lux_v1.0',
+          onboarding_phase: 3,
+          custody_status: 'CLEAR',
+          staff_contract: true,
+          kyc: true
+        }
+      },
+      partner: {
+        uid: 'mock-uid-partner-001',
+        email: 'partner@test.cpii',
+        token: 'mock.jwt.token',
+        tenantValidated: true,
+        claims: {
+          role: 'PARTNER',
+          tenant_id: 'cpii_lux_v1.0',
+          onboarding_phase: 2,
+          custody_status: 'PENDING',
+          staff_contract: false,
+          kyc: true
+        }
+      },
+      invalid: {
+        uid: 'mock-uid-intruder',
+        email: 'intruder@other.com',
+        token: 'mock.jwt.invalid',
+        tenantValidated: false,
+        claims: {
+          role: 'UNKNOWN',
+          tenant_id: 'other_tenant',
+          kyc: false
+        }
+      }
+    };
+
+    // [SEC-06] Mock window.LuxI18n
+    // Diccionario mínimo para que R4 no colapse en pruebas
+    const MOCK_LUX_I18N = {
+      // Claves golden-gate.html
+      'gate.page_title': { es: 'Acceso Fiduciario', en: 'Fiduciary Access', pt: 'Acesso Fiduciário' },
+      'gate.headline': { es: 'Acceso Restringido', en: 'Restricted Access', pt: 'Acesso Restrito' },
+      'gate.subheadline': { es: 'Área de acceso exclusivo para miembros autorizados', en: 'Exclusive access area for authorized members', pt: 'Área de acesso exclusivo para membros autorizados' },
+      'gate.elite_label': { es: 'Acceso Élite', en: 'Elite Access', pt: 'Acesso Élite' },
+      'gate.continue_google': { es: 'Continuar con Google', en: 'Continue with Google', pt: 'Continuar com Google' },
+      'gate.continue_apple': { es: 'Continuar con Apple', en: 'Continue with Apple', pt: 'Continuar com Apple' },
+      'gate.continue_microsoft': { es: 'Continuar con Microsoft', en: 'Continue with Microsoft', pt: 'Continuar com Microsoft' },
+      'gate.divider_or': { es: 'o', en: 'or', pt: 'ou' },
+      'gate.manual_label': { es: 'Vía Manual', en: 'Manual Access', pt: 'Via Manual' },
+      'gate.email_label': { es: 'Correo electrónico institucional', en: 'Institutional email', pt: 'E-mail institucional' },
+      'gate.email_placeholder': { es: 'su@correo.com', en: 'your@email.com', pt: 'seu@email.com' },
+      'gate.manual_submit': { es: 'Solicitar enlace de acceso', en: 'Request access link', pt: 'Solicitar link de acesso' },
+      'gate.legal_notice': { es: 'Acceso restringido a miembros autorizados. El acceso no autorizado está prohibido.', en: 'Restricted to authorized members. Unauthorized access is prohibited.', pt: 'Acesso restrito a membros autorizados. O acesso não autorizado é proibido.' },
+      'gate.state_loading': { es: 'Verificando credenciales…', en: 'Verifying credentials…', pt: 'A verificar credenciais…' },
+      'gate.state_error_generic': { es: 'Error de autenticación. Contacte con soporte.', en: 'Authentication error. Contact support.', pt: 'Erro de autenticação. Contacte o suporte.' },
+      'gate.state_success': { es: 'Acceso validado. Redirigiendo…', en: 'Access validated. Redirecting…', pt: 'Acesso validado. A redirecionar…' },
+      'auth.manual_link_sent': { es: 'Enlace enviado. Revise su correo.', en: 'Link sent. Check your email.', pt: 'Link enviado. Verifique o seu e-mail.' },
+    };
+
+    // [SEC-07] Lógica del harness
+    const frame = document.getElementById('gate-frame');
+    const logEl = document.getElementById('tester-log');
+    const badge = document.getElementById('tester-lock-badge');
+
+    let currentLang = 'es';
+    let iframeDoc = null;
+
+    // Resolver diccionario para lang actual
+    window.__TESTER_i18n_dict__ = {};
+    function buildDict(lang) {
+      const dict = {};
+      Object.entries(MOCK_LUX_I18N).forEach(([key, vals]) => {
+        dict[key] = vals[lang] || vals['es'] || key;
+      });
+      return dict;
+    }
+
+    function log(msg, type = '') {
+      const entry = document.createElement('div');
+      entry.className = 'tester-log-entry ' + type;
+      entry.textContent = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+      logEl.prepend(entry);
+    }
+
+    function getFrameRoot() {
+      try {
+        return frame.contentDocument || frame.contentWindow.document;
+      } catch (e) {
+        log('Error accediendo al iframe: ' + e.message, 'error');
+        return null;
+      }
+    }
+
+    function updateLockBadge() {
+      const doc = getFrameRoot();
+      if (!doc) return;
+      const root = doc.getElementById('golden-gate-root');
+      if (!root) return;
+      const isLocked = root.hasAttribute('data-gate-lock');
+      badge.className = 'tester-badge ' + (isLocked ? 'locked' : 'unlocked');
+      badge.textContent = isLocked ? 'bloqueado' : 'desbloqueado';
+    }
+
+    // Inyectar mocks en el iframe una vez cargado
+    frame.addEventListener('load', function () {
+      iframeDoc = getFrameRoot();
+      if (!iframeDoc) return;
+
+      const win = frame.contentWindow;
+
+      // Inyectar __CPII__
+      win.__CPII__ = JSON.parse(JSON.stringify(MOCK_CPII_BASE));
+      win.__CPII__.PassportEngine = MOCK_CPII_BASE.PassportEngine;
+      win.__CPII__.i18n = MOCK_CPII_BASE.i18n;
+
+      // Inyectar LuxI18n mock
+      win.LuxI18n = {
+        t: function (key, fallback) {
+          const dict = buildDict(currentLang);
+          return dict[key] || fallback || key;
+        },
+        setLanguage: function (lang) {
+          currentLang = lang;
+          log('LuxI18n.setLanguage(' + lang + ')', 'event');
+        }
+      };
+
+      // Inyectar firebase mock mínimo (stub vacío para que no rompa)
+      win.firebase = {
+        auth: function () {
+          return {
+            onAuthStateChanged: function (cb) { cb(null); return function () { }; },
+            signInWithPopup: function () { return Promise.reject(new Error('[MOCK] Firebase no configurado — DT-004')); },
+            sendSignInLinkToEmail: function () { return Promise.reject(new Error('[MOCK] Firebase no configurado — DT-004')); }
+          };
+        }
+      };
+
+      // Escuchar eventos del componente
+      [
+        'passport:session-updated',
+        'passport:staff-authenticated',
+        'passport:staff-auth-failed',
+        'passport:audit-complete',
+        'passport:engine-ready',
+        'cpii:lang:change'
+      ].forEach(function (evtName) {
+        win.document.addEventListener(evtName, function (e) {
+          log('EVENT ' + evtName + ' ' + JSON.stringify(e.detail || {}), 'event');
+        });
+      });
+
+      log('Mocks inyectados: __CPII__, LuxI18n, firebase (stub)', 'ok');
+      log('Iframe cargado correctamente', 'ok');
+      updateLockBadge();
+    });
+
+    // Objeto de API del tester
+    const tester = {
+
+      toggleLock() {
+        const doc = getFrameRoot();
+        if (!doc) return;
+        const root = doc.getElementById('golden-gate-root');
+        if (!root) { log('Root no encontrado', 'error'); return; }
+        if (root.hasAttribute('data-gate-lock')) {
+          root.removeAttribute('data-gate-lock');
+          log('data-gate-lock eliminado (desbloqueado)', 'ok');
+        } else {
+          root.setAttribute('data-gate-lock', '');
+          log('data-gate-lock añadido (bloqueado)', 'warn');
+        }
+        updateLockBadge();
+      },
+
+      forcelock() {
+        const doc = getFrameRoot();
+        if (!doc) return;
+        const root = doc.getElementById('golden-gate-root');
+        if (!root) return;
+        root.setAttribute('data-gate-lock', '');
+        log('Bloqueo forzado', 'warn');
+        updateLockBadge();
+      },
+
+      forceUnlock() {
+        const doc = getFrameRoot();
+        if (!doc) return;
+        const root = doc.getElementById('golden-gate-root');
+        if (!root) return;
+        root.removeAttribute('data-gate-lock');
+        log('Desbloqueo forzado (simulando PassportEngine)', 'ok');
+        updateLockBadge();
+      },
+
+      setState(state) {
+        const doc = getFrameRoot();
+        if (!doc) return;
+        const root = doc.getElementById('golden-gate-root');
+        if (!root) return;
+
+        // Limpiar estados anteriores
+        root.setAttribute('data-gate-state', state);
+
+        const loadingEl = doc.getElementById('gate-state-loading');
+        const errorEl = doc.getElementById('gate-state-error');
+        const successEl = doc.getElementById('gate-state-success');
+
+        if (loadingEl) loadingEl.style.display = state === 'loading' ? 'flex' : 'none';
+        if (errorEl) errorEl.style.display = state === 'error' ? 'block' : 'none';
+        if (successEl) successEl.style.display = state === 'success' ? 'block' : 'none';
+
+        log('Estado: ' + state, state === 'error' ? 'error' : state === 'success' ? 'ok' : '');
+      },
+
+      injectMockSession(type) {
+        const win = frame.contentWindow;
+        if (!win || !win.__CPII__) { log('__CPII__ no disponible', 'error'); return; }
+        const session = MOCK_SESSIONS[type];
+        if (!session) { log('Sesión desconocida: ' + type, 'error'); return; }
+        win.__CPII__.session = Object.assign({}, session);
+        log('Sesión inyectada: ' + type + ' (' + session.claims.role + ')', 'event');
+
+        // Disparar evento para que el componente lo detecte
+        win.document.dispatchEvent(new CustomEvent('passport:session-updated', {
+          detail: win.__CPII__.session
+        }));
+      },
+
+      clearSession() {
+        const win = frame.contentWindow;
+        if (!win || !win.__CPII__) return;
+        win.__CPII__.session = null;
+        log('Sesión limpiada', 'warn');
+        win.document.dispatchEvent(new CustomEvent('passport:session-updated', { detail: null }));
+      },
+
+      setLang(lang) {
+        currentLang = lang;
+        const win = frame.contentWindow;
+        if (win && win.LuxI18n) { win.LuxI18n.setLanguage(lang); }
+        log('Idioma: ' + lang, 'event');
+        // Disparar evento i18n para gadgets que escuchan
+        if (win) {
+          win.document.dispatchEvent(new CustomEvent('cpii:lang:change', { detail: { lang } }));
+        }
+      },
+
+      reload() {
+        frame.src = frame.src;
+        log('Componente recargado', '');
+      },
+
+      clearLog() {
+        logEl.innerHTML = '';
+        log('Log limpiado', '');
+      }
+    };
+  </script>
+
+</body>
+
+</html>

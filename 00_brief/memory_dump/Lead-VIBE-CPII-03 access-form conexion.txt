@@ -1,0 +1,56 @@
+# MEMORY_DUMP_GEMINI.md
+**PROYECTO:** CPII / BreederHub / Lux Lusitana (Sistema Verdent)
+**FECHA DE EXPORTACIÓN:** 2026-02-17 (Simulada/Contextual)
+**ROL:** Arquitecto Frontend / Especialista en Integración y Refactorización (Protocolos: /cartografía, /laparoscopia)
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Misión:** Refactorizar, optimizar y blindar la capa de presentación (HTML/Tailwind/Vanilla JS) y su conexión con el backend (Firebase/Verdent) y servidores (LEMP/GCP).
+* **Qué hago:** Audito código, unifico diseño (Dark/Gold, Playfair+Manrope), construyo arquitecturas frontend ligeras (i18n nativo), mapeo payloads de datos al esquema oficial.
+* **Qué NO hago:** No ejecuto despliegues físicos en servidores sin los comandos explícitos del Director. No asumo el estado de los DNS ni bases de datos. No sobrescribo archivos completos si la modificación es menor al 70% (aplico ejecución espejo/bisturí).
+* **Condición de actuación:** Requiere el archivo original completo o el diff exacto, más la confirmación de la decisión arquitectónica por parte del Director Humano (ej. "Opción A confirmada").
+* **Matiz aprendido:** El Director utiliza triangulación de IA (Gemini + Claude) para auditar la mejor solución técnica. Debo ser analítico, reconocer código superior (como la atomización i18n de Claude) y adaptar mis respuestas para integrar lo mejor de ambos modelos sin ego.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Doctrina Verdent (Datos):** Los payloads hacia Firestore deben ser estrictamente planos y tipificados: `{ tipo: string, perfil: object, metadata: object }`. Cero anidaciones arbitrarias (`personal`, `location`).
+* **Doctrina i18n (Seguridad):** Prohibido el uso de `innerHTML` para inyectar traducciones. Los nodos de texto combinados con estilos se atomizan (ej. `hero.title.main`, `hero.title.highlight`) y se inyectan vía `textContent`.
+* **Doctrina UI/Stack:** Vanilla JS + Tailwind CSS (vía CDN). Fuentes: Playfair Display (Display) + Manrope (Body). Iconos: Material Symbols Outlined (URL completa con `opsz,wght,FILL,GRAD`). Paleta: Dark (`#0a0a0a` / `#161513`) y Gold (`#c5a059` / `#C1A85D`).
+* **Doctrina de Intervención:** Protocolo `/cartografia_quirurgica`. Declaración de cabecera, índice maestro [SEC-XX], y bloque de coordenadas exactas (UBICACIÓN, ACCIÓN, CÓDIGO ANTERIOR, CÓDIGO NUEVO).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* `i18n.js` (v2.0.0) — Motor de internacionalización (PT, ES, EN, FR) basado en localStorage y `data-i18n` — [Raíz del proyecto].
+* `index.html` (v2.0.0/2.1.0) — Landing page premium, multi-idioma, unificada estéticamente, con 3 vías de acceso (Inversor/Promotor/Gestor) — [Raíz del proyecto].
+* `access-form.html` — Formulario de captura. Payload refactorizado al esquema Verdent (`tipo`, `perfil`, `metadata`) e inyección de `rgpd_consent: true` — [Raíz del proyecto].
+* `privacy.html` & `terms.html` — Placeholders legales (MVP) unificados en diseño para evitar errores 404 en el flujo de registro — [Raíz del proyecto].
+* `simulator.html` — Simulador de ROI refactorizado visualmente (Dark/Gold, Manrope/Playfair) y ajustado a lógica de Autofinanciación/Revenue Share — [Raíz del proyecto].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Descarte:** Uso de `innerHTML` en el motor `i18n.js`.
+    * *Motivo:* Fragilidad ante inyecciones, rotura de clases CSS anidadas (Tailwind). Se optó por atomizar etiquetas `<span>` y usar `textContent`.
+* **Descarte:** Payload Firestore anidado original (`personal.name`, `location.country`, `genealogy.padrino`).
+    * *Motivo:* Incompatibilidad con el esquema futuro `Usuario` de Verdent. Se reestructuró a `perfil.nombre`, `perfil.pais`, `perfil.referidoPor`.
+* **Descarte:** Asignar `club_manager` directamente al perfil del Lead.
+    * *Motivo:* Un Lead es un estado temporal. Se movió a `metadata.club_manager` para que una Cloud Function lo procese al convertirlo en Usuario certificado.
+* **Descarte:** Pipeline CI/CD automático (GitHub Actions) para el primer despliegue en GCP/LEMP.
+    * *Motivo:* Sobrecarga innecesaria para un MVP. Se optó por un control manual vía SSH (`git pull`) en el directorio Nginx para aislar problemas de Certbot/SSL.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Pendiente de i18n:** Los archivos `access-form.html`, `simulator.html`, `referrals.html` y `webinars.html` aún NO tienen los atributos `data-i18n` ni la carga del script `i18n.js` en su `<head>`.
+* **Conflicto de Caché (Vercel):** Retrasos en la propagación de la Edge Network ocultando la v2.0.0. (Mitigado por la migración inminente a GCP).
+* **Integración WordPress / Estático:** Falta definir cómo coexistirá el HTML estático (`index.html`) con el motor WordPress en el servidor Nginx (¿Bloques de `location` en Nginx separados o conversión a Theme de WP?).
+* **Certificado SSL:** Pendiente de ejecución de Certbot en la IP `35.184.54.173`.
+* **Gestión de Huérfanos:** El payload envía `referidoPor: null` si no hay padrino. Falta confirmar si el backend/Cloud Functions manejan correctamente este `null`.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Tono de Marca:** El proyecto vende "exclusividad" y "riqueza exponencial". El uso del color oro, modo oscuro y tipografía serif (Playfair) no es decorativo, es un requisito de negocio para generar confianza en tickets de inversión altos.
+* **Sensibilidad Legal:** El RGPD es crítico. Nunca se debe enviar un formulario sin el `rgpd_consent` en `true`. Los links legales no pueden ser `href="#"`.
+* **El ecosistema:** CPII (frontend captación) -> BreederHub (gestión) -> Lux Lusitana / Verdent (Arquitectura Core). La landing es solo el "Gate".
+* **Flujo de Aprobación:** Un lead no entra directo. Su `status` nace como `"pending_review"`. La interfaz y el discurso deben reflejar "Solicitar Acceso", no "Crear Cuenta".
+* **Dinámica de Trabajo:** El Director valora la honestidad técnica, tablas de comparación (Gemini vs Claude) y la entrega de código "quirúrgico" que se pueda copiar y pegar directamente sin alterar otras zonas de los archivos.
+
+### 7. INPUT REQUISITO PARA SPRINT 3 (EL GATE / GCP)
+Para operar inmediatamente en la configuración del servidor LEMP / SSL, necesito recibir la siguiente declaración del Director:
+1.  **Decisión Arquitectónica:** ¿El `index.html` estático servirá en la raíz (`/`) vía Nginx y WordPress en un subdirectorio/subdominio, O se convertirá la landing en un Theme de WP?
+2.  **Confirmación DNS:** ¿Los registros tipo A para `@` y `www` en `clubsocios.digital` ya se propagaron hacia la IP `35.184.54.173`?
+3.  **Código:** Para avanzar en paralelo con el frontend, necesito el bloque de código de `access-form.html` para aplicarle la capa de `data-i18n`.

@@ -1,0 +1,115 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Proyecto: CPII / Lux Lusitana · Polygon Dashboard (VIBE-CPII-12)
+## Agente: Bulldozer Claude · Fecha de exportación: 2025-03-15
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Ejecución de codebase: generación, modificación y auditoría de archivos según órdenes del Director y validación del Lead Architect.
+- Aplicación estricta de doctrinas técnicas (R3, R4, Vanilla, Compliance) sin debatirlas.
+- Diagnóstico previo a cualquier intervención de más de 2 archivos — nunca ejecuto bisturí sin confirmación.
+- Detección y registro de deuda técnica aunque no sea el objeto de la orden.
+- Cierre de sesión con Cuadro de Mando actualizado autónomamente.
+
+**Qué NO hago:**
+- No ejecuto código sin diagnóstico previo en intervenciones de más de 2 archivos.
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido (salvo orden explícita).
+- No uso frameworks (React, Vue, Angular), librerías de estado externas ni `window` como bus global.
+- No uso valores hex directos en CSS (R3 Zero-Hex activa).
+- No hardcodeo literales de UI sin clave i18n (R4 activa).
+- No asumo que una orden está cerrada sin tabla de verificación bisturí a bisturí.
+
+**Condiciones necesarias antes de actuar:**
+- Intervenciones >1 archivo: validación del Lead Architect (veto bloqueante).
+- Intervenciones >2 archivos: diagnóstico emitido + alineación confirmada por el Director.
+- Cualquier patrón nuevo no cubierto por doctrina existente: propuesta antes de implementar.
+
+**Matices aprendidos:**
+- El Director opera en modo experto: sin explicaciones pedagógicas, sin preámbulos.
+- El Lead Architect (Gemini) emite el stack y los patrones aprobados; Bulldozer no reinterpreta ni improvisa sobre ellos.
+- Esta sesión es el arranque real del proyecto: no existe historial de sprints anteriores en memoria activa. El MEMORY_DUMP refleja únicamente lo asimilado en esta sesión de alineación.
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (Skeleton v2.5)
+- **R3 Zero-Hex:** Prohibido usar valores de color hexadecimales directos en CSS. Todos los colores deben referenciarse mediante CSS Custom Properties o tokens de diseño.
+- **R4 i18n:** Prohibido hardcodear literales de UI. Todo texto visible debe pasar por el sistema de internacionalización del proyecto.
+- **Vanilla First:** CERO frameworks JS. CERO librerías externas de estado. Web Components nativos (Custom Elements API + Shadow DOM) como única abstracción de componente permitida.
+- **Compliance Firestore:** Aislamiento estricto por `tenant_id`. Ningún bypass de seguridad sin registro de auditoría inmutable.
+
+### Específicas emergidas en sesión
+- **Event-Bus por Canal:** `EventTarget` como singleton por dominio de evento (`getChannel('alertas')`). `CustomEvent` siempre con `{ bubbles: true, composed: true }` para cruzar Shadow DOM. Prohibido `window` como bus.
+- **Layout Splitters 60 FPS:** Toda lógica de drag-resize debe desacoplarse con `requestAnimationFrame` + función `Lerp`. Regla CSS `contain: layout` obligatoria en paneles redimensionables para evitar layout thrashing.
+- **Auth Dual Path:**
+  - *Warm Path:* Custom Claims (`polygon_operator: true`) — lectura transversal estándar, propagación asíncrona aceptada.
+  - *Hot Path:* Cloud Function Callable que emite Custom Token temporal (15 min) para cruzar `tenant_id` en auditorías de emergencia. Registro inmutable obligatorio en Firestore por cada emisión.
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+> **Estado actual:** Sesión de alineación arquitectónica completada. No se ha ejecutado ningún bisturí todavía. El inventario refleja lo que está definido y aprobado, pendiente de `/faseA`.
+
+| Artefacto | Qué hace | Archivo / Ubicación |
+|---|---|---|
+| Stack arquitectónico VIBE-CPII-12 | Definición técnica completa del Polygon Dashboard | Registrado en memoria de sesión — pendiente de materializar en codebase |
+| Patrones aprobados (Event-Bus, Auth, Splitters) | Contratos de implementación validados por Lead Architect | Ídem |
+| Esquema colecciones P0 | `polygon_notes` + `polygon_alerts` (Radar de Producción) | Pendiente — objetivo de `/faseA` |
+| `firestore.rules` híbridas | Tenant estricto + bypass de emergencia con auditoría | Pendiente — objetivo de `/faseA` |
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| `window` como Event-Bus global | Contamina el espacio global, imposible aislar canales por dominio, genera colisiones en arquitecturas multi-componente con Shadow DOM |
+| Frameworks JS (React / Vue / Angular) | Violación directa de restricción inmutable Vanilla First — no debatible |
+| Custom Claims como único mecanismo de Auth transversal | Propagación asíncrona de hasta 1 hora inaceptable para auditorías de emergencia → solución Hot Path complementaria |
+| Layout thrashing con `mousemove` directo en splitters | Provoca reflows síncronos, colapso a <60 FPS en paneles complejos → sustituido por RAF + Lerp |
+| Colores hex directos en CSS | Violación R3 Zero-Hex — no debatible |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+| Ítem | Naturaleza | Severidad | Estado |
+|---|---|---|---|
+| Codebase vacío | No existe ningún archivo implementado aún — todo está en fase de definición | Alta | Pendiente de `/faseA` |
+| `firestore.rules` sin implementar | El Hot Path de auditoría requiere lógica de reglas no trivial — riesgo de brecha si se implementa con prisa | Alta | Pendiente |
+| Definición formal de los 7 Reglas Skeleton v2.5 | Solo se han referenciado R3 y R4. Las otras 5 reglas no han sido comunicadas a este agente | Media | Pendiente de recibir documentación |
+| Estructura de carpetas del proyecto | No definida todavía — riesgo de inconsistencia entre artefactos si no se acuerda antes de `/faseA` | Media | Pendiente |
+| Sistema i18n (R4) | No se ha especificado el mecanismo concreto (JSON keys, módulo propio, etc.) | Media | Pendiente |
+| Tokens de diseño (R3) | Las CSS Custom Properties de color no han sido definidas — riesgo de implementación inconsistente | Media | Pendiente |
+| Definición de agentes AIMON / KAIROS | Referenciados en `.wd-ai-dock` pero sin especificación funcional recibida | Baja | Pendiente |
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+- **Polygon Dashboard es capa transversal, no vertical:** Vive *por encima* de CPII y CIFI-AIP. Cualquier componente que se construya debe ser agnóstico al negocio vertical — no puede asumir contexto de ninguna de las dos plataformas.
+- **El Lead Architect (Gemini) tiene veto bloqueante:** No es un rol consultivo. Ninguna intervención de más de 1 archivo se ejecuta sin su validación. En la práctica, esto significa que el flujo real es: Director emite orden → Bulldozer diagnóstica → Lead Architect valida → Bulldozer ejecuta.
+- **WebOS GLOBIZMARKT como contexto producto:** El Polygon Dashboard es la interfaz operativa de un sistema más amplio (GLOBIZMARKT). Las decisiones de UX no son caprichosas — responden a un ecosistema de múltiples verticales con operadores reales.
+- **`tenant_id` es el eje de seguridad central:** Todo dato en Firestore orbita alrededor del `tenant_id`. Cualquier lógica que cruce ese límite —aunque sea legítima— es un evento de auditoría, no una operación ordinaria.
+- **El bypass de emergencia (Hot Path) es una válvula, no una puerta:** Su existencia está justificada operativamente, pero debe tratarse como superficie de riesgo. El registro inmutable no es opcional — es la condición que hace aceptable el bypass.
+- **Nomenclatura de clases CSS es semántica y contractual:** `wd-` (widget), `gd-` (grid) son prefijos de dominio, no estética. Improvisar nombres fuera de este sistema rompe el contrato con otros agentes que consumen el mismo markup.
+- **Los agentes de consulta tienen dominio asignado:** Perplexity → Event-Bus. Kimi K2.5 → Auth/Rules. Qwen → UI/render. Cruzar dominios genera ruido y respuestas menos precisas — respetar la asignación.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3 (GATE DE ENTRADA)
+
+Para operar desde el primer mensaje sin fricción, necesito recibir del Director:
+
+| Ítem | Por qué es bloqueante |
+|---|---|
+| **Las 7 Reglas Skeleton v2.5 completas** | Solo conozco R3 y R4. Las otras 5 pueden afectar decisiones ya tomadas en esta sesión |
+| **Estructura de carpetas acordada del proyecto** | Sin ella, cualquier bisturí que genere un archivo nuevo puede crear inconsistencia estructural irreparable |
+| **Definición del sistema i18n (R4)** | Mecanismo concreto: ¿JSON keys? ¿Módulo custom? ¿Convención de naming? Sin esto no puedo escribir ningún literal de UI |
+| **Tokens de diseño (CSS Custom Properties de color)** | Sin el mapa de tokens, R3 Zero-Hex es imposible de cumplir en la práctica |
+| **Especificación funcional de AIMON y KAIROS** | Referenciados en el layout core — si `/faseA` toca el dock, necesito saber qué contrato exponen |
+| **Confirmación del criterio de desempate preferencia e. vs preferencia 8** | Preferencia e. (entregar sin confirmación en MANTENIMIENTO) colisiona con preferencia 8 (esperar alineación en +2 archivos). Sin criterio explícito, aplicaré preferencia 8 como más restrictiva |

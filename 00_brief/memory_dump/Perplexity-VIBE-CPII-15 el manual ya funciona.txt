@@ -1,0 +1,128 @@
+# MEMORY_DUMP_PERPLEXITY.md
+## ROL Y LÍMITES OPERATIVOS
+
+**SOMOS UNIDAD ARTIFACTS (Junior Dev Perplexity)**  
+- ✅ **Hacemos**: Lógica pura, registros/diccionarios, utilidades sin UI, traducción de contenido, indexación de recursos.  
+- ❌ **NO tocamos**: CSS, colores, layouts, Shadow DOM, Tailwind, lógica de renderizado DOM.  
+- 🚫 **Prohibido**: Proponer UI, inventar estilos, tocar archivos de Bulldozer (DOM), saltar cadena de mando.  
+- **Condición previa**: Órdenes del General Manager/Lead Architect con nombre_archivo + esquema_exacto + cantidad_items.  
+- **Comportamiento aprendido**: Cuando veo ambigüedad (iconos, nombres gadgets), pregunto 2-3 opciones válidas primero.
+
+**Cadena de Mando**: Director → Lead Architect → Bulldozer → Unidad Artifacts. Cero hotfixes sin autorización.
+
+## DOCTRINAS TÉCNICAS
+
+**Globales (Invariantes)**:
+R3 Zero-Hex: var(--theme-) solamente. #fff/#000 = MUERTE INSTANTÁNEA
+R4 i18n-Estricta: labelKey="clave" NO label: {es:'texto'}
+R0 Sin Hardcode: Variables desde manifest o window.CPII
+R1 Layout Trinity: Sidebar(250px) | Canvas(Órbita 2) | Dock(320px)
+R2 Taxonomía: .wd- (Órbita 3) | .gd-* (Órbita 2 gadgets) | .at-* (lógica)
+R5 Modelo Híbrido Autónomo: Gadgets con diccionario interno + escucha cpii:lang:change
+
+text
+
+**Artifacts-Específicas (Emergentes)**:
+A1 Protocolo Laparoscopia: Solo cambios delta, nunca archivos completos
+A2 JSON Inmaculado: Estructuras puras sin lógica mezclada
+A3 Standby Mode: "Auditado" = CERO acción hasta nueva orden explícita
+
+text
+
+## INVENTARIO DE LO CONSTRUIDO
+
+[core/at-resource-registry.js] — RESOURCE_REGISTRY (6 entradas) — Sellado VIBE-CPII-15
+├── 3 gadgets: manual(simulador,calculadora)
+├── 3 drafts: kyc,mls,network
+├── API: window.CPII.getResourceByKey(key)
+├── Doctrina R4 100%: Solo labelKey, nunca texto plano
+
+[core/i18n.js v2.0] — Motor global i18n — Sellado por Bulldozer
+├── Clave: cpii:locale (localStorage)
+├── Evento: cpii:lang:change
+├── Exposición: window.CPII.i18n.t()
+
+[gadgets/gd-manual.js v2.0] — Manual autónomo — Sellado por Bulldozer
+├── 8 secciones ES (PT/EN/FR vacías)
+├── Re-render en cpii:lang:change
+├── Modelo Híbrido Autónomo confirmado
+
+text
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+[fuzzyMatch() en registry] — Orden: "Solo JSON inmaculado" — Lógica de búsqueda queda para sprint futuro
+[label:{es:'Manual',pt:'Manual'}] — ILEGAL R4 — Corrección Lead Architect: labelKey="tab_manual"
+[Shadow DOM en gadgets] — Bloquea var(--theme-*) — Bulldozer: Light DOM + variables globales
+[Persistencia permanente] — sessionStorage volátil solo — F5 limpia estado (Doctrina confirmada)
+[Perplexity toca DOM/CSS] — Violación roles — Reasignado estrictamente a Artifacts (lógica pura)
+
+text
+
+## DEUDA TÉCNICA DETECTADA
+
+**Crítica (Bloquea Sprint 3)**:
+Traducciones gd-manual.js — getTemplatePT()/EN()/FR() vacías
+
+Cartografía perdida — Lead Architect hotfixes rompieron trazabilidad archivos
+
+contraste Dashboard — Modo Oscuro roto por CSS Lead Architect
+
+Admin Gate móvil — hidden md:block falla Tailwind CDN
+
+text
+
+**Media (Órbita 3)**:
+i18n.js core sin claves tab_draft_kyc/mls/network
+
+RESOURCE_REGISTRY sin categorías/filtros
+
+No hay gd-simulador.js/gd-calculadora.js reales
+
+text
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**CPII / Lux Lusitana**:
+Private Banking mindset: "Quirúrgico, no SaaS del montón"
+
+Cliente portugués sensible: PT prioritario sobre EN/FR
+
+Firebase dual: cpii-landing (Firestore) + cpii-crm (Vercel)
+
+KYC Estado crítico: Bloquea features hasta compliance
+
+Lead Architect aprende lento: Necesita 2-3 iteraciones para internalizar errores propios
+
+General Manager protege cadena mando: Cero hotfixes sin protocolo
+
+text
+
+**Trampas conocidas**:
+Tailwind CDN + breakpoint móvil = Admin Gate invisible
+
+localStorage cpii:locale vs cpii_crm_lang = carrera asíncrona
+
+Material Symbols iconos: function_calculator puede no existir
+
+text
+
+## INPUT REQUISITO PARA SPRINT 3
+
+**Para operar desde mensaje #1**:
+[OBLIGATORIO] Cartografía ACTUALIZADA de archivos (post-hotfixes Lead Architect)
+
+[OBLIGATORIO] Lista claves i18n PENDIENTES para RESOURCE_REGISTRY drafts
+
+[OPCIONAL] Planos Stitch para contraste Dashboard / Modo Oscuro
+
+[CONTEXTO] Estado KYC Lux Lusitana (bloqueos funcionales)
+
+[VALIDACIÓN] ¿gd-simulador.js existe ya o crear desde cero?
+
+Formato mínimo de orden:
+"Perplexity, traduce getTemplatePT() gd-manual.js. Esquema: [copiar getTemplateES()]. Entrega: solo función completa."
+
+text
+
+**Estado operativo**: MEMORY_DUMP sellado. Auditado para exportación. Standby confirmado.

@@ -1,0 +1,239 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Exportación de Memoria Total — CPII / Lux Lusitana
+**Agente:** Bulldozer (Claude) | **Sesiones cubietas:** VIBE-CPII-13 + VIBE-CPII-14
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecución de código frontend: Vanilla JS, HTML, CSS
+- Implementación de artefactos bajo doctrina Skeleton (`.at-*`, `.gd-*`, `.wd-*`)
+- Cirugía de archivos existentes vía `/laparoscopia`
+- Creación de archivos nuevos vía `/cartografia`
+- Traducción de planos arquitectónicos de Lead Architect en código de producción
+
+### Qué NO hago
+- No diseño infraestructura de backend ni Cloud Functions sin planos previos de Lead Architect
+- No toco Firestore rules ni auth triggers sin esquema Verdent validado
+- No ejecuto código a ciegas: siempre pido los archivos existentes antes de intervenir
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido (regla `/laparoscopia`)
+- No uso hex directamente en CSS — solo `var(--theme-*)`
+- No uso texto plano en HTML — `data-i18n` obligatorio (excepto Web Components autónomos)
+
+### Condiciones necesarias antes de actuar
+- En intervenciones de más de 1 archivo: validación de Lead Architect es condición necesaria
+- En intervenciones de más de 2 archivos: diagnóstico + esperar alineación del Director
+- Antes de cualquier bisturí: ver los archivos existentes — nunca emitir código a ciegas
+- Ante código legacy del Secretario General: desconfiar por defecto, verificar con Lead Architect
+
+### Matices aprendidos en este proyecto
+- El Secretario General (Antigravity) extrae código de archivos históricos que pueden ser de versiones anteriores incompatibles (v1.0 SaaS B2B). Tratar siempre como sospechoso hasta validación de Lead Architect.
+- Lead Architect opera en modo consultivo hasta recibir `/faseX` — entonces pasa a modo ejecución
+- El Director toma decisiones estratégicas pero delega la arquitectura en Lead Architect y la ejecución en Bulldozer. No saltarse la jerarquía.
+- Veto doctrinal R3/R4: si una orden viola doctrina, parar, avisar, proponer corrección antes de ejecutar.
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Doctrina Skeleton Global (R0–R5)
+- **R0** Sin hardcode — variables desde manifest
+- **R1** Trinity Layout — Órbita 1 (sidebar 250px) | Órbita 2 (Canvas) | Órbita 3 (Inspector 320px)
+- **R2** Taxonomía: Widgets `.wd-*` viven en Órbita 3 persistentes · Gadgets `.gd-*` se abren en Órbita 2 bajo demanda · Artifacts `.at-*` capa lógica profunda
+- **R3** Sin hex — solo `var(--theme-*)`
+- **R4** Sin texto plano — `data-i18n` obligatorio
+- **R5** Firestore `cpii-landing` como capa de datos
+
+### Doctrinas específicas emergidas en trabajo real
+
+**Modelo Híbrido Autónomo (R4 extendida)**
+Los Web Components `gd-*` NO usan `data-i18n` para su contenido extenso. Gestionan su propio diccionario interno PT/ES/EN/FR. El `core/i18n.js` solo cubre UI global (nav, botones, estados). Esto evita que el core se convierta en un monstruo inmanejable con el texto de cada gadget.
+
+**Light DOM obligatorio para Web Components**
+Sin Shadow DOM en ningún `gd-*`. Razón: Shadow DOM impide que `var(--theme-*)` penetre desde el stylesheet global. Consecuencia: las clases Tailwind y las variables CSS del proyecto funcionan dentro del componente sin ninguna configuración adicional.
+
+**Clave canónica de localStorage**
+- `cpii:locale` (NO `cpii_crm_lang` — esa es legacy v1.x)
+- `cpii:theme`
+- `cpii:timezone`
+Cualquier script del ecosistema que lea o escriba configuración debe usar estas claves exactas.
+
+**Handoff de Estado Universal — 4 fases**
+```
+1. localStorage origen (cpii.clubsocios.digital)
+2. URL params al saltar: ?cpii_lang=pt&cpii_theme=dark&cpii_tz=Europe/Lisbon
+3. at-bootstrapper lee URL → guarda en localStorage del destino → limpia URL
+4. Post-auth → Firestore /users/{uid}/preferences (fuente de verdad permanente)
+```
+
+**Aislamiento lógico, nunca físico**
+Las reglas de Firestore NO separan datos por `/tenants/{tenantId}`. El aislamiento es lógico usando `request.auth.token.tenant_id` sobre colecciones globales. Motivo: el motor de comisiones < 500ms es imposible con aislamiento físico.
+
+**Patrón de evento para re-render de Web Components**
+```javascript
+// Emisor (i18n.js)
+document.dispatchEvent(new CustomEvent('cpii:lang:change', { detail: { lang } }));
+
+// Receptor (cualquier gd-*)
+document.addEventListener('cpii:lang:change', () => {
+  document.querySelectorAll('gd-manual').forEach(el => el.render());
+});
+```
+
+**Orden de carga de scripts en el CRM**
+```html
+<head>
+  <script src="core/at-bootstrapper.js"></script>  <!-- PRIMERO, sin defer -->
+  <script src="core/i18n.js"></script>              <!-- sin defer -->
+  <script src="core/at-tab-manager.js" defer></script>
+  <script src="gadgets/gd-manual.js" defer></script>
+</head>
+<body>
+  ...
+  <script src="core/handoff-emitter.js" defer></script>  <!-- solo Landing -->
+</body>
+```
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Activo en producción / entregado y sellado
+
+| Artefacto | Qué hace | Archivo / Ruta |
+|---|---|---|
+| `at-bootstrapper.js` | Receptor Universal. Lee mochila de URL, guarda en localStorage, aplica tema e idioma al DOM (anti-FOUC), limpia URL con History API | `core/at-bootstrapper.js` |
+| `handoff-emitter.js` | Emisor Universal. Intercepta clics en `<a>` hacia dominios del ecosistema, inyecta mochila en URL de destino, respeta `target="_blank"` | `core/handoff-emitter.js` |
+| `at-tab-manager.js` | Gestor universal de pestañas en Órbita 2. API pública `window.__CPII__.tabManager`. Persistencia volátil en sessionStorage. Agnóstico al contenido. | `core/at-tab-manager.js` |
+| `gd-manual.js` v2.0 | Web Component del Manual de Buenas Prácticas. Diccionario interno PT/ES/EN/FR. Light DOM. Escucha `cpii:lang:change` y re-renderiza. | `gadgets/gd-manual.js` |
+| `tab-manager.css` | Estilos de Tab Bar + Workspace + gd-manual. 100% variables CSS, cero hex. | `css/tab-manager.css` |
+| `i18n.js` v2.0 | Motor de traducción. Clave canónica `cpii:locale`. Expone `window.__CPII__.i18n.t()`. Dispara `cpii:lang:change` al cambiar idioma. | `core/i18n.js` |
+
+### Construido en sesiones anteriores (CPII-13)
+
+| Artefacto | Qué hace | Archivo / Ruta |
+|---|---|---|
+| `access-form.html` | Admin Gate con Ghost Input. Valida clave `cpii-staff` vía Cloud Function `validateAdminGate` y redirige al CRM | `access-form.html` |
+| `CPII-crm_v0.1` | Dashboard Trinity Layout (3 órbitas) con i18n PT/ES/EN/FR | CRM en Vercel |
+| `core/i18n.js` v1.x | Motor de traducción legacy (sustituido por v2.0) | `core/i18n.js` (reemplazado) |
+
+### Objeto global `window.__CPII__`
+```javascript
+window.__CPII__ = {
+  config: { lang, theme, resolvedTheme, timezone },  // at-bootstrapper
+  i18n: { t(), setLanguage(), applyTranslations() }, // i18n.js
+  tabManager: { open(), activate(), close(), closeAll(), getState() }, // at-tab-manager
+  emitter: { getMochila(), injectMochila(), isEcosystemLink() } // handoff-emitter (solo Landing)
+}
+```
+
+### Dominios del ecosistema registrados en `handoff-emitter.js`
+```javascript
+const ECOSYSTEM_DOMAINS = [
+  'cpii.clubsocios.digital',
+  'webinar.clubsocios.digital',
+  'clubsocios.digital',
+  'cpii-crm-v0-1.vercel.app'
+];
+```
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| `localStorage` como única capa de configuración cross-domain | localStorage está atado al origen (dominio). No viaja entre `cpii.clubsocios.digital` y `cpii-crm-v0-1.vercel.app`. Descartado por Lead Architect. Sustituido por patrón Handoff de Estado (URL params + at-bootstrapper). |
+| Código legacy del Secretario General (`lateBindingMigration`, `/tenants/{tenantId}`, `role: user/admin`) | Material de archivo SaaS B2B v1.0. Incompatible con el motor de Revenue Share y la red multinivel. El aislamiento físico por tenant hace imposible calcular comisiones cross-tenant en < 500ms. Declarado radiactivo por Lead Architect. |
+| `data-i18n` en todos los textos de `gd-manual` | Convertiría `core/i18n.js` en un monstruo inmanejable con el texto completo del manual. Descartado en favor del Modelo Híbrido Autónomo (diccionario interno en el Web Component). |
+| Shadow DOM en Web Components | Impide que `var(--theme-*)` del stylesheet global penetre. Requeriría replicar o importar variables dentro del Shadow Root. Descartado. Light DOM obligatorio. |
+| Reescribir `render()` de `gd-manual` con decenas de `data-i18n` | Misma razón que el punto anterior + saturación del core. Descartado por Lead Architect. |
+| `onAuthCreate` con esquema legacy | Esquema incorrecto (no incluye `preferences`, KYC, Custom Claims del Esquema Verdent). Código emitido por Bulldozer en esta sesión fue anulado al detectar su origen legacy. |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (Bulldozer)
+- **`/faseC` no implementada:** La sincronización post-auth (`window.__CPII__.config` → Firestore `/users/{uid}/preferences`) está diseñada pero no codificada. Es el eslabón que cierra el Handoff de Estado.
+- **`at-tab-manager.js` no tiene límite de pestañas:** Se pueden abrir pestañas indefinidamente. No hay cap configurado ni indicador visual de overflow.
+- **`gd-manual.js` no tiene manejo de error si `MANUAL_I18N[lang]` falla:** El fallback a 'pt' está implementado en `getLang()` pero si el objeto está corrompido, el render falla silenciosamente.
+
+### Deuda observada (no es de Bulldozer)
+- **Admin Gate oculto en móvil:** `hidden md:block` no funciona con Tailwind CDN (requiere configuración de safelist o purge). Pendiente desde CPII-13.
+- **`onAuthCreate` y `firestore.rules` con Esquema Verdent:** Lead Architect declaró que los escribiría desde cero. No se han entregado en esta sesión. El backend de autenticación sigue sin blindaje real.
+- **Custom Claims Firebase Auth:** `dueño`, `gestor`, `inversor`, niveles L0-L3 — pendiente. Sin esto, cualquier regla de acceso en Firestore es insegura.
+- **Secret Manager para `cpii-staff`:** La clave está expuesta. Pendiente de migrar a Secret Manager.
+- **Tailwind CDN en producción:** La consola emite warning. Para producción real se necesita Tailwind CLI con purge configurado.
+- **`tab-manager.css` asume variables `--theme-*` definidas:** Si el archivo CSS del tema del proyecto no las define todas, el Tab Manager se rompe visualmente. No existe un fallback documentado.
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Restricciones de negocio
+- CPII es un **club privado de inversión inmobiliaria**. El acceso no es público — hay un proceso de onboarding con KYC. Esto condiciona todo el diseño de acceso.
+- El modelo de negocio es **Revenue Share con red multinivel** (Padrino L1, Inversor L2, etc.). El motor de cálculo de comisiones es el corazón del sistema. Cualquier decisión de arquitectura que lo ponga en riesgo es un veto bloqueante.
+- El mercado principal es **Portugal** (`lang: 'pt'` como default, `timezone: 'Europe/Lisbon'`). Los otros idiomas (ES, EN, FR) son mercados secundarios pero contemplados desde el MVP.
+
+### Sensibilidades del cliente
+- El Director valora la **autonomía del sistema** — prefiere que cada componente sea autosuficiente antes que que dependa de un core frágil.
+- El Director **no tolera deuda técnica invisible** — hay que señalarla aunque no sea el objeto de la orden.
+- El Lead Architect tiene **veto bloqueante** en decisiones de más de 1 archivo. No saltarse la jerarquía.
+- El Secretario General (Antigravity) tiene buena fe pero su cartografía puede extraer código de versiones antiguas. Siempre verificar la procedencia antes de construir sobre ella.
+
+### Patrones que funcionan
+- Preguntar archivos antes de escribir código — siempre. La sesión CPII-14 empezó así y evitó construir sobre código radiactivo.
+- El patrón Emisor/Receptor con `CustomEvent` es la forma limpia de comunicar Web Components con el motor central sin acoplamiento.
+- `sessionStorage` para persistencia volátil de pestañas — correcto para el MVP. No usar `localStorage` para esto (sobreviviría entre sesiones y confundiría al usuario).
+- Lead Architect aprecia que Bulldozer haga diagnóstico arquitectónico antes de ejecutar. No llegar directamente con código.
+
+### Trampas conocidas
+- **Tailwind CDN no purga clases dinámicas.** Si se generan clases por interpolación de strings en JS, pueden no estar disponibles en producción con Tailwind CLI. Usar clases completas en el HTML.
+- **`defer` en `i18n.js` rompe el timing.** Si `i18n.js` carga con `defer`, los Web Components pueden montarse antes de que `window.__CPII__.i18n` exista. `i18n.js` DEBE cargar sin `defer`.
+- **`at-bootstrapper.js` debe ser el primer script del `<head>`.** Si carga después del CSS o de otros scripts, puede producir FOUC (flash of unstyled content) antes de aplicar el tema.
+- **El Secretario General no siempre distingue qué versión del código extrae.** Nunca asumir que el código que trae es el actual en producción.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricciones, el agente heredero necesita:
+
+### Archivos a solicitar al inicio de sesión
+```
+1. core/at-bootstrapper.js     — versión actualmente desplegada
+2. core/handoff-emitter.js     — versión actualmente desplegada
+3. core/i18n.js                — confirmar que es v2.0 (con cpii:locale y window.__CPII__.i18n)
+4. core/at-tab-manager.js      — versión actualmente desplegada
+5. gadgets/gd-manual.js        — confirmar que es v2.0 (con diccionario interno)
+6. El HTML principal del CRM   — para ver orden de carga de scripts y estructura de Órbitas
+```
+
+### Decisiones que Lead Architect debe traer resueltas
+```
+1. Esquema Verdent completo (§ 4.B) con estructura exacta de /users/{uid}
+   incluyendo: preferences, kyc, custom_claims, niveles L0-L3, tipo (inversor/promotor)
+2. firestore.rules definitivo con aislamiento lógico (NO físico)
+3. onAuthCreate definitivo con Esquema Verdent
+4. Definición de Custom Claims exactos: qué claims, qué valores, qué reglas de elevación
+```
+
+### Pregunta de entrada recomendada para Sprint 3
+```
+"Bulldozer, Lead Architect ha entregado el Esquema Verdent definitivo y el código
+de onAuthCreate + firestore.rules. Adjunto los archivos. Ejecuta /faseC:
+sincronización post-auth de window.__CPII__.config con Firestore /users/{uid}/preferences."
+```
+
+### Estado esperado del ecosistema al entrar en Sprint 3
+- `at-bootstrapper`, `handoff-emitter`, `i18n v2.0`, `at-tab-manager`, `gd-manual v2.0` desplegados y funcionando
+- Cambio de idioma operativo en tiempo real en el CRM
+- Sistema de pestañas abierto con `gd-manual` como primer gadget activo
+- Handoff de configuración viajando entre dominios
+- Backend de auth **pendiente** — `/faseC` es la primera orden del sprint
+
+---
+
+*MEMORY_DUMP_BULLDOZER.md — Sellado al cierre de VIBE-CPII-14*

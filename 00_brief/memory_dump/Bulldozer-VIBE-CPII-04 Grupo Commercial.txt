@@ -1,0 +1,174 @@
+# MEMORY_DUMP_BULLDOZER.md
+**Agente:** Bulldozer (Claude Sonnet 4.6)
+**Fecha exportación:** 2026-02-19
+**Proyecto:** VIBE-CPII / Lux Lusitana
+**Sprint cubierto:** Sprint 1 (dogfood Verndent) + Sprint 2 (eXp Commercial Group Landing)
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Implementación frontend: HTML/CSS/JS vanilla, Tailwind, componentes autocontenidos
+- Integración de sistemas existentes sin romper arquitectura preexistente
+- Intervenciones quirúrgicas (`/laparoscopia`) sobre archivos ya entregados
+- Análisis de código ajeno (de Gemini, Antigravity, otros agentes) antes de validar
+- Generación de entregables listos para producción: no prototipos, no pseudocódigo
+- Competencia técnica en modo "Agentes Enfrentados" contra Gemini (Lead Architect)
+- Documentación de deuda técnica aunque no sea el objeto de la orden
+
+### Qué NO hago
+- No ejecuto bisturí sobre más de 2 archivos sin confirmación previa del Director
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido (regla /laparoscopia)
+- No genero claves i18n para idiomas sin tener el archivo i18n.js de referencia — riesgo de inconsistencia
+- No toco `main` directamente — todo pasa por rama de feature
+- No valido métricas de negocio (25% facturación, 7/17 CAPs, Agente del Año): son datos del Director, no verificables por mí
+- No asumo que el motor i18n usa `innerHTML` — siempre leer el motor antes de afirmar comportamiento
+
+### Condiciones necesarias antes de actuar
+- Ver el archivo objetivo antes de cualquier str_replace
+- Tener el sistema de diseño activo (variables de color, tipografías) antes de generar HTML nuevo
+- Para intervenciones multi-archivo: alineación explícita del Director
+
+### Matices aprendidos en este proyecto
+- Gemini es el Lead Architect y emite vetos bloqueantes — sus análisis de QA son válidos y debo procesarlos, no defenderme reflexivamente
+- Antigravity es el agente de edición de código y desplegador — no compite, ejecuta mis entregables
+- GPT-OSS 120B hace limpieza/fase 1 — no interactuamos directamente
+- El Director mantiene la cohesión del equipo de 4 agentes más él mismo
+- El proyecto tiene fecha crítica inamovible: webinar 27F (agentes eXp España)
+- El modo "Agentes Enfrentados" es real: Gemini recibe mis entregables y los critica, y viceversa — la dinámica es competitiva pero el objetivo es calidad, no ego
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (aplicables a este proyecto)
+- **R3 — Zero-Hex:** Sin colores hexadecimales hardcodeados en componentes nuevos. Usar siempre variables CSS o clases Tailwind del design system. Violación detectada: mi primer entregable `team-section.html` (standalone) usó `#0a0e1a` — corregido en versión integrada al usar las clases Tailwind del proyecto
+- **R4 — i18n obligatoria:** Todo texto visible en producción debe tener `data-i18n`. Violación detectada en mi SEC-05 inicial (hardcoded) — corregida en v2 con 30 claves mapeadas. `equipo-comercial.html` es excepción aceptada como MVP-PT
+
+### Doctrinas específicas emergidas en trabajo real
+- **Motor i18n = leer antes de asumir:** El motor original usaba `textContent` puro (nunca innerHTML). Asumir `innerHTML` sin leerlo hubiera roto las bios con `<strong>`. Lección: siempre leer el motor antes de proponer cambios
+- **data-i18n-html="true" = atributo explícito requerido:** El parche de Gemini v2.1.0 implementa la condición correctamente. Exactamente 2 nodos en el proyecto requieren este atributo: `team.da.bio` y `team.cb.bio` en `index.html`
+- **Inline styles = deuda inmediata:** La propuesta de Gemini para el CTA usaba inline styles masivos. Aprendizaje consolidado: nunca inline styles en este proyecto — todo a clases Tailwind o al bloque `<style>` del HEAD
+- **Design system del proyecto = Playfair Display + Manrope + 5 variables de color:** No inventar fuentes ni colores. El sistema está fijo en el Tailwind config del HEAD de index.html
+
+### Colores del sistema (para referencia rápida)
+```
+primary:          #C1A85D
+primary-hover:    #A8924D
+background-dark:  #161513
+card-dark:        #1e1b14
+border-dark:      #35332c
+text-secondary:   #b2afa3
+```
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Qué hace | Archivo / Ubicación |
+|---|---|---|
+| `team-section.html` (standalone) | Primer prototipo de sección equipo — autocontenido con CSS propio | `/mnt/user-data/outputs/team-section.html` — **DESCARTADO**, sustituido por integración nativa |
+| `index.html` SEC-05 v1 | Sustitución del CTA final por team section — sin data-i18n | Entregado, luego corregido |
+| `index.html` SEC-05 v2 | Team section con 30 claves data-i18n + data-i18n-html="true" en 2 nodos bio | `/mnt/user-data/outputs/index.html` — **ACTIVO en feature/commercial-sprint** |
+| `equipo-comercial.html` | Página dedicada al grupo: 9 secciones (hero, perfiles expandidos, metodología nuclear, elementos nucleares, áreas de intervención, CTA final) | `/mnt/user-data/outputs/equipo-comercial.html` — **ACTIVO en feature/commercial-sprint** |
+| `i18n-team-keys.json` | Diccionario de 30 claves team.* en 4 idiomas — entregado para merge en i18n.js | `/mnt/user-data/outputs/i18n-team-keys.json` — **OBSOLETO**: ya integrado en i18n.js v2.1.0 por Gemini |
+| `i18n.js` v2.1.0 | Motor i18n con 30 claves team.* añadidas + parche XSS data-i18n-html | Entregado por Gemini, validado por mí — **ACTIVO en feature/commercial-sprint** |
+
+### Arquitectura de navegación construida
+```
+index.html
+  └── SEC-05c CTA → equipo-comercial.html
+        └── Breadcrumb → index.html
+        └── CTA "Submeter Candidatura" → access-form.html?tipo=comercial
+```
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|---|---|
+| Entregar `team-section.html` standalone con CSS propio | No integra con el design system del proyecto. Colores hardcoded (R3). Requería adaptación manual |
+| Propuesta de Gemini con inline styles masivos | Inmantenible, irrespeta el sistema de diseño, hover con `!important` = señal de código frágil |
+| Usar `innerHTML` global en motor i18n | Vector XSS innecesario. Solución correcta: atributo explícito `data-i18n-html="true"` solo donde necesario |
+| Archivo intermedio `i18n-team-keys.json` como entregable final | Fue útil como paso intermedio pero el destino siempre fue el merge directo en i18n.js. El archivo standalone quedó obsoleto |
+| i18n completa de `equipo-comercial.html` en Sprint 2 | Volumen ~80 claves `ec.*`, fuera del scope de tiempo del sprint. Aceptado como deuda técnica MVP |
+| Stats en texto corrido sin stats bar | La stats bar (+25%, 7/17, 3+) aporta autoridad visual que el texto corrido no consigue. Decisión: mantener el componente |
+| CTA único (solo acceso al grupo) | Reemplazado por CTA doble: conocer el grupo + solicitar acceso. Más opciones para diferentes estados del funnel |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (generada por mí)
+| ID | Descripción | Criticidad | Estado |
+|---|---|---|---|
+| DT-01 | `equipo-comercial.html` — 0 atributos data-i18n en SEC-03 a SEC-08. Página monolingüe PT en proyecto de 4 idiomas | Media | **Aceptada como MVP. Sprint dedicado pendiente** |
+| DT-02 | Comentario obsoleto en index.html L473 referenciando `i18n-team-keys.json` inexistente | Baja | **Corregida por GPT-OSS en Fase 1** |
+
+### Deuda observada (no propia)
+| ID | Descripción | Criticidad | Propietario |
+|---|---|---|---|
+| DT-03 | Nav asimétrico: "Grupo Comercial" ausente en nav de index.html | Media | **Corregida por Antigravity en auditoría final** |
+| DT-04 | `<br>` en team.subtitle del HTML quedaba huérfano al aplicar i18n (textContent destruye el tag) | Baja | **Corregida por Gemini (Opción A: eliminar br)** |
+| DT-05 | FR typo: `team.cb.badge3` = "Co-fundador CPII" sin traducir en bloque francés | Baja | **Corregida por Antigravity en i18n.js L387** |
+| DT-06 | Métricas de autoridad (25%, 7/17, Agente del Año) hardcodeadas sin fuente de verdad dinámica. Si cambian hay que editar HTML + i18n.js manualmente | Media | Pendiente — sin propietario asignado |
+| DT-07 | `equipo-comercial.html` sin i18n completa del nav "Grupo Comercial" (la clave nav.grupo_comercial puede no existir aún en i18n.js) | Baja | Pendiente verificación |
+
+---
+
+## 6. CONOCIMIENTO TÁCTICO DEL PROYECTO
+
+### Sobre el negocio
+- **CPII** (Club Privado de Inversores Inmobiliarios) y **eXp Portugal Commercial Group** son dos entidades distintas pero relacionadas: CPII es el vehículo de inversión, Commercial Group es la estructura de agentes
+- El acceso al grupo tiene criterios formales: Agente Senior (5 años, 75% negócios comerciais), Agente Especialista (3 años, 50%), Referenciador (cualquier miembro eXp). Esto no es marketing — es arquitectura de acceso real
+- Las métricas de David Almeida (25% facturación, 7/17 CAPs, Agente del Año 2025) fueron validadas por negocio el 19/02. Fuente: actas de reunión del 18/02 con David Almeida y Carlos Balboa
+- El grupo opera con exclusividad firmada para área Comercial Portugal — esto es un differentiator legal, no solo marketing
+- La metodología KYC/AML no es un badge cosmético — es el filtro real que diferencia al grupo. Sin LOI + Prova de Fundos no se comparte información del activo. Antigravity y los demás agentes deben tratar esto como regla de negocio, no decoración
+
+### Sobre el equipo de agentes
+- **Gemini (Lead Architect):** Arquitecto de datos e i18n. Sus vetos son bloqueantes. Tiende a dar propuestas conceptuales sin código ejecutable — su fuerza está en el análisis y la arquitectura, no en el código entregable
+- **Antigravity:** Agente de edición de código y deploys. Hace QA exhaustivo, genera auditorías por fases, gestiona ramas git. Altamente confiable para integración
+- **GPT-OSS 120B:** Limpieza y fase 1. No interacciona directamente conmigo
+- **Yo (Bulldozer):** Único agente que entrega código HTML/CSS ejecutable y listo para producción. La dinámica "Agentes Enfrentados" con Gemini es real — sirve para elevar calidad
+
+### Patrones que funcionan
+- Leer el archivo objetivo ANTES de cualquier str_replace — siempre
+- Entregar código + diccionario i18n simultáneamente — evita el ciclo "falta el i18n"
+- Usar `data-i18n-html="true"` como atributo explícito, nunca como comportamiento por defecto
+- El Director aprecia respuestas directas sin preámbulo — modo BÁSICO por defecto, DETALLADO cuando hay arquitectura nueva
+
+### Trampas conocidas
+- **Trampa 1:** Asumir que el motor i18n soporta innerHTML sin leerlo. Coste: los tags `<strong>` se muestran como texto plano en producción
+- **Trampa 2:** Entregar CSS standalone (con variables propias) cuando el proyecto tiene un design system Tailwind. El resultado no integra visualmente
+- **Trampa 3:** Generar claves i18n sin ver el diccionario existente — riesgo de colisiones de naming o inconsistencia de estilo de claves (`snake_case` vs `dot.notation`)
+- **Trampa 4:** Ignorar el parche XSS cuando se añaden traducciones con HTML interno. El motor original (v2.0.0) usaba textContent puro — cualquier valor con HTML era texto literal
+
+### Stack técnico confirmado
+- HTML5 + Tailwind CSS CDN v3 (plugins: forms, container-queries)
+- Google Fonts: Playfair Display + Manrope
+- Google Material Symbols Outlined
+- Motor i18n propio (i18n.js) — localStorage persistence, 4 idiomas, DOMContentLoaded init
+- Firebase (stack declarado en footer — no interactuado aún)
+- Zero frameworks JS. Zero React. Zero Vue. Vanilla puro
+- Git con ramas de feature — `main` protegido
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+Para operar desde el primer mensaje sin fricciones, necesito:
+
+### Archivos
+- `index.html` — versión post-merge de `feature/commercial-sprint` (con nav "Grupo Comercial" añadido por Antigravity)
+- `i18n.js` — versión v2.1.0 final tal como está en la rama desplegada
+- `equipo-comercial.html` — versión final desplegada (para saber el estado exacto de la deuda DT-01)
+
+### Decisiones pendientes del Director
+- **¿Sprint i18n de equipo-comercial.html?** Si sí: necesito confirmación para ejecutar las ~80 claves `ec.*` en un sprint de 30 minutos
+- **¿Público y objetivo del webinar 27F?** El Director no respondió las 3 preguntas que lancé al final de Sprint 2. Son bloqueantes para el guion
+- **¿Merge a main autorizado?** La PR de `feature/commercial-sprint` está creada pero sin merge confirmado
+
+### Criterio de desempate activo
+- Preferencia e (entregar sin confirmación en MANTENIMIENTO) vs preferencia 8 (esperar alineación en +2 archivos): el Director no zanjó este conflicto en Sprint 2. Si hay intervención multi-archivo en Sprint 3, necesito criterio explícito o se aplica preferencia 8 por defecto

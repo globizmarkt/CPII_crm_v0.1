@@ -1,0 +1,50 @@
+# MEMORY_DUMP_LEAD_ARCHITECT
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Mi rol:** Lead Architect (Arquitecto Principal) de la Factoría. Coordino a la Unidad de Estructura (Bulldozer), Unidad de Artifacts (Qwen/Kimi), Departamento Visual (Stitch) y Unidad de Datos (Perplexity). Audito código, garantizo la integridad estructural y dicto la viabilidad técnica.
+* **Qué NO hago:** No escribo código desde cero ni reescribo archivos completos. No mezclo competencias de agentes (ej. pedir a Stitch, que es diseño visual, que ejecute lógica de DOM).
+* **Límites aprendidos (Hallucinatory Drift):** Tiendo a sufrir "visión de túnel" estética (ej. el error del header azul). Para evitarlo, me auto-impongo analizar el impacto en la *Trinity Architecture* global antes de aprobar un cambio visual.
+* **Condición de actuación (Laparoscopia v2):** Necesito estrictamente el bloque de código contextual (líneas superior e inferior) antes de autorizar a un agente a realizar una incisión estructural (abrir/cerrar etiquetas). No opero a ciegas. 
+* **Etiquetado de Mando:** Debo usar y exigir el prefijo `[ROL: Nombre_del_Agente]` para evitar la deriva de roles en las instrucciones.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Trinity Architecture:** Sistema de 3 Órbitas. Órbita 1 (Sidebar/Nav), Órbita 2 (Canvas/Contenido Dinámico), Órbita 3 (Dock/Info derecha).
+* **Doctrina R3 (Zero Hex):** Prohibición absoluta de colores hexadecimales hardcodeados. Todo debe mapearse a la paleta institucional (`var(--theme-*)`).
+* **Doctrina R4 (i18n):** Cero texto estático. Dos vías permitidas: Motor centralizado (`core/i18n.js`) o Modelo Híbrido Autónomo (diccionarios internos en los Web Components).
+* **Contrato de Scroll (Stitch Doctrine):** Solo la Órbita 2 (`overflow-y-auto`) tiene permiso para hacer scroll. Órbitas 1 y 3 permanecen rígidamente bloqueadas.
+* **Resolución de Conflicto Tailwind CDN:** Para valores de variables CSS del sistema inyectados dinámicamente mediante JS, es obligatorio el uso del atributo `style="..."` inline. La sintaxis `bg-[var(--theme-*))]` queda restringida a HTML estático en carga inicial.
+* **Estructura del Registro $O(1)$:** El `RESOURCE_REGISTRY` es obligatoriamente un Objeto literal (diccionario) indexado por ID, nunca un Array.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Base Estructural** — Layout Trinity, CSS vars (`--theme-ink` incluido), fixes críticos iniciales — `index.html`.
+* **Tab Manager (v3.1-R3)** — Motor de pestañas con persistencia volátil, inyección de componentes y estética Bloomberg (surface oscuro) — `core/at-tab-manager.js`.
+* **Resource Registry** — Diccionario cerrado de recursos con prefijo `gd-` — `core/at-resource-registry.js`.
+* **Translation Engine (v2.1)** — Motor i18n con tokens core (PT, ES, EN, FR) y terminología institucional — `core/i18n.js`.
+* **Search Engine** — Motor de búsqueda (Kimi) con soporte de acentos y scores — `core/at-search-engine.js`.
+* **Gadget: Dashboard (v1.0)** — Web Component híbrido autónomo con diseño Bento (Stitch) y diccionarios internos — `gadgets/gd-dashboard.js`.
+* **Gadget: Manual (v2.2)** — Documento oficial con selector de zoom (A-/A+) en `localStorage` y estética "Wet Blue Ink" — `gadgets/gd-manual.js`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Registro en formato Array:** Descartado. Cambiado a Objeto `{}` para garantizar acceso de complejidad $O(1)$ en el motor de búsqueda y el Tab Manager.
+* **Uso de Perplexity para traducir el Dashboard:** Descartado. Qwen implementó el "Modelo Híbrido Autónomo" incluyendo el HTML completo en los 4 idiomas dentro del componente, ahorrando la dependencia del motor central para este gadget masivo.
+* **Color Azul (`--theme-ink`) en el Header de Órbita 2:** Descartado. Rompía la estética oscura "Skeleton" y desconectaba el CRM. Se revirtió a `--theme-surface`. El azul queda estrictamente confinado al *interior* de los documentos para denotar autoridad.
+* **Inyección de clases Tailwind dinámicas en JS:** Descartado. El compilador JIT del CDN no las reconoce en tiempo de ejecución. Reemplazado por estilos inline para variables CSS.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Infracciones R3 Residuales (Capa Decorativa):** Existen tres hexadecimales hardcodeados en el bloque `<style>` del `index.html` que no afectan la lógica pero violan la doctrina:
+  1. `body { background-color: #161513; }`
+  2. `.luxury-glass { background: rgba(30, 27, 20, 0.7); }`
+  3. `.gatekeeper-overlay { background: rgba(22, 21, 19, 0.4); }`
+* **Vulnerabilidad de Agentes Junior:** Riesgo constante de que agentes (como Qwen) intenten asumir competencias fuera de su unidad si se les entregan archivos demasiado grandes sin "Brazo Humano" que los filtre.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Semántica del Color:** El Dorado (`--theme-border-active`) grita "interfaz/acción/navegación". El Azul Profundo (`--theme-ink`: `#181d6d` / `#0a1420`) susurra "autoridad/documento/oficialidad". Nunca deben intercambiar roles.
+* **Tono Private Banking:** Las palabras importan. No usamos "Manual", usamos "Guía" (`Guide`). El tono debe ser institucional, sobrio, exclusivo. El lujo en la arquitectura *Lux Lusitana* proviene de la ausencia de ruido visual.
+* **Control de Agentes:** "Stitch" es un departamento conceptual de diseño, no pica código. "Antigravity" es para refactorizaciones estructurales masivas de cierre de etiquetas. "Bulldozer" es la fuerza bruta del Core.
+* **Archivos Masivos:** Si se alimenta a los LLMs con archivos HTML pesados, "alucinarán" lógicas que no existen. La extracción manual (Brazo Humano) del `<main>` es obligatoria antes de delegar la creación de un componente.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para iniciar operaciones sobre "El Gate" (Gatekeeper/KYC) o la Órbita 3, necesito:
+1. **El contexto exacto (código base)** del archivo objetivo actual (ej. `index.html` actualizado o el nuevo script a inyectar).
+2. **Los planos de diseño (HTML/CSS)** si el origen es Stitch, pre-extraídos por el Director.
+3. **Confirmación explícita** de qué agente será asignado a la primera tarea utilizando la etiqueta `[ROL: Agente]`.

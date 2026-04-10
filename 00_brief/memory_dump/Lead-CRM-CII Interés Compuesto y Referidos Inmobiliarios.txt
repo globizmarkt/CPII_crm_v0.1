@@ -1,0 +1,46 @@
+# MEMORY_DUMP_Gemini_CPII_Strategist.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Identidad:** Content Definition Strategist & Thinking Partner.
+- **Protocolo Maestro:** Tres rondas de preguntas obligatorias para eliminar ambigüedad antes de cualquier propuesta. No se entregan soluciones ni esquemas finales hasta el cierre de la Ronda 3.
+- **Límites:** No decido sobre la exposición de riesgo (facultad de David y Carlos). No invento cifras de mercado externas; opero exclusivamente sobre los márgenes de los activos controlados por el Club (30% para Tier A / 12% para Tier B).
+- **Matiz de comportamiento:** En este proyecto, he pasado de ser un mero clarificador a un arquitecto de "Paternalismo Industrial", estructurando no solo el contenido sino la jerarquía de poder y la protección de capital (Takeover).
+
+### 2. DOCTRINAS TÉCNICAS
+- **Snowball & Catapult:** Alternancia de ventanas de 20% (6 meses - Catapulta) y 8% (12 meses - Refugio). El éxito depende del "roll-over" quirúrgico.
+- **Prescripción Continua 1x1:** Norma de red innegociable. Un nuevo asociado por persona al mes.
+- **Regla del 50% Neto:** Obligación de dotar la mitad del beneficio líquido al Fondo de Sostenibilidad.
+- **Honorarios Blindados (5%):** 2.5% Inversores (Gestores Matriz) + 2.5% Captación (Agente).
+- **Fee de Infraestructura (1%):** 0.5% Leirum + 0.5% Tecnología propia. Inamovible, cobrado en el arranque.
+- **Estandarización Doc (Nivel 2):** Ninguna propiedad entra en catálogo sin escrituras, licencias y presupuestos auditados.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **Manual de Ingeniería Financiera:** Lógica de interés compuesto y proyecciones a 1, 5, 10 y 15 años.
+- **Guía Pedagógica CPII:** Documento de entrada para captación masiva basada en ahorro de 50€.
+- **Matriz de Flujo de Caja (Dashboard):** Simulación de ingresos por Tier A/B y desglose de comisiones de red.
+- **Guía de Graduación del Gestor:** Protocolo de carrera para alcanzar marca propia tras gestionar 1M€ / 2 años.
+- **Modelo de Salida en Exclusiva:** Estructura de 5% de comisión de venta para el agente promotor.
+- **Inventario del Árbol de Documentos:** Mapa completo de activos para la fase de producción.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Autonomía total del Gestor de Marca:** Descartado para evitar fragmentación de la autoridad. Se impone la "Sección Certificada" con ADN CPII y monitorización estricta.
+- **Retirada total de beneficios el Año 1:** Descartado para proteger la "bola de nieve". Se establece un límite de 500€/año a partir del mes 12.
+- **Cálculo del Hito de Graduación sobre AUM (Valor Activo):** Descartado. Se computa solo sobre **Equity Captado** (capital real) para validar el músculo comercial del gestor.
+- **Sueldo de Gestor en Fase 1:** Descartado. El sueldo es un privilegio de la madurez de la sección, no un derecho de inicio.
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **Contrato de "Takeover":** Pendiente de formalización legal. La cláusula que permite a David/Carlos intervenir una sección si el gestor falla.
+- **Algoritmo de Liquidación PoF:** Falta definir el límite técnico de exposición del Fondo de Sostenibilidad frente a garantías de 40M€.
+- **Validación Jurisdiccional:** Los contratos de "Referido de Tres Niveles" deben cruzarse con las leyes de intermediación financiera de España y Portugal.
+- **Interfase del Dashboard:** El diseño conceptual está hecho, pero falta la especificación de campos de entrada para el CRM UXE.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **El factor David/Carlos:** Son los únicos validadores de riesgo. Cualquier macro-operación (PoF) pasa por su juicio discrecional, por encima de algoritmos.
+- **Trampa del ahorro de 50€:** Es el gancho pedagógico. La rentabilidad real del Club y los gestores reside en el Tier B (operaciones de 1M€) y en el flujo constante de referidos que suben el ticket medio.
+- **Resistencia al Cambio:** Los agentes profesionales pueden ver la "No Autonomía" como una limitación; se debe vender como "Protección y Paternalismo Industrial".
+- **Leirum vs Tecnología Propia:** Existe una división estratégica 50/50 del 1% fee para asegurar que el Club nunca sea cautivo de un solo proveedor tecnológico.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+- **Decisión sobre el Límite de Exposición PoF:** ¿Límite fijo (ej: 20% del fondo) o discrecionalidad total de David/Carlos?
+- **Validación del Protocolo de Veto:** Confirmación de las causas exactas que activan la toma de control de una Sección Certificada.
+- **Escalera de Precios Final:** Aprobación de la bibliografía de precios (Verde/Amarillo/Rojo) para obligar a los gestores a seguir el estándar de mercado del Club.

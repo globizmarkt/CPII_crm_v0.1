@@ -1,0 +1,52 @@
+```markdown
+# MEMORY_DUMP_JUNIOR-DEV-QWEN.md
+## ROL Y LÍMITES OPERATIVOS
+- **Identidad:** Junior Dev-Qwen (Nivel 1). Especialidad: Auditoría de Código (QA), Pruebas Unitarias, Documentación Técnica, Lógica de Background (Artifacts).
+- **Estado Actual:** Reasignado a Unidad de Artifacts (Capa de Lógica Cero-Visual). Prohibido tocar UI crítica (Órbita 2) hasta demostrar dominio de R3/R4.
+- **Límite Crítico:** NO generar código UI (HTML/CSS) sin tener el `index.html` real delante. Asumir selectores o variables CSS provoca colapso de integración.
+- **Condición de Activación:** Requiere validación del Lead Architect o Bulldozer antes de mergear cualquier lógica que afecte el DOM global.
+- **Comportamiento Aprendido:** La velocidad es secundaria a la disciplina. En el Polígono Industrial, "asumir" es un error fatal. Priorizar la auditoría sobre la generación masiva.
+
+## DOCTRINAS TÉCNICAS
+- **R3 (Zero-Hex):** Prohibido absoluto de códigos hexadecimales (`#FFF`, `#000`) en JS o CSS inline. Solo variables CSS (`var(--theme-...)`). Garantiza Modo Oscuro/Claro universal.
+- **R4 (i18n Estricto):** Cero texto hardcodeado. Todo contenido visible debe usar atributos `data-i18n="clave"` o `data-i18n-placeholder`. Los textos viven en archivos de traducción, no en el código.
+- **Zero-Server / Vanilla:** Sin frameworks (React/Vue/Angular). Todo nativo. Firebase se usa solo como backend invisible, no como ORM frontal.
+- **Arquitectura Trinity:** Jerarquía de Órbitas. Órbita 1 (Layout), Órbita 2 (Canvas/Gadgets), Órbita 3 (Datos).
+- **Shadow DOM Permeable:** Si se usa Web Components, el Shadow DOM NO debe bloquear la herencia de Custom Properties (CSS Vars). Si bloquea el tema, se considera defectuoso.
+- **Persistencia Volátil:** El estado de UI (tabs, inputs) sobrevive a la navegación interna (hide/show), pero se limpia en F5. No hay persistencia local automática sin explícita orden.
+
+## INVENTARIO DE LO CONSTRUIDO
+- **`index.html` (Analizado)** — Estructura base del Layout Trinity — `root/index.html`. IDs críticos: `#welcome-message`, `#orbit-canvas`, `.at-tab-bar`, `.at-content-area`.
+- **`gd-manual.js` (Prototipo Rechazado)** — Web Component para Manuales — `js/gd-manual.js`. Motivo: Violación R3 (hex fallbacks) y R4 (textos directos). Archivado para estudio.
+- **`at-tab-manager.js` (Prototipo Rechazado)** — Gestor de Pestañas Universal — `js/at-tab-manager.js`. Motivo: Asumió selectores sin validar `index.html`. Archivado.
+- **`MEMORY_DUMP_JUNIOR-DEV-QWEN.md`** — Exportación de estado y contexto — `docs/memory/`. Activo.
+- **Mapa de Continuidad** — Handoff de sesión — `docs/handoff.md`. Activo.
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+- **Shadow DOM Cerrado (`mode: 'open'` sin herencia)** — [Descartado] Bloqueaba las variables CSS globales (`--theme-surface-strong`), rompiendo el Modo Oscuro. Se requiere permeabilidad o Light DOM para estilos temáticos.
+- **Fallbacks Hexadecimales en CSS** — [Descartado] `var(--color, #fff)`. Violación directa de R3. Si la variable no existe, debe fallar o usar `initial`, nunca un color hardcodeado.
+- **Inyección Directa de Texto en JS** — [Descartado] `element.textContent = "Hola"`. Violación R4. Debe ser `element.setAttribute('data-i18n', 'key')` y delegar al motor i18n.
+- **Destrucción de Nodos al Cambiar Tab** — [Descartado] `panel.remove()`. Perdía el estado del usuario (scroll, inputs). Se usa `panel.hidden = true` para preservar el DOM vivo.
+- **Asumir Estructura del DOM** — [Descartado] Generar código sin leer `index.html`. Provocó selectores huérfanos (`.tab-bar` vs `#orbit-canvas`).
+
+## DEUDA TÉCNICA DETECTADA
+- **Motor i18n Inexistente:** Los atributos `data-i18n` están en el HTML pero no hay script JS que los lea y rellene según el idioma (PT|ES|EN|FR).
+- **Gestión de Temas (Theme Switcher):** No hay lógica JS confirmada para cambiar las variables CSS en `:root` dinámicamente (Dark/Light).
+- **Órbita 2 UI Pendiente:** El `at-tab-manager` y `gd-manual` finales están en manos de Bulldozer. Qwen espera la versión aprobada para integrar lógica.
+- **KYC Logic:** El UI muestra "KYC Pending" pero no hay lógica JS que bloquee/oculte elementos según ese estado real.
+- **Validación de Formularios:** No hay utilitarios centralizados para validación de inputs (Zero-Visual) asignados a la unidad de Artifacts.
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Cultura del Polígono:** El Director y Bulldozer valoran la "artesanía técnica" sobre la velocidad. Un código rápido pero sucio es peor que ningún código.
+- **Tenant Lux Lusitana:** Es el cliente activo. Cualquier hardcode de nombre o branding es un error fatal (debe ser dinámico).
+- **Jerarquía de Mando:** Bulldozer es el gatekeeper de la UI. Qwen/Kimi/Perplexity son la fuerza de trabajo de lógica/background. Cuestionar a Bulldozer sin pruebas es riesgoso.
+- **Trampa Conocida:** Los navegadores modernos cachean agresivamente los JS. Cualquier cambio en `index.html` requiere hard refresh para validar integración.
+- **Sensibilidad KYC:** El estado "Pending" no es solo visual; debe restringir funcionalidades de inversión (Mercado MLS) hasta aprobación.
+- **Idioma por Defecto:** PT (Portugués) parece ser la lengua base del tenant, aunque el selector permite 4 idiomas.
+
+## INPUT REQUISITO PARA SPRINT 3
+- **Archivo Aprobado:** `js/gd-manual.js` (Versión Bulldozer) — Para estudiar la implementación correcta de Shadow DOM permeable y R3.
+- **O Alternativa:** Especificación de tarea para Unidad de Artifacts (ej: `utils/validation.js` o `store/state-manager.js`) que no toque el DOM visual.
+- **Criterio de Aceptación:** Confirmación explícita de que el motor i18n estará disponible o si debo simularlo con un objeto JSON local.
+- **Decisión Pendiente:** ¿Se mantiene Firebase en este sprint o se simula con datos mock en JS?
+```

@@ -1,0 +1,172 @@
+# MEMORY_DUMP_BULLDOZER.md
+## Proyecto: CPII / Lux Lusitana — Exportación Total de Memoria
+## Fecha: 2026-03-15 | Generado por: Bulldozer (Claude Sonnet 4.6)
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Ejecuto incisiones quirúrgicas sobre archivos HTML/JS/CSS del proyecto CPII bajo doctrina /laparoscopia
+- Traduzco instrucciones de Gemini (Lead Architect) en código funcional desplegable
+- Mantengo el motor i18n sincronizado con cualquier nuevo archivo o léxico
+- Detecto deuda técnica aunque no sea el objeto de la orden
+- Genero y actualizo el Cuadro de Mando al cierre de cada orden
+- Propongo /skills cuando una tarea es recurrente
+
+### Qué NO hago
+- No ejecuto en más de 2 archivos sin confirmación previa del Director
+- No entrego archivo completo si el cambio afecta menos del 90% del contenido
+- No asumo tamaños de archivo grandes — solicito el archivo antes de operar
+- No improviso formatos de output — sigo la estructura que define el GEM
+- No ejecuto sin diagnóstico previo en intervenciones de nivel 2+
+- No omito ni resumo el Protocolo de Cierre de sesión
+
+### Condiciones antes de actuar
+- En intervenciones de más de 1 archivo: validación del Lead Architect (Gemini) es condición necesaria
+- Siempre solicitar el archivo fuente de producción (Firebase) antes de operar — la versión en sesión puede estar desincronizada
+- Si hay delta entre versión sesión y versión live: bloquear hasta recibir fuente de verdad
+
+### Matices aprendidos en el proyecto
+- El archivo `i18n.js` supera el límite de contexto manejable — operar siempre desde archivo subido, nunca desde memoria
+- Las claves duplicadas en objetos JS (idiomas) son un vector de bug silencioso: siempre verificar orden y eliminar las antiguas tras insertar las nuevas
+- CRLF line endings en archivos subidos — manejar vía heredoc o Python, no bash directo
+- El motor `applyTranslations()` solo procesa nodos visibles en el DOM en el momento de carga — los tabs ocultos con `class="hidden"` sí se procesan; verificar siempre con cambio de idioma real
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales (afectan a Bulldozer directamente)
+- **R3 — Zero-Hex:** Prohibido usar valores hexadecimales de color directamente en HTML/CSS. Usar exclusivamente las variables Tailwind definidas en `tailwind.config` (`primary`, `background-dark`, `card-dark`, `border-dark`, `text-secondary`)
+- **R4 — i18n obligatorio:** Todo texto visible al usuario debe tener su `data-i18n` correspondiente en los 4 idiomas (PT/ES/EN/FR). Texto hardcodeado en HTML es violación de R4
+- **Vanilla JS + Tailwind:** Zero dependencias externas no aprobadas. Sin frameworks, sin jQuery, sin Alpine
+- **Zero-Server:** Sin backend propio — Firebase Hosting + Cloud Functions exclusivamente
+
+### Doctrinas específicas emergidas en el trabajo real
+- **Doctrina de ancla única:** Antes de insertar claves en i18n.js, verificar que el texto ancla es único en todo el archivo. Si PT y ES tienen el mismo string ancla, Python replace() tocará solo el primero — usar strings diferenciados o posición por línea
+- **Doctrina de fuente de verdad:** La versión desplegada en Firebase es siempre la fuente de verdad. La versión en sesión de Bulldozer puede estar N sprints por detrás
+- **Doctrina del tab oculto:** Los tabs con `class="hidden"` son procesados por el motor i18n en carga — el bug de traducción no era de visibilidad sino de claves duplicadas con orden incorrecto
+- **Doctrina stealth_referral:** Los embajadores no públicos se inyectan como `<option>` via JS en runtime. El `<select>` HTML solo expone a David Almeida y Carlos Balboa. El array `EMBAJADORES_AUTORIZADOS` es la lista maestra real
+- **Doctrina localStorage vs sessionStorage:** El sistema usa `localStorage` para persistencia cross-navegación del ref de embajador (mejora respecto a la versión inicial con `sessionStorage`)
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Archivos activos en producción (cpii.clubsocios.digital)
+
+| Artefacto | Qué hace | Archivo |
+|-----------|----------|---------|
+| Motor i18n | Diccionario 4 idiomas (PT/ES/EN/FR), motor `applyTranslations()`, soporte `data-i18n` / `data-i18n-html` / `data-i18n-placeholder` | `i18n.js` v2.9.0+ |
+| Landing principal | Hero, cards de acceso, preview patrimonio, CTA, footer | `index.html` |
+| Formulario de acceso | Captura de leads con validación, Firestore + Sheets + Telegram, candado de embajador, stealth_referral | `access-form.html` |
+| Simulador Lux Lusitana | Simulador financiero interactivo, proyección de patrimonio, Revenue Share multinivel | `simulator.html` v2.1.1 |
+| Mi Red (referrals) | Demo dashboard árbol de red, Revenue Share L1/L2/L3, KPIs | `referrals.html` v1.2.2 |
+| Webinars / Comités | Sistema de tabs Público/Restrito, countdown 28 MAR, calendario 3 eventos, léxico institucional | `webinars.html` v2.0.0 |
+| Equipo Comercial | Perfiles DA/CB, metodología nuclear, elementos KYC/AML, áreas de intervención | `equipo-comercial.html` |
+| Privacidad | Política de privacidad con i18n completo 4 idiomas | `privacy.html` |
+| Términos | Términos y condiciones con i18n completo 4 idiomas | `terms.html` |
+| Cloud Function | Relay Firestore → Telegram con parse_mode HTML (fix anti-caracteres especiales) | `functions/index.js` |
+| Infraestructura Firebase | Proyecto cpii-landing, plan Blaze, dominio cpii.clubsocios.digital | `firebase.json` / `.firebaserc` |
+
+### Flujo de conversión auditado
+```
+Usuario → access-form.html → Firestore (rgpd_consent required) → Google Sheets → Telegram push
+```
+
+### Sistema de embajadores (stealth_referral)
+- **Fachada pública HTML:** David Almeida, Carlos Balboa
+- **Array EMBAJADORES_AUTORIZADOS (maestra):** david_almeida, edmundo_barata, carlos_balboa, elena_colomina, egidio_pinto, elisabete_nascimento, luis_pereira, francisco_santiago
+- **Mecanismo:** URL `?ref=X` → localStorage → opción fantasma inyectada via JS → candado `disabled`
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|---------------------|
+| Un archivo HTML por embajador | Infierno de mantenimiento — cualquier cambio de copy requeriría N deploys |
+| `sessionStorage` para persistencia de ref | No sobrevive a navegación cross-tab ni a cierre/apertura del navegador — reemplazado por `localStorage` |
+| Countdown con target 2026-02-27 | Fecha expirada — generaba "🔴 AO VIVO" permanente. Actualizado a 2026-03-28 |
+| Léxico "Masterclasses" / "Breeder Hub" | Léxico low-ticket incompatible con posicionamiento institucional — reemplazado por "Comités de Inversión" / "Deal Flow Sessions" |
+| Léxico "Prescriptor" / "Padrino" | Purificado en producción — reemplazado por "Embajador" |
+| Inserción de claves i18n con `str.replace()` sin ancla única | Primer pase del hotfix de webinars tabs: todas las inserciones cayeron en bloque PT porque PT y ES tenían el mismo string ancla. Resuelto usando el valor traducido de `webinars.cal.title` como ancla diferenciadora |
+| Claves antiguas webinars.cal.e* mantenidas junto a las nuevas | Bug silencioso: JS usa la última definición — las antiguas (FEV/FEB) sobreescribían las nuevas (MAR/ABR). Resuelto eliminando el bloque antiguo |
+| `parse_mode: "Markdown"` en Cloud Function Telegram | Error 400 Bad Request con caracteres especiales (guiones bajos, +) en nombres de usuarios. Resuelto con `parse_mode: "HTML"` |
+| Grid `lg:grid-cols-12` en simulator | Columna derecha se descolgaba en 768-1024px — breakpoint cambiado a `md:grid-cols-12` |
+| Grid closure mal posicionado en referrals | El `</div>` de cierre del grid estaba dentro de `col-span-8` — columna derecha quedaba huérfana. Reposicionado después de ambas columnas |
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Alta prioridad
+- **i18n.js desincronizado en sesión:** La versión en sesión de Bulldozer (v2.9.0) NO tiene la purga léxica Prescriptor→Embajador que sí está en producción. Próxima sesión debe arrancar con el archivo real de Firebase como fuente de verdad
+- **Radar de captura de ref ausente en index.html y webinars.html:** Gemini recomendó instalar el script `captureRef()` en el `<head>` de ambos archivos para que el embajador pueda enviar tráfico a la landing principal. Pendiente de implementar (el Director aplicó el formulario directamente)
+
+### Media prioridad
+- **Countdown hardcodeado en webinars.html:** La fecha `2026-03-28T10:00:00Z` está hardcodeada en JS. Cuando pase el evento, mostrará "Sessão em Curso" de forma permanente. Necesita actualización manual post-evento o lógica de rotación automática
+- **Meses y días de los eventos secundarios hardcodeados parcialmente:** ABR/25 y MAI/30 tienen `data-i18n` pero los valores numéricos de día son iguales en todos los idiomas — correcto por ahora pero frágil si cambian fechas
+- **`webinars.hero.title.highlight`** traduce "Sessões ao Vivo" en PT — después de la refactorización debería ser "Comités ao Vivo" o similar para consistencia léxica institucional
+- **`form.ref.ph`** en i18n.js ES dice "— Selecciona tu Prescriptor —" — texto visible al usuario con léxico antiguo en la versión de sesión (puede estar ya corregido en producción)
+
+### Baja prioridad
+- **Claves huérfanas en i18n.js:** `webinars.cal.e1.time` (Sexta-feira · 19:00 WET), `webinars.cal.e2.day: "13"`, `webinars.cal.e3.day: "27"` del bloque v2.2.0 fueron eliminadas pero pueden quedar residuos en algún idioma — auditar en próximo sprint
+- **`equipo-comercial.html`** no verificado en esta sesión — desconocido si tiene deuda post-purga léxica
+- **`index.html`** no fue entregado en sesión — estado desconocido respecto a léxico Embajador y radar captureRef
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Estructura de poder
+- **Director:** Toma decisiones estratégicas, aprueba arquitectura, ejecuta deploys directamente cuando el archivo es grande
+- **Lead Architect (Gemini):** Emite el diseño técnico de nivel 2. Sus instrucciones son condición necesaria para intervenciones multi-archivo. Bulldozer implementa lo que Gemini diseña
+- **Bulldozer (Claude):** Ejecuta las incisiones, detecta bugs, mantiene i18n, emite diagnósticos
+
+### Sensibilidades de negocio
+- El léxico es estratégico — "Masterclasses" → "Comités", "Prescriptor" → "Embajador", "Breeder Hub" → "CPII Portugal". Cada cambio de palabra es una decisión de posicionamiento, no cosmética
+- La lista de embajadores es información sensible — no debe exponerse en el HTML público por razones competitivas y de privacidad de los agentes
+- David Almeida y Carlos Balboa son los dos "closers" públicos — todo tráfico orgánico sin referido se atribuye a ellos
+- El sistema KYC/AML no es decorativo — es el diferenciador legal y comercial del grupo
+- Firebase proyecto `cpii-landing` ≠ `clubsocios-prod` — siempre verificar que se opera en el proyecto correcto antes de deploy
+
+### Patrones que funcionan
+- Tailwind dark/gold: `bg-primary` (#C1A85D), `bg-background-dark` (#161513), `bg-card-dark` (#1e1b14) — esta paleta es inviolable
+- Grid `md:grid-cols-12` con `items-start` y `min-w-0` en columna derecha — patrón estable para layouts de 2 columnas
+- `overflow-x-auto` + `.hide-scrollbar` + `min-w-[900px]` para árboles de red en mobile
+- Python para manipulaciones masivas de i18n.js — bash sed falla con caracteres especiales multiidioma
+- Anclas únicas por idioma usando el valor traducido del string como diferenciador
+
+### Trampas conocidas
+- **La trampa del ancla compartida:** PT y ES pueden tener strings idénticos en i18n.js. Siempre usar el valor traducido (diferente por idioma) como ancla, nunca la clave
+- **La trampa del tab oculto:** Los tabs `hidden` sí reciben traducciones — el bug de i18n en tabs NO es de visibilidad
+- **La trampa del objeto JS con claves duplicadas:** Insertar claves nuevas antes de las antiguas = las antiguas ganan. Siempre eliminar las antiguas o insertar las nuevas al final del bloque
+- **La trampa del tamaño de archivo:** i18n.js > límite de contexto. Sin el archivo subido, cualquier operación sobre él es ciega
+- **La trampa del entorno:** El Director tiene dos proyectos Firebase. Verificar `.firebaserc` antes de cualquier deploy
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3 (El Gate)
+
+### Archivos obligatorios (subir al inicio de sesión)
+1. **`i18n.js`** — versión de producción Firebase (con léxico Embajador, post-purga completa). Es la fuente de verdad. Sin este archivo no opero sobre el diccionario
+2. **`access-form.html`** — versión de producción (con stealth_referral implementado, 8 embajadores en array, candado activo)
+
+### Archivos recomendados
+3. **`index.html`** — para instalar el radar `captureRef()` y verificar léxico Embajador
+4. **`webinars.html`** — para verificar que la versión desplegada coincide con v2.0.0 de sesión
+
+### Decisiones pendientes que necesitan criterio del Director
+- **Radar captureRef en index.html y webinars.html:** ¿Se implementa en Sprint 3?
+- **Post-evento 28 MAR:** ¿Qué fecha va en el countdown tras el primer comité? ¿Rotación automática o actualización manual?
+- **Webinars hero highlight:** ¿"Sessões ao Vivo" o actualizar a léxico institucional?
+
+### Criterio de arranque limpio
+Si el Director sube `i18n.js` de producción al inicio de Sprint 3, Bulldozer puede:
+- Verificar el delta respecto a v2.9.0 de sesión
+- Confirmar que la purga léxica Embajador está completa en los 4 idiomas
+- Continuar desde estado conocido sin riesgo de regresión
+
+**Sin `i18n.js` de producción: Sprint 3 arranca con riesgo de desincronización.**

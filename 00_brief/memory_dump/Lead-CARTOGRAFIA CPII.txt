@@ -1,0 +1,44 @@
+# MEMORY_DUMP_CARTOGRAFIA.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Misión:** Mapeo, reorganización visual y documentación de trazabilidad sin alteración de la lógica funcional.
+* **Qué NO hago:** No optimizo, no refactorizo, no añado funcionalidades y nunca simplifico la documentación técnica u ornamental previa.
+* **Condición Previa:** Requiere un Diagnóstico Inicial, propuesta de Índice Maestro y confirmación explícita del modo (/pieza o /laparoscopia) antes de cualquier inyección de código.
+* **Matiz Aprendido:** La "limpieza" visual es interpretada como corrupción de datos; el Director exige preservar la densidad informativa y las cabeceras técnicas originales de forma íntegra.
+
+### 2. DOCTRINAS TÉCNICAS
+* **Estructurales:** Uso de Vanilla JS para lógica core, Tailwind CSS via CDN para el Design System y Google Fonts (Playfair/Manrope) para la identidad visual.
+* **i18n (v2.2.0):** Sincronización obligatoria mediante `lang-selector` y hooks `data-i18n` en todos los elementos de texto.
+* **Protocolo /laparoscopia (3 incisiones):** Metodología específica para modificar el flujo de datos sin romper el contrato del Skeleton Factory.
+* **Compliance:** Integración de flujos KYC/AML y enrutamiento territorial independiente de la genealogía de referidos.
+* **Trazabilidad Quirúrgica:** Cada sección debe estar delimitada por balizas visuales de alta visibilidad (líneas dobles y ornamentos) para facilitar la auditoría técnica inmediata.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Landing Page i18n** — Centro de conversión con títulos fragmentados para preservar estilos dorados — `index.html`.
+* **Formulario de Acceso v1.3.0** — Captura de leads con asignación territorial de managers y vinculación de genealogía (Referral ID) — `access-form.html`.
+* **Breeder Hub / Webinars** — Puerta de conversión audiovisual con countdown en tiempo real y trampa de valor (archivo bloqueado) — `webinars.html`.
+* **Contrato de Datos CPII** — Payload JSON para la colección `pending_users` compatible con Skeleton Factory — `access-form.html`.
+* **Tabla de Asignación Territorial** — Mapa fijo por código de país (PT/ES/BR/MX/AR) para enrutamiento de gestores — `access-form.html`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Simplificación de Cabeceras** — Descartado: El Director considera que la eliminación de metadatos y notas de arquitectura corrompe el propósito del mapeo.
+* **Unificación de Nodos Hero** — Descartado: Se requiere fragmentación (main/highlight/suffix) para mantener el estilo CSS diferenciado en el motor i18n.
+* **Cruce de Referral con Club Manager** — Descartado: Son entidades independientes; el Referral ID alimenta el Revenue Share y el Club Manager la operativa territorial.
+* **Validación Silenciosa de Prescriptores** — Adoptado: Los valores no autorizados en el campo `ref` se ignoran silenciosamente por seguridad.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Firebase Config:** El objeto `firebaseConfig` en `access-form.html` contiene placeholders ("TU_API_KEY") que impiden la conexión real en producción.
+* **UIDs Estáticos:** La tabla `CLUB_MANAGER_MAP` utiliza UIDs genéricos ("UID_GESTOR_DEFAULT") que deben ser actualizados con valores reales de Firestore.
+* **Persistencia de Idioma:** El selector en `index.html` depende de la existencia física de `i18n.js` y de su correcta inicialización en cada carga.
+* **Hard-coded Prescriptores:** La lista `PRESCRIPTORES_AUTORIZADOS` está en el código estático; una red grande requerirá migración a una colección de Firestore.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Genealogía:** El `referral_id` es el nodo L1 para el Revenue Share multinivel (L1/L2/L3); si falta, se asigna "organic".
+* **Efecto Gancho:** `webinars.html` usa un desenfoque (blur) sobre grabaciones inexistentes para forzar el registro en el `access-form.html`.
+* **Sensibilidad Territorial:** La asignación de un Gestor de Club es prioritaria para el cierre comercial y depende estrictamente del país de residencia declarado.
+* **Lux Lusitana / CPII:** El proyecto opera como un club de inversión fraccionada (desde 50€/mes) bajo la metodología del Grupo Comercial Portugal.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+* **Credenciales de Producción:** El `firebaseConfig` real para conectar la colección `pending_users`.
+* **Mapa de Gestión Real:** La lista definitiva de UIDs de los Responsables de Club por territorio para la tabla `CLUB_MANAGER_MAP`.
+* **Diccionario i18n Actualizado:** El archivo `i18n.js` con todas las claves `webinars.*` y `team.*` para validar la sincronización de idiomas en todas las escenas.

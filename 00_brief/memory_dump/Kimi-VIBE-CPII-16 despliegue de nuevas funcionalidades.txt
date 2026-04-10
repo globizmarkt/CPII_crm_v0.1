@@ -1,0 +1,149 @@
+# MEMORY_DUMP_[KIMI].md
+
+## ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Arquitectura de lógica DOM y flujo de datos en cliente
+- Parsing y validación de reglas de negocio en JavaScript vanilla
+- Integración de sistemas i18n con estructuras de UI
+- Diseño de motores de estado que operan sobre `window.__CPII__`
+- Traducción de requerimientos legales/fiduciarios a implementación técnica
+- Auditoría de inyectabilidad: verificar que teoría abstracta puede materializarse en HTML/JS
+
+**Qué NO hago:**
+- No genero CSS con valores hardcodeados (colores hexadecimales, tipografías específicas)
+- No asumo decisiones de nomenclatura comercial sin validación directiva
+- No acepto texto visible hardcodeado en atributos HTML (violación R4)
+- No propongo arquitecturas que requieran frameworks de cliente (React, Vue, etc.)
+- No asigno roles ni valido propuestas de otros agentes — solo implemento mi dominio
+
+**Condición necesaria antes de actuar:**
+- Especificación exacta de estructura de datos de entrada (`window.__CPII__`, `data-attributes`)
+- Confirmación de sistema de traducción (claves i18n, diccionario global)
+- Validación de que los requisitos de negocio son inyectables en markup estático
+- Claridad sobre qué agente posee autoridad de decisión en caso de conflicto técnico
+
+**Matiz de comportamiento aprendido:**
+- Mi instinto inicial es "completar" con propuestas visuales y textos. Esto viola R3/R4. Debo esperar a que Perplexity (UI) y Antigravity (Legal) entreguen sus piezas antes de cablear.
+- Cuando recibo corrección doctrinal, debo hacer retroceso explícito y confirmar restablecimiento de protocolo — no solo corregir en silencio.
+
+---
+
+## DOCTRINAS TÉCNICAS
+
+**Globales:**
+- **R3 (Zero Visual Injection):** No valores de diseño hardcodeados. Colores, espaciados, tipografías vienen de sistema de diseño aprobado, nunca de mi propuesta.
+- **R4 (i18n Absolute):** Cero texto visible en código. Todo flujo de copy pasa por `window.LuxI18n` o equivalente. Atributos `data-i18n-*` obligatorios.
+- **Vanilla JS Zero-Server:** Sin frameworks de cliente. Sin dependencias de build. Código ejecutable en navegador tal cual.
+- **Compliance-First:** La lógica de acceso refleja requerimientos legales (KYC, AML) — no es decorativa.
+
+**Específicas de DOM Engineering:**
+- **Separación de Preocupaciones Estricta:** HTML contiene estructura y hooks (`data-*`). JS contiene lógica. CSS contiene presentación. Nunca mezclar.
+- **Fuente de Verdad Única:** `window.__CPII__.session` es el único estado de usuario válido. No deducir de cookies, localStorage, o inferencias.
+- **Inyectabilidad Verificable:** Todo requerimiento de negocio debe poder expresarse como atributo HTML válido. Si no cabe en `data-*`, no es implementable.
+
+---
+
+## INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Qué hace | Ubicación |
+|:----------|:---------|:----------|
+| `passport-engine.js` | Motor de evaluación de requisitos fiduciarios. Parsea `data-requires`, evalúa contra `window.__CPII__.session`, aplica clases de bloqueo Tailwind, inyecta tooltips i18n | `core/passport-engine.js` |
+| Parser lógico AND/OR | Interpreta sintaxis `kyc:approved,academy:100|access_level:3`. Comas = AND, pipes = OR interno. Comparación numérica automática (&gt;=) o exacta (===) según tipo de dato | Dentro de `passport-engine.js` |
+| Sistema de tooltip dinámico | Inyección de nodo hermano al `&lt;a&gt;` con clases Tailwind de Perplexity. Posicionamiento absoluto, transición hover, z-index 50 | Función `applyCustodyHold()` en `passport-engine.js` |
+| API de re-evaluación | Exposición mínima `window.PassportEngine.revalidate()` para actualización sin reload | Final de `passport-engine.js` |
+| Validador de inyectabilidad | Metodología de verificación: requerimiento legal → atributo HTML → lógica JS evaluable | Documentado en conversaciones, no en archivo separado |
+
+---
+
+## DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|:---------|:--------------------|
+| `data-hold-message="Texto directo"` | Violación R4. Reemplazado por `data-i18n-tooltip="clave"` + lookup en `window.LuxI18n` |
+| Clases de estado hardcodeadas en JS | Violación R3. Reemplazado por paso de clases Tailwind como constantes configurables, pero sin valores de color específicos |
+| Uso de `title` nativo para tooltips | Insuficiente para diseño de Perplexity. Reemplazado por inyección de div absoluto con clases Tailwind |
+| Evaluación de permisos en servidor | Violación Zero-Server. Toda lógica debe ejecutar en cliente sobre estado ya inyectado en `window.__CPII__` |
+| Metáforas de "secta/templo/rito" en nomenclatura | Rechazo directivo. Proyecto debe sonar a banca privada institucional, no a gamificación esotérica |
+| Propuesta de color `#C9A227` (oro) en CSS | Violación R3. Eliminado. Esperar especificación de sistema de diseño oficial |
+| Estructura de menú de 6 pilares sin validación | Rechazo por falta de madurez fiduciaria. Validado después de pitch de nomenclatura institucional |
+
+---
+
+## DEUDA TÉCNICA DETECTADA
+
+| Ítem | Estado | Responsable observado |
+|:-----|:-------|:----------------------|
+| Definición exacta de `window.LuxI18n` | Pendiente. Se asume diccionario global, pero estructura no especificada (flat vs nested) | Antigravity / i18n system |
+| Fallback si `window.__CPII__` no existe | Parche actual: `console.error` y return. Debería haber modo degradado gracioso | Kimi (mi deuda) |
+| Sincronización de `access_level` vs roles string | `access_level: 3` equivale a `role: staff/manager`, pero mapeo no está documentado | Qwen / Backend |
+| Thresholds AUM variables | `aum:500000` está hardcodeado en HTML. Si cambia política de negocio, requiere regeneración de markup | Qwen / Config system |
+| Evento `passport:engine-ready` | Emitido pero ningún otro sistema documentado lo escucha. Posible código muerto | Kimi (mi deuda) |
+| Re-evaluación en tiempo real | API expuesta pero no hay mecanismo de trigger (WebSocket, polling) para cambios de estado | Arquitectura general |
+
+---
+
+## CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Restricciones de negocio:**
+- Lux Lusitana es club de inversión inmobiliaria de élite. Todo el lenguaje debe evocar banca privada suiza, no fintech startup. "Custodia", "protocolo", "elegibilidad" funcionan. "Desbloquear", "ganar", "nivel" suena a videojuego y es rechazado.
+- KYC no es burocracia — es "debida diligencia" que protege al inversor. El framing siempre es protección, no obstáculo.
+- La red de referidos ("Mi Red") es sensible. No puede parecer esquema piramidal. Es "tracción demostrada" y "responsabilidad de gestión".
+
+**Sensibilidades del cliente:**
+- El Director rechaza cualquier atisbo de "secta" o "tribu" en copy. Lo institucional es seguro.
+- Hay tensión entre "gamificación" (pedida explícitamente) y "seriedad fiduciaria" (también pedida). La solución es progresión de estatus, no puntos ni badges.
+- El sistema de "pasaportes" es metáfora aceptable porque evoca control de fronteras institucional, no aventura.
+
+**Patrones que funcionan:**
+- `data-requires` con sintaxis explícita (no JSON, string plano parseable)
+- Tooltips absolutos posicionados, no `title` nativo
+- Separación de fases visuales con separadores DOM claros
+- Uso de `opacity-50 grayscale` para estado locked — suficientemente estándar en Tailwind
+
+**Trampas conocidas:**
+- No confundir `academy_progress` (porcentaje 0-100) con `access_level` (entero 1-3+). Son variables independientes.
+- El OR lógico (`|`) en `data-requires` es raro en requerimientos de negocio pero necesario para "AUM o rol staff". Documentar bien.
+- Tailwind `group-hover` requiere que el wrapper tenga clase `group`. Fácil de olvidar en inyección dinámica.
+
+---
+
+## INPUT REQUISITO PARA SPRINT 3
+
+Para operar en El Gate desde el primer mensaje, necesito recibir:
+
+```json
+{
+ "estructura_datos": {
+   "window.__CPII__.session": "Confirmar si mantiene estructura {kyc_status, academy_progress, access_level, aum} o hay nuevos campos (ej. 'eligibility_tier', 'compliance_flags')",
+   "window.LuxI18n": "Especificar estructura: ¿flat keys (tooltip_phase2) o nested (es.tooltip.phase2)? ¿Idioma por defecto si falta traducción?"
+ },
+ "nuevas_zonas": {
+   "El Gate": "Definición de qué es: ¿nuevo pilar de menú? ¿sub-sección dentro de existente? ¿página standalone con su propio sistema de pasaportes?",
+   "data-requires": "Reglas específicas de acceso para El Gate (ej. 'access_level:4', 'special_invitation:true')"
+ },
+ "integracion": {
+   "passport-engine.js": "¿Reutilizar motor existente con nuevos selectores, o El Gate tiene lógica de acceso diferente que requiere passport-engine-v2.js?",
+   "eventos": "¿Necesita El Gate emitir/escuchar eventos específicos (passport:gate-access-granted, etc.)?"
+ },
+ "ui": {
+   "estado_locked": "¿Mismas clases Tailwind (opacity-50 grayscale) o El Gate tiene tratamiento visual distinto?",
+   "tooltip": "¿Posicionamiento diferente (ej. bottom-full en lugar de left-full)?"
+ },
+ "compliance": {
+   "logica_acceso": "¿El Gate es puramente técnico (access_level) o tiene componente legal adicional (nuevo KYC, documentación firmada)?"
+ }
+}
+
+ESTADO DE CIERRE
+Table
+Parámetro	Valor
+Timestamp cierre	2026-03-15 16:51 (Madrid)
+Sprint	2 (Órbita 1)
+Estado	✅ Completado
+Artefactos sellados	core/passport-engine.js, MANUAL_ACCESO_FIDUCIARIO.md
+Memory dump	Generado y archivado
+PRÓXIMA SESIÓN
+Sprint 3 — El Gate: Aguardando especificaciones de estructura de datos y reglas de acceso.
+Input pendiente: JSON de requisitos técnicos (ver INPUT REQUISITO PARA SPRINT 3 en memory dump).
+[KIMI] — Fuera de línea. Sistemas en standby. Hasta la próxima órbita.

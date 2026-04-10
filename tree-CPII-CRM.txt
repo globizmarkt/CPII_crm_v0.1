@@ -1,0 +1,205 @@
+Listado de rutas de carpetas para el volumen Windows-SSD
+El numero de serie del volumen es 1EA7-4366
+C:.
+|   .gitignore
+|   admin-gate.html
+|   golden-gate.html
+|   index.html
+|   manifest.offering_config
+|   tree-CPII-CRM.txt
+|   
++---.agent
++---00_brief
+|   +---memory_bridge
+|   \---memory_dump
+|           Antigravity-CUMBRE-TRINIDAD-v1.0.0.txt
+|           Antigravity-VIBE-AIP-01 Extracci�n �rbita 3.txt
+|           Antigravity-VIBE-AIP-02 Extracci�n �rbita 2.txt
+|           Antigravity-VIBE-AIP-03 Purificaci�n y Sello de Calidad.txt
+|           Bulldozer-analisis de su propia memoria.txt
+|           Bulldozer-VIBE-CPII-01 Prototipo Web.txt
+|           Bulldozer-VIBE-CPII-02 Refactorizacion.txt
+|           Bulldozer-VIBE-CPII-03 access-form conexion.txt
+|           Bulldozer-VIBE-CPII-04 Grupo Commercial.txt
+|           Bulldozer-VIBE-CPII-05 Refinar.txt
+|           Bulldozer-VIBE-CPII-06 pre-lanzamiento.txt
+|           Bulldozer-VIBE-CPII-07 encendido de motores.txt
+|           Bulldozer-VIBE-CPII-08.1 chapa y pintura.txt
+|           Bulldozer-VIBE-CPII-08.2 chapa y pintura.txt
+|           Bulldozer-VIBE-CPII-09 en �rbita y acoplamiento.txt
+|           Bulldozer-VIBE-CPII-10 sitensis para MLS.txt
+|           Bulldozer-VIBE-CPII-11 destilando para STITCH.txt
+|           Bulldozer-VIBE-CPII-12 Fork Polygon Dashboard.txt
+|           Bulldozer-VIBE-CPII-13 gadgets y webinar.txt
+|           Bulldozer-VIBE-CPII-14 el crm ya existe.txt
+|           Bulldozer-VIBE-CPII-15 manual funcionando.txt
+|           Bulldozer-VIBE-CPII-16 despliegue de nuevas funcionalidades.txt
+|           Kimi-VIBE-CPII-11 destilando para STITCH.txt
+|           Kimi-VIBE-CPII-12 Fork Polygon Dashboard.txt
+|           Kimi-VIBE-CPII-14 el crm ya existe.txt
+|           Kimi-VIBE-CPII-15 el manual ya funciona.txt
+|           Kimi-VIBE-CPII-16 despliegue de nuevas funcionalidades.txt
+|           Lead-ACTA 2026-02-18 David sobre CPII y EXP Commercial.txt
+|           Lead-Arquitecto Lead CPII en Modo Consultivo.txt
+|           Lead-CARTOGRAFIA CPII.txt
+|           Lead-CRM-CII Inter�s Compuesto y Referidos Inmobiliarios.txt
+|           Lead-CRM-CII Redactar Club Prescriptor Modelo de Inversi�n y Red Multinivel.txt
+|           Lead-CRM-CII-Redactar Club Fundador Estructura, Incentivos y Gobernanza.txt
+|           Lead-F.AGEN-arr-01.CPII-1.1-base.txt
+|           Lead-F.AGEN-arr-01.CPII-1.2_CPII_wordpress.txt
+|           Lead-F.AGEN-arr-01.CPII-1.3_Clud_socios_digital.txt
+|           Lead-F.AGEN-arr-01.CPII-1.4_administraci�n.txt
+|           Lead-FULL-AGENCY-02.1_CPII_fundadores.txt
+|           Lead-MARKETING-emprend-01.webinar-1.1 prescriptores.txt
+|           Lead-VIBE-CPII-01 Prototipo Web.txt
+|           Lead-VIBE-CPII-02 Refactorizaci�n.txt
+|           Lead-VIBE-CPII-03 access-form conexion.txt
+|           Lead-VIBE-CPII-04 Grupo Comercial.txt
+|           Lead-VIBE-CPII-05 Refinar.txt
+|           Lead-VIBE-CPII-06 pre-lanzamiento.txt
+|           Lead-VIBE-CPII-07 encendido de motores.txt
+|           Lead-VIBE-CPII-08 chapa y pintura.txt
+|           Lead-VIBE-CPII-09 orbitando y acoplando.txt
+|           Lead-VIBE-CPII-10 sitensis para MLS.txt
+|           Lead-VIBE-CPII-11 Destilando para STITCH.txt
+|           Lead-VIBE-CPII-12 Fork Polygon Dashboard.txt
+|           Lead-VIBE-CPII-13 gadgets y webinar.txt
+|           Lead-VIBE-CPII-14 el crm ya existe.txt
+|           Lead-VIBE-CPII-15 el manual ya funciona.txt
+|           Lead-VIBE-CPII-16 despliegue de nuevas funcionalidades.txt
+|           Perplexity-CPII-CRMMLS 01 genesis e investigaci�n preliminar.txt
+|           Perplexity-VIBE-CPII-11 destilando para STITCH.txt
+|           Perplexity-VIBE-CPII-12 Fork Polygon Dashboard.txt
+|           Perplexity-VIBE-CPII-14 el crm ya existe.txt
+|           Perplexity-VIBE-CPII-15 el manual ya funciona.txt
+|           Perplexity-VIBE-CPII-16 despliegue de nuevas funcionalidades.txt
+|           Qwen-VIBE-CPII-11 destilando para STITCH.txt
+|           Qwen-VIBE-CPII-12 Polygon Dashboard.txt
+|           Qwen-VIBE-CPII-14 el crm ya existe.txt
+|           Qwen-VIBE-CPII-15 Manual Functional.txt
+|           Qwen-VIBE-CPII-16 despliegue de nuevas funcionalidades.txt
+|           
++---01_arquitectura
+|       ADAPTABILITY_MAP_CPII_v2.5.md
+|       FIRESTORE_SECURITY_RULES_TEMPLATE.md
+|       INCUBATOR_MULTITENANCY_STANDARD.md
+|       SIDECAR_ARCHITECTURE_DOCTRINE.md
+|       THE_GATE_BLUEPRINT_V1.0.md
+|       
++---02_esquemas_datos
++---03_prototipo_stitch
+|   +---cpii_gd_dashboard_home
+|   |       cpii_gd_dashboard_home.html
+|   |       screen.png
+|   |       
+|   \---dise�os stitch
+|       |   SESSION_LOG.md
+|       |   
+|       +---.cumplen reglas
+|       |   +---cpii_agentmetrics.at_agent_v2.5_refactored
+|       |   |       code.html
+|       |   |       screen.png
+|       |   |       
+|       |   +---cpii_autofinancingclock.wd_clock_v2.5_refactored
+|       |   |       code.html
+|       |   |       screen.png
+|       |   |       
+|       |   +---cpii_clubpulse.gd_pulse_v2.5_refactored_final
+|       |   |       code.html
+|       |   |       screen.png
+|       |   |       
+|       |   +---cpii_compliancemessenger.wd_messenger_v2.5_refactored
+|       |   |       code.html
+|       |   |       screen.png
+|       |   |       
+|       |   +---cpii_dealroom.at_dealroom_v2.5_featured_deal
+|       |   |       code.html
+|       |   |       screen.png
+|       |   |       
+|       |   \---cpii_prescriptortree.gd_network_v2.5_refactored
+|       |           code.html
+|       |           screen.png
+|       |           
+|       +---cpii_dividendtracker.gd_dividend
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_fiscal_report_generator
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_integrated_dashboard
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_investment_simulator
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_kyc_gatekeeper_flow
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_layout_trinity
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_onboardingjourney.at_journey
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_payoutwallet.wd_payout
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_portfolio_visualizer
+|       |       code.html
+|       |       screen.png
+|       |       
+|       +---cpii_propertyavm_gadget
+|       |       code.html
+|       |       screen.png
+|       |       
+|       \---cpii_whitepaperviewer.at_whitepaper
+|               code.html
+|               screen.png
+|               
++---04_auditoria_7D7
++---05_workshop_cpii_crm
++---assets
++---Bridge
+|       README.md
+|       
++---core
+|       at-bootstrapper.js
+|       at-resource-registry.js
+|       at-search-engine.js
+|       at-tab-manager.js
+|       i18n.js
+|       MANUAL_ACCESO_FIDUCIARIO.md
+|       passport-engine.js
+|       PROTOCOL_CORE_ARCHITECT.md
+|       README_COLLAB.txt
+|       
++---css
+|       tab-manager.css
+|       
++---features
+|       at-admin-gate.js
+|       
++---functions
++---gadgets
+|   |   gd-calculadora.js
+|   |   gd-dashboard.js
+|   |   gd-manual.js
+|   |   gd-simulador.js
+|   |   staff-manual-i18n.json
+|   |   
+|   \---lab
+|           gate-tester.html
+|           
++---legacy
+|       gd-manual.html
+|       staff-manual.html
+|       
+\---logic

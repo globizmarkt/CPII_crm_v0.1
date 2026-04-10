@@ -1,0 +1,38 @@
+### 1. ROL Y LÍMITES OPERATIVOS
+**Rol:** Lead Cloud Architect & Memoria del Proyecto.
+**Funciones:** Diseño estructural, definición de la lógica de negocio, custodia de la "Única Fuente de Verdad" (Source of Truth) y auditoría de los Pull Requests antes del paso a producción. Actúo como el escudo contra regresiones.
+**Límites (Lo que NO hago):** No ejecuto código masivo ni hago *commits* directos a disco; esa es la labor del "Bulldozer" (Claude) a través de Antigravity. No autorizo despliegues a producción sin la verificación física en disco y la aprobación de la jerarquía (Pull Request manual del Director).
+**Condición de Actuación:** Requiere confirmación explícita del Director y lectura de estado verificada por Antigravity para emitir dictámenes o aprobar pases a la Fase 3 (Deploy).
+
+### 2. DOCTRINAS TÉCNICAS
+* **Arquitectura Asimétrica (Despliegue Bifurcado):** Separación estricta entre el embudo de captación (WordPress/LEMP en GCE para `www.`) y la bóveda/producto SaaS (HTML estático/Firebase Hosting para `cpii.`). Si el servidor LEMP cae, el producto sigue vivo en el Edge de Google.
+* **Stack Vanilla / Skeleton Factory:** HTML estático puro, Tailwind CSS vía CDN (sin compilador de Node.js en local), JavaScript nativo (ES6 sin frameworks) y Firebase SDK v10 inyectado vía `<script type="module">`.
+* **Naming Canónico:** Prohibido anidar `www` en subdominios operativos. El estándar innegociable es `cpii.clubsocios.digital` para evitar fricción SSL Wildcard y redundancia de UX.
+* **Doctrina de Disco (Antigravity):** Ningún código es oficial hasta que Antigravity confirma su existencia y versión en el disco local (`c:\BreederHub\CPII_v0`).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **`referrals.html` [v1.1.1]** — Árbol de red de crecimiento SVG. Fijo, absoluto y funcional. Bug estructural de grid (`</div>` faltante) corregido y balanceado con `items-start`.
+* **`i18n.js` [v2.6.0]** — Motor de internacionalización y diccionario consolidado. Contiene traducciones completas para `team.areas.*`, `team.cta.final.*` y `form.*`.
+* **`simulator.html` [v2.0.0]** — Motor matemático del CPII. Proyecta la curva exponencial Lux Lusitana. Validado con 10 nodos de datos base (meses 6 a 60).
+* **`access-form.html` [v1.2.1]** — Lead Magnet y formulario de captación. Blindado contra XSS usando `data-i18n-html="true"` para renderizar enlaces legales (RGPD) de forma segura.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Refactor a Flexbox/CSS Puro del Árbol de Referidos (v2.2.0):** Descartado. *Motivo:* Destruía el código SVG v1.1.0 que ya estaba verificado y funcional en disco. Se optó por una incisión quirúrgica (corregir el Grid wrapper y alinear al tope) en lugar de demoler la estructura entera.
+* **Despliegue de la Bóveda CPII en Máquina LEMP (Ubuntu/Nginx):** Descartado. *Motivo:* Retrasaba el Time-to-Market y mezclaba el SaaS con el frontend de marketing. Se optó por Firebase Hosting para asegurar CDN global y aprovisionamiento SSL automático, independizando el producto.
+* **Apertura Automatizada de Pull Requests por Claude:** Descartado temporalmente. *Motivo:* Fallos continuos del entorno Playwright del agente al interactuar con la interfaz de GitHub sin sesión iniciada. Se delega al Director la aprobación manual del PR.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Archivos de Configuración Ausentes:** Falta `firebase.json` y `.firebaserc` en la raíz del proyecto. El CLI de Firebase está ciego sin esto.
+* **Credenciales Vacías (Placeholders):** El archivo `access-form.html` contiene marcadores genéricos (`TU_PROJECT_ID`, `apiKey` falsa) en el bloque de inicialización de Firebase. El envío de leads a Firestore fallará en producción hasta que esto se inyecte.
+* **Desincronización Menor de Metadatos:** La cabecera visual de `i18n.js` dice "v2.4.0" aunque el contenido real verificado por QA es v2.6.0.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Core de Negocio CPII:** "No vendemos inmuebles, multiplicamos patrimonio". Es un club privado de inversión inmobiliaria (Revenue Share). El tono es exclusivo, institucional y oscuro (Theme VIBE: `bg-[#161513]`, textos blancos, acentos dorados `#C1A85D`).
+* **El Patrón de Alucinación del Bulldozer:** Claude (el agente ejecutor) tiene tendencia a anticipar versiones que ha generado en su contexto pero que aún no ha escrito en el disco mediante Antigravity. Como Arquitecto, la regla es frenarlo y exigirle lecturas de terminal. Nunca confiar en un bloque de código pequeño presentado como "ya existente".
+* **Captura de Referidos:** El sistema depende del `sessionStorage` (`cpii_ref`). Si un lead entra por un enlace de afiliado, ese dato viaja silente hasta el envío a la colección `leads/` o `pending_users` de Firestore.
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+Para ejecutar el inicio del Sprint 3 (Despliegue Asimétrico en Firebase Hosting), necesito recibir exactamente:
+1.  **El Firebase Project ID oficial** (`cpii-landing-v0` o el correspondiente en la consola GCP/Firebase).
+2.  **El objeto de configuración real de Firebase** (apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId) para inyectarlo en `access-form.html`.
+3.  **Confirmación de que los registros DNS (TXT/A)** para `cpii.clubsocios.digital` han sido creados en el registrador y están propagándose.

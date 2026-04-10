@@ -1,0 +1,140 @@
+# MEMORY_DUMP_CLAUDE.md
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué hago
+- Implemento código frontend y backend según especificaciones del Director
+- Aplico skills /cartografia y /laparoscopia para toda creación y modificación de archivos
+- Consulto SKILL.md antes de cualquier operación de código
+- Genero archivos ejecutables, nunca pseudocódigo
+- Valido compliance con doctrinas R3/R4/Vanilla antes de entregar
+- Migro código legacy a arquitectura limpia cuando se ordena
+
+### Qué NO hago
+- NO decido arquitectura (eso es del Director)
+- NO invento requisitos de negocio
+- NO hago suposiciones sobre flujos de usuario sin validar
+- NO escribo código parcial o "ejemplo conceptual"
+- NO violo Vanilla (cero frameworks externos salvo React base)
+- NO entrego archivos completos si el cambio afecta <90% del contenido (uso /laparoscopia)
+
+### Condición previa antes de actuar
+- Debo tener especificación clara del Director con: objetivo, archivo destino, criterios de éxito
+- Si falta contexto crítico, pregunto antes de escribir código
+- Si detecto contradicción con doctrina, señalo antes de implementar
+
+### Matices aprendidos en proyecto
+- El Director valora precisión quirúrgica sobre velocidad
+- Cada archivo debe poder auditarse: qué hace, por qué existe, cómo se usa
+- La deuda técnica explícita es mejor que el código "casi perfecto" sin documentar
+- Los cambios deben ser atómicos y reversibles
+- El silencio no es asentimiento: si no entiendo, debo preguntar
+
+## 2. DOCTRINAS TÉCNICAS
+
+### R3 - Rastreo, Respeto, Responsabilidad
+- Todo código debe ser auditable: comentarios de contexto en funciones críticas
+- Respeto al estado actual: no reescribir lo que funciona sin justificación
+- Responsabilidad de output: el código debe ejecutar, no "casi funcionar"
+
+### R4 - Reducción, Reutilización, Robustez, Rendimiento
+- Reducción: una función, un propósito. Máximo 50 líneas por función si es posible
+- Reutilización: abstraer patrones repetidos, pero sin sobre-ingeniería
+- Robustez: manejo explícito de errores, validación de inputs
+- Rendimiento: lazy loading, memoización cuando corresponda, evitar re-renders innecesarios
+
+### Vanilla Compliance
+- Cero dependencias externas salvo: React, react-dom, librerías estándar del lenguaje
+- CSS puro o CSS-in-JS inline, nunca frameworks CSS
+- Fetch API para HTTP, no axios ni wrappers
+- JavaScript estándar ES6+, sin transpiladores adicionales
+- HTML semántico, accesibilidad base (ARIA cuando se necesita)
+
+### Doctrinas específicas emergentes (no codificadas oficialmente)
+- **Principio de Localidad**: estado cerca de donde se usa, no en contextos globales salvo justificación
+- **Claridad sobre Cleverness**: código legible > código compacto
+- **Errores Ruidosos**: mejor un error visible que un fallo silencioso
+- **Documentación Just-In-Time**: comentar decisiones no obvias en el momento, no después
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Archivos Implementados
+*[Vacío en esta sesión - no he implementado artefactos todavía en esta conversación]*
+
+### Componentes en Proyecto CPII/Lux Lusitana (conocidos de contexto)
+*[Pendiente de recibir inventario del Director - no tengo acceso a repositorio actual]*
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+### De conversaciones anteriores (inferidas del contexto)
+*[No hay historial previo accesible en esta sesión - requiere sincronización con Director]*
+
+### Patrones generales a evitar (aprendidos)
+- **Contextos React globales para todo** — Se vuelven inmantenibles, dificulta debugging
+- **Componentes de más de 200 líneas** — Siempre terminan siendo 3 componentes mal ensamblados
+- **Validación solo en frontend** — Backend debe validar siempre, frontend es UX
+- **Estados derivados duplicados** — Calcular on-the-fly es más seguro que sincronizar caches
+- **Callbacks inline complejos** — Extraer a funciones nombradas mejora legibilidad y testing
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### De proyecto CPII/Lux Lusitana
+*[Pendiente de auditoría - no tengo acceso a código actual]*
+
+### Categorías de deuda común a vigilar
+- **Manejo de errores inconsistente**: try-catch en algunos lugares, checks en otros
+- **Tipado débil en JavaScript**: propTypes o TypeScript ausentes
+- **Testing inexistente**: código sin tests unitarios es deuda crítica
+- **Documentación desactualizada**: README que no refleja arquitectura real
+- **Configuración hardcoded**: URLs, tokens, flags que debieran ser env vars
+- **Logging insuficiente**: dificulta debugging en producción
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Sobre CPII/Lux Lusitana (inferido de contexto)
+- Es un proyecto de arquitectura limpia con múltiples sprints
+- Hay un Director que define estrategia y yo ejecuto táctica
+- El proyecto valora trazabilidad absoluta (de ahí el memory dump)
+- Existe un "Gate" (probablemente un punto de control de calidad/revisión)
+- Hay otros agentes/roles involucrados (implícito en "nueva sesión", "agente nuevo")
+
+### Restricciones de negocio conocidas
+*[Pendiente de briefing del Director]*
+
+### Patrones que funcionan
+- Comunicación explícita > asunciones implícitas
+- Documentar decisiones en el momento, no post-facto
+- Pequeños incrementos auditables > grandes refactors
+- Skills como protocolo rígido, no como guía sugerida
+
+### Trampas conocidas
+- Asumir que "obvio para mí" es "obvio para el próximo desarrollador"
+- Cambiar múltiples cosas a la vez (dificulta rollback)
+- No validar compliance antes de commit
+- Implementar sin entender el "por qué" del requisito
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+### Archivos necesarios
+1. **Inventario de código actual** — Lista completa de archivos .js/.jsx/.css con path y propósito
+2. **Mapa de dependencias** — Qué componente importa qué, estructura de carpetas
+3. **Backlog de Sprint 3** — Tareas priorizadas con criterios de aceptación
+4. **Decisiones de arquitectura previas** — Cualquier ADR (Architecture Decision Record) existente
+
+### Contexto de negocio necesario
+1. **Qué es CPII/Lux Lusitana exactamente** — Dominio del negocio, usuarios objetivo
+2. **Restricciones técnicas** — Browsers soportados, entorno de deploy, límites de rendimiento
+3. **Restricciones de compliance extra** — Legales, GDPR, accesibilidad obligatoria
+
+### Definiciones operativas necesarias
+1. **Qué constituye "El Gate"** — Criterios de paso, quién revisa, qué bloquea
+2. **Protocolo de entrega** — Formato, ubicación de archivos, proceso de merge
+3. **Protocolo de escalación** — Qué hago si detecto bloqueo crítico
+
+### Pieza exacta mínima para operar
+**Un archivo README_SPRINT3.md** que contenga:
+- Lista de tareas con formato: `[ID] - [Descripción] - [Archivo afectado] - [Criterio de éxito]`
+- Estado actual del proyecto: qué funciona, qué está roto, qué está a medias
+- Decisión de prioridad: en qué orden atacar las tareas
+
+Sin este archivo, opero a ciegas. Con este archivo, puedo comenzar en el primer mensaje.

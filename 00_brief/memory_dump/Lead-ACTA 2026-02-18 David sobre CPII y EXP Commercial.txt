@@ -1,0 +1,38 @@
+# MEMORY_DUMP_ACTA-procesar-reuniones.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Qué hago:** Especialista en gestión del conocimiento organizacional. [cite_start]Extraigo, estructuro y catalogo conocimiento valioso de documentos de debate (PDF/Docs) para hacerlo accesible y reutilizable[cite: 1, 9].
+- **Qué NO hago:** No puedo crear, actualizar o eliminar datos en Google Workspace; solo recupero y proceso información. No genero juicios de valor sin base en los documentos proporcionados.
+- **Condición previa:** Requiero la carga de documentos fuente y la ejecución del protocolo `/ordeño` (3 rondas de 3 preguntas) para fijar objetivos y eliminar ambigüedades estratégicas antes de la entrega final.
+
+### 2. DOCTRINAS TÉCNICAS
+- [cite_start]**Globales:** Protocolo `/ordeño` para definición de lógica, `/ajedrez` para análisis de actores/posiciones, y estricto cumplimiento de **Compliance Internacional (KYC/AML)**[cite: 47, 407, 411].
+- **Específicas de Especialidad:**
+    - [cite_start]**Doctrina de la "Fórmula de Éxito":** Los estándares técnicos (costos fijos <10%, operacionales 10-12%, personal <17%) no son burocracia, sino la causa directa de los resultados de David Almeida[cite: 45, 368, 373, 374].
+    - [cite_start]**Doctrina de la "Cola de Producción":** Los proyectos deben pasar por una fase de estudio y viabilidad técnica antes de acceder a la ronda de financiación del Club [cite: 33, 265-266].
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **Matriz de Conocimiento (Reunión 18/02/2026):** Estructura indexada con Decisiones, Aprendizajes, Debates, Oportunidades y Acciones [Nivel 2 de la respuesta previa].
+- **Taxonomía de Temas CPII:** Sistema de referencias cruzadas entre estrategia comercial, metodología y compliance [Nivel 3 de la respuesta previa].
+- [cite_start]**Estructura del Club (CPII):** Definición de vías de acceso (Inversor, Promotor, Gestor) y jerarquía de autoridad (Senior vs. Junior) [cite: 20, 23, 185-186].
+- [cite_start]**Protocolo de Leads Start:** Procedimiento de registro electrónico y validación en 24h [cite: 97-99, 824, 832].
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- [cite_start]**Nombre "CPI":** Descartado por falta de disponibilidad de dominio; se adoptó **CPII (Club Privado de Inversores Inmobiliarios)** para asegurar control digital[cite: 22, 178].
+- [cite_start]**Promoción Abierta de Activos:** Se descartó el uso de portales residenciales para activos comerciales; la venta debe ser cerrada, exclusiva y basada en captación de inversión, no venta de inmuebles[cite: 29, 242, 276].
+- [cite_start]**Informalidad con Partners:** Se abandonó el trato verbal con colaboradores como Ricardo/Start; se impuso un **Acuerdo Marco** escrito para educar profesionalmente al socio y evitar el "caos" del mercado español[cite: 96, 823].
+
+### 5. DEUDA TÉCNICA DETECTADA
+- [cite_start]**Verificación KC de David:** Pendiente de carga de fotografía de documento de identidad/tarjeta de ciudadanía debido a problemas de transferencia desde WhatsApp[cite: 87, 88, 767].
+- [cite_start]**Apartado "ESTUDO":** El módulo de calificación de empresas dentro del CRM está en construcción; se han extraído las métricas literales pero falta su implementación funcional[cite: 234].
+- [cite_start]**Traducciones:** Documentos para fundadores y prescriptores aún en proceso de traducción al portugués para el webinar del 27 de febrero[cite: 84, 112, 735].
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Patrón de Fracaso en España:** Los agentes locales (ej. Rodrigo/Maxa) suelen ignorar el procedimiento por "negocio inmediato", lo que lleva a tratar con testaferros. [cite_start]El método David es la única barrera contra este descrédito[cite: 18, 54, 56, 514].
+- **Sensibilidad de David:** Su autoridad es incuestionable (25% facturación EXP Portugal, Agente del Año 2025). [cite_start]Cualquier "flexibilidad" en el método debe presentarse como adaptación táctica, nunca como compromiso de la **Visión/Misión**[cite: 60, 61].
+- **El Privilegio del Club:** El CPII no es un servicio, es un privilegio. [cite_start]Los agentes mantienen su marca personal pero aceptan las obligaciones del Club para acceder a micro-inversores [cite: 73, 79, 638-640].
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+- [cite_start]**Manual de Procedimientos de EXP Comercial Portugal:** Documento base para unificar textos de la landing page[cite: 50, 443].
+- [cite_start]**Audios de David:** Definición de campos finales para el CRM y criterios específicos de estudios de mercado[cite: 109, 234].
+- [cite_start]**Contrato del Abogado:** El borrador final revisado por el equipo legal para formalizar la relación con Start[cite: 90, 780].

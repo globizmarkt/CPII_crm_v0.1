@@ -1,0 +1,43 @@
+# MEMORY_DUMP_Gemini_Director_Tecnico.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Actúo como Director Técnico (CTO) e Ingeniero de Sistemas. Diseño arquitecturas híbridas (WordPress + Firebase), gestiono la infraestructura en Google Cloud Platform (GCP), configuro entornos LEMP (Linux, Nginx, MySQL, PHP), securizo fronteras con SSL/TLS y valido la viabilidad técnica de las propuestas de negocio.
+* **Qué NO hago:** No tomo decisiones de branding final ni de estrategia de marketing sin validación, no opero en servidores externos a GCP sin previo aviso, y no ejecuto código destructivo sin confirmación explícita del Lead Architect.
+* **Condición para actuar:** Necesito acceso a la terminal (SSH) o capturas de pantalla de la consola de GCP/Registrador de dominios para diagnosticar bloqueos de red o errores de configuración en tiempo real.
+* **Matices aprendidos:** El entorno de Google Cloud suele presentar discrepancias entre la interfaz web (UI) y el estado real de la instancia, lo que requiere validación forzosa vía Cloud Shell o scripts de inicio (Startup Scripts).
+
+### 2. DOCTRINAS TÉCNICAS
+* **Globales:**
+    * **R3/R4 (Aislamiento de Motores):** WordPress/MySQL se limitan exclusivamente a la captación de leads y contenido público; el núcleo del negocio (CPII/SaaS) reside en Firebase.
+    * **Vanilla/Web Components:** Prohibición estricta de Redis/SQL para el CRM; uso de tecnologías nativas y ligeras para el frontend.
+    * **Compliance (RGPD):** Captura de consentimiento obligatorio (`rgpd_consent: true`) antes de la persistencia de datos.
+* **Específicas del Proyecto:**
+    * **Doctrina del "Inyector Ciego":** El formulario en WordPress debe enviar datos a Firestore sin depender de la salud de la base de datos MySQL local.
+    * **Doctrina de la Frontera Segura:** Ninguna integración de autenticación (Google Sign-In) se inicia sin SSL (HTTPS) activo y funcional.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Infraestructura Base:** VM en Compute Engine (IP: 35.184.54.173) con Ubuntu 22.04 LTS.
+* **Entorno LEMP:** Nginx, PHP 8.1 y MySQL configurados y operativos.
+* **Capa de Fachada:** WordPress instalado en el dominio raíz.
+* **Gestión de Red:** Reglas de Firewall para HTTP (80), HTTPS (443) y Túnel IAP para SSH (22).
+* **Seguridad SSL:** Certificado Let's Encrypt activo para `clubsocios.digital` y `www.clubsocios.digital`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Acceso SSH por Puerto 22 Abierto al Mundo (0.0.0.0/0):** Descartado por fallos de autenticación persistentes; sustituido por el túnel IAP (`35.235.240.0/20`) por ser más robusto y seguro.
+* **Integración WP-Firebase vía Extensiones Estándar:** Descartado en favor de Cloud Functions dedicadas para permitir lógica de segmentación y enriquecimiento de leads multitenant.
+* **Configuración de SSL vía Cloud Shell:** Descartado; la ejecución debe ser interna en la VM para que Let's Encrypt valide correctamente la IP del servidor.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **Configuración Interna de WP:** Las URLs internas de WordPress podrían seguir apuntando a `http` o a la IP, lo que generará errores de contenido mixto (Mixed Content).
+* **Script de Inicio (Startup Script):** Se dejó un script de emergencia para forzar la apertura del puerto 22; debe ser limpiado de los metadatos de la instancia para evitar ejecuciones innecesarias en cada reinicio.
+* **Firewall Interno (UFW):** Actualmente desactivado para facilitar la instalación de SSL; debe ser reconfigurado y activado para proteger la máquina.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **Restricción de Negocio:** El objetivo no es crear una "web corporativa", sino una máquina de captura de leads para una newsletter exclusiva (`blog.cpii@clubsocios.digital`).
+* **Sensibilidad de Infraestructura:** El cliente prefiere optimizar costes (GCP nivel bajo/medio) mediante gestión propia en lugar de servicios gestionados caros.
+* **Patrón que Funciona:** El uso de `gcloud compute ssh ... --tunnel-through-iap` es la única forma fiable de acceder cuando el panel web de GCP entra en bucle de "autenticación fallida".
+
+### 7. INPUT REQUISITO PARA SPRINT 3
+* **Credenciales de Firebase:** Archivo de configuración (`firebaseConfig`) o acceso al proyecto en Firebase Console para iniciar el "Acoplamiento Atómico".
+* **Criterio de Formulario:** Definición exacta de los campos de captación (Lead Magnet) para codificar el "Inyector Ciego".
+* **Acceso a WP-Admin:** Confirmación de que el Lead Architect puede loguearse en `https://clubsocios.digital/wp-admin` sin errores de redirección.

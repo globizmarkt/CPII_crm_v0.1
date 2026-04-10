@@ -1,13 +1,28 @@
 /**
  * CPII — i18n.js
- * Versión: v2.0 → v2.1
+ * Versión: v2.2
  * FECHA    : 2026-03-14
  * Motor de traducción universal del ecosistema
  * Ruta: core/i18n.js
  *
  * Propósito:   - Añadir claves brand_name y brand_tooltip_text en los
  *              - 4 idiomas. Actualizar brand_subtitle (eliminar prefijo CPII).
- * Índice:      - Sin balizas nuevas. Cambios dentro del bloque translations.
+ *              - Inyectar claves de los 6 pilares de Órbita 1 en los
+ *              - 4 idiomas. Sustituir claves nav_* obsoletas.
+ *              - Inyectar nomenclatura fiduciaria final en los 6 pilares
+                de Órbita 1. Conversión de formato anidado a plano.
+ * 
+ *              - Sin balizas nuevas. Cambios dentro del bloque translations.
+ *              - Bloque translations — sección UI Global × 4 idiomas.
+ * Índice: 
+ *              [UI Global] — 4 idiomas
+ *              [Órbita 1] — 4 idiomas
+ *              [Órbita 2] — 4 idiomas
+ *              [Órbita 3] — 4 idiomas
+ *              [Órbita 4] — 4 idiomas
+ *              [Órbita 5] — 4 idiomas
+ *              [Órbita 6] — 4 idiomas
+ * 
  *
  * Doctrina: R0 Sin hardcode | R4 data-i18n obligatorio
  */
@@ -18,12 +33,16 @@ const translations = {
         "brand_name": "Gestor de Relações",
         "brand_subtitle": "Clube Privado",
         "brand_tooltip_text": "Estratégia de Inteligência Patrimonial: Gestão centralizada com visão 360° para otimizar cada oportunidade de investimento.",
-        "nav_dashboard": "Dashboard",
-        "nav_mls": "Mercado MLS",
-        "nav_network": "A Minha Rede",
-        "nav_history": "Histórico",
+        "nav_dashboard": "Posição Global",
+        "nav_vault": "Meus Ativos",
+        "nav_crm": "Gestão de Relações",
+        "nav_network": "Minha Rede",
+        "nav_academy": "Academy",
+        "nav_audit": "Histórico e Documentos",
         "nav_settings": "Definições",
         "nav_manuals": "Manuais",
+        "tooltip_phase2": "Habilitação Pendente: Conclua a Academy e o seu KYC.",
+        "tooltip_phase3": "Acesso Reservado: Staff ou Nível de Gestão Mínimo.",
         "search_placeholder": "Pesquisar...",
         "tenant_label": "Utilizador",
         "welcome_title": "Espaço de Trabalho",
@@ -123,12 +142,16 @@ const translations = {
         "brand_name": "Gestor de Relaciones",
         "brand_subtitle": "Club Privado",
         "brand_tooltip_text": "Estrategia de Inteligencia Patrimonial: Gestión centralizada con visión 360° para optimizar cada oportunidad de inversión.",
-        "nav_dashboard": "Dashboard",
-        "nav_mls": "Mercado MLS",
+        "nav_dashboard": "Posición Global",
+        "nav_vault": "Mi Cartera",
+        "nav_crm": "Gestión de Relaciones",
         "nav_network": "Mi Red",
-        "nav_history": "Historial",
+        "nav_academy": "Academy",
+        "nav_audit": "Historial y Documentos",
         "nav_settings": "Ajustes",
         "nav_manuals": "Manuales",
+        "tooltip_phase2": "Habilitación Pendiente: Completa la Academy y tu KYC.",
+        "tooltip_phase3": "Acceso Reservado: Staff o Nivel de Gestión Mínimo.",
         "search_placeholder": "Buscar...",
         "tenant_label": "Usuario",
         "welcome_title": "Espacio de Trabajo",
@@ -228,12 +251,16 @@ const translations = {
         "brand_name": "Relationship Manager",
         "brand_subtitle": "Private Club",
         "brand_tooltip_text": "Wealth Intelligence Strategy: Centralized 360° management to optimize every investment opportunity.",
-        "nav_dashboard": "Dashboard",
-        "nav_mls": "MLS Market",
+        "nav_dashboard": "Global Position",
+        "nav_vault": "Private Assets",
+        "nav_crm": "Relationship Management",
         "nav_network": "My Network",
-        "nav_history": "History",
+        "nav_academy": "Academy",
+        "nav_audit": "History & Docs",
         "nav_settings": "Settings",
         "nav_manuals": "Guides",
+        "tooltip_phase2": "Pending Enablement: Complete Academy and KYC.",
+        "tooltip_phase3": "Restricted Access: Staff or Minimum Management Level.",
         "search_placeholder": "Search...",
         "tenant_label": "User",
         "welcome_title": "Workspace",
@@ -333,12 +360,16 @@ const translations = {
         "brand_name": "Gestionnaire de Relations",
         "brand_subtitle": "Club Privé",
         "brand_tooltip_text": "Stratégie d'Intelligence Patrimoniale : Gestion centralisée avec vision 360° pour optimiser chaque opportunité d'investissement.",
-        "nav_dashboard": "Tableau de bord",
-        "nav_mls": "Marché MLS",
+        "nav_dashboard": "Position Globale",
+        "nav_vault": "Le Portfolio",
+        "nav_crm": "Gestion des Relations",
         "nav_network": "Mon Réseau",
-        "nav_history": "Historique",
+        "nav_academy": "Academy",
+        "nav_audit": "Historique et Docs",
         "nav_settings": "Paramètres",
         "nav_manuals": "Manuels",
+        "tooltip_phase2": "Habilitation en Attente : Complétez l'Academy et votre KYC.",
+        "tooltip_phase3": "Accès Réservé : Staff ou Niveau de Gestion Minimum.",
         "search_placeholder": "Rechercher...",
         "tenant_label": "Utilisateur",
         "welcome_title": "Espace de Travail",
@@ -479,25 +510,36 @@ function applyTranslations(lang) {
  * Cambia idioma, persiste con clave canónica cpii:locale y aplica al DOM
  */
 function setLanguage(lang) {
-    // ── Clave canónica del ecosistema (alineada con at-bootstrapper.js) ──
-    localStorage.setItem('cpii:locale', lang);
+    try {
+        localStorage.setItem('cpii:locale', lang);
+    } catch (e) {
+        // Modo privado o storage lleno: fallback a session-only
+        console.warn('[i18n] localStorage no disponible, usando solo sesión');
+    }
     applyTranslations(lang);
-    // Notificar a Web Components autónomos (ej. gd-manual) para re-renderizar
-    document.dispatchEvent(new CustomEvent('cpii:lang:change', { detail: { lang } }));
+    document.dispatchEvent(new CustomEvent('cpii:lang:change', {
+        detail: { lang, persistent: true }
+    }));
 }
 
 // ── Inicialización ────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-    // Leer desde clave canónica (at-bootstrapper ya la habrá escrito si viene del pasillo)
-    const saved = localStorage.getItem('cpii:locale') || 'pt';
-    const selector = document.getElementById('lang-selector');
-
-    if (selector) {
-        selector.value = saved;
-        selector.addEventListener('change', e => setLanguage(e.target.value));
+    let saved;
+    try {
+        saved = localStorage.getItem('cpii:locale');
+    } catch (e) {
+        saved = null;
     }
+    const lang = saved || 'pt';
 
-    applyTranslations(saved);
+    // Delegación de cambio de idioma en contenedor padre (R2 optimizado)
+    document.body.addEventListener('change', (e) => {
+        if (e.target.id === 'lang-selector') {
+            setLanguage(e.target.value);
+        }
+    });
+
+    applyTranslations(lang);
 });
 
 // ── Exponer motor en window.__CPII__ ──────────────────────────

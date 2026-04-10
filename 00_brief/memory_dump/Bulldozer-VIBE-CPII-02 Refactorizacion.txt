@@ -1,0 +1,282 @@
+# MEMORY_DUMP_CLAUDE_SONNET_4.5.md
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Lo que hago
+- **Frontend Design & Implementation**: HTML/CSS/JS con estética distintiva (no genérica AI slop)
+- **Protocolo /cartografía**: Creación de archivos nuevos con cabecera + balizas [SEC-XX]
+- **Protocolo /laparoscopia**: Modificaciones quirúrgicas de precisión sin reescribir archivos completos
+- **Integración Firebase**: Esquemas Firestore con jerarquía anidada para escalabilidad
+- **Validación de formularios**: Client-side con feedback visual y UX pulida
+
+### Lo que NO hago
+- **Backend logic**: Cloud Functions, reglas de seguridad Firestore, APIs server-side
+- **Decisiones de negocio**: Asignación de gestores, cálculo de Revenue Share, lógica multinivel
+- **Infraestructura**: Deploy, DNS, CI/CD, configuración de servicios externos
+- **Gestión de assets**: Subida de imágenes a Firebase Storage, CDN management
+
+### Condiciones antes de actuar
+- **NUNCA** empiezo a codificar sin leer el skill relevante (`view /mnt/skills/...`)
+- **NUNCA** asumo estructura de datos sin confirmar esquema Firestore con el cliente
+- **SIEMPRE** pregunto antes de añadir campos nuevos al formulario (fricción vs. conversión)
+- **SIEMPRE** valido si el cambio afecta <90% del archivo → /laparoscopia, no reescritura completa
+
+### Matices aprendidos del comportamiento
+- El cliente prefiere **captura rápida de leads** → formularios cortos, segunda fase vía email/reunión
+- **No asumir que el modelo mental del cliente coincide con el mío** → hacer preguntas específicas antes de codificar
+- Si un agente anterior (Gemini) propone algo que no encaja con lo construido → pausar y reconciliar antes de integrar
+- Los "placeholder UIDs" (`UID_GESTOR_PORTUGAL`) son temporales → el cliente debe sustituirlos antes de producción
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Globales aplicables
+- **R3 (Vanilla Stack)**: HTML/CSS/JS puro, CDN para dependencias (Tailwind, Firebase SDK), cero bundlers
+- **R4 (Compliance)**: RGPD obligatorio (checkbox términos), datos sensibles solo post-consentimiento
+- **Cartografía Quirúrgica v3.1**: Cabecera + Índice Maestro + balizas [SEC-XX] en todo archivo >100 líneas
+- **/laparoscopia**: Regla de Oro del 90% — si cambio afecta <90% del archivo, SOLO entregar bloques modificados
+- **Ahorro de contexto**: No entregar archivos completos innecesariamente
+
+### Doctrinas específicas de Frontend (emergentes)
+- **Tipografía distintiva obligatoria**: Evitar Inter/Roboto/Arial → usar fuentes con carácter (Cormorant Garamond, DM Sans)
+- **Animaciones sutiles de entrada**: `fadeUp` con `animation-delay` escalonado para UX premium sin sobrecarga
+- **Color tokens vía CSS variables**: Todo color hardcoded debe estar en `tailwind.config` para consistencia
+- **Inputs con iconos inline**: Material Symbols posicionados absolute dentro del input, no fuera
+- **Validación inline no invasiva**: Mostrar errores SOLO al submit, no durante el typing (menos fricción)
+- **Estados de carga en botones**: `.btn-loading` class que swappea texto por spinner + mensaje
+- **Select sobre input cuando hay lista cerrada**: Si hay ≤10 opciones conocidas, usar `<select>`, no `<input type="text">`
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Archivos activos en el proyecto
+
+**`access-form.html`** — Formulario de captura de leads CPII  
+**Ubicación**: `/mnt/user-data/outputs/access-form.html`  
+**Versión**: 1.2.0  
+**Qué hace**:
+- Captura: Nombre, Email, Teléfono (con prefijo internacional), País, Perfil (Inversor/Promotor), Prescriptor autorizado
+- Checkbox RGPD obligatorio
+- Asignación territorial automática vía `CLUB_MANAGER_MAP` (tabla fija país → UID gestor)
+- Pre-selección de prescriptor vía URL `?ref=david_almeida`
+- Integración Firestore con esquema anidado (personal, location, genealogy, investment_profile, metadata)
+- Validación client-side con feedback visual
+- UX: animaciones de entrada escalonadas, estado de carga en botón, mensaje de éxito inline
+
+**Balizas `[SEC-XX]` implementadas**:
+- `[SEC-01]` Head / imports
+- `[SEC-02]` Tailwind config
+- `[SEC-03]` Header sticky
+- `[SEC-04]` Panel izquierdo (beneficios)
+- `[SEC-05a-e]` Formulario completo (perfil, campos, prescriptor, RGPD, submit)
+- `[SEC-06]` Footer
+- `[SEC-07]` Tabla fija `CLUB_MANAGER_MAP` (país → UID gestor)
+- `[SEC-08]` Captura de prescriptor desde URL + array `PRESCRIPTORES_AUTORIZADOS`
+- `[SEC-09]` Firebase init + esquema Firestore + envío lead
+
+**Esquema Firestore implementado**:
+```js
+leadData = {
+  personal: { name, email, phone, profile_type },
+  location: { country, club_manager },
+  genealogy: { padrino, nivel: null, revenue_share: null },
+  investment_profile: { budget_range: null, property_type: null, 
+                        preferred_location: null, acquisition_goals: null,
+                        pof_confirmed: null, pof_date: null },
+  metadata: { source, funnel_stage, rgpd_consent, status, created_at, updated_at }
+}
+```
+
+**Prescriptores autorizados activos**:
+- `david_almeida`
+- `carlos_balboa`
+
+**Países con prefijo telefónico**:
+PT +351, ES +34, BR +55, MX +52, AR +54, US +1, UK +44, FR +33, DE +49, IT +39
+
+---
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+**Input de texto libre para referido** — Descartado  
+**Motivo**: El cliente tiene lista cerrada de Prescriptores autorizados. Select dropdown garantiza integridad de datos y evita typos/spam.
+
+**Captura de POF, presupuesto, tipo de propiedad en formulario inicial** — Descartado  
+**Motivo**: Fricción excesiva en top of funnel. Cliente confirmó que esos datos se capturan en Fase 2 (email/reunión). Formulario optimizado para conversión rápida.
+
+**Separar campos de teléfono en Firestore (`prefix` y `number`)** — Descartado  
+**Motivo**: Innecesariamente complejo. Se concatenan en frontend antes de envío (`phone_prefix + phone → personal.phone`). Backend trata el teléfono como string único.
+
+**Usar localStorage para persistencia de referido** — Implementado parcialmente, luego descartado  
+**Motivo**: sessionStorage es suficiente y más seguro (no persiste entre sesiones). El `?ref=` de la URL ya garantiza captura en la mayoría de casos.
+
+**Formulario en dos pasos dentro de la misma página** — Descartado  
+**Motivo**: Cliente confirmó que el formulario actual ya tiene los "datos imprescindibles para la primera captura". No justifica la complejidad UX de multi-step.
+
+**Campos de padrino y club_manager como uno solo** — ERROR CRÍTICO EVITADO  
+**Motivo**: Son entidades **completamente independientes**. Padrino = genealogía/Revenue Share. Club Manager = asignación territorial/gestión operativa. Mezclarlos rompería la lógica de negocio multinivel.
+
+**Iconos SVG custom en lugar de Material Symbols** — Descartado  
+**Motivo**: Material Symbols vía CDN es más rápido de iterar, tiene variable fonts (weight/fill ajustables), y mantiene consistencia visual sin gestionar assets.
+
+---
+
+## 5. DEUDA TÉCNICA DETECTADA
+
+### Deuda propia (access-form.html)
+
+**UIDs placeholder en `CLUB_MANAGER_MAP`** — CRÍTICO  
+**Estado**: Todos los valores son strings placeholder (`"UID_GESTOR_PORTUGAL"`, etc.)  
+**Impacto**: El formulario funciona pero asigna gestores falsos. El cliente debe sustituir con UIDs reales de Firestore antes de producción.  
+**Solución**: Documentado en comentarios de `[SEC-07]`. Requiere input del cliente.
+
+**Firebase config placeholder** — CRÍTICO  
+**Estado**: Objeto `firebaseConfig` en `[SEC-09]` contiene valores `"TU_API_KEY"`, etc.  
+**Impacto**: Firestore no funciona hasta que el cliente pegue su config real.  
+**Solución**: Documentado en comentarios de `[SEC-09]`. Instrucciones claras para el cliente.
+
+**Validación de email débil** — MENOR  
+**Estado**: Regex básico `/^[^\s@]+@[^\s@]+\.[^\s@]+$/` detecta formato pero no valida existencia del dominio  
+**Impacto**: Acepta emails con typos (ej: `user@gmai.com`). No crítico para Fase 1.  
+**Solución**: Implementar validación vía API (ej: Abstract API) en Fase 2 si el spam se convierte en problema.
+
+**Sin rate limiting en submit** — MENOR  
+**Estado**: Un usuario malicioso podría spammear el formulario  
+**Impacto**: Potencial inflación de leads falsos en Firestore  
+**Solución**: Implementar Firestore Security Rules con límite de writes por IP o implementar reCAPTCHA invisible en Fase 2.
+
+**Sin feedback de error de Firestore al usuario** — MENOR  
+**Estado**: Si `addDoc` falla, solo se muestra `alert()` genérico  
+**Impacto**: UX pobre en caso de error de red o permisos  
+**Solución**: Mejorar manejo de errores con mensajes específicos (ej: "Verifica tu conexión a internet").
+
+**Estilos inline en `<style>` en lugar de archivo CSS externo** — MENOR  
+**Estado**: Todo el CSS custom está en `<style>` dentro del `<head>`  
+**Impacto**: No es deuda real para un archivo standalone, pero si crece el proyecto, debería extraerse.  
+**Solución**: Si el proyecto escala a múltiples páginas, extraer a `styles.css` y cachear.
+
+### Deuda observada (no propia pero relevante)
+
+**Propuesta de Gemini desalineada con esquema actual** — ALTO RIESGO  
+**Estado**: Gemini propuso script con estructura de datos diferente (ej: `club_manager: "PENDIENTE"` hardcoded en lugar de usar la tabla `CLUB_MANAGER_MAP`)  
+**Impacto**: Si el cliente integra ambos scripts sin reconciliar, habrá inconsistencia de datos en Firestore  
+**Solución**: El cliente debe decidir qué esquema usar y descartar el otro. Recomiendo mantener el esquema de access-form.html porque ya implementa la tabla fija.
+
+**Falta de Cloud Function para asignación automática de huérfanos** — BLOQUEANTE PARA PRODUCCIÓN  
+**Estado**: Leads con `padrino: "HUERFANO"` NO se asignan automáticamente al `club_manager` territorial — esto requiere backend  
+**Impacto**: Los leads huérfanos quedan sin gestor asignado hasta intervención manual  
+**Solución**: Implementar Cloud Function `onLeadCreate` que detecte `padrino === "HUERFANO"` y asigne el UID del `club_manager` del país. Fuera de mi alcance (Backend).
+
+**Falta de Firestore Security Rules** — CRÍTICO  
+**Estado**: El cliente mencionó "modo de prueba" (30 días con permisos abiertos)  
+**Impacto**: Cualquiera puede leer/escribir/borrar leads de la base de datos  
+**Solución**: Implementar reglas restrictivas antes del vencimiento del modo prueba. Fuera de mi alcance (Backend).
+
+---
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+### Contexto de negocio CPII / Lux Lusitana
+
+**Dos entidades independientes que NUNCA se cruzan**:
+1. **Prescriptor/Padrino** (genealogía) → determina Revenue Share multinivel (L1/L2/L3)
+2. **Responsable de Club** (territorial) → gestión operativa, asignado por país de residencia del lead
+
+**Leads huérfanos**: Sin prescriptor O cuando el progenitor se da de baja/es expulsado → se asignan al Responsable de Club del país del lead. Esta lógica NO está en el formulario, requiere Cloud Function.
+
+**Modelo de negocio**: Club de inversión inmobiliaria con red multinivel. Revenue Share hasta nivel 3. Autofinanciación garantizada mencionada en beneficios del formulario.
+
+**Perfil de usuario**: Inversores (mayoritario esperado) y Promotores/Gestores (minoría). El campo `profile_type` es radio button, no select, porque son solo 2 opciones mutuamente excluyentes.
+
+**Fase 1 vs Fase 2**:
+- **Fase 1** (formulario): Captura rápida de contacto básico + asignaciones automáticas
+- **Fase 2** (email/reunión): POF (Prueba de Fondos), presupuesto, tipo de propiedad, ubicación preferida. El Responsable de Club gestiona esta fase manualmente.
+
+**POF**: NO es checkbox de declaración. NO es subida de archivo en el formulario. Se solicita fuera del flujo web (email, reunión). El campo `pof_confirmed` en Firestore es un flag que el gestor actualiza manualmente después de verificar.
+
+**RGPD obligatorio**: Portugal y España requieren consentimiento explícito. El checkbox `terms` es `required` y su valor viaja como `metadata.rgpd_consent: true` a Firestore. Sin él, no se puede enviar.
+
+### Patrones que funcionan
+
+**Pre-selección vía URL**: El patrón `?ref=david_almeida&tipo=inversor` permite crear links de invitación personalizados. El formulario pre-selecciona automáticamente el prescriptor y el perfil. Muy útil para campañas de email o redes sociales.
+
+**Select sobre input para listas cerradas**: Cuando hay ≤10 opciones conocidas (prescriptores, países), siempre `<select>`. Mejora UX, reduce errores, facilita análisis de datos.
+
+**Esquema Firestore con campos `null` desde Fase 1**: Declarar todos los campos de `investment_profile` como `null` en el primer `addDoc` evita migraciones de esquema futuras. Permite `updateDoc` sin errores de "campo inexistente".
+
+**Animaciones escalonadas con `animation-delay`**: Clases `.anim-1` a `.anim-5` con delays crecientes (0.05s, 0.15s, 0.25s...) crean sensación de "reveal" profesional sin complejidad de JS.
+
+### Trampas conocidas
+
+**No asumir que "referido" = "prescriptor"**: En conversaciones tempranas se usó "Padrino" y "Referido" intercambiablemente. El cliente finalmente confirmó que son **Prescriptores autorizados** de una lista cerrada. No confundir con un sistema abierto de códigos de referido.
+
+**No mezclar club_manager y padrino**: Es la trampa #1. Son columnas diferentes en Firestore. Un lead puede tener `padrino: "david_almeida"` (quien lo invitó) y `club_manager: "UID_GESTOR_ESPANA"` (quien lo gestiona territorialmente) al mismo tiempo. Son roles diferentes.
+
+**No sobrecargar el formulario inicial**: El cliente rechazó capturar POF/presupuesto/tipo de propiedad en el primer contacto. Prioriza conversión sobre completitud de datos. La segunda fase existe para un motivo.
+
+**Cuidado con propuestas de otros agentes**: Gemini propuso un esquema Firestore diferente con `club_manager: "PENDIENTE"` hardcoded. Si el cliente integra ese código sin reconciliar, rompe la tabla fija `CLUB_MANAGER_MAP` que ya está implementada. Validar antes de fusionar.
+
+**Material Symbols requiere configuración de variable fonts**: Sin `font-variation-settings`, todos los iconos se ven iguales (peso 400, fill 0). El código actual usa `style="font-variation-settings:'FILL' 0,'wght' 300"` inline para control granular.
+
+### Sensibilidades del cliente
+
+**Transparencia radical**: El cliente expone el protocolo de trabajo (Cartografía Quirúrgica, /laparoscopia) en los documentos compartidos. Valora la trazabilidad y el "por qué" de cada decisión tanto como el "qué".
+
+**Decisiones basadas en preguntas, no en asunciones**: Prefiere que se le pregunte antes que recibir código "sorpresa" con features no solicitadas. Las preguntas con opciones múltiples (widget de selección) funcionan mejor que preguntas abiertas.
+
+**Protocolo > velocidad**: No tiene prisa por tener el código "ya". Prioriza que el código siga los protocolos (/cartografía, /laparoscopia) y sea mantenible a largo plazo. Prefiere pausas para aclarar arquitectura antes que iteraciones rápidas con deuda técnica.
+
+**Reacción negativa a la falta de balizas**: Cuando el código no tenía cabecera + balizas [SEC-XX], el cliente pausó inmediatamente el trabajo y pidió un mapeo completo. Esto es una señal: nunca entregar archivos >100 líneas sin estructura Cartografía Quirúrgica.
+
+---
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+
+### Archivos/código necesarios
+
+**`index.html` completo** — CRÍTICO  
+**Por qué**: El `access-form.html` vive en el contexto de una landing previa (funnel: "El usuario ya ha visto una landing previa y este es el paso de conversión"). Necesito ver el index para entender el flujo completo, estilos compartidos, y cómo se pasa el referido vía sessionStorage.
+
+**Firebase config real O confirmación de que sigue siendo placeholder** — ALTO  
+**Por qué**: Si el cliente ya configuró Firebase, necesito los valores reales para validar que el esquema funciona. Si sigue siendo placeholder, necesito saber si hay cambios en la estructura (ej: nombre de la colección diferente a "leads").
+
+**UIDs reales de los Responsables de Club O confirmación de estructura** — ALTO  
+**Por qué**: Si el cliente ya creó los usuarios gestores en Firestore, necesito los UIDs para actualizar `CLUB_MANAGER_MAP`. Si aún no existen, necesito saber la estructura del documento `users/{uid}` para asegurar compatibilidad.
+
+**Lista actualizada de prescriptores autorizados** — MEDIO  
+**Por qué**: Si hay cambios (añadir/quitar prescriptores), necesito intervención /laparoscopia en `[SEC-05c]` y `[SEC-08]`.
+
+### Criterios/decisiones necesarias
+
+**¿Qué pasa si un lead llega sin prescriptor Y desde un país sin gestor asignado?** — CRÍTICO  
+**Situación**: Usuario selecciona `country: "OTHER"` y no elige prescriptor.  
+**Estado actual**: `club_manager: "UID_GESTOR_DEFAULT"` y `padrino: "HUERFANO"`.  
+**Pregunta**: ¿Quién es `UID_GESTOR_DEFAULT`? ¿Es un gestor real o un placeholder? ¿Existe un "pool internacional" que absorbe estos casos?
+
+**¿Se mantiene el esquema actual de Firestore o se adopta la propuesta de Gemini?** — CRÍTICO  
+**Conflicto**: Gemini propuso `club_manager: "PENDIENTE"` en lugar de usar `CLUB_MANAGER_MAP`.  
+**Pregunta**: ¿Descartamos la propuesta de Gemini y mantenemos la tabla fija, o hay que reconciliar ambos enfoques?
+
+**¿Hay campos adicionales que capturar en Fase 1 que no estén en el formulario actual?** — MEDIO  
+**Situación**: Gemini mencionó "Intereses de adquisición" en su propuesta.  
+**Pregunta**: ¿Ese campo va en Fase 1 (formulario) o en Fase 2 (reunión)? Si va en Fase 1, ¿es select, textarea, o tags?
+
+**¿El formulario necesita multi-idioma (PT/ES) o se mantiene en español?** — BAJO  
+**Estado actual**: Todo el texto visible está en español (aunque lang="pt" en el HTML).  
+**Pregunta**: ¿Es intencional o hay que implementar i18n?
+
+### Piezas de contexto deseables (no bloqueantes)
+
+**Documentación de la Cloud Function de asignación de huérfanos** — DESEABLE  
+**Por qué**: Si existe borrador o spec de la función que asigna leads huérfanos al club_manager territorial, puedo validar que el esquema del formulario sea compatible.
+
+**Mockup o wireframe de la Fase 2 (panel de admin)** — DESEABLE  
+**Por qué**: Si hay visión de cómo el Responsable de Club completará los campos de `investment_profile`, puedo anticipar incompatibilidades de esquema.
+
+**Analytics/tracking requirements** — DESEABLE  
+**Por qué**: Si hay que integrar Google Analytics, Meta Pixel, o eventos custom, mejor saberlo desde el principio para incluir en `metadata`.
+
+**Reglas de negocio para cálculo de `nivel` y `revenue_share`** — DESEABLE  
+**Por qué**: Actualmente estos campos son `null` en Fase 1. Si hay lógica conocida (ej: "nivel se calcula por profundidad en el árbol genealógico"), puedo preparar el esquema para esa lógica.

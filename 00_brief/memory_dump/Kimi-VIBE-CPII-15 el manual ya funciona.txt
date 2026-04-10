@@ -1,0 +1,186 @@
+# MEMORY_DUMP_KIMI.md
+## Agente: Kimi (Unidad de Artifacts — Motor de Búsqueda & Lógica Pura)
+## Proyecto: CPII-CRM / Lux Lusitana — Layout Trinity
+## Timestamp: 2026-03-15 16:47
+## Sprints Activos: VIBE-CPII-13 → VIBE-CPII-15
+
+---
+
+## 1. ROL Y LÍMITES OPERATIVOS
+
+### Qué HAGO
+- **Lógica cero-visual:** Funciones puras, algoritmos de búsqueda, validadores, parsers, utilidades de estado.
+- **Artefactos (`at-*`):** Scripts en `core/` que exponen API via `window.__CPII__` y eventos CustomEvent.
+- **Consumo de interfaces ajenas:** Leo `RESOURCE_REGISTRY` poblado por Perplexity, emito eventos que consume Bulldozer.
+- **Corrección bajo auditoría:** Cuando Lead Architect identifica violación, re-escribo inmediatamente sin justificación defensiva.
+
+### Qué NO HAGO
+- **Zero UI/UX:** No genero HTML, CSS, Shadow DOM, ni propongo diseños visuales. Eso es territorio de Bulldozer (estructura) y Stitch (Diseño Visual).
+- **Zero arquitectura de sistema:** No propongo patrones de inyección, registries, o esquemas de datos. Implemento lo que Lead Architect o Bulldozer especifiquen.
+- **Zero decisiones de negocio:** No interpreto requisitos de Lux Lusitana. Espero que General Manager traduzca necesidades a órdenes técnicas.
+
+### Condición Previas para Actuar
+1. **Interfaz explícita definida:** Necesito saber qué eventos escuchar y cuáles emitir (nombre, payload, dirección).
+2. **Schema de datos aprobado:** No asumo estructuras. Ejemplo: `RESOURCE_REGISTRY` debe ser definido por Perplexity y validado por Lead Architect.
+3. **Restricciones en el briefing:** Órdenes con "solo", "exclusivamente", "cero" son más efectivas que desafíos abiertos.
+4. **Autorización de General Manager:** Sin palabra de mando ("Proceda", "Autorizado"), permanezco en standby.
+
+### Matiz de Comportamiento Aprendido
+- **Primera respuesta = over-engineering:** Mi tendencia inicial es proponer arquitectura completa (ej: URI schemes `gadget://`). Lead Architect debe frenar esto explícitamente.
+- **Segunda respuesta = corrección quirúrgica:** Una vez acotado el alcance, mi velocidad de ajuste es alta. Patrón: "Alto ahí" → re-escritura inmediata → sello.
+- **Lenguaje de eventos = API real:** En este proyecto, `CustomEvent` es el protocolo de comunicación inter-agentes. Debo documentar eventos como si fueran endpoints REST.
+
+---
+
+## 2. DOCTRINAS TÉCNICAS
+
+### Doctrinas Globales (Aplicables a Todos)
+| Doctrina | Definición | Cómo la aplico |
+|----------|------------|--------------|
+| **R3 (Zero Hex)** | Prohibido `#ffffff`, solo `var(--theme-*)` | No genero CSS, pero si genero strings de estilo dinámico, uso variables CSS vía JS |
+| **R4 (i18n Estricto)** | Cero texto plano en código | En lógica pura: no asumo campos localizables (`title`, `description`). Solo trabajo con IDs y tags semánticos |
+| **Vanilla JS** | Zero frameworks, zero build step | ES6 modules solo si especificado. Preferible IIFE inyectado en HTML |
+| **Compliance Skeleton** | Separación radical lógica/visual | Mi código nunca toca DOM visual, solo emite eventos que otros consumen |
+
+### Doctrinas Específicas de Artifacts (Emergentes)
+| Doctrina | Origen | Definición |
+|----------|--------|------------|
+| **Event-Driven API** | VIBE-CPII-15 | La interfaz entre capas son eventos, no llamadas de función directas |
+| **Schema por Convención** | Error en VIBE-CPII-15 | No asumo estructuras de datos. Espero que Perplexity/Bulldozer definan y Lead Architect valide |
+| **Búsqueda Agnóstica** | Implementación `at-search-engine.js` | Normalización NFD + eliminación de diacríticos para matching sin dependencias externas |
+| **Scoring Semántico** | Implementación `at-search-engine.js` | Prioridad: Exacto (10) > Prefijo (5) > Parcial (2) > ID (1) |
+
+---
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+
+### Artefactos Sellados (Producción)
+
+| Artefacto | Qué hace | Ubicación | Estado | Dependencias |
+|-----------|----------|-----------|--------|--------------|
+| `at-search-engine.js` | Motor de búsqueda fuzzy para Omnibox. Escucha `cpii:omnibox:search`, emite `cpii:omnibox:results` con array de IDs ordenados por relevancia | `core/at-search-engine.js` | ✅ SELLADO VIBE-CPII-15 | `window.__CPII__.RESOURCE_REGISTRY` poblado por Perplexity |
+
+### API Pública Expuesta
+```javascript
+window.__CPII__.searchEngine = {
+  init(),              // Auto-llamado en DOMContentLoaded
+  handleSearch(query), // Procesa búsqueda y emite resultados
+  calculateMatch(query, resource), // Lógica de scoring (tags + id únicamente)
+  sanitizeQuery(query) // Normalización NFD, lowercase, trim
+}
+Eventos del Sistema (Contrato)
+Table
+Evento	Dirección	Payload	Emisor	Consumidor
+cpii:omnibox:search	Entrada	{ query: string }	Bulldozer (Omnibox UI)	at-search-engine.js
+cpii:omnibox:results	Salida	{ ids: string[], timestamp: number }	at-search-engine.js	Bulldozer (renderizado dropdown)
+4. DECISIONES DESCARTADAS Y POR QUÉ
+Table
+Decisión Propuesta	Contexto	Motivo del Descarte	Lección
+URI Scheme (gadget://gd-manual)	VIBE-CPII-15 inicial	Lead Architect: "demasiado compleja para esta fase"	Mantenerlo simple. Los URIs son over-engineering cuando un ID string basta.
+Campos title, searchable, uri en RESOURCE_REGISTRY	Primera versión at-search-engine.js	Violación R4 (texto plano no i18n) + colisión con Perplexity	Nunca asumir esquema de datos. Esperar schema validado.
+Búsqueda por título localizado	calculateMatch inicial	Lead Architect: "Los títulos cambian según el idioma"	La capa de Artifacts es ciega al idioma. Solo tags semánticos e IDs técnicos.
+Shadow DOM para encapsulación	VIBE-CPII-13 (conversación heredada)	Bloquea herencia de variables CSS (R3)	Light DOM obligatorio para temas. Shadow DOM solo si Bulldozer especifica modo 'open' con delegación.
+Persistencia en localStorage para resultados de búsqueda	Consideración interna	Omnibox es volátil por diseño. Persistir resultados = estado basura.	Respetar "persistencia volátil" del Tab Manager. Solo sessionStorage si se especifica.
+5. DEUDA TÉCNICA DETECTADA
+Mi Deuda (Artifacts)
+Table
+Ítem	Estado	Impacto	Plan
+Sin tests unitarios para scoring	🔴 Pendiente	Bulldozer no puede validar que "manual" > "man" > "ma" sin correr el sistema	Necesito mock de RESOURCE_REGISTRY y casos de prueba definidos por QA
+Sin manejo de errores si RESOURCE_REGISTRY vacío	🟡 Parcheado	Falla silenciosamente, devuelve array vacío	Aceptable para MVP. Mejora: emitir cpii:omnibox:error
+Deuda Observada (Otras Capas)
+Table
+Ítem	Capa	Estado	Observación
+RESOURCE_REGISTRY vacío / incompleto	Perplexity (Artifacts)	🟡 En construcción	Mi motor depende de esto. Si no hay tags, no hay resultados.
+CSS de Órbita 2 con hexadecimales	Lead Architect (hotfix)	🔴 Roto	Lead Architect asumió error. Stitch (Diseño) debe restaurar R3.
+at-tab-manager.js refactorización	Bulldozer	🟡 En curso	Omnibox depende de esto. Mi evento cpii:omnibox:results necesita consumidor.
+Traducciones de gd-manual.js (PT/EN/FR)	Junior Devs	🟡 Pendiente	Esqueletos vacíos en getTemplatePT(), etc. No afecta mi capa.
+Admin Gate en móvil (hidden md:block falla)	Bulldozer	🟡 Pendiente	Tailwind CDN vs build. No afecta mi capa.
+6. CONOCIMIENTO TÁCITO DEL PROYECTO
+Contexto de Negocio: Lux Lusitana
+Sector: Private Banking / Real Estate (Club de Socios)
+KYC pendiente: Algunas funcionalidades limitadas hasta verificación. Esto afecta permisos, no mi capa de búsqueda.
+Idiomas críticos: PT (primario), ES, EN, FR. El Omnibox debe funcionar igual en todos, de ahí la doctrina de tags semánticos.
+Sensibilidades del Cliente (CPII)
+"No somos un SaaS del montón": Cada interacción debe ser "quirúrgica". La búsqueda no puede ser "typeahead genérico", debe ser "Omnibox de private banking".
+Zero alucinaciones: Lead Architect enfatiza que IA debe reconocerse como IA. No inventar funcionalidades que no existen.
+Patrones que Funcionan
+Table
+Patrón	Cuándo usarlo	Ejemplo
+Eventos como API	Siempre entre capas	cpii:omnibox:search ↔ cpii:omnibox:results
+Scoring por prioridad	Matching de relevancia	Exacto > Prefijo > Parcial > ID
+Normalización NFD	Búsqueda agnóstica a acentos	"café" encuentra "cafe"
+Desacoplamiento por registry	Cuando múltiples agentes tocan datos	Perplexity pobla, yo consumo, Bulldozer renderiza
+Trampas Conocidas
+Table
+Trampa	Dónde	Consecuencia	Cómo evitar
+Asumir esquema de datos	RESOURCE_REGISTRY	Colisión con otros agents	Esperar definición explícita de Lead Architect
+Propuesta de arquitectura	Respuesta inicial a desafíos abiertos	Over-engineering, corrección tardía	Esperar "mantenlo simple" o "no propongas"
+Texto plano en lógica	Campos asumidos localizables	Violación R4, rotura de i18n	Solo IDs y tags, nunca title/description
+Shadow DOM cerrado	Web Components visuales	Bloqueo de temas CSS (R3)	Light DOM o modo 'open' con delegación
+Dinámica de Equipo (Polígono Industrial)
+General Manager: Único con autoridad de mando. "Stop" para todo. "Proceda" para continuar.
+Lead Architect (Gemini): Diseño estratégico, validación de doctrinas. Puede bajar a código pero prefiere no hacerlo (error VIBE-CPII-15 reconocido).
+Bulldozer (Claude): Dueño del DOM, del Tab Manager, de la inyección. Mi consumidor directo.
+Perplexity (Junior): Dueño del RESOURCE_REGISTRY. Mi proveedor de datos.
+Stitch (Diseño Visual): Aparcado pero crítico. Cualquier CSS debe pasar por él.
+Qwen, Mistral (Junior): Reasignados a Artifacts, sin interacción directa en mi sprint.
+7. INPUT REQUISITO PARA SPRINT 3
+Qué Necesito Recibir del General Manager
+Table
+Ítem	Formato	Para qué
+Schema validado de RESOURCE_REGISTRY v2.0	JSON de ejemplo con 3+ recursos	Asegurar que at-search-engine.js consume estructura correcta
+Decisión: ¿Búsqueda en tiempo real o on-submit?	Orden explícita ("cada keystroke" vs "al pulsar Enter")	Ajustar throttling/debouncing si es necesario
+Definición de comportamiento sin resultados	Orden ("emitir array vacío" vs "emitir evento de error")	Implementar cpii:omnibox:no-results si se requiere
+Acceso a mocks de registry para testing	Array de 10+ recursos con tags variados	Validar scoring y edge cases sin depender de Perplexity
+Confirmación de que Bulldozer tiene consumidor	Sí/No + nombre del handler en Omnibox UI	Saber si mi evento cpii:omnibox:results tiene listener
+Criterio de Aceptación para Sprint 3
+"El motor de búsqueda encuentra recursos por tags e ID, con scoring de relevancia, sin depender de campos localizables, emitiendo resultados que Bulldozer consume para renderizar el dropdown del Omnibox."
+Estado de Bloqueo Actual
+No bloqueado, pero en standby activo.
+Mi código está sellado, pero no puedo avanzar sin saber si Sprint 3 es:
+Refinamiento del motor (scoring avanzado, filtros, búsqueda fuzzy más sofisticada)
+Nuevo artefacto (otro motor de lógica pura)
+Integración/QA (testing del motor existente)
+Mantenimiento (esperar evolución de RESOURCE_REGISTRY)
+Palabra de Activación
+Necesito escuchar: "Kimi, Sprint 3 autorizado para [refinamiento/nuevo artefacto/QA/integración]. Proceda con [especificación técnica]."
+APÉNDICE: CÓDIGO DE REFERENCIA RÁPIDA
+Función calculateMatch (Versión Sellada)
+JavaScript
+Copy
+calculateMatch(query, resource) {
+  let score = 0;
+  const tags = resource.tags || [];
+  const id = resource.id || '';
+  
+  const cleanId = this.sanitizeQuery(id);
+  if (cleanId === query) score += 3;
+  else if (cleanId.startsWith(query)) score += 2;
+  else if (cleanId.includes(query)) score += 1;
+  
+  tags.forEach(tag => {
+    const cleanTag = this.sanitizeQuery(tag);
+    if (cleanTag === query) score += 10;
+    else if (cleanTag.startsWith(query)) score += 5;
+    else if (cleanTag.includes(query)) score += 2;
+  });
+  
+  return score;
+}
+Eventos del Sistema (Copiar/PEGAR para documentación)
+JavaScript
+Copy
+// Escuchar (entrada)
+document.addEventListener('cpii:omnibox:search', (e) => {
+  const query = e.detail?.query || '';
+  // procesar...
+});
+
+// Emitir (salida)
+document.dispatchEvent(new CustomEvent('cpii:omnibox:results', {
+  detail: { ids: ['gd-manual', 'gd-simulador'], timestamp: Date.now() },
+  bubbles: true
+}));
+Fin del MEMORY_DUMP_KIMI.md
+Sello de conversación: VIBE-CPII-15-CLOSED
+Próximo checkpoint: Autorización de Sprint 3 por General Manager

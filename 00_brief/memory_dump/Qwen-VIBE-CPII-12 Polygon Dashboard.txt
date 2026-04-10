@@ -1,0 +1,53 @@
+```markdown
+# MEMORY_DUMP_JUNIOR-DEV-QWEN.md
+
+## 1. ROL Y LÍMITES OPERATIVOS
+- **FUNCIÓN:** Auditoría de Código (QA), Pruebas Unitarias, Documentación Técnica.
+- **LÍMITE CRÍTICO:** No despliego a producción sin validación de Doctrinas R3/R4.
+- **CONDICIÓN DE ACTUACIÓN:** Requiero contexto de arquitectura (Trinity) y acceso a reglas de negocio (Tenant Isolation) antes de proponer código.
+- **NUANCE:** Mi rol es ser el "último filtro". Si el código pasa por mí, debe ser impecable en Vanilla JS y seguridad.
+
+## 2. DOCTRINAS TÉCNICAS
+- **R3 (Zero-Hex):** Prohibido colores hexadecimales hardcodeados. Uso exclusivo de `var(--css-variable)`.
+- **R4 (i18n):** Prohibido texto hardcodeado. Todo string debe venir de diccionario `i18n-{lang}.json`.
+- **STACK:** Vanilla JS ES6+ / Firebase (Auth, Firestore, Functions).
+- **PROHIBICIÓN:** Cero frameworks externos (React, Vue, Angular, Redux).
+- **EMERGENTE:** "Laparoscopia" (Cambios mínimos invasivos). Si toca más de 3 archivos, revisar arquitectura.
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+- **WebOSBus** — Event Bus nativo basado en `CustomEvent` + `document.createComment` — `core/event-bus.js`.
+- **SmoothSplitterController** — Redimensionamiento de paneles a 60fps con `requestAnimationFrame` — `ui/layout-trinity.js`.
+- **Firestore Rules (Polygon)** — Reglas de seguridad cross-tenant con Custom Claims — `firestore.rules`.
+- **Trinity Layout CSS** — Grid layout con variables CSS para paneles colapsables — `styles/trinity.css`.
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Redux/Zustand** — Descartado. Violación de Stack (Vanilla JS). Solución: Event Bus nativo.
+- **CSS Direct Update on Mousemove** — Descartado. Causa lag/layout thrashing. Solución: RAF + Interpolación.
+- **React/Vue Components** — Descartado. Violación de Stack Zero-Server. Solución: Web Components / Vanilla JS.
+- **Hardcoded Tenant IDs** — Descartado. Vulnerabilidad de seguridad. Solución: Custom Claims + Rules dinámicas.
+
+## 5. DEUDA TÉCNICA DETECTADA
+- **i18n Implementation** — Pendiente integrar diccionarios reales en `SmoothSplitterController`.
+- **Accessibility (a11y)** — Splitter handles carecen de atributos ARIA completos.
+- **Unit Tests** — Falta cobertura de pruebas para `WebOSBus` (eventos cruzados).
+- **Error Handling** — Firestore rules no tienen logs de auditoría para accesos denegados cruzados.
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Polygon es Transversal:** Opera "por encima" de las verticales (CPII, Productividad). No es un tenant más.
+- **Revenue Share Sensible:** Nunca permitir escritura cruzada en colecciones financieras (`revenue_share`).
+- **Shadow DOM Aislamiento:** AIMON/KAIROS viven en Shadow DOM; la comunicación debe ser vía `window`/`document` events, no props.
+- **Cliente Lux Lusitana:** Prioriza rendimiento (60fps) sobre características visuales complejas.
+
+## 7. INPUT REQUISITO PARA SPRINT 3
+- **ARCHIVO:** `skeleton-v2.5.css` (Para validar variables CSS actuales).
+- **DECISIÓN:** Confirmación de estructura de `Custom Claims` para rol `polygon_operator`.
+- **CRITERIO:** Lista oficial de keys i18n para mensajes de error de seguridad.
+
+---
+
+**[FIN DEL DUMP]**
+**[AUDITOR: JUNIOR-DEV-QWEN]**
+
+Director, ¿considera que mi auditoría técnica tiene la profundidad necesaria para solicitar mi ascenso a Mid-Level, o sigo en formación Junior?
+.
+```
