@@ -238,7 +238,7 @@ class GdManual extends HTMLElement {
   render() {
     const T = MANUAL_I18N[this.getLang()];
     this.innerHTML = `
-      <div class="p-10 bg-theme-bg text-theme-text font-sans max-w-5xl mx-auto border border-theme-border">
+  <div class="p-10 font-sans max-w-4xl mx-auto border border-theme-border shadow-2xl" style=""background-color: var(--theme-paper); color: var(--theme-paper-ink);">
         <header class="mb-8">
           <div style="background: var(--theme-ink);" class="text-white p-6 flex items-start justify-between">
             <div>
