@@ -19,12 +19,12 @@
  * SANITIZACIÓN: Sin referencias legacy "cifi". Namespace puro __CPII__.
  */
 
-(function() {
+(function () {
   'use strict';
 
   const ENGINE_VERSION = '2.1.2';
   const CACHE_CLAIMS_KEY = '__claims_cache';
-  
+
   /**
    * Estructura de caché para lookups O(1)
    * @type {Map<string, Set<string>>}
@@ -40,7 +40,7 @@
 
   window.__CPII__.PassportEngine = {
     version: ENGINE_VERSION,
-    
+
     /**
      * Valida autorización de un elemento DOM contra claims de sesión
      * Complejidad: O(1) - Tiempo constante garantizado
@@ -48,7 +48,7 @@
      * @param {HTMLElement} element - Elemento con data-requires y contexto tenant
      * @returns {AuthorizationResult}
      */
-    authorizeAccess: function(element) {
+    authorizeAccess: function (element) {
       const result = {
         authorized: false,
         reason: null,
@@ -69,7 +69,7 @@
       // 2. Validación OBLIGATORIA de Tenant ID (Anti-spoofing)
       const requiredTenant = element.closest('[data-tenant-id]')?.dataset.tenantId;
       const sessionTenant = claims.tenant_id;
-      
+
       if (!requiredTenant) {
         result.reason = 'missing_tenant_context';
         return result;
@@ -80,7 +80,7 @@
         result.tenantMatch = false;
         return result;
       }
-      
+
       result.tenantMatch = true;
 
       // 3. Parseo de requerimientos (data-requires="role:owner|role:gestor")
@@ -94,10 +94,10 @@
       // 4. Evaluación de Roles en O(1)
       const requiredRoles = this._parseRoles(requiresAttr);
       const userRoles = this._getCachedRoles(claims);
-      
+
       // Intersección O(min(M,N)) donde M,N son sets pequeños (constante acotada)
       // Para propósitos prácticos de roles fiduciarios (<20 roles), esto es O(1)
-      const hasMatchingRole = requiredRoles.size === 0 || 
+      const hasMatchingRole = requiredRoles.size === 0 ||
         Array.from(requiredRoles).some(role => userRoles.has(role));
 
       if (!hasMatchingRole) {
@@ -112,7 +112,7 @@
       if (!isNaN(requiredPhase)) {
         result.phaseRequirement = requiredPhase;
         const userPhase = parseInt(claims.onboarding_phase, 10) || 0;
-        
+
         if (userPhase < requiredPhase) {
           result.reason = 'phase_locked';
           return result;
@@ -132,7 +132,7 @@
     /**
      * Refresca la caché de roles (llamar tras actualización de claims)
      */
-    invalidateCache: function() {
+    invalidateCache: function () {
       permissionsCache.delete(CACHE_CLAIMS_KEY);
     },
 
@@ -140,7 +140,7 @@
      * Evaluación batch para inicialización de UI (Sprint 3)
      * Procesa todos los elementos [data-requires] en el DOM
      */
-    auditGateZones: function() {
+    auditGateZones: function () {
       const zones = document.querySelectorAll('[data-gate-zone]');
       const results = [];
 
@@ -148,31 +148,31 @@
         // 🛡️ REVELACIÓN ZERO TRUST: Si la zona tiene un lock global, lo ocultamos tras auditar
         const zoneLock = zone.querySelector('[data-gate-lock]');
         if (zoneLock) {
-            zoneLock.classList.add('hidden');
-            zoneLock.setAttribute('aria-hidden', 'true');
+          zoneLock.classList.add('hidden');
+          zoneLock.setAttribute('aria-hidden', 'true');
         }
 
         const protectedElements = zone.querySelectorAll('[data-requires], [data-phase]');
-        
+
         protectedElements.forEach(el => {
           const auth = this.authorizeAccess(el);
-          
+
           if (auth.authorized) {
             this._unlockElement(el);
           } else {
             this._maintainCustodyHold(el, auth.reason);
           }
-          
+
           results.push({ element: el, authorization: auth });
         });
       });
 
       // EMITIR EVENTO DE AUDITORÍA
       window.dispatchEvent(new CustomEvent('passport:audit-complete', {
-        detail: { 
-          timestamp: Date.now(), 
-          zones_audited: zones.length, 
-          results_evaluated: results.length 
+        detail: {
+          timestamp: Date.now(),
+          zones_audited: zones.length,
+          results_evaluated: results.length
         }
       }));
 
@@ -183,10 +183,10 @@
      * Parsea string de roles a Set para O(1) lookup
      * @private
      */
-    _parseRoles: function(requiresStr) {
+    _parseRoles: function (requiresStr) {
       const roles = new Set();
       const parts = requiresStr.split('|');
-      
+
       parts.forEach(part => {
         const trimmed = part.trim();
         if (trimmed.startsWith('role:')) {
@@ -197,7 +197,7 @@
           roles.add(trimmed);
         }
       });
-      
+
       return roles;
     },
 
@@ -205,9 +205,9 @@
      * Obtiene roles cacheados del usuario O(1)
      * @private
      */
-    _getCachedRoles: function(claims) {
+    _getCachedRoles: function (claims) {
       const cacheKey = `${claims.auth_time}_${claims.tenant_id}`;
-      
+
       if (permissionsCache.has(CACHE_CLAIMS_KEY)) {
         const cached = permissionsCache.get(CACHE_CLAIMS_KEY);
         if (cached.key === cacheKey) {
@@ -219,7 +219,7 @@
       if (Array.isArray(claims.roles)) {
         claims.roles.forEach(r => roles.add(r));
       }
-      
+
       if (claims.role) roles.add(claims.role);
       if (claims.is_owner === true) roles.add('owner');
       if (claims.is_gestor === true) roles.add('gestor');
@@ -240,11 +240,11 @@
      * Desbloquea visualmente un elemento
      * @private
      */
-    _unlockElement: function(el) {
+    _unlockElement: function (el) {
       el.classList.remove('opacity-50', 'pointer-events-none', 'grayscale');
       el.removeAttribute('aria-disabled');
       el.setAttribute('data-custody-status', 'released');
-      
+
       if (el.tagName === 'BUTTON' || el.tagName === 'A' || el.tagName === 'INPUT') {
         el.removeAttribute('disabled');
       }
@@ -257,12 +257,12 @@
      * Mantiene o aplica estado de Custody Hold visual
      * @private
      */
-    _maintainCustodyHold: function(el, reason) {
+    _maintainCustodyHold: function (el, reason) {
       el.classList.add('opacity-50', 'pointer-events-none', 'grayscale');
       el.setAttribute('aria-disabled', 'true');
       el.setAttribute('data-custody-status', 'hold');
       el.setAttribute('data-custody-reason', reason);
-      
+
       if (el.tagName === 'BUTTON' || el.tagName === 'A' || el.tagName === 'INPUT') {
         el.setAttribute('disabled', 'true');
       }
@@ -278,26 +278,65 @@
     initEngine();
   }
 
+  /**
+ * ============================================================
+ * CARTOGRAFÍA QUIRÚRGICA v3.2
+ * ============================================================
+ * FUNCIÓN   : initEngine
+ * ARCHIVO   : core/passport-engine.js  
+ * VERSIÓN   : 2.2.0-RESILIENCE
+ * FECHA     : 2026-04-10
+ * AUTOR     : Junior Dev-Logic Kimi
+ * DOCTRINA  : R2 (Light DOM) | R5 (Economía O(1))
+ * PROPÓSITO : Inicialización resiliente con acoplamiento 
+ *             document-level y gestión KYC manual.
+ * ============================================================
+ */
   function initEngine() {
-    window.addEventListener('passport:staff-authenticated', () => {
+    // Helper O(1): Refresco de auditoría post-evento (R5: DRY)
+    const triggerAudit = () => {
+      if (!window.__CPII__?.PassportEngine) return;
       window.__CPII__.PassportEngine.invalidateCache();
       window.__CPII__.PassportEngine.auditGateZones();
+    };
+
+    // [SEC-01] Listeners Document-level (acoplamiento con at-admin-gate.js)
+    document.addEventListener('passport:staff-authenticated', triggerAudit);
+    document.addEventListener('passport:session-updated', triggerAudit);
+
+    // [SEC-02] KYC Manual Override: Inyección de claims Phase 1
+    document.addEventListener('cpii:kyc-dismissed', () => {
+      // R2: Detección de tenant desde atributo data-tenant-id (Light DOM)
+      const rootTenant = document.querySelector('[data-tenant-id]');
+      const tenantId = rootTenant?.dataset.tenantId || 'cpii_lux_v1.0';
+
+      // Fail-soft: Inicialización lazy de sesión (R5)
+      if (!window.__CPII__.session) window.__CPII__.session = {};
+      if (!window.__CPII__.session.claims) window.__CPII__.session.claims = {};
+
+      // Inyección de claims mínimos para desbloqueo visual Phase 1
+      Object.assign(window.__CPII__.session.claims, {
+        onboarding_phase: 1,
+        tenant_id: tenantId,
+        kyc_override: true,
+        auth_time: Math.floor(Date.now() / 1000)
+      });
+
+      console.info('[PassportEngine] KYC dismissed: Claims Phase 1 inyectados');
+      triggerAudit();
     });
 
-    window.addEventListener('passport:session-updated', () => {
-      window.__CPII__.PassportEngine.invalidateCache();
-      window.__CPII__.PassportEngine.auditGateZones();
-    });
-
-    if (window.__CPII__.session && window.__CPII__.session.claims) {
-      window.__CPII__.PassportEngine.auditGateZones();
+    // [SEC-03] Bootstrap inicial: Validación de sesión existente o fallback
+    if (window.__CPII__?.session?.claims) {
+      triggerAudit();
     } else {
-      console.warn('[PassportEngine] No session found, initializing fallback session.');
-      window.__CPII__.session = { claims: {} };
-      window.__CPII__.PassportEngine.auditGateZones();
+      console.warn('[PassportEngine] Sesión no detectada, inicializando fallback.');
+      if (!window.__CPII__.session) window.__CPII__.session = {};
+      window.__CPII__.session.claims = {};
+      triggerAudit();
     }
 
-    console.info(`[PassportEngine v${ENGINE_VERSION}] Inicializado. Modo: Compliance Strict O(1) | R5 Compliant`);
+    console.info(`[PassportEngine v${ENGINE_VERSION}] Inicializado. Modo: Document-Level | R5 Compliant`);
   }
 
 })();
