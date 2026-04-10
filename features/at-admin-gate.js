@@ -289,6 +289,11 @@ class AtAdminGate extends HTMLElement {
 
             this._setState('success');
 
+            // Redirección Fiduciaria al interior del CRM
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 1200);
+
         } catch (error) {
             console.error(`[at-admin-gate] OAuth ${providerName} error:`, error);
 
