@@ -365,20 +365,21 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
 
     <!-- [SEC-10] Bootstrap Script — Trinity Router v2.0.0 (Kimi) -->
     <script>
-            // ============================================================
-            // CARTOGRAFÍA QUIRÚRGICA v3.2
-            // ============================================================
-            // ARCHIVO   : index.html [SEC-10] Bootstrap Trinity Router
-            // VERSIÓN   : 2.0.0
-            // FECHA     : 2026-03-22
-            // AUTOR     : Junior Dev-Logic Kimi
-            // DOCTRINA  : R2 (Light DOM) | R4 (i18n Strict) | R5 (Economía O(1))
-            // PROPÓSITO : Reemplazar el enrutamiento por innerText (legacy) con
-            //             Event Delegation basado en atributos data-gadget, garantizando
-            //             inmunidad ante cambios de idioma y complejidad O(1) constante.
-            // SPRINT    : VIBE-CPII-19 — Saneamiento Sprint 3
-            // ============================================================
+        // ============================================================
+        // CARTOGRAFÍA QUIRÚRGICA v3.2
+        // ============================================================
+        // ARCHIVO   : index.html [SEC-10] Bootstrap Trinity Router
+        // VERSIÓN   : 2.0.0
+        // FECHA     : 2026-03-22
+        // AUTOR     : Junior Dev-Logic Kimi
+        // DOCTRINA  : R2 (Light DOM) | R4 (i18n Strict) | R5 (Economía O(1))
+        // PROPÓSITO : Reemplazar el enrutamiento por innerText (legacy) con
+        //             Event Delegation basado en atributos data-gadget, garantizando
+        //             inmunidad ante cambios de idioma y complejidad O(1) constante.
+        // SPRINT    : VIBE-CPII-19 — Saneamiento Sprint 3
+        // ============================================================
 
+        document.addEventListener('DOMContentLoaded', () => {
             (function () {
                 'use strict';
 
@@ -521,6 +522,7 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
                     }
                 })();
             })();
+        });
     </script>
     <script src="core/passport-engine.js" defer></script>
 
