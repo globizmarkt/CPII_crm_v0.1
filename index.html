@@ -483,6 +483,43 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
                 });
 
                 console.log('[TrinityRouter] ✅ Inicializado (Event Delegation O(1))');
+
+                // [SEC-10.3] Auto-Boot: Conexión Traccional por defecto (R5 O(1))
+                (function autoBootTraccional() {
+                    const DEFAULT_GADGET = 'gd-manual';
+
+                    // Fail-closed: Validar contra whitelist existente (O(1))
+                    if (!ALLOWED_GADGETS.has(DEFAULT_GADGET)) {
+                        console.warn(`[TrinityRouter] Auto-boot bloqueado: ${DEFAULT_GADGET} no en whitelist`);
+                        return;
+                    }
+
+                    try {
+                        // Inyección en Órbita 2
+                        tm.openFromRegistry(DEFAULT_GADGET);
+
+                        // Activación visual del pilar correspondiente (sin duplicar lógica de eventos)
+                        const defaultTrigger = sidebar.querySelector(`[data-gadget="${DEFAULT_GADGET}"]`);
+                        if (defaultTrigger) {
+                            const activePillar = defaultTrigger.closest('.menu-pillar-wrapper')?.querySelector('.menu-pillar')
+                                || defaultTrigger.closest('.menu-pillar')
+                                || defaultTrigger;
+
+                            // Aplicar estado activo (clases Tailwind canónicas del sistema)
+                            activePillar.classList.add('bg-primary/10', 'text-primary', 'border-primary/20');
+                            activePillar.classList.remove('text-slate-400');
+                        }
+
+                        document.dispatchEvent(new CustomEvent('trinity:boot-complete', {
+                            detail: { gadget: DEFAULT_GADGET, mode: 'auto-traccional', timestamp: Date.now() },
+                            bubbles: true
+                        }));
+
+                    } catch (err) {
+                        console.error('[TrinityRouter] Auto-boot fallido:', err);
+                        // Fail-safe: El lienzo permanece en estado válido (vacío) si el gadget falla
+                    }
+                })();
             })();
     </script>
     <script src="core/passport-engine.js" defer></script>
