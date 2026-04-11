@@ -1,0 +1,132 @@
+# CONVERSATION_INDEX.md
+
+### 1. MAPA DE CONVERSACIONES
+[VIBE-CPII-01] — [Bulldozer, Lead, Perplexity] — Prototipo Web — Creación del prototipo HTML estático inicial.
+[VIBE-CPII-02] — [Bulldozer, Lead] — Refactorización — Modularización y establecimiento de clases base.
+[VIBE-CPII-03] — [Bulldozer, Lead, Ingeniero] — access-form conexion — Integración de RGPD al esquema Verdent, diccionarios y debate Nginx vs WP.
+[VIBE-CPII-04] — [Bulldozer, Lead, Ingeniero] — Grupo Comercial — Mapeo de diccionarios de métricas, parche de seguridad XSS en `i18n.js` y captura `?ref=`.
+[VIBE-CPII-05] — [Bulldozer, Lead, Claude El Jefe] — Refinar — Saneamiento intensivo de marca "eXp" y purga de frameworks pesados (React/Zustand ban).
+[VIBE-CPII-06] — [Bulldozer, Lead] — pre-lanzamiento — Despliegue asimétrico (Firebase vs WordPress LEMP) y corrección del árbol de red SVG.
+[VIBE-CPII-07] — [Bulldozer, Lead] — encendido de motores — Despliegue GCE, Cloud Functions (onAuthCreate 1 Gen) y Webhook nativo a Google Sheets.
+[VIBE-CPII-08] — [Bulldozer, Lead, Ingeniero] — chapa y pintura — Motor Telegram de alertas, candados de atribución (local storage) y Reglas Firestore base.
+[VIBE-CPII-09] — [Bulldozer, Lead] — orbitando y acoplando — Diseño del esquema de agregación plana (NoSQL ancestry, zero-cost), Mailer Híbrido (SendGrid+Workspace).
+[VIBE-CPII-10] — [Bulldozer, Lead] — sitensis para MLS — Blueprint de la "Estructura Tricameral" arquitectónica (Fase A) y migración a reglas Direct-to-Storage (Uploads).
+[VIBE-CPII-11] — [Bulldozer, Kimi, Lead, Perplexity, Qwen] — Destilando para STITCH — Adaptación y preparación de componentes para integración en ecosistema STITCH.
+[VIBE-CPII-12] — [Bulldozer, Kimi, Lead, Perplexity, Qwen] — Fork Polygon Dashboard — Bifurcación del frontend Polygon para el entorno CPII.
+[VIBE-CPII-13] — [Bulldozer, Lead Architect] — Gadgets y Webinar — Gadget Manual, definición "Admin Gate", y UI Layout Trinity (Sidebar/Canvas/Dock).
+[VIBE-CPII-14] — [Bulldozer, Kimi, Lead, Perplexity, Qwen] — El CRM ya existe — Auditoría y consolidación del sistema fiduciario base.
+[VIBE-CPII-15] — [Bulldozer, Kimi, Lead, Perplexity, Qwen] — Manual funcionando — Sellado de la doctrina `MANUAL_ACCESO_FIDUCIARIO.md` y estructura de validación.
+[VIBE-CPII-16] — [Bulldozer, Kimi, Lead, Perplexity, Qwen] — Despliegue de nuevas funcionalidades — Inyección en Órbita 1 (6 pilares fiduciarios), script `passport-engine.js` y traducción institucional del Custody Hold.
+[VIBE-AIP-01] — [Antigravity, Director] — Extracción Órbita 3 (Reactive) — Localización y agnostización de la lógica del Inspector de Metadatos y el Oráculo AIMON desde el prototipo fundacional `cifi-aip-prototype.html`.
+[VIBE-AIP-02] — [Antigravity, Director] — Extracción Órbita 2 (Canvas) — Identificación de la lógica del TabManager (Contenedor Dinámico) y el Emisor de Contexto para la sincronización entre Canvas e Inspector.
+[VIBE-AIP-03] — [Antigravity, Director] — Auditoría y Purificación (Canvas) — Ejecución del Test de Agnosticismo sobre `workspace-canvas.js`. Erradicación de red-400 y migración a Material Symbols. Sellado del componente como R5-Ready.
+[VIBE-SUMMIT-01] — [Antigravity, Director] — Consolidación Trinidad 1.0 — Evaluación de operatividad global. Las tres órbitas y el chasis AppShell alcanzan el estado de producción universal bajo doctrinas R1-R5.
+[VIBE-CPII-17] — [Perplexity, Director] — Propuesta visual candado pasaporte — Definición conceptual de estados de bloqueo fiduciario (cerrado/verificando/aprobado/denegado).
+[VIBE-CPII-18] — [Director, Lead Architect, Antigravity, Bulldozer, Kimi, Qwen, Perplexity, Stitch, DeepSeek] — Auditoría de Estrategia y Blindaje del Gate — Debate sobre arquitectura de identidad federada; decisiones v1.4 consolidadas (Élite Federada, Vía Manual JWT, coordenada `golden-gate.html`, tolerancia cero a DT-004/005).
+[VIBE-CPII-18b] — [DeepSeek, Antigravity] — Redacción del Blueprint Oficial Sprint 4 (Golden Gate) — Consolidación ejecutable de decisiones arquitectónicas y hoja de ruta para Bulldozer y Kimi.
+[VIBE-CPII-19] — [Bulldozer] — CONVERSATION_INDEX Consolidation — Generación del índice global de memoria a partir de los MEMORY_DUMPs de todos los agentes activos.
+
+### 2. DÓNDE ESTÁN LAS COSAS
+- `MANUAL_ACCESO_FIDUCIARIO.md` — Lógica acumulativa KYC y doctrina legal — `CPII_crm_v0.1/core/` (Lead Architect / Qwen) [VIBE-CPII-15]
+- `index.html` (Órbita 1) — Estructura base de navegación y métricas SEC-05 — `CPII_crm_v0.1/` (Perplexity / Lead Architect) [VIBE-CPII-16]
+- `passport-engine.js` (v2.1.2) — Motor DOM O(1) para evaluación de requerimientos fiduciarios — `CPII_crm_v0.1/core/` (Kimi) [VIBE-CPII-16]
+- `i18n.js` — Motor de nomenclatura institucional y protección XSS — `CPII_crm_v0.1/core/` (Lead Architect / Ingeniero) [VIBE-CPII-04]
+- `access-form.html` — Formulario base con webhooks y candados de atribución — `CPII_crm_v0.1/` (Bulldozer / Ingeniero) [VIBE-CPII-03]
+- `simulator.html` — Simulador matemático (Catapulta/Refugio) — `CPII_crm_v0.1/` (Lead Strategist) [VIBE-CPII-10]
+- `functions/index.js` — Capa backend (Mailer, Telegram, onAuthCreateBridge) — `CPII_crm_v0.1/functions/` (Lead Architect / Ingeniero) [VIBE-CPII-07]
+- `firestore.rules` — Reglas NoSQL para inmutabilidad tenant y direct-to-storage — `CPII_crm_v0.1/` (Lead Cloud Architect) [VIBE-CPII-10]
+- Bóveda IMPA v1.8.1 — Sistema de identidad y protocolos modulares — `docs/gem_vibe_cpii/` (Antigravity) [VIBE-SUMMIT-01]
+- `README_VIBE_CPII.md` — Manual oficial con troubleshooting y planta de 7 agentes — `docs/gem_vibe_cpii/` (Antigravity) [VIBE-SUMMIT-01]
+- Bóveda Qwen — Sistema de auditoría QA — `docs/qwen-system/` (Antigravity) [VIBE-SUMMIT-01]
+- `CONVERSATION_INDEX.md` — Índice global de memoria descontaminada — `.bibliotecario/` (DeepSeek) [VIBE-CPII-18]
+- `MANIFEST.md` (v0.1.7) — Mapa de coordenadas del polígono — `.bibliotecario/` (Antigravity) [VIBE-CPII-18]
+- `SPRINT4_GOLDEN_GATE_BLUEPRINT.md` — Contrato de obra ejecutable para Sprint 4 — `.bibliotecario/blueprints/` (DeepSeek) [VIBE-CPII-18b]
+- `at-admin-gate.js` (v1.1.1-silent) — Componente lógico para autenticación y handoff — `CPII_crm_v0.1/features/` (Kimi) [VIBE-CPII-16]
+- `golden-gate.html` — Puerta de acceso fiduciaria (Élite Federada + Vía Manual JWT) — `CPII_crm_v0.1/` (Blueprinted, pendiente creación física) [VIBE-CPII-18]
+
+### 3. DECISIONES GLOBALES DE ARQUITECTURA
+- **Agnosticismo Radical (R0):** El núcleo (Skeleton) es 100% whitelabel; la lógica específica de negocio se delega a Custom Claims ("Mochila" JWT) [Kimi, Antigravity, Lead Architect, DeepSeek].
+- **Zero-Hex (R3) y Vanilla Zero-Deps:** Uso exclusivo de Tailwind utilitario y variables `--theme-*`; prohibición estricta de React, Vue o librerías externas de UI [Qwen, Perplexity, Kimi, Bulldozer].
+- **i18n Strict (R4):** Cero texto hardcodeado en la UI; todo debe procesarse mediante el motor de traducción `LuxI18n` para evitar XSS y cumplir normativas [Qwen, Bulldozer, Kimi, Perplexity].
+- **Economía de Guerra (R5):** Soluciones O(1) obligatorias, rechazo a recursos costosos como Redis o Cloud Functions innecesarias (ej. exclusión de LinkedIn) [Kimi, Perplexity, Lead Architect].
+- **Zero Trust UI (Born Locked):** La UI nace bloqueada visualmente (`data-gate-lock`); solo el motor JS (`passport-engine.js`) puede revelar la interfaz tras validar claims, previniendo FOUC y aplicando fricción intencional [Kimi, Perplexity, Bulldozer].
+- **Separación de Responsabilidades:** Bulldozer maquetará el DOM, Kimi electrificará la lógica en JS, y Qwen auditará el cumplimiento doctrinal; la comunicación inter-agente está prohibida, siendo el Director el único bus de datos [Bulldozer, Kimi, Qwen, Perplexity, Lead Architect].
+- **Protocolo de Laparoscopia ("Sin archivo real = sin operación"):** Todo agente requiere el archivo físico en el contexto del chat antes de proponer o ejecutar modificaciones, evitando operar sobre "archivos fantasma" [Bulldozer, Qwen, Perplexity, Lead Architect].
+- **Erradicación de la "Contaminación Inmobiliaria":** Ningún artefacto debe referenciarse como existente sin una coordenada física válida en `MANIFEST.md` o el árbol de directorios [DeepSeek, Bulldozer, Qwen, Antigravity].
+- **Élite de Identidad Federada:** Google, Apple, Microsoft exclusivamente. LinkedIn excluido por violar R5 (requiere OAuth custom + Cloud Functions intermedias = O(n)) [Lead Architect, Kimi, Perplexity, Antigravity, DeepSeek].
+- **Vía Manual JWT-Native:** `sendSignInLinkToEmail` de Firebase Auth para preservar el axioma JWT. Descartado WhatsApp/Telegram custom por romper la arquitectura de `passport-engine.js` [Kimi, Lead Architect, Perplexity, Antigravity].
+- **Golden Gate como archivo físico nuevo:** `golden-gate.html` será creado como entidad independiente de `admin-gate.html` para evitar contaminación inmobiliaria y permitir iteración controlada [DeepSeek, Lead Architect, Antigravity].
+
+### 4. DEUDA TÉCNICA CONSOLIDADA
+
+**Crítica / Bloqueante:**
+1. **DT-004:** Firebase SDK sin configurar en el nuevo `golden-gate.html` (credenciales reales no inyectadas). Bloquea cualquier operación OAuth [Antigravity, Bulldozer, Kimi, DeepSeek].
+2. **DT-005:** Motor i18n (`core/i18n.js`) no enlazado en el nuevo archivo. Faltan registrar claves nuevas (`gate.continue_apple`, `auth.manual_link_sent`, `gate.continue_google`, `gate.continue_microsoft`, `gate.manual_link_send`, `auth.manual_code_sent`) en `i18n_STRUCTURE.json`. Inyectar UI sin claves provoca violación R4 [Antigravity, Qwen, Bulldozer, Kimi, DeepSeek].
+3. **DT-010:** "Golden Gate" fantasma; se requiere crear físicamente `golden-gate.html` para evitar "contaminación inmobiliaria" [DeepSeek, Bulldozer].
+
+**Alta:**
+4. **Integración CMS Inconclusa:** Instancia WordPress en GCE desalineada (faltan hardening y certificados), generando un posible "Limbo" de identidad [Kimi, Qwen, Perplexity].
+5. **Fallbacks JS Ausentes (DT-009):** Si `window.__CPII__` colapsa, el `passport-engine.js` falla silenciosamente sin una degradación elegante de la UI [Kimi, Qwen, Perplexity].
+6. **Backend Handoff Faltante:** El endpoint `/api/staff/handoff` invocado por `at-admin-gate.js` no existe actualmente [Kimi, Perplexity].
+7. **Discrepancia Claims:** Conflicto entre `window.__CPII__.session.claims` vs `window.__CPII__.session.passport.claims` sin resolución arquitectónica [Perplexity, Kimi].
+
+**Media:**
+8. **Uploader Deficitario:** Riesgo de saturar RAM (512MB) en Cloud Functions; urge migrar a un patrón Direct-to-storage [Kimi, Qwen, Lead Architect].
+9. **Candado Stealth Pendiente:** Falta despliegue en Firebase Hosting del script para ocultar `?ref=` [Lead Architect].
+10. **Accesibilidad ARIA Custody Hold:** El atributo `aria-disabled` no se propaga correctamente a lectores de pantalla [Perplexity, Bulldozer].
+11. **Claves i18n Huérfanas:** `nav_mls` y `nav_history` saturan el diccionario sin una purga programada [Kimi, Qwen].
+12. **Theme Tokens CSS (DT-006):** Falta archivo canónico `css/theme.css`; actualmente usa fallback de estilo interno [Perplexity].
+13. **Hooks Desconectados:** `passport:engine-ready` se emite sin listeners, y faltan estados transitorios claros para el KYC [Kimi, Qwen].
+14. **Validación de Dependencias Firebase:** `passport-engine.js` asume `window.firebase` existe sin verificación robusta al inicio [Kimi].
+
+### 5. CONOCIMIENTO TÁCTICO CONSOLIDADO
+- **"El Director es el único Bus de Datos":** Los agentes (Gemini, Claude, Qwen, DeepSeek) son LLMs aislados en interfaces de chat. No pueden compartir archivos, comunicarse entre sí mediante API ni modificar el disco duro local de forma autónoma. El Director Humano debe copiar y pegar el código manualmente (Dispatch Asincrónico).
+- **El "Vibe" de Alta Banca Suiza:** La aplicación exige un tono institucional, sobrio y discreto ("Luxury Glass"). Se prohíben dinámicas de startup o elementos lúdicos (gamificación, rewards). La fricción en el proceso (ej. procesos KYC lentos o estados grises) es un "Escudo Psicológico" diseñado para filtrar usuarios y comunicar exclusividad, no un problema de usabilidad.
+- **Palabra de Seguridad ("guapito de cara"):** Es un gatillo de emergencia que valida la autoridad del Director Humano en el entorno de desarrollo, empleado para superar bloqueos de los agentes si se detecta deriva narrativa. Pista: confusión entre ironía y cumplido en el Sprint de Seguridad.
+- **Ansiedad de Compilación del Lead Architect:** El orquestador estratégico tiene una tendencia inherente a generar código final o anticipar veredictos para "llenar el vacío", lo que viola la separación de responsabilidades y la cadena de mando. La planta debe forzarlo a delegar y ceñirse a la orquestación.
+- **Bifurcación Traccional de Usuarios:** Los Inversores interactúan con "Lerium" (landing) y no pasan por "El Gate". Solo el Staff y los Partners utilizan la puerta fiduciaria (`admin-gate.html` / `golden-gate.html`) que es el objetivo actual.
+- **"Sin archivo real = sin operación":** La regla de oro de la laparoscopia. Cualquier sugerencia técnica sobre un archivo que no se haya pegado en el chat es considerada una alucinación (Ghost File).
+- **Inmutabilidad del "Hueso" (Skeleton):** Las reglas fundamentales R0-R7 son tratadas como un Código Penal. Los incumplimientos (ej. un solo color HEX en un PR) generan rechazo inmediato sin lugar a debate.
+- **Paternalismo Sectorial / Compliance-Based Privilege:** La fricción en UI comunica élite; "restringir es demostrar valor". Conceptos como "El Gate", "Custodia Fiduciaria" imponen respeto y filtran agentes rebeldes; no son bugs, son filtros de calidad AML/KYC intencionales.
+- **Bucle de Identidad Intocable:** `onAuthStateChanged` → `getIdTokenResult(true)` → Inyección en `window.__CPII__.session` → `passport:session-updated` → Auditoría `PassportEngine`. Si se interrumpe, el usuario queda ciego.
+- **Economía de Guerra R5:** Escala cero costo mensual. Prohibido Redis/Memorystore, Firebase Free Pool obligatorio. BreederHub Incubator opera con multitenancy lógica (`tenant_id`), NO física.
+
+### 6. GAPS DETECTADOS
+- **Jurisdicción de Enrutamiento (Tenant Routing):** Queda pendiente decidir qué componente (y por ende, qué agente) será responsable de redirigir a los usuarios basándose en el `tenant_id` de los Custom Claims. Kimi señala que no pertenece a `passport-engine.js`, y Bulldozer sugiere que debería ser un nuevo `at-router.js` bajo control de Antigravity.
+- **Resolución Técnica de `user.privateEmail`:** Aunque se aprobó Apple como proveedor de identidad, falta definir el flujo técnico de vinculación post-login para mantener la trazabilidad del KYC cuando el usuario oculta su correo real.
+- **Manejo de Errores de Fallback (`window.__CPII__`):** Múltiples agentes señalan el colapso silencioso si el objeto global falla, pero no se ha asignado un ticket claro para diseñar e implementar la UI de degradación (Fallback UI).
+- **Verificación Atómica UID-Phone:** Se estableció conceptualmente que la Vía Manual debe requerir un teléfono pre-registrado, pero no hay un plan claro sobre cómo las reglas de Firestore (jurisdicción de Antigravity) validarán este vínculo atómicamente antes de permitir la emisión del JWT.
+- **Resolución de Discrepancia Claims:** Conflicto arquitectónico entre las dos estructuras de claims (`session.claims` vs `session.passport.claims`) requiere decisión de diseño para unificar el acceso.
+- **Protocolo de Degradación R5:** No existe un documento formal que defina cómo el sistema debe comportarse cuando alcanza los límites de Firebase Free Pool o cuando falla una dependencia crítica.
+
+### 7. FUENTE DE VERDAD CONSOLIDADA
+// `window.__CPII__` → Namespace raíz de la arquitectura Sidecar y espacio de nombres universal del proyecto — declarado por: [Kimi, Perplexity, DeepSeek, Antigravity]
+// `window.__CPII__.config` → Configuración resuelta e inicialización de la vertical activa (project_id, lang, theme, timezone, tenant_id) — declarado por: [Kimi, Antigravity, Qwen]
+// `window.__CPII__.config.project_id` → Identificador del proyecto actual en BreederHub Incubator — declarado por: [Kimi]
+// `window.__CPII__.config.tenant_id` → Alias de project_id, usado en validaciones cross-tenant — declarado por: [Kimi]
+// `window.__CPII__.session` → Fuente de verdad del estado fiduciario del usuario activo (UID, JWT, claims de tenant y rol fiduciario) — declarado por: [Lead Architect, Antigravity, Perplexity, Kimi, Qwen, DeepSeek]
+// `window.__CPII__.session.uid` → User ID único de Firebase — declarado por: [Kimi]
+// `window.__CPII__.session.email` → Email del usuario autenticado — declarado por: [Kimi]
+// `window.__CPII__.session.claims` → Claims de Firebase Auth (roles, tenant_id, onboarding_phase, custody_status) — declarado por: [Kimi, Perplexity, Qwen]
+// `window.__CPII__.session.token` → JWT token de Firebase para autorización backend — declarado por: [Kimi]
+// `window.__CPII__.session.tenantValidated` → Boolean: claims.tenant_id coincide con data-tenant-id del DOM — declarado por: [Kimi]
+// `window.__CPII__.session.passport` → ⚠️ Objeto estructurado que envuelve los datos de autorización y claims evaluados (estructura alternativa en conflicto con session directo) — declarado por: [Kimi, Perplexity]
+// `window.__CPII__.PassportEngine` → Motor de autorización global O(1) y caché de permisos fiduciarios (`__claims_cache`) — declarado por: [Kimi, Perplexity, Qwen, DeepSeek]
+// `window.__CPII__.i18n` → Motor y diccionario de traducciones cargado por el bootstrapper (usado primariamente vía `.t()`) — declarado por: [Antigravity, Qwen, Kimi, Perplexity]
+// `window.__CPII__.i18n.t()` → Función de traducción pura del motor i18n v2.0 — declarado por: [Kimi, Qwen, Perplexity]
+// `window.__CPII__.SceneManager` → Gestor de navegación agnóstico (R6: prohibido href a HTML) — declarado por: [Qwen]
+// `window.__CPII__.emitter` → Módulo de inyección de "mochila" de estado entre dominios (solo en Landing) — declarado por: [Qwen]
+// `window.LuxI18n` → Diccionario global de traducciones y motor i18n de fallback (R4 Strict) — declarado por: [Lead Architect, Perplexity, Kimi, Qwen, DeepSeek]
+// `window.firebase` → Objeto del SDK nativo empleado para inicializar la app y manejar la validación de identidad federada (`firebase.auth()`) — declarado por: [Lead Architect, Kimi, Perplexity, Qwen, DeepSeek]
+// `customElements.registry` → Registro global de Web Components nativos en el DOM (`at-admin-gate`, etc.) — declarado por: [Kimi, DeepSeek]
+// `localStorage.getItem('cpii:locale')` → Persistencia del idioma preferido del usuario — declarado por: [Qwen]
+// `MANUAL_I18N` → Diccionario interno estático de gadgets para fallback R4 (gd-manual.js) — declarado por: [Qwen]
+// `GADGET_REGISTRY` → Objeto interno de at-tab-manager para registro de gadgets — declarado por: [DeepSeek]
+// `CONVERSATION_INDEX.md` → Fuente de verdad histórica de decisiones estratégicas, estado de sprints y deuda técnica consolidada — declarado por: [DeepSeek, Qwen]
+// `MANIFEST.md` → Fuente de verdad oficial sobre la geografía física del polígono y estado de los artefactos — declarado por: [Antigravity, DeepSeek, Qwen]
+// `tree-breederhub.txt` → Mapa de directorios regenerado tras cada hito — declarado por: [DeepSeek]
+// `CSS_TOKENS_CANONICAL.css` → Fuente de verdad canónica para la validación R3 (Zero-Hex) y variables Tailwind — declarado por: [Qwen]
+// `i18n_STRUCTURE.json` → Fuente de verdad para la validación R4 (diccionario maestro de claves de traducción) — declarado por: [Qwen]
+// `VIOLATIONS_CHECKLIST.md` → Protocolo ejecutable para auditoría QA de código — declarado por: [Qwen]
+// `PATTERNS_COOKBOOK.md` → Recetas paso a paso para implementar patrones conformes R2/R3/R4/R6 — declarado por: [Qwen]
+// `EXAMPLES_LIBRARY.js` → Componentes modelo conformes para clonación — declarado por: [Qwen]

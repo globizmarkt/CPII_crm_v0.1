@@ -1,0 +1,249 @@
+# CONVERSATION_INDEX.md (Actualizado con MEMORY_DUMPs Sprint 20)
+
+## 1. MAPA DE CONVERSACIONES
+
+| ID | Agentes | Tema | Output clave |
+|---|---|---|---|
+| VIBE-CPII-01 | Bulldozer, Lead, Perplexity | Prototipo Web | Creación del prototipo HTML estático inicial. |
+| VIBE-CPII-02 | Bulldozer, Lead | Refactorización | Modularización y establecimiento de clases base. |
+| VIBE-CPII-03 | Bulldozer, Lead, Ingeniero | access-form conexion | Integración de RGPD al esquema Verdent, diccionarios y debate Nginx vs WP. |
+| VIBE-CPII-04 | Bulldozer, Lead, Ingeniero | Grupo Comercial | Mapeo de diccionarios de métricas, parche de seguridad XSS en `i18n.js` y captura `?ref=`. |
+| VIBE-CPII-05 | Bulldozer, Lead, Claude El Jefe | Refinar | Saneamiento intensivo de marca "eXp" y purga de frameworks pesados (React/Zustand ban). |
+| VIBE-CPII-06 | Bulldozer, Lead | pre-lanzamiento | Despliegue asimétrico (Firebase vs WordPress LEMP) y corrección del árbol de red SVG. |
+| VIBE-CPII-07 | Bulldozer, Lead | encendido de motores | Despliegue GCE, Cloud Functions (onAuthCreate 1 Gen) y Webhook nativo a Google Sheets. |
+| VIBE-CPII-08 | Bulldozer, Lead, Ingeniero | chapa y pintura | Motor Telegram de alertas, candados de atribución (local storage) y Reglas Firestore base. |
+| VIBE-CPII-09 | Bulldozer, Lead | orbitando y acoplando | Diseño del esquema de agregación plana (NoSQL ancestry, zero-cost), Mailer Híbrido (SendGrid+Workspace). |
+| VIBE-CPII-10 | Bulldozer, Lead | sitensis para MLS | Blueprint de la "Estructura Tricameral" arquitectónica (Fase A) y migración a reglas Direct-to-Storage (Uploads). |
+| VIBE-CPII-11 | Bulldozer, Kimi, Lead, Perplexity, Qwen | Destilando para STITCH | Adaptación y preparación de componentes para integración en ecosistema STITCH. |
+| VIBE-CPII-12 | Bulldozer, Kimi, Lead, Perplexity, Qwen | Fork Polygon Dashboard | Bifurcación del frontend Polygon para el entorno CPII. |
+| VIBE-CPII-13 | Bulldozer, Lead Architect | Gadgets y Webinar | Gadget Manual, definición "Admin Gate", y UI Layout Trinity (Sidebar/Canvas/Dock). |
+| VIBE-CPII-14 | Bulldozer, Kimi, Lead, Perplexity, Qwen | El CRM ya existe | Auditoría y consolidación del sistema fiduciario base. |
+| VIBE-CPII-15 | Bulldozer, Kimi, Lead, Perplexity, Qwen | Manual funcionando | Sellado de la doctrina `MANUAL_ACCESO_FIDUCIARIO.md` y estructura de validación. |
+| VIBE-CPII-16 | Bulldozer, Kimi, Lead, Perplexity, Qwen | Despliegue de nuevas funcionalidades | Inyección en Órbita 1 (6 pilares fiduciarios), script `passport-engine.js` y traducción institucional del Custody Hold. |
+| VIBE-AIP-01 | Antigravity, Director | Extracción Órbita 3 (Reactive) | Localización y agnostización de la lógica del Inspector de Metadatos y el Oráculo AIMON desde `cifi-aip-prototype.html`. |
+| VIBE-AIP-02 | Antigravity, Director | Extracción Órbita 2 (Canvas) | Identificación de la lógica del TabManager (Contenedor Dinámico) y el Emisor de Contexto para sincronización Canvas–Inspector. |
+| VIBE-AIP-03 | Antigravity, Director | Auditoría y Purificación (Canvas) | Test de Agnosticismo sobre `workspace-canvas.js`. Erradicación de red-400, migración a Material Symbols. Sellado R5-Ready. |
+| VIBE-SUMMIT-01 | Antigravity, Director | Consolidación Trinidad 1.0 | Las tres órbitas y el chasis AppShell alcanzan estado de producción universal bajo doctrinas R1–R5. |
+| VIBE-CPII-18 | Director, Lead Architect, Antigravity, Bulldozer, Kimi, Qwen, Perplexity, Stitch, DeepSeek | Auditoría de Estrategia y Blindaje del Gate | Debate sobre arquitectura de identidad federada; decisiones v1.4 consolidadas (Élite Federada, Vía Manual JWT, coordenada `golden-gate.html`, tolerancia cero a DT-004/005). |
+| VIBE-CPII-18b | DeepSeek, Antigravity | Redacción del Blueprint Oficial Sprint 4 (Golden Gate) | Consolidación ejecutable de decisiones arquitectónicas y hoja de ruta para Bulldozer y Kimi. |
+| VIBE-CPII-19 | Bulldozer, Kimi, Qwen, Lead Architect, Director | Golden Gate y Tester — Fin de Sprint | Creación de `golden-gate.html`, `gate-tester.html` y `features/at-admin-gate.js` (v1.2.0‑silent). Cierre DT‑010. Excepciones doctrinales R4 para entornos de test y logs. |
+| VIBE-CPII-20 | Kimi, Antigravity, Lead Architect, Director | Sprint 5 — Auditoría Estructural (Comando Ghost) | Erradicación del código espagueti legacy que capturaba `?ref=`. Nueva doctrina: prohibido parseo de URL en vistas HTML. Creación de `features/at-attribution.js`. |
+| VIBE-CPII-21 | Kimi, Antigravity, Director | Sprint 6 — Reconstrucción del Puente Traccional (DT-013) | Implementación de `features/at-attribution.js` (Stealth Catcher O(1)), inyección en cabeceras de `index.html` y `golden-gate.html`. Limpieza de parámetros UTM/ref. |
+| VIBE-CPII-22 | Kimi, Bulldozer, Qwen, Lead Architect, Director | Sprint 7 — Bugfix UI (Born Locked) y OAuth | Corrección de `_activateControls()` en `at-admin-gate.js` para eliminar `data-gate-lock`. Resolución `TypeError` en OAuth mediante instanciación dinámica de `AuthProvider`. |
+| VIBE-CPII-23 | Antigravity, Lead Architect, Qwen, DeepSeek | Sprint 20 — Ciberseguridad (Blindaje Perimetral) | Inyección atómica de Custom Claims (`role:guest`, `status:pending_approval`, `tenant_id:cpii_lux_v1.0`) en `functions/index.js`. Creación `firestore.rules` con `belongsToTenant()` y Default-Deny. Sincronización tenencia en `golden-gate.html`. Cierre DT-004 mitigada. |
+| VIBE-CPII-24.1 | Antigravity, Director | Extensión de Triaje — Actualización de Embajadores | Modificación de `access-form.html` (Landing) para nuevos embajadores (Maurício Caires, Maria da Luz Santos, Francisco Dias, Ismael Ferreira). Inyección en lista `EMBAJADORES_AUTORIZADOS` y `EXCEPCIONES_EMBAJADORES`. |
+
+---
+
+## 2. DÓNDE ESTÁN LAS COSAS
+
+| Artefacto | Descripción | Ubicación | Autor(es) | Conversación |
+|-----------|-------------|----------|-----------|--------------|
+| `MANUAL_ACCESO_FIDUCIARIO.md` | Lógica acumulativa KYC y doctrina legal | `CPII_crm_v0.1/core/` | Lead Architect, Qwen | VIBE-CPII-15 |
+| `index.html` v1.5.0 / Trinity Router v3.0.0 | AppShell Trinity Layout con polling asíncrono (Resilience) | `CPII_crm_v0.1/` | Perplexity, Lead Architect, Bulldozer, Kimi, Antigravity | VIBE-CPII-16, VIBE-CPII-19, VIBE-CPII-20 |
+| `passport-engine.js` v2.2.0-RESILIENCE | Motor DOM O(1) para evaluación de requerimientos fiduciarios | `CPII_crm_v0.1/core/` | Kimi, Antigravity | VIBE-CPII-16, VIBE-CPII-20 |
+| `i18n.js` / `corei18n.js` | Motor de nomenclatura institucional y protección XSS | `CPII_crm_v0.1/core/` | Lead Architect, Ingeniero | VIBE-CPII-04 |
+| `access-form.html` | Formulario base con webhooks y candados de atribución (actualizado con nuevos embajadores) | `CPII_v1.0/access-form.html` (Landing) | Bulldozer, Ingeniero, Antigravity | VIBE-CPII-03, VIBE-CPII-24.1 |
+| `simulator.html` | Simulador matemático (Catapulta/Refugio) | `CPII_crm_v0.1/` | Lead Strategist | VIBE-CPII-10 |
+| `functions/index.js` | Cloud Functions v2: `onStaffCreated` (inyección claims), `validateAdminGate` (puente traccional) | `CPII_crm_v0.1/functions/` | Lead Architect, Antigravity | VIBE-CPII-07, VIBE-CPII-23 |
+| `firestore.rules` | Reglas Default-Deny con función `belongsToTenant()` | `CPII_crm_v0.1/` | Lead Cloud Architect, Antigravity | VIBE-CPII-10, VIBE-CPII-23 |
+| `Bóveda IMPA v1.8.1` | Sistema de identidad y protocolos modulares | `docs/gem_vibe_cpii/` | Antigravity | VIBE-SUMMIT-01 |
+| `README_VIBE_CPII.md` | Manual oficial con troubleshooting y planta de 7 agentes | `docs/gem_vibe_cpii/` | Antigravity | VIBE-SUMMIT-01 |
+| `Bóveda Qwen` | Sistema de auditoría QA (Q0–Q6) | `docs/qwen-system/` | Antigravity | VIBE-SUMMIT-01 |
+| `CONVERSATION_INDEX.md` | Índice global de memoria descontaminada | `.bibliotecario/` | DeepSeek | VIBE-CPII-18, VIBE-CPII-23 |
+| `MANIFEST.md` v0.1.9 | Mapa de coordenadas del polígono | `.bibliotecario/` | Antigravity, DeepSeek | VIBE-CPII-18, VIBE-CPII-24.1 |
+| `SPRINT4_GOLDEN_GATE_BLUEPRINT.md` | Contrato de obra ejecutable para Sprint 4 | `.bibliotecario/blueprints/` | DeepSeek | VIBE-CPII-18b |
+| `at-admin-gate.js` v2.0.0 | Componente lógico para autenticación y handoff | `CPII_crm_v0.1/features/` | Kimi | VIBE-CPII-19, VIBE-CPII-22 |
+| `golden-gate.html` v1.0.0 | Puerta de acceso fiduciario Staff/Partners con `data-tenant-id="cpii_lux_v1.0"` | `CPII_crm_v0.1/` | Bulldozer, Kimi, Antigravity | VIBE-CPII-19, VIBE-CPII-23 |
+| `gate-tester.html` v1.0.0 | Harness de pruebas aislado para `golden-gate.html` | `gadgets/lab/` | Bulldozer, Qwen | VIBE-CPII-19 |
+| `at-attribution.js` v1.0.0 | Interceptor Stealth O(1) para captura y limpieza de parámetros URL (ref, utm) | `CPII_crm_v0.1/features/` | Kimi | VIBE-CPII-21 |
+| `gd-manual.js` v2.2 | Gadget del Manual de Buenas Prácticas con Paper Mode y zoom persistente | `gadgets/` | Kimi, Antigravity | VIBE-CPII-20 |
+| `at-tab-manager.js` v3.1 | Orquestador de pestañas agnóstico basado en `RESOURCE_REGISTRY` | `core/` | Antigravity | VIBE-CPII-20 |
+| `handoff-emitter.js` | Sistema de transferencia de estado via URL params entre Landing y CRM | `core/` | Antigravity | VIBE-CPII-20 |
+| `css/theme.css` | Archivo canónico de tokens CSS (pendiente de creación) | `CPII_crm_v0.1/css/` | Perplexity | — |
+| `i18n_STRUCTURE.json` | Diccionario maestro de claves i18n | `docs/qwen-system/` | Qwen | — |
+| `CSS_TOKENS_CANONICAL.css` | Fuente de verdad para validación R3 | `docs/qwen-system/` | Qwen | — |
+| `VIOLATIONS_CHECKLIST.md` | Protocolo ejecutable para auditoría QA | `docs/qwen-system/` | Qwen | — |
+| `PATTERNS_COOKBOOK.md` | Recetas de patrones conformes | `docs/qwen-system/` | Qwen | — |
+| `EXAMPLES_LIBRARY.js` | Componentes modelo para referencia | `docs/qwen-system/` | Qwen | — |
+| `LEARNINGS_2026_W15.md` | Registro de aprendizajes Semana 15 (Puente Traccional, recalibración Bulldozer) | `.bibliotecario/` | DeepSeek | Semana 15 |
+| `EXECUTION_LOG.md` | Bitácora de hitos y ejecuciones | `.bibliotecario/` | Antigravity, DeepSeek | Sprint 20 |
+| `Antigravity-VIBE-CPII-20-Acoplamiento-Exitoso.txt` | Volcado técnico de cierre Sprint 20 | `.bibliotecario/archives/` | Antigravity | Sprint 20 |
+
+---
+
+## 3. DECISIONES GLOBALES DE ARQUITECTURA
+
+- **R0 — Agnosticismo Radical:** El núcleo (Skeleton) es 100% whitelabel. La lógica específica de negocio se delega a Custom Claims (“Mochila” JWT). Cualquier referencia a negocio se inyecta como configuración, nunca hardcodeada.
+- **R2 — Light DOM:** Prohibido Shadow DOM. Los Web Components operan sobre Light DOM para heredar variables CSS y estilos globales. Los `onclick` inline son violaciones que deben ser saneadas.
+- **R3 — Zero‑Hex:** Prohibido CSS personalizado o colores hexadecimales en producción. Todo diseño y estado visual se resuelve con clases utilitarias Tailwind o variables `--theme-*`. Excepción autorizada para Paper Mode (`#F9F8F1`, `#1A1A1A`) con aprobación explícita.
+- **R4 — i18n Strict:** Cero texto hardcodeado en HTML o JS visible al usuario. Toda cadena debe ser clave de diccionario (`data-i18n`, `data-i18n-placeholder`). **Excepciones oficiales:** entornos de test (`*-tester.html`), logs de consola técnica, y el texto interno de un atributo `data-i18n` (fallback semántico válido anti-FOUC).
+- **R5 — Economía de Guerra (Zero‑Deps):** JS puro, cero dependencias externas (React, Vue, Redux, Zustand). Prohibidas Cloud Functions innecesarias. Preferencia por soluciones O(1) y escalado a cero. Uso de `Set`/`Map` para validaciones, `setTimeout` asíncrono pasivo.
+- **Zero Trust UI (Born Locked):** La UI fiduciaria nace bloqueada visualmente (`data-gate-lock`). Solo `passport-engine.js` o `at-admin-gate.js` pueden desbloquearla tras validar claims, previniendo FOUC.
+- **Compliance‑Based Privilege:** La fricción en la UI no es un error; es un filtro de calidad AML/KYC. Las áreas bloqueadas (Custody Hold) son estado intencional.
+- **Separación de Responsabilidades:** Bulldozer maqueta el DOM, Kimi electrifica la lógica en JS, Qwen audita cumplimiento doctrinal, Antigravity custodia el Core, Perplexity investiga, DeepSeek documenta, Lead Architect orquesta. El Director es el único bus de datos; prohibida comunicación lateral entre agentes.
+- **Protocolo de Laparoscopia (“Sin archivo real = sin operación”):** Todo agente requiere el archivo físico en el contexto del chat antes de proponer o ejecutar modificaciones.
+- **Erradicación de la Contaminación Inmobiliaria:** Ningún artefacto debe referenciarse sin una coordenada física válida en `MANIFEST.md` o el árbol de directorios.
+- **Sidecar Architecture / Mochila:** La identidad y los permisos del usuario se encapsulan en `window.__CPII__.session`. El enrutamiento por `tenant_id` se resuelve desde los claims, no desde el código del Skeleton.
+- **Exclusión definitiva de LinkedIn de la Élite Federada:** Descartado por violar R5 (requiere proxy O(n)). La trinidad nativa de Firebase (Google, Apple, Microsoft) es la única admitida.
+- **Prohibición de parseo de URL en vistas HTML:** Queda estrictamente prohibido incrustar lógica de lectura de `window.location.search` en las vistas HTML. Cualquier captura de atribución debe implementarse en un módulo dedicado (`features/at-attribution.js`).
+- **Doctrina de Autorización (RBAC):** Modelo de privilegios mínimos (Default-Deny). Todo usuario nuevo ingresa con `role: 'guest'`, `status: 'pending_approval'`. La UI muestra candados en todas las áreas excepto “Manuales”.
+- **Cloud Run Functions v2 (Eventarc):** Obligatorio uso de `@google-cloud/functions-framework` en puerto 8080. IAM mínimo: `roles/datastore.user`, `roles/run.invoker`, `roles/eventarc.eventReceiver`.
+- **Identity Platform Eventos:** Para que Firebase Auth dispare eventos hacia Eventarc, es mandatario activar la "Lectura de datos" y "Escritura de datos" en los Registros de Auditoría globales para Identity Toolkit.
+- **Sincronización de tenencia canónica:** Se establece `tenant_id: 'cpii_lux_v1.0'` como identificador único de tenant en todos los artefactos (Custom Claims, Firestore, UI). Cualquier documento o sesión sin este valor es rechazado.
+- **Inyección atómica de la Constitución Fiduciaria:** Cloud Function `onStaffCreated` asigna Custom Claims al registro: `role: 'guest'`, `status: 'pending_approval'`, `tenant_id: 'cpii_lux_v1.0'`.
+- **Adopción absoluta del modelo Default-Deny en Firestore:** Reglas con función `belongsToTenant()` que compara `tenant_id` del JWT con el del documento. Fallback global `allow read, write: if false`.
+- **Override doctrinal QA (R4 i18n):** Confirmado: el texto interno de una etiqueta con `data-i18n` es fallback semántico válido (anti-FOUC) y **no constituye violación de R4**.
+- **Doctrina de Resilience (Polling Inverso):** Los componentes no asumen disponibilidad del core; reintentan asíncronamente (ej. `initTrinity` con `setTimeout` 100ms) para evitar race conditions en despliegues con latencia.
+- **Recalibración estricta de Bulldozer:** Prohibición absoluta de emitir o tocar lógica JS o plantear decisiones estratégicas. Su jurisdicción se limita a DOM, atributos y clases Tailwind.
+
+---
+
+## 4. DEUDA TÉCNICA CONSOLIDADA
+
+### Crítica / Bloqueante
+| ID | Descripción | Responsable | Estado |
+|----|-------------|-------------|--------|
+| **DT-004** | Firebase SDK sin configurar en `golden-gate.html` (credenciales reales no inyectadas). Bloquea operaciones OAuth reales. | Antigravity | **MITIGADA** (infraestructura operativa, pendiente credenciales finales) |
+| **DT-005** | Motor i18n (`core/i18n.js`) no enlazado en `golden-gate.html`. Claves nuevas no registradas en `i18n_STRUCTURE.json`. | Antigravity, Qwen | Pendiente |
+
+### Alta
+| ID | Descripción | Responsable | Estado |
+|----|-------------|-------------|--------|
+| **DT-009** | Fallbacks JS ausentes: si `window.__CPII__` colapsa, `passport-engine.js` falla silenciosamente sin UI degradada. | Kimi | Pendiente |
+| **DT-006** | Theme tokens CSS: falta archivo canónico `css/theme.css`; actualmente usa fallback de estilo interno. | Perplexity | Pendiente |
+| **Integración CMS Inconclusa** | WordPress en GCE sin hardening/certificados, generando posible “Limbo” de identidad. | Kimi, Qwen | Pendiente |
+| **Backend Handoff Faltante** | Endpoint `/api/staff/handoff` invocado por `at-admin-gate.js` no existe actualmente. | Kimi, Perplexity | Pendiente |
+| **Custom Claims vs Base de Datos** | Actualmente el rol `guest` solo vive en Firestore. Falta implementar asignación de Custom Claims en JWT para reglas backend. | Lead Architect | Pendiente |
+| **Manejo de Errores (Dead Letter Queue)** | Si la escritura en Firestore falla, el evento de Eventarc se pierde. No hay cola de reintentos o alertas. | Antigravity | Pendiente |
+| **Botones OAuth y formulario Vía Manual en `disabled`** | En `golden-gate.html` todos los controles de autenticación están deshabilitados. Requieren electrificación por Kimi. | Kimi | Pendiente |
+| **Script `at-admin-gate.js` no enlazado en `golden-gate.html`** | El componente está comentado al final del body; enlazarlo es tarea pendiente. | Kimi | Pendiente |
+
+### Media
+| ID | Descripción | Responsable | Estado |
+|----|-------------|-------------|--------|
+| **DT-012** | `admin-gate.html` obsoleto tras despliegue de `golden-gate.html`. Coexistencia genera contaminación inmobiliaria. Pendiente purga. | Antigravity, Bulldozer | Pendiente |
+| **DT-011** | Claves i18n huérfanas (`nav_mls`, `nav_history`, `tooltip_phase2/3`) saturan el diccionario sin purga programada. | Kimi, Qwen | Pendiente |
+| **Accesibilidad ARIA Custody Hold** | `aria-disabled` no se propaga correctamente a lectores de pantalla en estado Born Locked. | Perplexity, Bulldozer | Pendiente |
+| **Hooks Desconectados** | `passport:engine-ready` se emite sin listeners confirmados; faltan estados transitorios claros para KYC. | Kimi, Qwen | Pendiente |
+| **Uploader Deficitario** | Riesgo de saturar RAM (512MB) en Cloud Functions; urgente migrar a patrón Direct-to-storage. | Kimi, Qwen | Pendiente |
+| **Candado Stealth Pendiente** | Falta despliegue en Firebase Hosting del script para ocultar `?ref=`. | Lead Architect | Pendiente |
+| **Tailwind CDN** | El uso de `<script src>` en producción penaliza performance; requiere compilación PostCSS. | Perplexity | Pendiente |
+| **Selector frágil en TrinityRouter** | `aside.w-\[250px\]` acoplado a la anchura del sidebar. Cualquier cambio de layout rompe el router. | Kimi | Pendiente |
+| **`gate-tester.html` no tiene ruta canónica en MANIFEST.md** | El harness existe en disco pero falta coordenada física para evitar contaminación inmobiliaria. | DeepSeek | Pendiente |
+| **Textos hardcodeados en `gate-tester.html`** | Strings de UI hardcodeados en panel de control. No es producción, pero si se despliega como herramienta interna debe pasar por R4. | Bulldozer | Pendiente |
+| **`/settings` sin `data-gadget`** | El enlace de configuración en el footer del sidebar no tiene gadget asignado. Fantasma funcional. | Lead Architect, Kimi | Pendiente |
+| **Discrepancia `window.__CPII__.session.claims` vs `window.__CPII__.session.passport.claims`** | Dos estructuras que podrían divergir; falta una fuente de verdad única o capa de normalización. | Kimi, Perplexity | Pendiente |
+| **Violación R3 en Canvas** | Uso de `bg-[#0D0D0D]` en `#canvas-orbita-2` (clase arbitraria Tailwind) viola Zero-Hex. Aplicado por mandato directo, pendiente abstracción a token `--theme-canvas-deep`. | Bulldozer, Stitch | Pendiente |
+| **Seguridad hardcoded en Cloud Function** | `validateAdminGate` compara clave maestra contra string fijo `"cpii-staff"` en código fuente. Pendiente migración a variables de entorno o secreto. | Antigravity | Pendiente |
+| **Órbita 2 (Canvas) inactiva** | Acceso fiduciario a `gd-manual.js` pendiente de reactivación completa. | Kimi, Antigravity | Activo (objetivo Semana 15) |
+
+### Resueltas
+| ID | Descripción | Sprint |
+|----|-------------|--------|
+| DT-010 | Golden Gate fantasma — creación de archivo físico | Sprint 4 |
+| DTR-001 | Comando Ghost — código espagueti `?ref=` | Sprint 5 |
+| DT-013 | Puente Traccional — implementación `at-attribution.js` | Sprint 6 |
+| Race Condition SEC-10 | Migración a Document-Level y Resilience v3.0 | Sprint 20 |
+
+---
+
+## 5. CONOCIMIENTO TÁCITO CONSOLIDADO
+
+- **El Director es el único Bus de Datos:** Los agentes son LLMs aislados. No comparten archivos, no se comunican mediante API ni modifican el disco local autónomamente. El Director humano copia y pega manualmente (Despacho Asincrónico).
+- **Vibe de Alta Banca Suiza — implicaciones para el DOM:** No hay elementos decorativos innecesarios, no hay animaciones llamativas. El único spinner permitido es el de estado de carga, sobrio. Colores de acento: oro (`--theme-accent`) sobre fondo oscuro carbono. Cualquier elemento que "parezca una app de startup" es rechazable.
+- **Palabra de Seguridad (“guapito de cara”):** Gatillo de emergencia que valida la autoridad del Director en el entorno de desarrollo. Se emplea para superar bloqueos si se detecta deriva narrativa.
+- **Ansiedad de Compilación del Lead Architect:** El orquestador estratégico tiende a generar código final o anticipar veredictos. La planta debe forzarlo a delegar y ceñirse a la orquestación.
+- **Bifurcación Traccional de Usuarios:** Los Inversores interactúan con Lerium (landing) y no pasan por el Gate. Solo Staff y Partners utilizan la puerta fiduciaria (`golden-gate.html`).
+- **Inmutabilidad del “Hueso” (Skeleton):** Las reglas fundamentales R0–R7 son tratadas como un Código Penal. Cualquier incumplimiento (ej. un solo color HEX) genera rechazo inmediato.
+- **Alucinaciones LLM Recurrentes:** Agentes secundarios tienden a proponer React, Redux, Shadow DOM o subcolecciones SQL-like. El Lead Architect y las doctrinas estrictas actúan como cortafuegos.
+- **Paternalismo Sectorial / Escudo Psicológico:** “Restringir es demostrar valor”. Conceptos como “El Gate”, “Custodia Fiduciaria” imponen respeto y filtran agentes rebeldes.
+- **La UI nace bloqueada:** El HTML estático muestra siempre `data-gate-lock`. El motor JS es la única llave que puede removerlo tras validación, previniendo FOUC. En desarrollo, el `gate-tester.html` permite controlar el bloqueo sin tocar el componente.
+- **Bucle de Identidad Intocable:** `onAuthStateChanged` -> `getIdTokenResult(true)` -> inyección en `window.__CPII__.session` -> `passport:session-updated` -> auditoría `PassportEngine`. Interrumpir este flujo deja al usuario ciego.
+- **Contaminación Inmobiliaria:** Cualquier concepto que se discuta como si ya existiera sin coordenada en `MANIFEST.md` o el árbol genera ruido y puede llevar a código fantasma.
+- **Soberanía del Director:** El Director Humano tiene el "Gatillo de Borrado" absoluto. Los agentes son lentes de análisis, no entidades soberanas.
+- **Economía de Guerra (R5) Estricta:** Prohibido Redis, Cloud Functions innecesarias, o cualquier dependencia que genere coste mensual o latencia O(n). Escala a cero obligatoria. Cada milisegundo cuenta.
+- **Patrón que funciona:** Consolidar banderas rojas de todos los agentes antes de tomar una decisión estratégica. La auditoría de la planta en sesiones como VIBE-CPII-18 permitió corregir errores antes de que llegaran a código.
+- **Born Locked no es negociable:** El `data-gate-lock` en render 0 es la identidad del sistema. No se debe eliminar en desarrollo "para ver el componente" — para eso existe el harness.
+- **Los comentarios en el código son contratos:** Los marcadores de deuda técnica (ej. `<!-- pendiente de enlazar (DT-004) -->`) son deuda registrada y no deben eliminarse hasta que la DT esté cerrada.
+- **Separación de responsabilidades como protocolo de seguridad, no solo de organización:** Bulldozer pinta, Kimi electrifica, Qwen audita. Si Bulldozer incluye JS de negocio o Kimi modifica HTML estructural, se crea deuda de auditoría que Qwen no puede resolver sin el archivo original.
+- **Backend crea, frontend consume:** El cliente no debe crear ni mutar campos fiduciarios sensibles. La creación del documento `users` en Firestore es responsabilidad exclusiva del backend (Cloud Function).
+- **El Navegador Miente:** En entornos Vercel rápidos, Chrome cachea agresivamente. La purga de caché (`Ctrl + Shift + R`) es un rito obligatorio tras cada `git push`.
+- **El Simulador KYC es vital:** Cambiar estados en Firestore a mano bloquea el flujo de desarrollo. El botón "Simular KYC Verificado" es un backdoor táctico necesario.
+- **La Habitabilidad es Seguridad:** Un manual ilegible (texto gris sobre fondo casi negro) es un manual que no se lee. Priorizar el contraste tipo papel ("Paper Mode") en Órbita 2 es clave para la retención del Staff.
+- **Burocracia de Agentes:** Qwen no escribe lógica, Kimi no audita, Bulldozer no toca JS. Romper esto genera código espagueti. Mantener los "Paquetes de Despacho" estrictos salva el proyecto.
+- **Vercel vs Firebase:** Vercel se usa por el "Organization Private Repo Paywall" (se usa Hobby público para UI). Firebase es la fuente de verdad de seguridad.
+- **El Handshake:** El Lead Architect y el Director operan bajo la palabra clave "guapito de cara" para validar alineaciones estéticas.
+- **Patrón que funciona:** El "Polling de 100ms" ha demostrado ser más estable que `DOMContentLoaded` para inicializar el namespace `window.__CPII__` en entornos de red lentos.
+- **Trampa conocida:** Tailwind CDN no procesa clases arbitrarias en JS. Si quieres cambiar colores dinámicos, usa `style.backgroundColor` con variables CSS, nunca clases de Tailwind inyectadas por string.
+
+---
+
+## 6. GAPS DETECTADOS
+
+- **Jurisdicción de Enrutamiento (Tenant Routing):** Pendiente decidir qué componente (y agente) será responsable de redirigir usuarios basándose en el `tenant_id` de los Custom Claims. Kimi señala que no pertenece a `passport-engine.js`; Bulldozer sugiere un nuevo `at-router.js` bajo Antigravity.
+- **Resolución Técnica de `user.privateEmail`:** Aunque se aprobó Apple como proveedor de identidad, falta definir el flujo técnico de vinculación post‑login para mantener trazabilidad KYC cuando el usuario oculta su correo real.
+- **Manejo de Errores de Fallback (`window.__CPII__`):** Múltiples agentes señalan el colapso silencioso si el objeto global falla, pero no se ha asignado un ticket claro para diseñar la UI de degradación.
+- **Verificación Atómica UID-Phone:** Establecido conceptualmente que la Vía Manual debe requerir un teléfono pre‑registrado, pero no hay plan sobre cómo las reglas de Firestore validarán este vínculo antes de emitir el JWT.
+- **Definición de “Éxito” del Sprint 4:** Criterios de aceptación para Golden Gate no están formalizados (¿qué validaciones son bloqueantes vs informativas?).
+- **Documentación de la exclusión de LinkedIn:** Aunque decidido, no está formalmente registrada en los índices, lo que podría permitir que reaparezca en discusiones futuras.
+- **Entorno Local:** La CLI de `gcloud` no está empalmada en el entorno Windows local del Director, obligando a hacer las operaciones IAM por interfaz web (Consola).
+- **Falta de contrato explícito de reglas Firestore** para todos los campos no críticos del documento `users`.
+- **`/settings` sin `data-gadget`:** El enlace de configuración en el footer del sidebar no tiene gadget asignado. Si existe `gd-settings`, hay que añadirlo; si no, el enlace es un fantasma funcional.
+- **`onclick` de botones de idioma en Órbita 3 (`index.html`):** Los 4 botones de cambio de idioma (PT/ES/EN/FR) siguen usando `onclick="setLanguage(...)"` inline. Violación R2 pendiente de saneamiento.
+- **Falta de formalización de la matriz de transiciones de `role` y `status`:** Aunque se definieron jerarquías, no hay un contrato documentado de qué transiciones están permitidas y bajo qué condiciones.
+- **`CPII_crm_v0.1/functions` vacío:** Mientras la lógica real del backend (Cloud Functions) reside en la rama de landing, el directorio del CRM está vacío, creando un gap estructural.
+- **Configuración de Dominio Final:** No se ha decidido si se mantendrá permanentemente `https://crm.cpii.digital/` o se moverá todo al subdirectorio bajo `cpii-landing`. Esto afecta la persistencia de `golden-gate.html`.
+- **gd-dashboard.js sin auditoría:** Presenta problemas de contraste crítico y falta de cumplimiento R3 (Zero Hex).
+- **Omnibox monolingüe:** Las etiquetas de búsqueda en `RESOURCE_REGISTRY` solo están en español; falla en EN/PT/FR.
+
+---
+
+## 7. FUENTE DE VERDAD CONSOLIDADA
+
+```javascript
+// window.__CPII__ → Namespace raíz del proyecto, espacio de nombres universal de la arquitectura Sidecar — declarado por: Kimi, Perplexity, DeepSeek, Antigravity, Bulldozer, Lead Architect
+// window.__CPII__.config → Configuración resuelta e inicialización (project_id, lang, theme, timezone, tenant_id) — declarado por: Kimi, Antigravity, Qwen, Perplexity
+// window.__CPII__.session → Fuente de verdad del estado fiduciario del usuario activo (UID, JWT, claims, token, tenantValidated) — declarado por: Lead Architect, Antigravity, Perplexity, Kimi, Qwen, DeepSeek, Bulldozer
+// window.__CPII__.session.uid → User ID único de Firebase — declarado por: Kimi
+// window.__CPII__.session.email → Email del usuario autenticado — declarado por: Kimi
+// window.__CPII__.session.claims → Claims de Firebase Auth (roles, tenant_id, onboarding_phase, custody_status) — declarado por: Kimi, Perplexity
+// window.__CPII__.session.token → JWT token de Firebase para autorización backend — declarado por: Kimi
+// window.__CPII__.session.tenantValidated → Boolean: claims.tenant_id coincide con data-tenant-id del DOM — declarado por: Kimi
+// window.__CPII__.session.passport → Objeto estructurado que envuelve los datos de autorización y claims evaluados — declarado por: Kimi, Perplexity
+// window.__CPII__.session.passport.tenant_id → Tenant_id extraído del JWT tras autenticación — declarado por: Kimi
+// window.__CPII__.session.passport.claims → Hash Map de claims del usuario (role, kyc, staff_contract, etc.) — declarado por: Kimi
+// window.__CPII__.session.passport.tier → Nivel de acceso del usuario (OWNER, GESTOR, etc.) — declarado por: Kimi
+// window.__CPII__.session.passport.integrity_score → Puntuación de integridad del pasaporte (0-100) — declarado por: Kimi
+// window.__CPII__.PassportEngine → Motor de autorización global O(1) y caché de permisos (`__claims_cache`) — declarado por: Kimi, Perplexity, Qwen, DeepSeek, Bulldozer, Antigravity
+// window.__CPII__.PassportEngine.claimsCache → Caché de claims/permisos — declarado por: Kimi
+// window.__CPII__.i18n → Motor y diccionario de traducciones cargado por el bootstrapper (usado primariamente vía `.t()`) — declarado por: Antigravity, Qwen, Kimi, Perplexity
+// window.__CPII__.i18n.t() → Función de traducción pura del motor i18n v2.0 (R4 Strict) — declarado por: Kimi, Perplexity, Qwen, Bulldozer
+// window.__CPII__.SceneManager → Gestor de navegación agnóstico (R6: prohibido href a HTML) — declarado por: Qwen
+// window.__CPII__.attribution → API para recuperar/limpiar datos de atribución de campaña (ref, utm_*) — declarado por: Kimi, Antigravity
+// window.__CPII__.tabManager → Motor de gestión de tabs/gadgets; invocado por TrinityRouter vía `tm.openFromRegistry(gadgetId)` — declarado por: Bulldozer (en mocks), Antigravity
+// window.__CPII__.RESOURCE_REGISTRY → Fuente de verdad O(1) para el mapeo de gadgets y permisos requeridos — declarado por: Antigravity
+// window.LuxI18n → Diccionario global de traducciones, motor de i18n de fallback (R4 Strict) — declarado por: Lead Architect, Perplexity, Kimi, Qwen, DeepSeek, Antigravity, Bulldozer
+// window.firebase → SDK nativo empleado para inicializar la app y manejar la validación de identidad federada (`firebase.auth()`) — declarado por: Lead Architect, Kimi, Perplexity, Qwen, DeepSeek, Antigravity, Bulldozer
+// window.CPII → Namespace legacy del bootstrapper (v1.0.0), expone método `init()` para inyección de project_id — declarado por: Kimi
+// customElements.registry → Registro global de Web Components nativos en el DOM (`at-admin-gate`, `gd-manual`, etc.) — declarado por: Kimi, DeepSeek
+// localStorage → Persistencia de preferencias (`cpii:locale`, `cpii:attribution:*`, `cpii:emailForSignIn`, `cpii:manual:zoom`) — declarado por: Kimi, Antigravity
+// CONVERSATION_INDEX.md → Fuente de verdad histórica de decisiones estratégicas, estado de sprints y deuda técnica consolidada — declarado por: DeepSeek, Qwen
+// MANIFEST.md → Fuente de verdad oficial sobre la geografía física del polígono y estado de los artefactos — declarado por: Antigravity, DeepSeek, Qwen, Bulldozer
+// tree-breederhub.txt → Mapa de directorios regenerado tras cada hito — declarado por: Antigravity, Perplexity
+// GADGET_REGISTRY → Objeto interno de at-tab-manager para registro de gadgets — declarado por: DeepSeek, Antigravity
+// EXECUTION_LOG.md → Bitácora de hitos y ejecuciones — declarado por: Antigravity, DeepSeek
+// LEARNINGS_2026_W15.md → Registro de aprendizajes de la Semana 15 — declarado por: DeepSeek
+// CSS_TOKENS_CANONICAL.css → Fuente de verdad canónica para la validación R3 (Zero-Hex) y variables Tailwind — declarado por: Qwen
+// i18n_STRUCTURE.json → Fuente de verdad para la validación R4 (diccionario maestro de claves de traducción) — declarado por: Qwen
+// Firestore.collection('staff') → Fuente de verdad de la Constitución Fiduciaria (roles y estados) de los usuarios registrados — declarado por: Lead Architect (Copilot), Antigravity
+// Firestore.collection('leads') → Gestión comercial — declarado por: Antigravity
+// Identity Toolkit API (Firebase Auth) → Emisor global de eventos de identidad (SignUp) — declarado por: Lead Architect (Copilot)
+// Default Compute Service Account → Vehículo de ejecución y portador de permisos (IAM) para la planta Antigravity — declarado por: Lead Architect (Copilot)
+// Cloud Function `onStaffCreated` → Inyección atómica de Custom Claims — declarado por: Antigravity
+// Cloud Function `validateAdminGate` → Puente traccional seguro (Landing → CRM) — declarado por: Antigravity, Bulldozer
+// window.__TESTER_i18n_dict__ → Diccionario resuelto para el idioma activo en gate-tester.html; generado por `buildDict(lang)` y consumido por el mock de `LuxI18n.t()` — declarado por: Bulldozer
+// URL activa (CRM) → https://cpii-crm-v0-1.vercel.app/index.html — declarado por: Antigravity
+// URL fiduciaria (Gate) → https://crm.cpii.digital/golden-gate.html — declarado por: Antigravity, Bulldozer
+
+⚠️ **Contradicciones detectadas:** Ninguna. Todos los agentes coinciden en la definición de los objetos globales principales (`window.__CPII__`, `window.__CPII__.session`, `window.LuxI18n`, etc.). Las diferencias menores (ej. `window.CPII` legacy vs `window.__CPII__`) son compatibles y reflejan evolución histórica.

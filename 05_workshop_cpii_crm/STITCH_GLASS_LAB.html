@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STITCH GLASS LAB — Dashboard Sprint 22</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      /* Tokens Médula v2.5.1 */
+      --theme-bg: #161513;
+      --theme-surface: #1e1b14;
+      --theme-primary: #C1A85D;
+      --theme-text: #FDFBF6;
+      --theme-text-muted: #73726E;
+      --theme-border: #35332c;
+      --theme-border-active: #C1A85D;
+      --brand-alert: #D97706;
+      --theme-success: #10B981;
+
+      /* Registro Canónico v2.6 */
+      --theme-surface-glass: rgba(30, 27, 20, 0.4);
+      --theme-border-glass: rgba(193, 168, 93, 0.15);
+      --theme-blur-glass: 16px;
+    }
+
+    body {
+      background-color: var(--theme-bg);
+      font-family: 'Manrope', sans-serif;
+      color: var(--theme-text);
+    }
+
+    .serif-numbers {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Clase Maestra de Glassmorphism (Canon v2.6) */
+    .luxury-glass {
+      background: var(--theme-surface-glass);
+      backdrop-filter: blur(var(--theme-blur-glass));
+      -webkit-backdrop-filter: blur(var(--theme-blur-glass));
+      border: 1px solid var(--theme-border-glass);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    /* Estilos base para las tarjetas que Stitch va a transformar */
+    .institutional-card {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .institutional-card:hover {
+      border-color: var(--theme-border-active);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body class="p-8 md:p-12 min-h-screen">
+
+  <div class="max-w-6xl mx-auto">
+    <div class="mb-12 border-b border-white/5 pb-4">
+      <h2 class="text-[10px] uppercase tracking-[0.4em] text-primary/60 font-bold mb-2">Sprint 22 — Modo Stitch</h2>
+      <h1 class="text-3xl font-serif text-white">Laboratorio de Glassmorphism</h1>
+      <p class="text-[11px] text-slate-500 mt-2">Operando sobre el volcado de la versión R3 Final. Aplica la clase <code
+          class="text-primary font-bold">luxury-glass</code> a los contenedores para ver la magia.</p>
+    </div>
+
+    <!-- 
+            VOLCADO DE GD-DASHBOARD (R3 FINAL CSS)
+            Intervenir aquí para aplicar Glassmorphism 
+        -->
+    <div id="stitch-playground" class="relative group">
+
+      <div class="gd-dashboard-home" data-hibernatable="true" data-state="active">
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[var(--theme-text-muted)] mb-8">
+          <span>Inicio</span>
+          <span class="material-symbols-outlined text-[10px]">chevron_right</span>
+          <span class="text-[var(--theme-border-active)]">Dashboard</span>
+        </nav>
+
+        <!-- KYC Alert Banner -->
+        <div
+          class="mb-8 flex items-center justify-between p-4 bg-[var(--theme-surface)] border-l-4 border-[var(--brand-alert)]">
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 bg-[var(--brand-alert)]/10 flex items-center justify-center text-[var(--brand-alert)]">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">error</span>
+            </div>
+            <div>
+              <p class="text-[var(--theme-text)] font-bold text-xs uppercase tracking-wider">Cumplimiento Normativo
+                Requerido</p>
+              <p class="text-[var(--theme-text-muted)] text-[11px]">Complete su verificación KYC para acceder a activos
+                de grado institucional.</p>
+            </div>
+          </div>
+          <button
+            class="px-5 py-2 bg-[var(--brand-alert)] text-[var(--theme-text)] text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all">
+            Verificar Ahora
+          </button>
+        </div>
+
+        <!-- Welcome Header -->
+        <div class="flex items-end justify-between mb-8 border-b border-[var(--theme-border)] pb-6">
+          <div>
+            <h1 class="text-2xl font-serif text-[var(--theme-text)] mb-1">Buenos Días, Alexander</h1>
+            <p class="text-[var(--theme-text-muted)] text-[11px] uppercase tracking-widest">Rendimiento Consolidado de
+              Cartera • 10 Oct, 2024</p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              class="px-3 py-1.5 border border-[var(--theme-border)] text-[var(--theme-text-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-border-active)] transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+              <span class="material-symbols-outlined text-sm">share</span> Compartir
+            </button>
+            <button
+              class="px-3 py-1.5 border border-[var(--theme-border)] text-[var(--theme-text-muted)] hover:text-[var(--theme-text)] hover:border-[var(--theme-border-active)] transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+              <span class="material-symbols-outlined text-sm">download</span> Reporte
+            </button>
+          </div>
+        </div>
+
+        <!-- Bento Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <!-- Investment Summary Card -->
+          <div
+            class="md:col-span-2 institutional-card p-6 relative overflow-hidden bg-[var(--theme-surface)] border-[var(--theme-border)]">
+            <div class="flex justify-between items-start mb-8">
+              <h3 class="text-[var(--theme-text-muted)] text-[10px] uppercase tracking-[0.2em] font-bold">Resumen de
+                Capital</h3>
+              <span class="text-[10px] text-[var(--theme-border-active)] font-bold uppercase tracking-widest">Activos
+                Auditados</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+              <div>
+                <p class="text-[var(--theme-text-muted)] text-[10px] uppercase tracking-widest mb-2">Valor Total de
+                  Activos</p>
+                <p class="serif-numbers text-3xl text-[var(--theme-border-active)]">€142.500,00</p>
+              </div>
+              <div>
+                <p class="text-[var(--theme-text-muted)] text-[10px] uppercase tracking-widest mb-2">Rendimiento
+                  Proyectado</p>
+                <p class="serif-numbers text-3xl text-[var(--theme-text)]">7,24<span class="text-lg opacity-40">%</span>
+                </p>
+              </div>
+              <div>
+                <p class="text-[var(--theme-text-muted)] text-[10px] uppercase tracking-widest mb-2">Próximo Vencimiento
+                </p>
+                <p class="serif-numbers text-2xl text-[var(--theme-text)]">12 Oct, 2024</p>
+              </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-[var(--theme-border)] flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 bg-[var(--theme-success)]"></span>
+                <span class="text-[10px] text-[var(--theme-text-muted)] font-bold uppercase tracking-widest">Mercados
+                  Abiertos</span>
+              </div>
+              <button
+                class="text-[10px] text-[var(--theme-border-active)] font-bold uppercase tracking-widest flex items-center gap-1 hover:underline">
+                Estado Detallado <span class="material-symbols-outlined text-xs">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Actions Card -->
+          <div class="institutional-card p-6 bg-[var(--theme-surface)] border-[var(--theme-border)]">
+            <h3 class="text-[var(--theme-text-muted)] text-[10px] uppercase tracking-[0.2em] font-bold mb-6">
+              Transacciones</h3>
+            <div class="space-y-2">
+              <button
+                class="w-full flex items-center justify-between p-3 border border-[var(--theme-border)] hover:border-[var(--theme-border-active)] bg-[var(--theme-bg)] transition-all group">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-lg text-[var(--theme-border-active)]">add_circle</span>
+                  <span class="text-[11px] font-bold uppercase tracking-widest text-[var(--theme-text)]">Nueva
+                    Inversión</span>
+                </div>
+                <span
+                  class="material-symbols-outlined text-[var(--theme-text-muted)] group-hover:text-[var(--theme-border-active)] text-sm">chevron_right</span>
+              </button>
+              <button
+                class="w-full flex items-center justify-between p-3 border border-[var(--theme-border)] hover:border-[var(--theme-border-active)] bg-[var(--theme-bg)] transition-all group">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-lg text-[var(--theme-border-active)]">pie_chart</span>
+                  <span class="text-[11px] font-bold uppercase tracking-widest text-[var(--theme-text)]">Rebalancear
+                    Cartera</span>
+                </div>
+                <span
+                  class="material-symbols-outlined text-[var(--theme-text-muted)] group-hover:text-[var(--theme-border-active)] text-sm">chevron_right</span>
+              </button>
+              <button
+                class="w-full flex items-center justify-between p-3 border border-[var(--theme-border)] hover:border-[var(--theme-border-active)] bg-[var(--theme-bg)] transition-all group">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-lg text-[var(--theme-border-active)]">shopping_bag</span>
+                  <span class="text-[11px] font-bold uppercase tracking-widest text-[var(--theme-text)]">Acceder al
+                    Mercado</span>
+                </div>
+                <span
+                  class="material-symbols-outlined text-[var(--theme-text-muted)] group-hover:text-[var(--theme-border-active)] text-sm">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Club News & Recent Projects -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          <section>
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-sm font-bold uppercase tracking-widest text-[var(--theme-text)]">Feed de Inteligencia</h3>
+              <button
+                class="text-[var(--theme-text-muted)] hover:text-[var(--theme-border-active)] text-[10px] font-bold uppercase tracking-widest">Archivo</button>
+            </div>
+            <div class="space-y-4">
+              <div
+                class="flex gap-4 p-4 border border-[var(--theme-border)] bg-[var(--theme-surface)] hover:border-[var(--theme-border-active)] transition-colors cursor-pointer group">
+                <div class="w-24 h-24 overflow-hidden shrink-0">
+                  <img
+                    class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                    alt="Luxury Villa"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLDJKlI2kYDU8FQFrXvHICDxQ9KnN1li7h3Uupb5I_DQKRGRpa0G7kh85u-4Bkn10Wd29k7BX-oMLOe6ZRwcdbX4jCCfnme-Lz2NPSI2UwqZRCJ1KbWF6XqBOj_4XkLmrOUtwtxCWsuCUALp1E5ZT_cfITYrKaO2c_uPcPi0sVGuqLnuAEitk05SC5-h7FrInqDpU2MH73tKT-rKOUTLP3KgwlrxRHxtH3-kGQ0DrbWJwnWk17NDZsmui0UZ6adDqhUXv3V1bx991I" />
+                </div>
+                <div>
+                  <span
+                    class="text-[9px] text-[var(--theme-border-active)] font-bold uppercase tracking-[0.2em]">Lanzamiento
+                    de Activo</span>
+                  <h4
+                    class="text-[13px] font-bold text-[var(--theme-text)] mb-1 mt-0.5 group-hover:text-[var(--theme-border-active)] transition-colors uppercase tracking-wider">
+                    Palácio Real: Finca en Alentejo</h4>
+                  <p class="text-[11px] text-[var(--theme-text-muted)] leading-relaxed line-clamp-2">Pre-lanzamiento
+                    exclusivo para miembros CPII. Renovación histórica con ROI proyectado del 12%.</p>
+                </div>
+              </div>
+              <div
+                class="flex gap-4 p-4 border border-[var(--theme-border)] bg-[var(--theme-surface)] hover:border-[var(--theme-border-active)] transition-colors cursor-pointer group">
+                <div class="w-24 h-24 overflow-hidden shrink-0">
+                  <img
+                    class="w-full h-full object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                    alt="Office Building"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLY1tbqwZw5joDUXXx147ieSWNXMYiALKBh0Kz9fPKviP7xPnuF7ZBLOStz5khMUI_2gte0u-2eaxglgkbs_7EEOSuohrSWGBK82etq8pQ1jLUF_YNLJ5HokmE7Wl3P_4wFam7Jp6LnZ7Gx_Q3crXah4tj8vWmkbLA-NFlwugE2pL_8hSP6KE3RiQkZ9k4XlycMiKBRSW52vq9w7YqfL1obqRf63SFRpuk0W7QRUxllbrYTdWp5K2OdDrf9Z5cxBHIosK8xwrYqmq8" />
+                </div>
+                <div>
+                  <span
+                    class="text-[9px] text-[var(--theme-border-active)] font-bold uppercase tracking-[0.2em]">Informe de
+                    Mercado</span>
+                  <h4
+                    class="text-[13px] font-bold text-[var(--theme-text)] mb-1 mt-0.5 group-hover:text-[var(--theme-border-active)] transition-colors uppercase tracking-wider">
+                    Perspectivas del Sector Comercial Q4</h4>
+                  <p class="text-[11px] text-[var(--theme-text-muted)] leading-relaxed line-clamp-2">Análisis trimestral
+                    del sector comercial portugués y oportunidades de liquidez.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-sm font-bold uppercase tracking-widest text-[var(--theme-text)]">Asignación de Activos
+              </h3>
+              <button
+                class="text-[var(--theme-text-muted)] hover:text-[var(--theme-border-active)] text-[10px] font-bold uppercase tracking-widest">Configuración</button>
+            </div>
+            <div
+              class="institutional-card p-8 h-[314px] flex flex-col justify-center items-center bg-[var(--theme-surface)] border-[var(--theme-border)]">
+              <div
+                class="w-44 h-44 border-[1px] border-[var(--theme-border)] flex items-center justify-center relative">
+                <div class="absolute inset-0 border-4 border-[var(--theme-border-active)]/20"></div>
+                <div class="absolute inset-0 border-t-4 border-l-4 border-[var(--theme-border-active)]"></div>
+                <div class="text-center">
+                  <p class="text-[10px] text-[var(--theme-text-muted)] font-bold uppercase tracking-widest mb-1">Total
+                    Activos</p>
+                  <p class="serif-numbers text-3xl text-[var(--theme-text)]">24</p>
+                </div>
+              </div>
+              <div class="mt-8 flex gap-6">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-[var(--theme-border-active)]"></span>
+                  <span
+                    class="text-[10px] text-[var(--theme-text-muted)] font-bold uppercase tracking-widest">Inmobiliario
+                    (75%)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-[var(--theme-border)]"></span>
+                  <span class="text-[10px] text-[var(--theme-text-muted)] font-bold uppercase tracking-widest">Comercial
+                    (25%)</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+
+</html>

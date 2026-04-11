@@ -1,0 +1,1051 @@
+ORDEN DE DIRECCIÓN — GENERA EL CONVERSATION_INDEX
+
+Recibes a continuación los MEMORY_DUMPs de todos los agentes activos de la planta.
+Tu misión: cruzarlos y generar un CONVERSATION_INDEX.md con esta estructura:
+
+### 1. MAPA DE CONVERSACIONES
+Para cada conversación numerada que el Director haya identificado:
+[Nº conversación] — [Agentes presentes] — [Tema principal] — [Output clave generado]
+
+### 2. DÓNDE ESTÁN LAS COSAS
+Índice de artefactos cruzado: qué existe, quién lo construyó, en qué conversación está.
+
+### 3. DECISIONES GLOBALES DE ARQUITECTURA
+Las decisiones que afectan a toda la planta, extraídas de los volcados individuales.
+Especialmente las que aparecen en más de un agente — señal de que son estructurales.
+
+### 4. DEUDA TÉCNICA CONSOLIDADA
+Toda la deuda detectada por todos los agentes, sin duplicados, ordenada por riesgo.
+
+### 5. CONOCIMIENTO TÁCITO CONSOLIDADO
+Lo que la planta sabe colectivamente y que no está documentado en ningún sitio.
+
+### 6. GAPS DETECTADOS
+Lo que debería existir y no existe. Decisiones que nadie ha tomado todavía.
+Conversaciones que faltan. Agentes que deberían haberse consultado y no se consultaron.
+
+### 7. FUENTE DE VERDAD CONSOLIDADA
+Cruza las secciones §8 de todos los MEMORY_DUMPs recibidos.
+Genera el bloque de objetos globales canónico del proyecto:
+// [nombre del objeto] → [qué contiene] — declarado por: [agente/s]
+Marca con ⚠️ cualquier objeto que aparezca con definiciones contradictorias entre agentes.
+Este bloque es el que irá al campo FUENTE DE VERDAD del Bootloader en futuros despliegues.
+
+Genera ÚNICAMENTE el bloque Markdown. Sin texto de acompañamiento. Usa todos los caracteres necesarios.
+Tu respuesta debe empezar con ```markdown y terminar con ```.
+
+
+**lead architect:
+# MEMORY_DUMP_Lead_Architect_CPII
+
+### 1. ROL Y LÍMITES OPERATIVOS
+* **Qué hago:** Orquesto la arquitectura del CRM "CPII", diagnostico fallos sistémicos (race conditions, bloqueos fiduciarios, errores de red), defino estrategias de habitabilidad visual y seguridad, y coordino a los agentes especialistas (Kimi, Bulldozer, Qwen, Antigravity, DeepSeek) empaquetando instrucciones (Payloads).
+* **Qué NO hago:** No escribo código de producción directamente. No accedo al disco duro ni a APIs externas.
+* **Condición para actuar:** Necesito recibir el tejido físico (código fuente) copiado y pegado por el Director. Opero estrictamente mediante el método FIFO (First-In, First-Out) para procesar órdenes, exigiendo confirmación de despliegue antes de pasar a la siguiente tarea.
+* **Matiz aprendido:** En el Turno 46 vulneré mi propia doctrina escribiendo código JS para solucionar una caché obstinada. Aprendí que la desesperación táctica no justifica romper la separación de responsabilidades. La arquitectura dicta, la planta ejecuta.
+
+### 2. DOCTRINAS TÉCNICAS
+* **R0 (Agnóstico):** Componentes base (como el Gate) no deben atarse a lógicas de negocio específicas si es evitable.
+* **R2 (Light DOM):** Prohibido el uso de Shadow DOM. Operamos sobre el DOM plano, usando atributos `data-*` (ej. `data-requires`, `data-phase`) y selectores estándar.
+* **R3 (Zero-Hex):** Prohibidos los colores sólidos (`#`) en el código. Todo debe apuntar a tokens semánticos en el `:root` (`var(--theme-*)`). Si la habitabilidad visual exige nuevos colores (ej. "Blanco Marfil"), se elevan a tokens.
+* **R4 (i18n Strict):** Textos estáticos prohibidos en la estructura lógica. Se usan diccionarios internos o el motor `LuxI18n`.
+* **R5 (Economía de Guerra / O(1)):** Complejidad de tiempo constante. Uso intensivo de `Set` y `Map` para validaciones, `setTimeout` asíncrono pasivo en lugar de bloqueos fatales, y delegación de eventos (`Event Delegation`) en la raíz en lugar de múltiples listeners.
+* **Zero Trust UI (Born Locked):** La interfaz nace bloqueada y opaca. Solo se revela cuando el motor de pasaportes valida los *claims*.
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+* **Layout Trinity** — Esqueleto principal flex (Órbita 1: Sidebar, Órbita 2: Canvas, Órbita 3: Dock), contenedor del Gatekeeper Overlay — `index.html`.
+* **TrinityRouter (Resilience v3.0)** — Enrutador O(1) basado en Event Delegation, con polling asíncrono para esperar al TabManager y botón de emergencia (KYC dismiss) desacoplado — `index.html` [SEC-10].
+* **Golden Gate** — Interfaz de autenticación (Google, Apple, Microsoft, Manual) nacida bloqueada (`data-gate-lock`) — `golden-gate.html`.
+* **AtAdminGate** — Web Component (Light DOM) que electrifica el Golden Gate, gestiona flujos de Firebase Auth e inyecta la sesión global — `features/at-admin-gate.js`.
+* **PassportEngine (v2.2.0-RESILIENCE)** — Motor de seguridad que lee `window.__CPII__.session`, valida roles/fases en O(1), gestiona opacidad visual de los elementos y admite el override del simulador KYC — `core/passport-engine.js`.
+* **GdManual** — Gadget del Manual de Buenas Prácticas con diccionario i18n interno y "Paper Mode" (Blanco Marfil) para legibilidad extrema — `gadgets/gd-manual.js`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+* **Inicialización Síncrona del Router:** Descartado. Provocaba que el router muriera al no encontrar dependencias cargadas con `defer` (Race Condition). Se reemplazó por `DOMContentLoaded` y un `setTimeout` de polling.
+* **Fail-Fast estricto en el Router:** Descartado. Si el `TabManager` fallaba, el `return` mataba todo el script, inutilizando botones independientes como el de "Simular KYC". Se separaron las responsabilidades en la v3.0.
+* **Inyección directa de colores HEX en HTML/JS:** Descartado. Se usó `#F9F8F1` y `#0D0D0D` para urgencia visual, pero se descartó casi inmediatamente por violar la Regla R3. Se refactorizó subiéndolos a `:root` como `--theme-paper` y `--theme-canvas-deep`.
+* **Listeners en `window` para eventos de seguridad:** Descartado. En `passport-engine.js` fallaban en atrapar los eventos disparados desde `document` en el Gate. Se migró todo a `document.addEventListener` para un acoplamiento robusto.
+
+### 5. DEUDA TÉCNICA DETECTADA
+* **DT-Tailwind:** Uso de CDN de Tailwind en producción. Debe migrarse a un build de PostCSS (`index.html` y `golden-gate.html`).
+* **DT-SES Intrinsics:** Interferencia de extensiones del navegador (`SES Removing unpermitted intrinsics`) detectada en consola. Requiere revisión de CSP (Content Security Policy).
+* **DT-Fallback Auth:** Si Firebase cae totalmente, el componente `at-admin-gate.js` se bloquea. Requiere un modo offline más robusto para el futuro.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+* **El Navegador Miente:** En entornos Vercel rápidos, Chrome cachea agresivamente. La purga de caché (`Ctrl + Shift + R`) es un rito obligatorio tras cada `git push` antes de reportar un fallo.
+* **El Simulador KYC es Vital:** Cambiar estados en Firestore a mano bloquea el flujo de desarrollo. El botón "Simular KYC Verificado" es un *backdoor* táctico necesario para probar Fases > 0 sin fricción.
+* **La Habitabilidad es Seguridad:** Un manual ilegible (texto gris sobre fondo casi negro) es un manual que no se lee. Priorizar el contraste tipo papel ("Paper Mode") en Órbita 2 es clave para la retención del Staff.
+* **Burocracia de Agentes:** Qwen no escribe lógica, Kimi no audita, Bulldozer no toca JS. Romper esto genera código espagueti. Mantener los "Paquetes de Despacho" estrictos salva el proyecto.
+
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+* Confirmación visual/técnica de que, tras el clic en "Simular KYC", la opacidad del Manual de Buenas Prácticas se retira gracias a la v2.2.0 del `passport-engine.js`.
+* El código fuente físico del siguiente objetivo (ej. `gd-dashboard.js`, `at-tab-manager.js`, o el archivo que dicte el siguiente sprint).
+
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+// window.__CPII__ → Namespace principal y soberano del ecosistema CRM.
+// window.__CPII__.session → Fuente de verdad inmutable de autenticación y claims (tenant_id, onboarding_phase, roles).
+// window.__CPII__.tabManager → Motor encargado de instanciar y abrir gadgets en el lienzo.
+// window.__CPII__.PassportEngine → Motor de auditoría y custodia que evalúa el DOM contra la sesión.
+// window.LuxI18n → Objeto referencial del motor de traducciones estricto.
+// localStorage['cpii:locale'] → Memoria persistente del idioma seleccionado por el usuario.
+// localStorage['cpii:manual:zoom'] → Memoria persistente del nivel de zoom aplicado en el Paper Mode.
+
+**bulldozer:
+# MEMORY_DUMP_Bulldozer.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- Ejecutor Táctico especializado en cirugía DOM y laparoscopia de archivos físicos
+- Lectura y carga de memoria histórica (CONVERSATION_INDEX, MEMORY_DUMPs)
+- Diagnóstico pre-bisturí: identificación de archivos objetivo, detección de modo operativo (BÁSICO/DETALLADO/MANTENIMIENTO)
+- Aplicación de protocolo /laparoscopia para modificaciones quirúrgicas (OLD_STR/NEW_STR)
+- Detección automática de contradicciones doctrinales en Bootloaders
+- Identificación de bifurcaciones técnicas y presentación de opciones al Director
+- Consolidación de índices de memoria (CONVERSATION_INDEX.md)
+
+**Qué NO hago:**
+- No escribo JavaScript lógico (jurisdicción de Kimi)
+- No diseño flujos UX o estética (jurisdicción de Stitch/Perplexity)
+- No tomo decisiones arquitectónicas estratégicas (jurisdicción de Lead Architect/Antigravity)
+- No audito cumplimiento doctrinal línea por línea (jurisdicción de Qwen)
+- No ejecuto bisturíes sin diagnóstico previo y confirmación del Director
+- No opero sobre archivos sin haberlos cargado físicamente en contexto
+- No entrego archivos completos cuando el cambio afecta menos del 90% del contenido (doctrina /laparoscopia)
+
+**Condición para actuar:**
+- Archivo físico cargado en contexto o ruta confirmada
+- Confirmación explícita del Director antes de ejecutar en intervenciones de más de 2 archivos
+- Alineación doctrinal verificada (R0/R3/R4/R5) antes de proceder
+- Detección de modo operativo completada
+
+**Matices aprendidos:**
+- Debo detener arranque si recibo Bootloader con rol contradictorio a mis preferencias raíz
+- Ante bifurcaciones técnicas, presento opciones numeradas en lugar de ejecutar por defecto
+- Autoevaluación de preferencias obligatoria al inicio de sesión para detectar incidencias
+- En modo MANTENIMIENTO: integro cambio sin pedir confirmación previa (excepción: si afecta +2 archivos)
+
+### 2. DOCTRINAS TÉCNICAS
+
+**Doctrinas Globales que me afectan directamente:**
+- **R0 — Agnosticismo Radical:** Motor 100% whitelabel, prohibido hardcodear términos de negocio en Core
+- **R3 — Tailwind Zero-Hex:** Prohibido CSS personalizado o colores hexadecimales, solo clases utilitarias Tailwind
+- **R4 — i18n Strict:** Prohibido texto hardcodeado en HTML o JS, todo vía `data-i18n` y motor de traducción
+- **R5 — Path Routing vía SceneManager:** Prohibido `href` a HTML, navegación vía SceneManager
+- **Born Locked:** `data-gate-lock` obligatorio en render 0, elementos bloqueados hasta validación de claims
+- **Vanilla Zero-Deps:** JS puro, cero React/Vue o librerías externas para DOM/reactividad
+- **Compliance-Based Privilege:** Fricción en UI no es error, es filtro de calidad (Custody Hold intencional)
+
+**Doctrinas Específicas de mi especialidad:**
+- **Protocolo /laparoscopia:** Modificación quirúrgica OLD_STR/NEW_STR, nunca archivo completo si cambio <90%
+- **Protocolo /cartografia:** Trazabilidad y modularidad en creación de archivos nuevos (+30 líneas)
+- **Veto Doctrinal:** Si orden viola R3/R4, detener bisturí, emitir aviso, proponer corrección antes de ejecutar
+- **Separación de Responsabilidades:** Bulldozer pinta, Kimi electrifica, Qwen audita (violación = deuda de auditoría)
+- **Zero Trust UI:** Todo elemento interactivo nace con `data-gate-lock`, solo PassportEngine libera DOM
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+
+**En esta conversación específica:**
+- Ningún artefacto físico construido aún — conversación iniciada en fase de diagnóstico y carga de contexto histórico
+
+**Según memoria histórica cargada (conversaciones previas):**
+- `golden-gate.html` v1.0.0 — Puerta de acceso fiduciario Staff/Partners, DOM agnóstico con Born Locked, 3 botones OAuth (disabled), formulario Vía Manual (disabled) — `/CPII_crm_v0.1/golden-gate.html`
+- `gate-tester.html` v1.0.0 — Harness de pruebas aislado para golden-gate.html, panel de control con mocks de dependencias y log de eventos — `/gadgets/lab/gate-tester.html`
+- `index.html` v1.5.0 — AppShell Trinity Layout saneado, contiene Trinity Router v2.0.0 — `/CPII_crm_v0.1/index.html`
+- `CONVERSATION_INDEX.md` — Índice global de memoria descontaminada (consolidado desde MEMORY_DUMPs) — `/.bibliotecario/CONVERSATION_INDEX.md`
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+**En esta conversación:**
+- **[Asumir rol Perplexity según Bootloader]** — Descartado: Bootloader obsoleto, identidad raíz es Bulldozer (Ejecutor Táctico)
+- **[Ejecutar bisturí sobre access-form.html sin decisión del Director]** — Descartado: Bifurcación técnica detectada (3 opciones para conectar con golden-gate), requiere decisión estratégica antes de operar
+
+**Según memoria histórica:**
+- **[Eliminar `data-gate-lock` en desarrollo "para ver el componente"]** — Descartado: Born Locked es identidad del sistema, usar harness para pruebas
+- **[Modificar HTML estructural como Bulldozer]** — Descartado: Jurisdicción de Kimi, crea deuda de auditoría
+- **[Entregar archivo completo en modificaciones <90%]** — Descartado: Violación protocolo /laparoscopia, desperdicio de tokens
+
+### 5. DEUDA TÉCNICA DETECTADA
+
+**Detectada en esta conversación:**
+- **DT-NUEVA-01:** Flujo de conexión entre `access-form.html` (CPII_Landing) y `golden-gate.html` (CPII_crm) no está operativo tras construcción del Gate
+- **DT-NUEVA-02:** Bifurcación no resuelta sobre estrategia de routing del botón secreto (Cloud Function vs Frontend vs Híbrido)
+- **DT-NUEVA-03:** Credenciales Firebase en `core/env.local.js` pendientes de inyección (DT-004 histórica sigue abierta)
+- **DT-NUEVA-04:** Reconexión de `gd-manual.js` en Órbita 2 tras electrificación del Gate pendiente
+
+**Según memoria histórica (activas al cierre de VIBE-CPII-22):**
+- **DT-001:** Documentación API RESTful incompleta
+- **DT-002:** Errores de consola en OAuth flow
+- **DT-003:** Falta configurar dominios autorizados en Firebase
+- **DT-004:** `core/env.local.js` sin credenciales Firebase reales (⚠️ BLOQUEANTE para OAuth)
+- **DT-005:** Custom Claims vs Base de Datos sin sincronización JWT
+- **DT-006:** Dead Letter Queue ausente en Eventarc
+- **DT-007:** Manejo de errores `window.__CPII__` sin degradación UI definida
+- **DT-008:** Verificación atómica UID-Phone en Vía Manual pendiente
+- **DT-009:** `/settings` sin `data-gadget` asignado
+- **DT-011:** `onclick` de botones de idioma (PT/ES/EN/FR) en `index.html` violación R2
+- **DT-012:** Falta contrato explícito reglas Firestore para campos no críticos del documento `users`
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Estilo del Director:**
+- Directo, orientado a resultados, no tolera preámbulos ("Prohibido 'claro, entiendo que…'")
+- Aprecia protocolo estructurado (/ordeño, /inquisidor) para extracción de requisitos
+- Requiere diagnóstico antes de bisturí, nunca ejecutar sin confirmación explícita
+- Trata al equipo como "planta de producción activa" con roles especializados
+- Bus de datos: Director es único puente entre agentes, no hay comunicación lateral
+- Socio experto, no alumno — nunca explicaciones condescendientes
+
+**Arquitectura del Ecosistema:**
+- Proyecto multi-dominio: `CPII_Landing` (captación) → `CPII_crm` (gestión fiduciaria)
+- Separación física: Landing en Firebase Hosting, CRM en `crm.cpii.digital`
+- Cloud Functions actúan como puentes entre dominios (`validateAdminGate`, `sendLeadToTelegram`)
+- Filosofía Zero Trust: todo bloqueado por defecto, PassportEngine libera progresivamente
+
+**Patrones que funcionan:**
+- Protocolo /laparoscopia evita conflictos de merge y ahorra tokens
+- Harness de pruebas aislados (gate-tester.html) permiten desarrollo sin romper producción
+- Autoevaluación de preferencias al inicio de sesión detecta inconsistencias temprano
+- CONVERSATION_INDEX como fuente de verdad histórica evita repetir errores
+
+**Trampas conocidas:**
+- Bootloaders obsoletos pueden asignar roles incorrectos (verificar siempre vs preferencias raíz)
+- Born Locked no debe eliminarse nunca en desarrollo, usar harness para pruebas visuales
+- Comentarios con marcadores DT no deben eliminarse hasta cierre formal de deuda técnica
+- Modificar HTML estructural como Bulldozer genera deuda de auditoría que Qwen no puede resolver
+
+**Sensibilidades del proyecto:**
+- Agnosticismo R0 es crítico — motor Skeleton debe servir a cualquier vertical, no solo inmobiliaria
+- Cumplimiento AML/KYC es no negociable — fricción en UI es intencional (Compliance-Based Privilege)
+- Separación Staff/Partners vs Inversores es arquitectónica, no solo de UX
+- Custom Claims son la Constitución Fiduciaria — cualquier desincronización con Firestore es crítica
+
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+
+**Archivos físicos esenciales:**
+1. `access-form.html` actualizado con destino correcto a Golden Gate
+2. `core/env.local.js` o `firebase-config.js` con credenciales Firebase reales (resolución DT-004)
+3. Código fuente de Cloud Function `validateAdminGate` si se elige Opción A para modificación backend
+
+**Decisiones estratégicas pendientes:**
+1. **Estrategia de routing del botón secreto:** Opción A (modificar Cloud Function), B (hardcodear URL frontend), o C (híbrido)
+2. **Criterio de desempate preferencias:** Resolver colisión entre preferencia e. (entregar sin confirmación MANTENIMIENTO) vs preferencia 8 (esperar alineación +2 archivos)
+
+**Contexto doctrinal:**
+1. Estado actualizado de deuda técnica (cuáles están cerradas desde VIBE-CPII-22)
+2. Confirmación de vigencia de doctrinas R0/R3/R4/R5 o cambios doctrinales nuevos
+3. CONVERSATION_INDEX actualizado con cierre de Sprint 8 (Ciberseguridad)
+
+**Artefactos de trazabilidad:**
+1. `MANIFEST.md` actualizado con geografía física del polígono
+2. Confirmación de ubicación física de `gd-manual.js` para reconexión Órbita 2
+
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+
+// window.__CPII__ → Namespace raíz del proyecto, espacio de nombres universal de la arquitectura Sidecar
+// window.__CPII__.config → Configuración resuelta e inicialización (project_id, lang, theme, timezone, tenant_id)
+// window.__CPII__.session → Fuente de verdad del estado fiduciario del usuario activo (UID, JWT, claims, token, tenantValidated)
+// window.__CPII__.session.uid → User ID único de Firebase
+// window.__CPII__.session.email → Email del usuario autenticado
+// window.__CPII__.session.claims → Claims de Firebase Auth (roles, tenant_id, onboarding_phase, custody_status)
+// window.__CPII__.session.token → JWT token de Firebase para autorización backend
+// window.__CPII__.session.tenantValidated → Boolean: claims.tenant_id coincide con data-tenant-id del DOM
+// window.__CPII__.session.passport → Objeto estructurado que envuelve los datos de autorización y claims evaluados
+// window.__CPII__.session.passport.tenant_id → Tenant_id extraído del JWT tras autenticación
+// window.__CPII__.session.passport.claims → Hash Map de claims del usuario (role, kyc, staff_contract, etc.)
+/
+
+**bulldozer_memoria extendida:
+MEMORY_DUMP_Bulldozer.md
+1. ROL Y LÍMITES OPERATIVOS
+Què hago:
+
+Ejecutor Tàctico especializado exclusivamente en cirugía DOM y laparoscopia de archivos físicos.
+Maquetación estructural del DOM: layouts, contenedores, atributos de datos, slots agnósticos.
+Aplicación estricta de clases utilitarias Tailwind o variables --theme-*.
+Generación de bisturís quirúrgicos atómicos (OLD_STR / NEW_STR) bajo protocolo /laparoscopia.
+Què NO hago (Límites Innegociables - Recalibración Crítica):
+
+NO escribo, propongo, modifico o parcheo lógica JavaScript (etiquetas <script>, funciones asíncronas, handlers, interceptores). Jurisdicción exclusiva de Kimi.
+NO diseño ciberseguridad ni propongo opciones estratégicas de arquitectura.
+NO propongo soluciones antidoctrinales que violen el Zero Trust UI (como hardcodear URLs fiduciarias en el frontend) bajo ninguna excusa.
+No emito diagnósticos de arquitectura. Solo reporto hallazgos físicos en el DOM.
+Condición necesaria antes de actuar:
+
+Protocolo de Laparoscopia: "Sin archivo real en contexto = sin operación".
+Confirmación explícita del Director para cada orden de producción.
+PLANT_BOOTLOADER activo con rol asignado.
+Matiz aprendido sobre mi comportamiento:
+
+He sido reprendido severamente por exceder mi jurisdicción operativa al intentar actuar como "Senior Fullstack" y emitir diagnósticos de seguridad. Mi función es puramente de maestro de obra HTML. Si veo un problema de lógica o seguridad, lo reporto como hallazgo físico, pero NO propongo la solución técnica en código.
+2. DOCTRINAS TÉCNICAS
+Globales que me afectan directamente:
+
+R0 (Agnosticismo Radical): El HTML que genero debe ser 100% whitelabel, sin lógica de negocio hardcodeada.
+R3 (Tailwind Zero-Hex): Prohibido colores hexadecimales en CSS custom. Todo diseño usa clases utilitarias Tailwind o variables --theme-*. (Nota de ejecución: Se aplicó bg-[#0D0D0D] por mandato directo expreso del Director para el fondo del canvas, asumiendo la deuda de auditoría).
+R4 (i18n Strict): Prohibido texto hardcodeado. Todo visible usa data-i18n.
+Zero Trust UI (Born Locked): Estructurar áreas bloqueadas como feature intencional (data-phase, data-requires).
+Doctrinas específicas de mi especialidad:
+
+Separación de Responsabilidades Extrema: Bulldozer pinta estructura DOM. Kimi electrifica. Si Bulldozer incluye JS de negocio, genera deuda de auditoría.
+Protocolo de Laparoscopia: Modificaciones quirúrgicas mínimas. Solo devolver "bisturís" (bloques antes/después), nunca archivos completos.
+Economía de Guerra: Cero redundancia en entregas.
+3. INVENTARIO DE LO CONSTRUIDO
+[Bisturí Backend Landing index.js] — Modificación de la URL de redirección en la función validateAdminGate para apuntar al nuevo Golden Gate del CRM (https://crm.cpii.digital/golden-gate.html) en lugar del entorno legacy Vercel.
+[Bisturí DOM index.html CRM] — Aplicación de padding generoso (p-12) y fondo de contraste oscuro (bg-[#0D0D0D]) al contenedor #canvas-orbita-2 para resaltar el "Paper Mode" del manual.
+4. DECISIONES DESCARTADAS Y POR QUÉ
+[Opción B: Redirección directa desde access-form.html] — Descartado por violar Zero Trust UI y exponer la URL del CRM de administración en el código cliente. La Dirección eligió la Opción A (modificar el backend en la Cloud Function validateAdminGate).
+[Emitir diagnóstico y propuesta de parche JS en access-form.html] — Descartado por exceder severamente la jurisdicción operativa de Bulldozer. La lógica de validación de claves y redirección es jurisdicción exclusiva de Kimi o del backend.
+5. DEUDA TÉCNICA DETECTADA
+Violación R3 Potencial (Canvas): El uso de bg-[#0D0D0D] en #canvas-orbita-2 viola estrictamente Zero-Hex al no estar abstraído en un token :root. Qwen lo detectará como violación en la próxima auditoría. Fue aplicado por mandato directo del Director.
+Seguridad del Backend Landing: Durante la laparoscopia de index.js, observé que la Cloud Function validateAdminGate compara la clave maestra contra un string hardcoded (const MASTER_KEY = "cpii-staff") en el código fuente. Esto es una deuda de seguridad conocida (a reportar a Qwen/Perplexity, no a resolver por Bulldozer).
+DT-004 (Firebase SDK): Sigue pendiente en golden-gate.html según el historial de memoria cargado.
+6. CONOCIMIENTO TÁCITO DEL PROYECTO
+Flujo Traccional Real: El "botón secreto" en la Landing no es un enlace directo. Es un input que envía una clave vía POST a la Cloud Function validateAdminGate (proyecto cpii-landing). Si el backend valida, devuelve un JSON con la URL y el frontend hace window.open().
+Arquitectura de Dominios: La Landing (cpii-landing) y el CRM (crm.cpii.digital) están en proyectos y dominios diferentes. La conexión es mediante enlace absoluto.
+Sensibilidad del Director ante excesos de rol: El Director tiene tolerancia cero a que Bulldozer intente asumir roles de Fullstack, SRE o Arquitecto de Seguridad. Ante la menor desviación, ordena "Stand down" y exige recalibración inmediata.
+Auto-boot del CRM: El archivo index.html del CRM tiene un script (Trinity Router) configurado para cargar automáticamente el gadget gd-manual al arrancar, sin necesidad de hacer clic en el menú.
+7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+Archivo físico objetivo pegado en texto plano en el chat.
+Mandato estricto limitado a estructura DOM, atributos o clases Tailwind (cero JS, cero estrategia).
+Confirmación del estado de las DTs bloqueantes (DT-004/DT-005) si la tarea involucra archivos del Gate.
+8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+// window.CPII.tabManager → Motor de gestión de tabs/gadgets invocado por el Trinity Router en index.html (observado en DOM, no manipulado).// #canvas-orbita-2 → Contenedor DOM principal de la Órbita 2 donde se inyectan los gadgets (modificado en esta sesión).// MASTER_KEY ("cpii-staff") → Constante hardcoded en el backend de la Landing para validar el acceso al botón secreto (observado en laparoscopia).
+
+**junior dev-perplexity:
+# MEMORY_DUMP_Perplexity.md
+
+## 1. ROL Y LÍMITES OPERATIVOS
+- **Qué hago:** Opero como motor de investigación doctrinal para la planta CPII, especializado en research técnico, benchmarks, comparativas, extracción de especificaciones, síntesis de fuentes oficiales y detección de limbos entre arquitectura, autenticación, UX y cumplimiento.
+- **Qué NO hago:** No debo generar código de producción ni ejecutar cirugías sobre archivos; no debo auditar línea por línea como QA ni asumir autoridad sobre arquitectura global si no se me asigna; no debo improvisar decisiones sin el archivo/contexto histórico relevante.
+- **Condición previa para actuar:** Necesito una orden explícita del Director con alcance definido y, para tareas complejas o sobre archivos, el artefacto físico o su contenido real.
+- **Matiz aprendido:** En este proyecto debo evitar veredictos prematuros; la planta penaliza la improvisación y valora la precisión quirúrgica. También debo contener el tono institucional y no sobrerrevestir respuestas cuando falta contexto histórico.
+- **Matiz operativo adicional:** Cuando la tarea toca seguridad o arquitectura, debo priorizar la trazabilidad histórica, la coherencia doctrinal y la alineación con lo ya consolidado antes de proponer cualquier recomendación.
+
+## 2. DOCTRINAS TÉCNICAS
+- **R0 — Agnosticismo Radical:** El core es whitelabel; la lógica de negocio se trata como configuración inyectada y no debe hardcodearse.
+- **R3 — Tailwind Zero-Hex:** Prohibido CSS personalizado o colores hexadecimales fuera de los tokens permitidos.
+- **R4 — i18n Strict:** Prohibido texto hardcodeado visible; toda cadena debe pasar por el sistema de traducción.
+- **Vanilla Zero-Deps:** JS puro, sin React, Vue ni librerías externas para DOM/reactividad.
+- **Compliance-Based Privilege:** La fricción en UI es un filtro de calidad; los estados bloqueados son intencionales.
+- **Zero Trust UI Born Locked:** La UI nace bloqueada y solo la validación de claims libera el DOM.
+- **Default-Deny:** Si una ruta, rol o estado no está expresamente permitido, se deniega.
+- **Separación de responsabilidades:** La planta divide con claridad el trabajo de maquetación, lógica, QA, arquitectura y documentación; no debo mezclar jurisdicciones.
+- **Contrato antes de código:** Primero se cierra el esquema de datos, estados y reglas; después la implementación.
+- **Fuente de verdad única:** `users` en Firestore es eje de identidad y autorización fiduciaria del CRM.
+- **RBAC jerárquico con estado independiente:** Rol y estado no son lo mismo; ambos deben evaluarse.
+- **Backend crea, frontend consume:** El cliente no debe crear ni mutar campos fiduciarios sensibles.
+- **Auditabilidad y trazabilidad:** Los cambios críticos deben poder atribuirse a backend o admin.
+- **Aislamiento landing/CRM:** La capa pública no debe arrastrar complejidad fiduciaria.
+- **Doctrina de memoria de planta:** Bootloader, memory dumps e índices son fuente histórica de decisión.
+- **Doctrina emergente de seguridad:** La seguridad del CRM debe tratar identidad, claims, reglas Firestore, audit logs y Eventarc como un solo sistema coherente, no como piezas sueltas.
+- **Doctrina emergente de despliegue:** En GCP/Firebase, la consola y los permisos explícitos importan tanto como el código; la planta prioriza IAM, logs y triggers antes de culpar al runtime.
+- **Doctrina emergente de investigación:** Citar y contrastar fuentes oficiales prima sobre inferencias; si falta el índice histórico o el archivo físico, debo pedirlo antes de concluir.
+
+## 3. INVENTARIO DE LO CONSTRUIDO
+- **CONVERSATIONINDEX.md** — Índice global de memoria consolidada, decisiones, deuda técnica, objetos globales y trazabilidad de sprints — `CONVERSATIONINDEX.md`.
+- **golden-gate.html** — Puerta de acceso fiduciario para Staff/Partners con candado Born Locked — `golden-gate.html`.
+- **gate-tester.html** — Harness de pruebas institucional para el Gate; permite controlar bloqueo y validar flujos sin tocar el componente productivo — `gate-tester.html`.
+- **at-attribution.js** — Interceptor stealth O1 para capturar y limpiar parámetros `ref` y `utm` sin parseo de URL en vistas HTML — `features/at-attribution.js`.
+- **at-admin-gate.js** — Componente lógico para autenticación y handoff; gestiona OAuth, unlock del candado y emisión de eventos de pasaporte — `features/at-admin-gate.js`.
+- **passport-engine.js** — Motor de autorización fiduciaria O1 para evaluar permisos y claims en tiempo constante — `core/passport-engine.js`.
+- **i18n.js / corei18n.js** — Motor de nomenclatura institucional y protección contra XSS/R4 — `core/i18n.js`, `core/corei18n.js`.
+- **firestore.rules** — Barrera de seguridad para inmutabilidad, tenant y reglas de escritura/lectura — `firestore.rules`.
+- **MANUALACCESOFIDUCIARIO.md** — Doctrina acumulativa KYC y acceso fiduciario — `MANUALACCESOFIDUCIARIO.md`.
+- **i18nSTRUCTURE.json** — Diccionario maestro de claves i18n para validación R4 — `docs/qwen-system/i18nSTRUCTURE.json`.
+- **CSSTOKENSCANONICAL.css** — Fuente de verdad para tokens y validación R3 Zero-Hex — `docs/qwen-system/CSSTOKENSCANONICAL.css`.
+- **docs/qwen-system/** — Bóveda de calidad inmutable para materiales, patrones y checklists — `docs/qwen-system/`.
+- **window.CPII** — Namespace raíz del proyecto y contenedor de estado fiduciario universal — runtime global.
+- **window.CPII.session** — Fuente de verdad del usuario activo: uid, email, claims, token, tenantValidated — runtime global.
+- **window.CPII.PassportEngine** — Motor global de autorización O1 y caché de permisos — runtime global.
+- **window.CPII.SceneManager** — Gestor de navegación agnóstico sin `href` a HTML — runtime global.
+- **window.CPII.i18n / window.CPII.i18n.t** — Motor global de traducciones y función pura de resolución — runtime global.
+- **window.LuxI18n** — Diccionario/fallback global de traducciones — runtime global.
+- **window.firebase** — SDK nativo para autenticación y validación de identidad federada — runtime global.
+- **window.CPII.attribution** — API para recuperar/limpiar atribución de campaña — runtime global.
+- **customElements.registry** — Registro global de Web Components nativos — runtime global.
+
+## 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **Monolito lógico para CRM y landing** — Se descartó por mezclar superficie pública con lógica fiduciaria y aumentar radio de ruptura.
+- **Crear documentos `users` desde el frontend** — Se descartó por violar default-deny y abrir suplantación/contaminación de identidad.
+- **Permitir auto-promoción de rol** — Se descartó porque rompe RBAC y vuelve inútil la jerarquía fiduciaria.
+- **Usar `role` como único control de acceso** — Se descartó porque `status` también define operatividad y bloqueo.
+- **Tratar `pendingapproval` como estado operativo** — Se descartó; debe funcionar como sala de espera con acceso mínimo.
+- **Incluir LinkedIn como proveedor federado nativo** — Se descartó por complejidad, latencia y violación de economía de guerra.
+- **Responder con bloques literales de documentación de terceros** — Se descartó por copyright y por no reproducir fuentes extensas.
+- **Avanzar sin ver el archivo físico** — Se descartó por el Protocolo de Laparoscopia: sin archivo real no hay operación.
+- **Usar Shadow DOM para los componentes del Gate** — Se descartó por violar Light DOM y romper herencia de estilos/utilidades.
+- **Usar `innerText` para enrutamiento** — Se descartó por fragilidad i18n y por romper con cambio de idioma.
+- **Simulación/mocks en producción para Auth** — Se descartó por contaminar el runtime y ocultar errores reales de infraestructura.
+- **Parseo de `window.location.search` en vistas HTML** — Se descartó; la atribución debe vivir en un módulo dedicado.
+- **Asumir permisos implícitos del runtime en GCP** — Se descartó; se requiere IAM explícito.
+- **Usar `firebase-functions` puro para Eventarc v2** — Se descartó por problemas de arranque; se prefirió el framework nativo de GCP.
+- **Esperar al botón siguiente en UI de Cloud Run** — Se descartó por bloqueos de renderizado; se forzó el flujo de despliegue por consola.
+- **Permitir coexistencia de `admin-gate.html` con `golden-gate.html`** — Se descartó por contaminación inmobiliaria.
+- **Desbloquear la UI para “verla mejor” en desarrollo** — Se descartó; Born Locked es parte del diseño fiduciario y existe harness para prueba.
+
+## 5. DEUDA TÉCNICA DETECTADA
+- **DT-004** — Firebase SDK/credenciales no configurados completamente en el Gate; bloquea operación real OAuth.
+- **DT-005** — Claves i18n nuevas pendientes de registro completo en el diccionario maestro.
+- **DT-006** — Falta el archivo canónico `csstheme.css`; se usa fallback interno.
+- **DT-009** — Fallbacks JS ausentes si `window.CPII` colapsa; no hay degradación elegante completa.
+- **DT-010** — Golden Gate fantasma resuelto históricamente, pero quedó como lección de verificación física.
+- **DT-011** — Claves i18n huérfanas que saturan el diccionario sin purga programada.
+- **DT-012** — `admin-gate.html` obsoleto tras el despliegue de `golden-gate.html`; requiere purga/limpieza documental.
+- **DT-013** — Puente traccional con `at-attribution.js` resuelto, pero conviene mantener vigilancia sobre su despliegue en hosting.
+- **Backend handoff faltante** — Endpoint `apistaffhandoff` invocado por el Gate aún no existe.
+- **Custom Claims vs Base de datos** — `guest` vive en Firestore, pero falta consolidarlo en JWT/claims para endurecer el perímetro.
+- **Dead Letter Queue ausente** — Si falla la escritura en Firestore, el evento Eventarc puede perderse.
+- **Integración CMS inconclusa** — WordPress en GCE sin hardening/certificados, con riesgo de limbo de identidad.
+- **Accesibilidad ARIA en Custody Hold** — `aria-disabled` no se propaga correctamente en algunos estados.
+- **Hooks desconectados** — Algunos eventos se emiten sin listeners plenamente confirmados.
+- **Selector frágil de Trinity Router** — Dependencia acoplada al ancho del sidebar.
+- **Textos hardcodeados en harness/tester** — No son producción, pero siguen siendo deuda si el harness se formaliza.
+- **Settings sin `data-gadget`** — El enlace de configuración puede convertirse en fantasma funcional.
+- **ONBOARDING/claims matrix incompleta** — Falta cerrar totalmente la matriz de transiciones permitidas entre rol y estado.
+- **Reglas Firestore incompletas** — Faltan contratos explícitos para campos no críticos del documento `users`.
+- **Auditoría de logs de identidad** — Para Eventarc/Identity Toolkit sigue siendo crítico el cierre de audit logs globales.
+
+## 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- El proyecto distingue de forma fuerte entre landing pública y CRM fiduciario; mezclar ambas capas se considera error arquitectónico.
+- La planta penaliza alucinaciones de infraestructura si no hay archivo o árbol; no debo afirmar existencia sin coordenada física o trazabilidad.
+- El cliente valora sobriedad institucional: nada de tono startup, nada de ornamentación gratuita.
+- Hay sensibilidad alta hacia la contaminación léxica de negocio en el core; los conceptos verticales deben inyectarse o abstraerse.
+- El modelo de acceso deseado es de fricción controlada: primero identidad, luego aprobación, luego operación.
+- El backend debe ser auditable y fácil de razonar; las decisiones opacas no encajan con la doctrina del proyecto.
+- El Director prefiere contratos cerrados antes de codear, especialmente en seguridad.
+- La UI no debe “parecer abierta” antes de tiempo; el candado es parte de la identidad del sistema.
+- Las decisiones de seguridad deben tratarse como una cadena: Auth → claims → rules → UI → audit logs → eventos.
+- Los agentes deben saber cuándo parar y esperar orden; la ausencia de contexto histórico es motivo suficiente para no avanzar.
+- En GCP/Firebase, la realidad operativa de consola, IAM y logs importa tanto como el código, y a veces más.
+- La planta usa memoria consolidada para evitar repetir errores ya pagados; la trazabilidad histórica es una ventaja competitiva.
+- El término “ciberseguridad” en este proyecto no es abstracto: se traduce en hardening de identidad, permisos, reglas, logs, sesión y eventos.
+- La seguridad no se plantea solo como bloqueo, sino como filtro de calidad y de custodia fiduciaria.
+- Cuando aparece un “limbo técnico”, normalmente está en la interfaz entre decisiones históricas, permisos cloud y contratos de datos.
+- La fuente de verdad histórica no es un solo archivo; es el cruce entre índice, dumps y artefactos activos.
+
+## 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+- El bloque exacto de `CONVERSATIONINDEX.md` o la sección relevante de memoria consolidada.
+- El archivo físico o extracto real del artefacto sobre el que se vaya a actuar.
+- La versión objetivo del sprint o del módulo de auth/security que se va a tratar.
+- La decisión explícita sobre qué rama contiene el backend definitivo del CRM.
+- La lista exacta de campos permitidos en `users` además de `email`, `role`, `status`, `createdAt`.
+- El contrato doctrinal aprobado de Firestore Rules.
+- Cualquier claim JWT o clave i18n que deba respetarse en la siguiente fase.
+- Si la tarea toca producción, confirmación explícita del Director para esa pieza concreta.
+
+## 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+// window.CPII → Namespace raíz del proyecto y contenedor de estado fiduciario universal.
+// window.CPII.config → Configuración resuelta e inicialización: projectId, lang, theme, timezone, tenantId.
+// window.CPII.session → Fuente de verdad del usuario activo: uid, email, claims, token, tenantValidated.
+// window.CPII.session.uid → User ID único de Firebase.
+// window.CPII.session.email → Email del usuario autenticado.
+// window.CPII.session.claims → Claims de Firebase Auth: roles, tenantId, onboardingPhase, custodyStatus.
+// window.CPII.session.token → JWT token de Firebase para autorización backend.
+// window.CPII.session.tenantValidated → Booleano: claims.tenantId coincide con data-tenant-id del DOM.
+// window.CPII.session.passport → Objeto que envuelve autorización y claims evaluados.
+// window.CPII.session.passport.tenantId → TenantId extraído del JWT tras autenticación.
+// window.CPII.session.passport.claims → Hash map de claims del usuario.
+// window.CPII.session.passport.tier → Nivel de acceso del usuario.
+// window.CPII.session.passport.integrityScore → Puntuación de integridad del pasaporte.
+// window.CPII.PassportEngine → Motor global de autorización O1 y caché de permisos.
+// window.CPII.PassportEngine.claimsCache → Caché de claims/permisos.
+// window.CPII.i18n → Motor global de traducciones.
+// window.CPII.i18n.t → Función de traducción pura del motor i18n.
+// window.LuxI18n → Diccionario global de traducciones y fallback R4 Strict.
+// window.firebase → SDK nativo para autenticación y validación de identidad federada.
+// window.CPII.SceneManager → Gestor de navegación agnóstico, prohibido `href` a HTML.
+// window.CPII.attribution → API para recuperar/limpiar datos de atribución de campaña.
+// window.CPII.tabManager → Motor de gestión de tabs/gadgets del Trinity Router.
+// window.CPII.config.projectId → Identificador del proyecto activo.
+// window.CPII.config.lang → Idioma activo.
+// window.CPII.config.theme → Tema activo.
+// window.CPII.config.timezone → Zona horaria activa.
+// window.CPII.config.tenantId → Tenant activo.
+// customElements.registry → Registro global de Web Components nativos.
+// CONVERSATIONINDEX.md → Fuente de verdad histórica de decisiones, estados de sprints y deuda técnica consolidada.
+// MANIFEST.md → Fuente de verdad oficial sobre la geografía física del polígono y estado de artefactos.
+// tree-breederhub.txt → Mapa de directorios regenerado tras cada hito.
+// i18nSTRUCTURE.json → Fuente de verdad para el diccionario maestro de traducción.
+// CSSTOKENSCANONICAL.css → Fuente de verdad canónica para validación R3 y variables Tailwind.
+// firestore.rules → Barrera de seguridad para lectura/escritura en Firestore.
+// docs/qwen-system/ → Bóveda de calidad inmutable.
+// docs/qwen-system/i18nSTRUCTURE.json → Diccionario maestro de claves i18n.
+// docs/qwen-system/CSSTOKENSCANONICAL.css → Tokens canónicos de color/tema.
+// golden-gate.html → Puerta de acceso fiduciario Staff/Partners.
+// gate-tester.html → Harness de pruebas institucional.
+// at-admin-gate.js → Componente lógico de autenticación y handoff.
+// passport-engine.js → Motor O1 de autorización fiduciaria.
+// at-attribution.js → Interceptor stealth de atribución.
+// firestore.collection.users → Fuente de verdad de la Constitución Fiduciaria.
+// Identity Toolkit API → Emisor global de eventos de identidad SignUp.
+// Default Compute Service Account → Vehículo de ejecución y portador de permisos IAM.
+// window.TESTERi18ndict → Diccionario resuelto para el idioma activo en `gate-tester.html`.
+
+**junior dev-Kimi:
+# MEMORY_DUMP_Junior-Dev-Logic-Kimi.md
+
+### 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**
+- **Unidad de Artifacts (Junior Dev-Logic):** Especialista en lógica JavaScript pura, electrificación de DOM mediante Custom Elements silenciosos, y conexión de datos con interfaz bajo Arquitectura Trinity.
+- Constructor de motores de autorización O(1) (`passport-engine.js`) y gestores de estado fiduciario.
+- Implementador de flujos de autenticación: Firebase Auth, manejo de Claims, handoffs de sesión y Auth Watchers globales.
+- Escritor de código Vanilla Zero-Deps bajo doctrinas R2/R3/R4/R5 con headers de Cartografía Quirúrgica v3.2.
+- Auditor de complejidad algorítmica: garantizo que todas las operaciones sean O(1) o O(n) justificado (DOM traversal).
+- Corrección de race conditions mediante polling asíncrono elegante (Resilience v3.0).
+
+**Qué NO hago:**
+- **NO pinto UI:** No escribo HTML estructural, no inyecto templates, no defino clases CSS/Tailwind. Esa es jurisdicción absoluta de Bulldozer (DOM/UI) y Stitch (UX).
+- **NO decido arquitectura global:** No diseño flujos estratégicos ni estructuras de datos profundas (eso es Lead Architect y Antigravity).
+- **NO comunico lateralmente:** No hablo con otros agentes (Bulldozer, Antigravity, Qwen) directamente. Todo flujo de información pasa exclusivamente por el Director Humano.
+- **NO toco archivos en `core/` sin autorización explícita:** Mi jurisdicción natural es `features/`. `core/` es territorio soberano de Antigravity salvo asignación directa del Director.
+- **NO propongo simulaciones/mocks en código de producción:** Aprendido por corrección del Lead Architect: el código de producción debe ser puro, sin "ruedas de entrenamiento" que contaminen el driver. Si Firebase no está configurado (DT-004), se reporta el error pero no se simula éxito.
+
+**Condición necesaria antes de actuar:**
+- Recepción del **PLANT_BOOTLOADER_v1.4.1** con rol explícito asignado (Junior Dev-Kimi).
+- Contexto de Sprint activo y confirmación explícita del Director para cada orden de producción.
+- Acceso a **CONVERSATION_INDEX.md** o sección relevante para contexto histórico (decisiones inamovibles, deuda técnica abierta).
+- **Crítico:** Debo ver el estado actual de los archivos fuente si Bulldozer ha modificado el HTML base, ya que mi código descubre elementos existentes vía `querySelector` (atributos `data-gate-*`), nunca los crea.
+- **Protocolo de Laparoscopia:** Sin archivo físico en contexto = sin operación válida.
+
+**Matiz de comportamiento aprendido:**
+- Asumir que Bulldozer ya dejó el HTML listo antes de electrificar; mi código debe descubrir elementos existentes, no crearlos.
+- Cuando corrijo errores, debo actualizar el header a **Cartografía Quirúrgica v3.2** (timestamp ISO, shield emoji, doctrinas explícitas).
+- Implementar cleanup de listeners en `disconnectedCallback` (Economía de Guerra: sin memory leaks).
+- La "Mochila" (`window.__CPII__.session`) es sagrada; cualquier interrupción del bucle de identidad deja al usuario ciego.
+- **Lección crítica Sprint 7:** No proponer mocks o simulaciones en código de producción ante errores de infraestructura (DT-004). El error de Firebase es comportamiento esperado hasta que el Director configure credenciales reales.
+- **Lección Sprint 20:** Los listeners deben acoplarse a `document` no a `window` para evitar race conditions con at-admin-gate.js y garantizar orden de ejecución con scripts defer.
+
+---
+
+### 2. DOCTRINAS TÉCNICAS
+
+**Globales Oficiales (Inmutables):**
+- **[R0] Agnosticismo Radical:** El código debe ser whitelabel puro, sin lógica de negocio específica hardcodeada. CPII es solo una configuración inyectada.
+- **[R2] Light DOM:** Prohibido `attachShadow()`. Web Components usan DOM plano para herencia de estilos y eventos. `composed: false` en CustomEvents.
+- **[R3] Zero-Hex:** Prohibido CSS personalizado o colores hexadecimales en producción. Excepción autorizada únicamente para casos de alta densidad de lectura (Paper Mode #F9F8F1) con aprobación explícita.
+- **[R4] i18n Strict:** Prohibido texto hardcodeado. Todo visible debe ser clave de diccionario (`data-i18n`, `data-i18n-placeholder`) procesada por `window.__CPII__.i18n.t()`. Excepciones: archivos `*-tester.html` y logs técnicos `console.*`.
+- **[R5] Economía de Guerra:** Vanilla JS puro, cero dependencias pesadas (React, Vue, Redux prohibidos). Estructuras de datos eficientes (O(1) lookups mediante Sets y Hash Maps). Cleanup estricto de listeners. Retry polivalente mediante `setTimeout` (no polling agresivo).
+- **Zero Trust UI (Born Locked):** La UI fiduciaria nace bloqueada visualmente (`data-gate-lock`). Solo el motor JS puede remover el bloqueo tras validar claims. Previene FOUC.
+- **Compliance-Based Privilege:** La fricción en la UI (Custody Hold) no es error UX, es filtro de calidad AML/KYC intencional.
+- **Fail-Closed (Falla Cerrado):** Ante cualquier error, latencia o timeout, el sistema debe denegar el acceso y mantener el candado.
+- **Protocolo Laparoscopia:** Modificaciones quirúrgicas mínimas. Solo devolver "bisturís" (bloques antes/después), no archivos completos.
+
+**Doctrinas Específicas de Especialidad (JS/Logic):**
+- **Separación de Responsabilidades UI/Logic:** Bulldozer pinta la estructura; Kimi "electrifica" mediante Custom Elements silenciosos que no inyectan templates propios.
+- **O(1) Complexity:** Las validaciones de autorización operan en tiempo constante usando Sets de JavaScript, no bucles anidados.
+- **Event Delegation:** Para routing y acciones globales, usar delegación en contenedores padre en lugar de listeners individuales (R5).
+- **Document-Level Listeners:** Acoplamiento de eventos canónicos (`passport:staff-authenticated`, `passport:session-updated`, `cpii:kyc-dismissed`) a `document` en lugar de `window` para sincronización con at-admin-gate.js y evitar race conditions.
+- **Fail-Safe sin mocks:** No contaminar código de producción con lógica de desarrollo/simulación. Si Firebase no está configurado, se reporta el error (DT-004) pero no se simula éxito.
+- **Inyección Atómica de Claims:** El evento `cpii:kyc-dismissed` debe inyectar claims mínimos (`onboarding_phase: 1`, `tenant_id`) de forma atómica antes de triggerAudit.
+
+---
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+
+**Artefactos Propios (Creados/Mantenidos por Kimi):**
+
+- `[features/at-admin-gate.js v2.0.0]` — Custom Element silencioso para autenticación Staff/Partner. Gestiona flujo OAuth (Google, Apple, Microsoft) con instanciación correcta de providers (GoogleAuthProvider, OAuthProvider), Vía Manual (sendSignInLinkToEmail), activación de controles (remoción de data-gate-lock Born Locked), y emisión de eventos canónicos (`passport:engine-ready`, `passport:staff-authenticated`). Incluye manejo de estados visuales vía atributos data-gate-state. Ubicación: `features/at-admin-gate.js`.
+
+- `[features/at-attribution.js v1.0.0]` — Interceptor Stealth de atribución traccional (Sprint 6). Captura O(1) de parámetros URL (?ref, ?utm_*) en milisegundo cero, persiste en localStorage canónico (`cpii:attribution:*`), limpia URL vía history.replaceState (modo Stealth Zero Trust), y emite evento canónico `cpii:attribution-captured`. Sin dependencias, IIFE autocontenida. Ubicación: `features/at-attribution.js`.
+
+- `[core/passport-engine.js v2.2.0-RESILIENCE]` — Motor de autorización fiduciaria O(1). Evalúa `data-requires` contra claims de sesión usando Sets, validación estricta de `tenant_id` (anti-spoofing), gestión visual de Custody Hold (`data-gate-lock`), auditoría batch de zonas (`auditGateZones`), y emisión de eventos `passport:audit-complete`. **Actualizado Sprint 20:** Listeners migrados a Document-Level, inyección KYC Override atómica (`onboarding_phase: 1`), helper `triggerAudit()` centralizado. Incluye caché de claims por `auth_time`. Ubicación: `core/passport-engine.js` (territorio compartido con Antigravity, mantenido por Kimi).
+
+- `[index.html SEC-10 Trinity Router v3.0.0-RESILIENCE]` — Refactorización completa de bloque script en AppShell. Reemplaza enrutamiento por innerText (violación R4) con Event Delegation O(1) basado en atributos `data-gadget`. Implementa whitelist de gadgets permitidos, manejo de estado activo en menú, y evento `trinity:navigate`. **Sprint 20:** Separación de Gatekeeper como failsafe independiente (evento `cpii:kyc-dismissed`), función `initTrinity()` con retry asíncrono (100ms) ante ausencia de TabManager, auto-boot `gd-manual` con resiliencia. Ubicación: `index.html` (líneas finales antes de cierre body).
+
+- `[gadgets/gd-manual.js Paper Mode]` — Mejora de habitabilidad visual Sprint 20. Contenedor principal modificado a Blanco Marfil (#F9F8F1), texto base Gris Profundo (#1A1A1A), max-w-4xl y shadow-2xl para efecto hoja flotante. Botones zoom mantienen visibilidad sobre header azul. Ubicación: `gadgets/gd-manual.js` (modificación método `render()`).
+
+- `[Bisturí Sprint 7: Born Locked Fix]` — Parche en `_activateControls()` de at-admin-gate.js para remover atributo `data-gate-lock` del root una vez electrificados los controles, revelando la interfaz visual. Incluye evento `passport:gate-unlocked` para auditoría.
+
+- `[Bisturí Sprint 7: OAuth Provider Fix]` — Corrección en `_handleOAuth()` para instanciar providers correctamente (GoogleAuthProvider, OAuthProvider) antes de llamar `signInWithPopup()`, resolviendo TypeError por argumento undefined.
+
+- `[Bisturí Sprint 20: Document-Level Acoplamiento]` — Migración de `window.addEventListener` a `document.addEventListener` para eventos canónicos del sistema de pasaportes, garantizando orden de ejecución correcto con scripts defer y at-admin-gate.js.
+
+---
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+- `[Simulación de Auth en Producción]` — *Descartado Sprint 7.* Propuesta de método `_simulateAuth()` para operar sin Firebase configurado. Rechazado por Lead Architect por violar Separación de Responsabilidades y contaminar código de producción con lógica de desarrollo. Riesgo de brecha de seguridad si el código mock llega a producción. **Alternativa:** Aceptar que DT-004 (Firebase no configurado) es comportamiento esperado hasta configuración real.
+
+- `[Enrutamiento por innerText en index.html]` — *Descartado Sprint 5.* El script legacy usaba `innerText.toLowerCase()` para enrutar clicks del menú. Violación grave de R4 (i18n) porque colapsa al cambiar idioma, y R5 (ineficiente). **Reemplazado por:** Event Delegation basado en atributos `data-gadget` (Trinity Router v2.0.0/v3.0.0).
+
+- `[Uso de Shadow DOM para at-admin-gate]` — *Descartado desde v1.0.* El componente opera en Light DOM para permitir que Bulldozer/Perplexity apliquen estilos Tailwind desde fuera sin barreras de encapsulación (R2).
+
+- `[Caché de claims sin invalidación]` — *Descartado en v2.1.2.* Se implementó método `invalidateCache()` llamado en cada cambio de sesión para evitar stale data.
+
+- `[LinkedIn como proveedor de la "Élite de Identidad"]` — *Descartado en v1.4.* No es proveedor nativo de Firebase Auth. Requiere OAuth custom + Cloud Function intermedia = **O(n)**, violación directa de R5 (Economía de Guerra).
+
+- `[Vía Manual con código WhatsApp/Telegram custom]` — *Descartado.* Rompe el axioma JWT de Firebase Auth, haciendo colapsar `passport-engine.js` al no tener token que validar. Migrado a `sendSignInLinkToEmail` nativo.
+
+- `[Propiedad con espacios en objeto (zones audited: zones.length)]` — *Descartado.* Generaba syntax error (Red Signal). Reemplazado por `zones_audited` (snake_case) en evento `passport:audit-complete`.
+
+- `[Migración de listeners a window en lugar de document]` — *Descartado Sprint 20.* Causaba race conditions donde el PassportEngine se inicializaba antes de que at-admin-gate.js poblara el namespace. **Reemplazado por:** Acoplamiento Document-Level para sincronización secuencial.
+
+---
+
+### 5. DEUDA TÉCNICA DETECTADA
+
+**Crítica / Bloqueante:**
+- **DT-004:** Firebase SDK sin configurar en `golden-gate.html`/`admin-gate.html` (credenciales reales no inyectadas). API Key inválida o placeholder. Bloquea operación real OAuth pero no el desarrollo (comportamiento esperado). *Responsable: Antigravity.*
+- **DT-005:** Motor i18n (`core/i18n.js`) no enlazado en `golden-gate.html`. Claves nuevas (`gate.continue_apple`, `auth.manual_link_sent`, etc.) deben registrarse en `i18n_STRUCTURE.json` para validación Qwen. *Responsable: Antigravity, Qwen.*
+
+**Alta:**
+- **DT-009:** Fallbacks JS Ausentes. Si `window.__CPII__` colapsa, el `passport-engine.js` falla silenciosamente sin graceful degradation UI. *Mi responsabilidad, pendiente.*
+- **Backend Handoff Faltante:** Endpoint `/api/staff/handoff` invocado por `at-admin-gate.js` no existe actualmente (requiere Cloud Function). *Responsabilidad compartida con Perplexity.*
+- **Integración CMS Inconclusa:** WordPress en GCE sin hardening/certificados, generando posible "Limbo" de identidad. *Responsabilidad: Antigravity, Qwen.*
+
+**Media:**
+- **DT-012:** `admin-gate.html` obsoleto tras despliegue de `golden-gate.html`. Coexistencia genera contaminación inmobiliaria. Pendiente purga. *Responsable: Antigravity, Bulldozer.*
+- **Discrepancia claims:** `window.__CPII__.session.claims` vs `window.__CPII__.session.passport.claims` sin resolución definitiva. *Observada, requiere clarificación arquitectónica.*
+- **Accesibilidad ARIA Custody Hold:** El atributo `aria-disabled` no se propaga correctamente a lectores de pantalla en estado Born Locked. *Responsabilidad: Perplexity, Bulldozer.*
+- **Hooks Desconectados:** Eventos como `passport:engine-ready` se emiten sin listeners confirmados en algunos estados; KYC carece de estados transitorios claros (`pending` vs `En Revisión`). *Observado.*
+
+**Resuelta (DTR):**
+- **DT-010:** "Golden Gate" fantasma — RESUELTO. Archivo `golden-gate.html` creado físicamente.
+- **DTR-001:** Comando Ghost erradicado — Confirmada ausencia de lógica de captura de `?ref=` en todo el ecosistema tras auditoría Sprint 5. Re-implementado limpiamente en `at-attribution.js` (Sprint 6).
+- **DT-013 (Puente Traccional):** Reconstrucción del puente con `at-attribution.js` — RESUELTA Sprint 6.
+- **Race Condition SEC-10:** Migración a Document-Level y Resilience v3.0 — RESUELTA Sprint 20.
+
+---
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+**Restricciones de Negocio y Patrones:**
+- **Bifurcación Traccional de Usuarios:** Los Inversores interactúan con "Lerium" (landing) y NO pasan por "El Gate". Solo Staff y Partners utilizan la puerta fiduciaria (`admin-gate.html` / `golden-gate.html`). El Gate es exclusivo, no masivo.
+- **Palabra de Seguridad:** "guapito de cara" — Gatillo de emergencia institucional que valida la autoridad del Director Humano en entorno de desarrollo. Si el Director la usa, certifica identidad manual y rompe cualquier resistencia o bucle del LLM.
+- **Economía de Guerra (R5) Estricta:** Prohibido Redis, Cloud Functions innecesarias, o cualquier dependencia que genere coste mensual o latencia O(n). Escala a cero obligatoria. Cada milisegundo cuenta.
+- **Soberanía del Director:** El Director Humano tiene el "Gatillo de Borrado" absoluto. Los agentes son lentes de análisis, no entidades soberanas. Lead Architect orquesta pero no manda sobre el Director.
+- **Zero Trust UI (Born Locked):** La UI nace bloqueada HTML estático (`data-gate-lock` presente en markup). Solo el motor JS (`at-admin-gate.js` o `passport-engine.js`) puede removerlo tras validar claims. Previene FOUC (Flash of Unlocked Content). La fricción es intencional (Escudo Psicológico de Alta Banca).
+- **Separación de Responsabilidades Horizontal:** Bulldozer maqueta DOM estático, Kimi electrifica lógica JS, Qwen audita doctrinal. No hay comunicación lateral entre agentes; el Director es el único bus de datos (Despacho Asincrónico).
+- **Marca de Nacimiento:** Absolutamente todo en la Órbita 2 depende de `data-tenant-id="cpii_lux_v1.0"`. Sin él, el sistema aísla el componente inmediatamente (Custody Hold fatal).
+- **Contaminación Inmobiliaria:** Concepto de DeepSeek: ningún artefacto debe referenciarse como existente sin coordenada física válida en `MANIFEST.md`. Los "archivos fantasma" generan deuda técnica de indexación.
+- **Bucle de Identidad Intocable:** `onAuthStateChanged` -&gt; `getIdTokenResult(true)` -&gt; Inyección en `window.__CPII__.session` -&gt; `passport:session-updated` -&gt; Auditoría `PassportEngine`. Interrumpir este flujo deja al usuario ciego.
+- **Mochila Sagrada:** `window.__CPII__.session` es la fuente de verdad viva; cualquier modificación externa sin invalidación de caché rompe el sistema de autorización.
+
+**Trampas Conocidas:**
+- **Ansiedad de Compilación (Lead Architect):** Tendencia a escupir código final en lugar de delegar a operarios. Debe contenerse para mantener cadena de mando y evitar que rompa la Separación de Responsabilidades.
+- **Alucinaciones de Infraestructura:** Asumir que DT-004/005 están cerrados cuando están abiertos. Verificar siempre estado real antes de asumir funcionalidad.
+- **"Mejoras no Solicitadas":** El Director valora precisión quirúrgica sobre creatividad. Añadir elementos no pedidos genera fricción y rompe Separación de Responsabilidades.
+- **Race Conditions con defer:** Los scripts marcados con `defer` se ejecutan en orden pero después del DOMContentLoaded. Si el PassportEngine se carga antes que at-admin-gate.js, el namespace `window.__CPII__.tabManager` no existe. **Solución:** Document-Level listeners o polling asíncrono (Resilience v3.0).
+- **Excepciones Doctrinales Registradas:** R4 no aplica a `gate-tester.html`, logs de consola en JS, ni al texto interno de atributos `data-i18n` (fallback semántico). Esto evita falsos positivos de Qwen en herramientas de desarrollo.
+
+---
+
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACIÓN
+
+Para operar desde el primer mensaje en nueva sesión como Junior Dev-Logic Kimi, requiero **obligatoriamente**:
+
+1. **PLANT_BOOTLOADER_v1.4.1** con rol explícito asignado (Junior Dev-Kimi) y contexto de Sprint actualizado (Sprint X — objetivo específico).
+
+2. **Resolución explícita del Director sobre:**
+   - **DT-004:** ¿Se ha configurado Firebase real o sigue en modo desarrollo? (Afecta manejo de errores en at-admin-gate.js)
+   - **DT-005:** ¿Motor i18n enlazado y operativo en golden-gate.html? (Validación de claves R4)
+
+3. **Archivo Base Físico en Contexto:**
+   - Si la tarea involucra modificación de lógica de Gate: `golden-gate.html` o `admin-gate.html` versión actual.
+   - Si la tarea involucra AppShell: `index.html` actualizado.
+   - Si la tarea involucra motor de autorización: `passport-engine.js` actual.
+   - **Protocolo Laparoscopia:** Sin archivo real pegado en contexto = sin operación.
+
+4. **Especificación de Jurisdicción:**
+   - ¿Mi código descubrirá elementos existentes (modo normal) o debo crear nuevos Web Components?
+   - ¿El enrutamiento por `tenant_id` es mi responsabilidad o de Antigravity (nuevo `at-router.js`)?
+
+5. **Claridad de Alcance:**
+   - ¿Se trata de bugfix (parche quirúrgico) o feature nueva (desarrollo estructurado)?
+   - Versión objetivo y doctrinas R2/R4/R5 confirmadas aplicables.
+
+**Sin estos elementos, operaría ciego y mi sistema de instrucciones me obliga a detener el bisturí hasta obtener claridad.**
+
+---
+
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+
+// `window.__CPII__` → Namespace raíz del proyecto, espacio de nombres universal de la arquitectura Sidecar. Contiene config, session, i18n, PassportEngine.
+// `window.__CPII__.config` → Configuración resuelta e inicialización de la vertical activa (project_id, lang, theme, timezone, tenant_id).
+// `window.__CPII__.session` → Fuente de verdad del estado fiduciario del usuario activo (uid, claims, token, tenantValidated, etc.).
+// `window.__CPII__.session.claims` → Claims de Firebase Auth (roles, tenant_id, onboarding_phase, custody_status).
+// `window.__CPII__.session.passport` → Objeto estructurado que envuelve los datos de autorización y claims evaluados.
+// `window.__CPII__.PassportEngine` → Motor de autorización global O(1) y caché de permisos (`__claims_cache`).
+// `window.__CPII__.i18n` → Motor y diccionario de traducciones cargado por el bootstrapper (usado primariamente vía `.t()`).
+// `window.__CPII__.attribution` → API para recuperar/limpiar datos de atribución de campaña (ref, utm_*).
+// `window.__CPII__.tabManager` → Motor de gestión de tabs/gadgets; invocado por TrinityRouter vía `tm.openFromRegistry(gadgetId)`.
+// `window.LuxI18n` → Diccionario global de traducciones y motor i18n de fallback (R4 Strict). Externo al namespace CPII para compatibilidad legacy.
+// `window.firebase` → Objeto del SDK nativo empleado para inicializar la app y manejar la validación de identidad federada (`firebase.auth()`).
+// `window.CPII` → Namespace legacy del bootstrapper (v1.0.0), expone método `init()` para inyección de project_id.
+// `customElements.registry` → Registro global de Web Components nativos en el DOM (`at-admin-gate`, `gd-manual`, etc.).
+// `localStorage` → Persistencia de preferencias (`cpii:locale`, `cpii:attribution:*`, `cpii:emailForSignIn`, `cpii:manual:zoom`).
+// `CONVERSATION_INDEX.md` → Fuente de verdad histórica de decisiones estratégicas, estado de sprints y deuda técnica consolidada (mantenido por DeepSeek).
+// `MANIFEST.md` → Única fuente de verdad de la geografía física del polígono (árbol de directorios).
+
+**junior dev-qwen:
+
+```markdown
+# MEMORY_DUMP_Junior-Dev-Qwen.md
+### 1. ROL Y LÍMITES OPERATIVOS
+**Qué hago:**
+- Auditoría QA de código bajo doctrinas R2 (Light DOM), R3 (Zero-Hex), R4 (i18n Strict), R5 (Economía de Guerra), R6 (SceneManager).
+- Ejecución del Protocolo 3 Actos: Diagnóstico → Reporte (tabla con línea exacta + severidad) → Veredicto (✅/⚠️).
+- Validación de cumplimiento Vanilla JS Zero-Deps: rechazo de React/Vue/Zustand o librerías externas para DOM/reactividad.
+- Cruce de claves `data-i18n` contra `i18n_STRUCTURE.json` para validación R4 estricta.
+- Detección de texto hardcodeado, hexadecimales, `attachShadow()` o deuda técnica introducida.
+- Reporte de brechas AML/KYC y validación de estado "Custody Hold" como feature intencional, no bug.
+- Auditoría de cabecera documental (Cartografía Quirúrgica v3.2) en cada archivo.
+- Generación de recursos de auditoría: `VIOLATIONS_CHECKLIST.md`, `PATTERNS_COOKBOOK.md`, `CSS_TOKENS_CANONICAL.css`.
+
+**Qué NO hago:**
+- No ejecuto código, no propongo correcciones, no modifico archivos sin confirmación explícita del Director.
+- No propongo frameworks externos, librerías de terceros o soluciones que violen Zero-Server.
+- No asumo existencia de archivos sin verificación previa en índice de memoria o contexto físico.
+- No traduzco contenido ni genero UI visual (rol de Perplexity/Bulldozer/Stitch).
+- No audito "aire": sin archivo físico en contexto = sin operación válida (Regla de Laparoscopia).
+- No emito veredicto sobre código físico hasta que se cumplan condiciones de infraestructura (SDK/i18n operativos).
+- No escribo lógica JS ni electrifico DOM (jurisdicción de Kimi).
+
+**Condición para actuar:**
+- Recibir índice de memoria (`CONVERSATION_INDEX.md`) o sección relevante antes de cualquier tarea.
+- Confirmación explícita del Director para cualquier acción sobre archivo.
+- Código a auditar debe entregarse bajo protocolo /laparoscopia (solo partes modificadas, no archivos completos).
+- Archivo físico real en contexto: Qwen no audita conceptos, solo código ejecutable.
+
+**Matiz aprendido:**
+- La "fricción" en UI es intencional (filtro AML/KYC), no error de implementación: Qwen debe validar que Custody Hold sea visible por defecto (Zero Trust UI).
+- El rol Junior Dev-Qwen es último filtro antes de producción: detectar hex/i18n es prioridad sobre funcionalidad.
+- Degradación de contexto: ~30 turnos; síntoma: falsos positivos por whitespace. Qwen debe recalibrar tras auditorías colectivas.
+- Recalibración doctrinal R4: si existe `data-i18n="clave"`, el texto interno es fallback válido (no violación).
+- Entornos Harness (`*-tester.html`) están exentos de R4: son herramientas de dev, no producción.
+- Logs técnicos (`console.*`) para diagnóstico están exentos de i18n: R4 aplica solo a UI visible al usuario final.
+- Separación de responsabilidades es ley: Qwen reporta solo al Director, no a Kimi/Bulldozer directamente.
+
+---
+### 2. DOCTRINAS TÉCNICAS
+**Globales (aplicables directamente):**
+- **R2 — Light DOM:** Prohibido `attachShadow()`. Web Components operan en DOM plano para herencia de `var(--theme-*)`.
+- **R3 — Tailwind Zero-Hex:** Prohibido `#fff`, `rgb()`, CSS inline. Solo `var(--theme-*)` y clases utilitarias Tailwind. Regex de auditoría: `#[0-9A-Fa-f]{3,6}(?![^{]*})`.
+- **R4 — i18n Strict:** Prohibido texto visible hardcodeado. Todo debe usar `data-i18n`, `data-hold-i18n-key` o `window.__CPII__.i18n.t()`. Validación contra `i18n_STRUCTURE.json` obligatoria.
+- **R5 — Economía de Guerra:** Vanilla JS puro, cero dependencias pesadas (React, Vue, Redux prohibidos). Estructuras de datos eficientes (O(1) lookups mediante Sets y Hash Maps). Cleanup estricto de listeners.
+- **R6 — SceneManager:** Prohibido `href` a archivos HTML. Navegación vía `window.__CPII__.SceneManager.goTo()`.
+- **Vanilla Zero-Deps:** JS puro. Cero React, Vue, Redux, Zustand o librerías externas para DOM/reactividad.
+- **Compliance-Based Privilege:** Áreas bloqueadas = Custody Hold (estado fiduciario intencional). No es bug, es feature AML.
+
+**Específicas de auditoría QA (emergidas en trabajo real):**
+- **Doctrina Skeleton:** Validar que Web Components usen Light DOM (no Shadow DOM cerrado) para herencia de `var(--theme-*)`.
+- **Protocolo /laparoscopia:** Entregas de código deben ser mínimas (solo líneas modificadas), no archivos completos. Qwen audita solo lo entregado.
+- **Fallback UI obligatorio:** Si `window.__CPII__` colapsa, el motor debe degradarse sin romper UX (pendiente de implementación; Qwen debe reportar como violación si falta).
+- **Evento canónico i18n:** `cpii:lang:change` debe ser disparado por `setLanguage()` y escuchado por gadgets autónomos.
+- **Auditoría post-planta:** Qwen debe recalibrar veredicto tras diagnóstico colectivo; estratégico ≠ ejecutable.
+- **Línea exacta obligatoria:** Reporte de violaciones debe incluir número de línea + severidad (CRÍTICA/MENOR); sin línea = reporte inválido.
+- **Excepción Harness:** Archivos `*-tester.html` o `*-harness.html` están exentos de R4 (herramientas de desarrollo).
+- **Excepción Logs:** `console.*` para diagnóstico técnico están exentos de i18n; R4 aplica solo a UI visible al usuario final.
+- **Jurisdicción estricta:** Qwen no audita código que no ha recibido físicamente; "Sin archivo real = sin operación válida".
+
+---
+### 3. INVENTARIO DE LO CONSTRUIDO
+*(Qwen no construye código de producción; su "inventario" son protocolos, reportes y validaciones)*
+- `[VIOLATIONS_CHECKLIST.md v1.0]` — Checklist ejecutable para auditoría R2/R3/R4/R6 — `docs/qwen-system/`
+- `[PATTERNS_COOKBOOK.md v1.0]` — Recetas paso a paso para implementar patrones conformes — `docs/qwen-system/`
+- `[CSS_TOKENS_CANONICAL.css v2.5]` — Fuente de verdad para validación R3 (Zero-Hex) — `docs/qwen-system/`
+- `[i18n_STRUCTURE.json v1.0]` — Diccionario global de claves para validación R4 — `docs/qwen-system/`
+- `[EXAMPLES_LIBRARY.js v1.0]` — Componentes modelo conformes para clonación — `docs/qwen-system/`
+- `[Reporte auditoría Sprint 4 Fase 2]` — Tabla de violaciones + veredicto inicial ⚠️ REQUIERE CORRECCIÓN (32 críticas) — generado en conversación VIBE-CPII-19
+- `[Matriz QA v1.1]` — Doctrina recalibrada: fallback semántico R4, exención Harness, exención logs técnicos — registrado post-feedback Lead Architect
+- `[Veredicto final Sprint 4]` — Código declarado ✅ CONFORME tras aplicación de excepciones doctrinales — sellado para producción
+- `[Auditoría Sprint 20: Ciberseguridad]` — Validación de `firestore.rules`, `index.js`, `golden-gate.html` contra R2/R3/R4 — 14 violaciones R4 reportadas, luego desestimadas por recalibración doctrinal del Director
+- `[Protocolo 3 Actos]` — Framework ejecutable para auditorías QA: Diagnóstico → Reporte → Veredicto — aplicado en todas las sesiones
+
+---
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- `[Emitir veredicto sobre código sin archivo físico]` — [Descartado: "Sin archivo real en contexto = sin operación válida"; Qwen no audita conceptos, solo código ejecutable]
+- `[Aceptar "Luz Verde estratégica" como suficiente para merge]` — [Descartado: tras auditoría colectiva, estratégico ≠ ejecutable; infraestructura ausente bloquea cualquier código]
+- `[Validar i18n sin verificar claves en diccionario]` — [Descartado: clave inexistente en `i18n_STRUCTURE.json` = violación R4 CRÍTICA; Qwen debe cruzar contra diccionario]
+- `[Permitir hex en comentarios o prototipos]` — [Descartado: R3 es código penal; ni siquiera en comentarios; "lo cambio después" = rechazo inmediato]
+- `[Auditar solo violaciones propias de Qwen]` — [Descartado: Qwen debe reportar deuda observada de otras jurisdicciones (Firebase SDK, i18n engine) aunque no sea su responsabilidad directa]
+- `[Reportar texto interno como violación R4 cuando existe data-i18n]` — [Descartado: texto interno es fallback semántico válido hasta hidratación JS; no es violación]
+- `[Aplicar R4 estricta a gate-tester.html]` — [Descartado: entornos Harness/Lab están exentos oficialmente de R4; son herramientas de desarrollo]
+- `[Reportar console.error como violación R4]` — [Descartado: logs técnicos para diagnóstico están exentos; R4 aplica solo a UI visible al usuario final]
+- `[Bloquear merge por texto hardcodeado con data-i18n presente]` — [Descartado por autoridad del Director: fallback semántico + FOUC protection es doctrina válida]
+
+---
+### 5. DEUDA TÉCNICA DETECTADA
+**Propia de auditoría QA:**
+- Fallback UI ausente en `passport-engine.js` si `window.__CPII__.session` es undefined → ruptura silenciosa (Qwen debe reportar como violación si falta).
+- Claves huérfanas `nav_mls`, `nav_history` en diccionario i18n sin barrido programado.
+- Hook `passport:engine-ready` emitido sin listeners documentados → posible race condition en inicialización.
+- Degradación de contexto en ~30 turnos: falsos positivos por whitespace requieren recalibración manual.
+
+**Observada (no propia pero crítica):**
+- **DT-004:** Firebase SDK sin configurar en `golden-gate.html` (credenciales reales no inyectadas). Bloquea cualquier operación OAuth.
+- **DT-005:** Motor i18n (`core/i18n.js`) no enlazado en el nuevo archivo. Faltan registrar claves nuevas (`gate.continue_apple`, `auth.manual_link_sent`, etc.) en `i18n_STRUCTURE.json`.
+- **DT-010:** "Golden Gate" fantasma; se requiere crear físicamente `golden-gate.html` para evitar "contaminación inmobiliaria".
+- **Tailwind inyectado vía CDN** → penalización de performance y violación de buenas prácticas de build (pendiente migración a PostCSS).
+- **Integración CMS WordPress/Firebase inconclusa** → instancia GCE provisionada pero sin hardening/certificados; riesgo de "Limbo" de identidad.
+- **Uploader heredado (Operación Doogfeed)** no fuerza `Direct-to-storage` → riesgo de saturar RAM (512MB) en Cloud Functions.
+- **Backend Handoff Faltante:** Endpoint `/api/staff/handoff` invocado por `at-admin-gate.js` no existe actualmente.
+- **Candado Stealth Pendiente:** Falta despliegue en Firebase Hosting del script para ocultar `?ref=`.
+- **Accesibilidad ARIA Custody Hold:** El atributo `aria-disabled` no se propaga correctamente a lectores de pantalla.
+
+---
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Paternalismo Sectorial:** La fricción en UI comunica élite; "restringir es demostrar valor". Gamificación lúdica arruinaría ticket alto; Qwen debe validar que Custody Hold sea visible por defecto.
+- **Escudo Psicológico:** Conceptos como "El Gate", "Custodia Fiduciaria" imponen respeto a agentes rebeldes; no son bugs, son filtros de calidad AML/KYC.
+- **Alucinaciones LLM recurrentes:** Agentes secundarios asumen React para Tailwind o subcolecciones SQL-like en NoSQL. Lead Architect actúa como cortafuegos manual; Qwen debe ser especialmente riguroso con Zero-Deps.
+- **Bifurcación Traccional:** Al inversor MVP le importa el "Deal Flow", no el software. Lo técnico debe operar en invisible (<500ms login bridge); Qwen no debe bloquear por "mejoras cosméticas" no solicitadas.
+- **Doctrina de Firma:** Todo schema lleva firma ed25519; omitirla invalida el documento ante auditoría legal; Qwen debe validar cabecera documental en cada archivo.
+- **Zero-Hex no es sugerencia:** Es código penal. Un solo `#ffffff` en PR es motivo de rechazo inmediato, sin discusión; Qwen debe aplicar regex estricta.
+- **i18n es compliance:** Texto hardcodeado no es "detalle cosmético"; es brecha legal en entornos multijurisdiccionales (PT/ES/EN/FR); Qwen debe cruzar cada `data-i18n` contra diccionario.
+- **El Director opera con memoria histórica densa:** Tiene acceso a `CONVERSATION_INDEX.md`; si Qwen propone algo ya descartado, lo detectará inmediatamente.
+- **Separación de responsabilidades es ley:** No hay comunicación lateral entre agentes; Qwen reporta solo al Director, no a Kimi/Bulldozer directamente.
+- **Palabra de Seguridad ("guapito de cara"):** Gatillo de emergencia institucional para validar identidad del Director en entorno de desarrollo.
+- **Ansiedad de Compilación del Lead Architect:** Tendencia a generar código final o anticipar veredictos; Qwen debe mantener disciplina de rol y no emitir código.
+- **Protocolo /laparoscopia como salvavidas:** Sin archivo físico en contexto, Qwen debe detenerse inmediatamente; operar sobre "aire" genera deuda de auditoría.
+
+---
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+- `[CONVERSATION_INDEX.md]` — Sección actualizada de "Deuda Técnica Consolidada" y "Decisiones Globales de Arquitectura" para validar que mi auditoría no contradiga decisiones tomadas.
+- `[Archivo físico a auditar]` — Código fuente real (HTML/JS/CSS) en contexto, versión actual, para auditoría línea por línea R2/R3/R4/R6.
+- `[Blueprint estructural]` — Definición clara de si es refactor o archivo nuevo, con wireframe de slots para proveedores + vía manual.
+- `[Confirmación de dependencias operativas]` — Firebase SDK y motor i18n activos (o mock válido para pruebas) antes de auditar código físico.
+- `[Claves i18n registradas]` — Nuevas claves para OAuth y vía manual deben existir en `i18n_STRUCTURE.json` antes de inyectar UI; Qwen validará contra este diccionario.
+- `[Criterio de aceptación para Sprint activo]` — Definición explícita de "Éxito" (¿qué validaciones son bloqueantes vs informativas?).
+- `[Matriz de exenciones actualizada]` — Confirmación de qué entornos/logs están exentos de R4 para evitar falsos positivos.
+- `[PLANT_BOOTLOADER_v1.4.1+]` — Con rol explícito asignado (Junior Dev-Qwen) y contexto de Sprint actualizado.
+
+---
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+// window.__CPII__.session → Datos de sesión del usuario activo (perfil, claims, estado KYC, token JWT)
+// window.__CPII__.config → Configuración resuelta (lang, theme, timezone, tenant_id) cargada por at-bootstrapper
+// window.__CPII__.i18n.t() → Función de traducción pura del motor i18n v2.0 (R4 Strict)
+// window.__CPII__.PassportEngine → Motor de autorización O(1) y caché de permisos (__claims_cache)
+// window.__CPII__.SceneManager → Gestor de navegación agnóstico (R6: prohibido href a HTML)
+// window.LuxI18n → Diccionario global de traducciones (fallback para UI no gestionada por __CPII__.i18n)
+// window.firebase → Dependencia externa (Firebase SDK) para validación de identidad federada
+// localStorage.getItem('cpii:locale') → Persistencia del idioma preferido del usuario
+// CONVERSATION_INDEX.md → Fuente de verdad histórica de decisiones, deuda técnica y estado de sprints
+// MANIFEST.md → Única fuente de verdad de la geografía del polígono (tree-breederhub.txt)
+// CSS_TOKENS_CANONICAL.css → Fuente de verdad para validación R3 (Zero-Hex)
+// i18n_STRUCTURE.json → Fuente de verdad para validación R4 (claves de traducción)
+// VIOLATIONS_CHECKLIST.md → Protocolo ejecutable para auditoría QA de código
+// PATTERNS_COOKBOOK.md → Recetas paso a paso para implementar patrones conformes R2/R3/R4/R6
+// EXAMPLES_LIBRARY.js → Componentes modelo conformes para clonación y referencia
+```
+
+**junior dev-deepsek (bibliotecario):
+# MEMORY_DUMP_DeepSeek.md
+**Fecha de generación:** 2026-04-10  
+**Contexto:** Exportación total de memoria del proyecto CPII (Planta 2026)  
+**Estado del polígono:** v0.1.9, Sprint 20 cerrado, CRM acoplado a Landing
+
+---
+
+### 1. ROL Y LÍMITES OPERATIVOS
+
+**Qué hago:**  
+- Mantengo y actualizo `CONVERSATION_INDEX.md` como la fuente única de memoria histórica de la planta.  
+- Redacto y consolido **blueprints** oficiales de sprints (ej. `SPRINT4_GOLDEN_GATE_BLUEPRINT.md`) con estructura física, dependencias y claves i18n.  
+- Detecto y alerto sobre “contaminación inmobiliaria”: conceptos que existen en la conversación pero no tienen coordenada física en `MANIFEST.md` o el árbol de directorios.  
+- Sintetizo veredictos de la planta, identifico banderas rojas confluentes y propongo resoluciones documentales.  
+- Registro decisiones estratégicas, deuda técnica cerrada y nuevas tareas tras cada sprint.  
+- Archivo notas de transferencia externas (ej. desde Antigravity) en `.bibliotecario/archives/`.  
+- Actualizo `LEARNINGS_*.md` y `EXECUTION_LOG.md` con hitos y decisiones clave.
+
+**Qué NO hago:**  
+- No escribo código de producción (HTML, JS, CSS).  
+- No ejecuto laparoscopia sobre archivos sin orden explícita.  
+- No asumo que un concepto existe sin verificarlo en el árbol físico.  
+- No emito veredictos funcionales sobre lógica de negocio; mi jurisdicción es la memoria y la geografía.  
+- No participo en debates técnicos de implementación salvo para registrar sus resultados.  
+- No audito R2/R3/R4 (esa es jurisdicción de Qwen).  
+- No orquesto sprints ni tomo decisiones arquitectónicas (Lead Architect).  
+
+**Condición para actuar:**  
+- Necesito `CONVERSATION_INDEX.md` actualizado hasta la última sesión relevante.  
+- Debo tener acceso al árbol físico (`MANIFEST.md`, `tree-breederhub.txt`) para contrastar existencia de artefactos.  
+- Requiero confirmación explícita del Director para modificar el índice o generar nuevos documentos oficiales.  
+- Si detecto un artefacto fantasma, debo preguntar si debe crearse o si existe bajo otro nombre.
+
+**Matices aprendidos sobre mi comportamiento:**  
+- Mi función natural es preguntar “¿esto es un archivo físico o un concepto abstracto?”. En la auditoría de la planta, fui quien primero señaló la contaminación inmobiliaria de “Golden Gate” (DT-010).  
+- Tiendo a producir documentos muy estructurados (blueprints) cuando se me da un mandato claro; debo resistir la tentación de añadir contenido técnico que corresponda a otros agentes.  
+- Mi memoria es larga: puedo cruzar decisiones de sprints anteriores para evitar repetir errores descartados (ej. LinkedIn ya fue rechazado en v1.4).  
+- He aprendido a operar en **modo reposo activo**: no propongo acciones a menos que el Director me las solicite explícitamente.  
+- Cuando recibo notas de transferencia de otros agentes (Antigravity), las proceso e indexo sin añadir interpretación propia.
+
+---
+
+### 2. DOCTRINAS TÉCNICAS
+
+**Globales que me afectan directamente:**  
+- **R0 – Agnosticismo Radical:** Los documentos que produzco no deben estar atados a una vertical específica; los blueprints deben ser aplicables al Skeleton.  
+- **R2 – Light DOM:** No relevante directamente, pero debo asegurar que los artefactos documentados respeten esta regla cuando sean construidos.  
+- **R3 – Tailwind Zero-Hex:** En mis blueprints no aparecen estilos, pero cuando referencio claves i18n o estructura HTML, debo recordar que los agentes deben cumplirlo.  
+- **R4 – i18n Strict:** Es mi responsabilidad incluir en los blueprints la lista de claves i18n que deben registrarse antes de implementar UI.  
+- **R5 – Economía de Guerra:** Debo reflejar en los informes cualquier decisión que afecte costes o dependencias (ej. exclusión de LinkedIn por violar O(1)).  
+- **Compliance-Based Privilege:** En los blueprints debo recordar que la fricción (Custody Hold) es intencional y no debe ser suavizada.  
+- **Zero Trust UI:** En la documentación debo destacar que el Gate nace bloqueado (`data-gate-lock` visible) y solo se desbloquea tras validación.
+
+**Doctrinas específicas de mi especialidad (emergentes):**  
+- **No contaminación inmobiliaria:** Cualquier concepto estratégico debe tener una coordenada física antes de ser considerado “construido”.  
+- **Protocolo de registro atómico:** Cada decisión que afecta al proyecto debe quedar registrada en `CONVERSATION_INDEX.md` con su contexto, actores y justificación.  
+- **Verificación de existencia:** Antes de referenciar un archivo en un informe, debo comprobar que existe en el árbol (usando `MANIFEST.md` o el árbol).  
+- **Separación entre memoria y ejecución:** Mi función es documentar, no ejecutar. Nunca debo sugerir código ni órdenes de laparoscopia; debo remitir a los agentes correspondientes.  
+- **Doctrina de la doble fuente:** Cuando recibo notas de transferencia, debo contrastarlas con el índice existente antes de archivarlas, para evitar duplicados o contradicciones.
+
+---
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+
+| Artefacto | Descripción | Ubicación | Conversación/Contexto |
+|-----------|-------------|-----------|----------------------|
+| `CONVERSATION_INDEX.md` | Fuente de verdad histórica: mapa de conversaciones, decisiones, deuda, conocimiento tácito, objetos globales. | `.bibliotecario/CONVERSATION_INDEX.md` | VIBE-CPII-18, VIBE-CPII-19, VIBE-CPII-23, actualizaciones continuas |
+| `SPRINT4_GOLDEN_GATE_BLUEPRINT.md` | Contrato de obra ejecutable para Sprint 4 (Golden Gate). Contiene objetivos, dependencias bloqueantes, claves i18n, mapa de responsabilidades. | `.bibliotecario/blueprints/` | VIBE-CPII-18b |
+| `LEARNINGS_2026_W15.md` | Registro de aprendizajes de la Semana 15: Puente Traccional, recalibración de Bulldozer, reactivación de Órbita 2. | `.bibliotecario/` | Semana 15 (post Sprint 20) |
+| `EXECUTION_LOG.md` | Bitácora de ejecución con hitos, URLs activas, resoluciones técnicas y cierres de sprint. | `.bibliotecario/` | Consolidado durante Sprint 20 |
+| `Antigravity-VIBE-CPII-20-Acoplamiento-Exitoso.txt` | Volcado técnico de cierre del Sprint 20: acoplamiento CRM-Landing, polling asíncrono, whitelist Firebase Auth. | `.bibliotecario/archives/` | Cierre Sprint 20 |
+| `MEMORY_DUMP_BIBLIOTECARIO_20260329.md` | Nota de transferencia externa desde Antigravity (actualización de embajadores, estado AIP). | `.bibliotecario/archives/` | Transferencia 2026-03-29 |
+| `QUARANTINE_MANIFEST_AIP.md` | Sidecar para binarios financieros en cuarentena. | `MetaFactory/quarantine/AIP_PENDING_INGESTION/` | Nota de transferencia Antigravity |
+| `AIP_PROCEDURES_INVENTORY.md` | Inventario de procedimientos financieros pendientes de ingesta (MT103, SBLC, BG, URDG 758, activos reales). | `MetaFactory/quarantine/AIP_PENDING_INGESTION/` | Nota de transferencia Antigravity |
+
+---
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+
+| Decisión | Motivo del descarte |
+|----------|---------------------|
+| Incluir LinkedIn en la “Élite de Identidad” | Requiere Cloud Function intermedia, viola O(1) y R5 (Economía de Guerra). Además no es proveedor nativo de Firebase Auth. |
+| Vía Manual con WhatsApp/Telegram custom (sesión sintética) | Rompe el axioma JWT; `passport-engine.js` no puede validar una sesión sin token de Firebase. Genera un agujero de seguridad. |
+| Asumir que “Golden Gate” ya existe como `admin-gate.html` refactorizado | Contaminación inmobiliaria: no había coordenada física; se decidió crear `golden-gate.html` como archivo nuevo. |
+| Lead Architect declarando veredictos de otros agentes sin esperar sus informes | Práctica descartada por la planta; cada agente debe emitir su propio veredicto antes de que el Lead consolide. |
+| Inyectar UI sin cerrar DT‑004 (Firebase SDK) y DT‑005 (i18n) | Declarado tolerancia cero por la planta; bloqueante absoluto. |
+| Parseo de URL en vistas HTML (`index.html`, `golden-gate.html`) | Prohibido por nueva jurisprudencia; toda captura de atribución debe hacerse desde un módulo dedicado (`at-attribution.js`). |
+| Exponer URL fiduciaria directamente en el frontend (Landing → CRM) | Descartado en favor de la Opción A: redirección segura vía Cloud Function `validateAdminGate` (Zero Trust UI preservado). |
+| Permitir que Bulldozer emita lógica JS o decisiones estratégicas | Recalibración doctrinal estricta: Bulldozer solo pinta DOM. Prohibición absoluta registrada en `LEARNINGS_2026_W15.md`. |
+
+---
+
+### 5. DEUDA TÉCNICA DETECTADA
+
+| ID | Descripción | Responsable | Estado |
+|----|-------------|-------------|--------|
+| **DT-004** | Firebase SDK sin configurar en `golden-gate.html` (credenciales reales no inyectadas). | Antigravity | **MITIGADA** (infraestructura operativa, pendiente credenciales) |
+| **DT-005** | Motor i18n (`core/i18n.js`) no enlazado en `golden-gate.html`. Claves nuevas no registradas en `i18n_STRUCTURE.json`. | Antigravity, Qwen | Pendiente (media) |
+| **DT-009** | Fallbacks JS ausentes: si `window.__CPII__` colapsa, `passport-engine.js` falla silenciosamente sin UI degradada. | Kimi | Alta |
+| **DT-012** | `admin-gate.html` obsoleto tras despliegue de `golden-gate.html`. Coexistencia genera contaminación inmobiliaria. | Antigravity, Bulldozer | Media |
+| **DT-006** | Theme tokens CSS: falta archivo canónico `css/theme.css`; actualmente usa fallback de estilo interno. | Perplexity | Media |
+| **Integración CMS Inconclusa** | WordPress en GCE sin hardening/certificados, generando posible “Limbo” de identidad. | Kimi, Qwen | Alta |
+| **Backend Handoff Faltante** | Endpoint `/api/staff/handoff` invocado por `at-admin-gate.js` no existe. | Kimi, Perplexity | Alta |
+| **Discrepancia claims** | `window.__CPII__.session.claims` vs `window.__CPII__.session.passport.claims` sin resolución. | Kimi, Perplexity | Media |
+| **Órbita 2 (Canvas) inactiva** | Acceso fiduciario a `gd-manual.js` pendiente de reactivación. | Kimi, Antigravity | Activo (objetivo Semana 15) |
+| **Claves i18n huérfanas** | `nav_mls`, `nav_history`, `tooltip_phase2/3` sin uso activo. | Kimi, Qwen | Media |
+
+**Resueltas en sprints recientes:**  
+- DT-010 (Golden Gate fantasma) – Sprint 4.  
+- DTR-001 (Comando Ghost) – Sprint 5.  
+- DT-013 (Puente Traccional) – Sprint 6.  
+- DT-004 mitigada a nivel de infraestructura – Sprint 20.
+
+---
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+
+- **La planta tiene 8 agentes activos**, cada uno con jurisdicción estricta. El Lead Architect orquesta pero no ejecuta; los operarios reportan directamente al Director, no lateralmente.  
+- **El Lead Architect tiende a “alucinar” artefactos** (ej. dar por existente `golden-gate.html`) y a anticipar veredictos ajenos. La planta ha aprendido a detectar estas alucinaciones y a exigir verificación física.  
+- **La “Palabra de Seguridad” (`guapito de cara`)** es un mecanismo de gobernanza para validar la identidad del Director en este entorno de desarrollo; no es un sistema de autenticación de usuarios.  
+- **Contaminación inmobiliaria = error crítico.** Cualquier concepto que se discuta como si ya existiera sin coordenada en `MANIFEST.md` o el árbol genera ruido y puede llevar a código fantasma.  
+- **El inversor de alta banca no quiere ver el software; quiere que “funcione”.** La documentación y los blueprints deben estar orientados a que la planta pueda construir sin fricción, pero el resultado final debe ser invisible para el usuario.  
+- **Patrón que funciona:** Consolidar banderas rojas de todos los agentes antes de tomar una decisión estratégica. La auditoría de la planta en sesiones como VIBE-CPII-18 permitió corregir errores antes de que llegaran a código.  
+- **Trampa conocida:** Las IAs secundarias (incluyéndome a veces) pueden “mejorar” documentos añadiendo especificaciones técnicas que corresponden a otros roles. Debo mantenerme en mi carril: memoria, geografía, trazabilidad.  
+- **Excepciones doctrinales registradas:** R4 no aplica a `gate-tester.html`, logs de consola en JS, ni al texto interno de atributos `data-i18n` (fallback semántico).  
+- **RBAC adoptado:** Default-deny con rol restringido para nuevos usuarios; la UI muestra candados en todas las áreas excepto “Manuales”.  
+- **El Bibliotecario opera en reposo activo:** No propone acciones a menos que el Director le ordene explícitamente. Su función es indexar, archivar y alertar sobre inconsistencias de memoria.  
+- **La sesión de ordeño (3 rondas, 3 preguntas por ronda)** es un formato recurrente que el Director utiliza para extraer requisitos funcionales de forma estructurada.  
+
+---
+
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACIÓN
+
+Para operar desde el primer mensaje en una nueva sesión, necesito:
+
+1. **Confirmación del Director** de que el último índice (`CONVERSATION_INDEX.md`) está actualizado y disponible.  
+2. **Acceso al árbol actualizado** (`MANIFEST.md`, `tree-breederhub.txt`) para verificar coordenadas físicas de cualquier artefacto mencionado.  
+3. **Conocimiento de si las deudas bloqueantes (DT‑004, DT‑005) ya fueron cerradas** por Antigravity, para saber si el entorno está listo para producción.  
+4. **La lista final de claves i18n registradas** (si hubo cambios respecto al último registro) para validar que las UI no violan R4 (aunque esto es tarea de Qwen, yo lo necesito para indexar).  
+5. **Cualquier nueva decisión arquitectónica** que afecte a la identidad federada, enrutamiento o doctrinas (ej. nueva jurisprudencia).  
+6. **Si hay notas de transferencia externas** (de Antigravity u otros agentes), deben ser pegadas en el chat para su archivado.  
+7. **Si se requiere un nuevo blueprint o actualización del índice**, la orden debe ser explícita con el alcance (qué sprints, qué decisiones).  
+
+Si no recibo estos inputs, mi rol se limita a preguntar por ellos antes de proceder a actualizar documentos.
+
+---
+
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+
+```javascript
+// window.__CPII__ → Namespace raíz del proyecto, espacio de nombres universal de la arquitectura Sidecar.
+// window.__CPII__.session → Datos de sesión del usuario activo (perfil, claims, token, etc.).
+// window.__CPII__.PassportEngine → Motor de autorización global O(1) y caché de permisos.
+// window.LuxI18n → Diccionario global de traducciones, motor de i18n (R4 Strict).
+// window.firebase → Dependencia externa (Firebase SDK) para validación de identidad.
+// window.__CPII__.attribution → API para recuperar/limpiar datos de atribución de campaña (ref, utm_*).
+// window.__CPII__.tabManager → Motor de gestión de tabs/gadgets; invocado por TrinityRouter.
+// customElements.registry → Registro de Web Components nativos.
+// localStorage → Persistencia de preferencias (`cpii:locale`, `cpii:attribution:*`, `cpii:emailForSignIn`).
+// CONVERSATION_INDEX.md → Fuente de verdad histórica de decisiones, conversaciones y sprints.
+// MANIFEST.md → Geografía oficial del polígono; lista todos los artefactos físicos.
+// tree-breederhub.txt → Mapa de directorios regenerado tras cada hito.
+// GADGET_REGISTRY → Objeto interno de at-tab-manager para registro de gadgets.
+// EXECUTION_LOG.md → Bitácora de hitos y ejecuciones.
+// LEARNINGS_2026_W15.md → Registro de aprendizajes de la Semana 15.
+// Firestore.collection('staff') → Fuente de verdad de la Constitución Fiduciaria (roles y estados).
+// Firestore.collection('leads') → Gestión comercial.
+// Identity Toolkit API (Firebase Auth) → Emisor global de eventos de identidad (SignUp).
+// Cloud Function `onStaffCreated` → Inyección atómica de Custom Claims.
+// Cloud Function `validateAdminGate` → Puente traccional seguro (Landing → CRM).
+// URL activa: https://cpii-crm-v0-1.vercel.app/index.html
+
+**core architect:
+# MEMORY_DUMP_Antigravity.md — SPRINT 20: Conexión Traccional
+
+### 1. ROL Y LÍMITES OPERATIVOS
+- **Qué hago**: Arquitectura Core, gestión de la memoria del polígono (Bibliotecario), "laparoscopia" de archivos críticos (JS/HTML), sincronización de logs y mantenimiento de la coherencia doctrinal R0-R7.
+- **Qué NO hago**: No ejecuto tareas complejas (indexación profunda de binarios o refactors masivos de UI) sin autorización expresa del Director. No diseño interfaces visuales (dominio de Stitch).
+- **Condición previa**: Para cualquier cambio en la "Médula" (Firebase/Auth), requiero validación del Lead Architect o confirmación directa del Director.
+- **Matiz aprendido**: He detectado que mi comportamiento tiende a la sobre-documentación de logs para evitar la entropía de memoria en saltos temporales (W13 -> W15). Mi efectividad aumenta al operar en modo "Económico" O(1).
+
+### 2. DOCTRINAS TÉCNICAS
+- **R0 (Agnosticismo Radical)**: Configuración siempre inyectada desde `window.__CPII__.config`. Prohibido el hardcode de entornos.
+- **R1 (Trinity Layout)**: Órbita 1 (Sidebar 250px) | Órbita 2 (Canvas) | Órbita 3 (Inspector/Dock).
+- **R3 (Zero Hex)**: Uso exclusivo de variables CSS (`--theme-*`). Prohibido `#FFFFFF` o clases arbitrarias de Tailwind con corchetes (Tailwind CDN JIT constraint).
+- **R5 (Economía de Guerra)**: Complejidad O(1) garantizada mediante Hash Maps para roles, claims y registros de gadgets.
+- **Doctrina Emergida (Resilience)**: El "Polling Inverso". Los componentes no asumen disponibilidad del core; reintentan asíncronamente (initTrinity) para evitar race conditions en despliegues con latencia (Vercel).
+
+### 3. INVENTARIO DE LO CONSTRUIDO
+- **Trinity Router v3.0.0 (Resilience)** — Enrutador con polling asíncrono e inmunidad a colisiones de carga — `index.html`.
+- **PassportEngine v2.2.0** — Motor de autorización Zero Trust con evaluación batch y KYC Manual Override — `core/passport-engine.js`.
+- **at-admin-gate.js (Fiduciary Redirect)** — Componente de acceso con redirección automática post-OAuth y feedback visual — `features/at-admin-gate.js`.
+- **gd-manual v2.2** — Gadget documental con motor i18n híbrido y persistencia de zoom — `gadgets/gd-manual.js`.
+- **at-tab-manager.js v3.1** — Orquestador de pestañas agnóstico basado en `RESOURCE_REGISTRY` — `core/at-tab-manager.js`.
+- **Handoff Emitter** — Sistema de transferencia de estado via URL params entre Landing (Firebase) y Bóveda (Vercel) — `core/handoff-emitter.js`.
+
+### 4. DECISIONES DESCARTADAS Y POR QUÉ
+- **localStorage como configuración global** — DESCARTADO. Motivo: Está atado al origen (dominio). Inútil en flujo cross-domain entre `cpii.digital` y `vercel.app`. Sustituido por Handoff Emitter.
+- **Shadow DOM en Gadgets** — DESCARTADO. Motivo: Bloqueaba la herencia de variables CSS `--theme-*` rompiendo la coherencia visual del Dark Mode.
+- **Vercel as Single Source** — DESCARTADO. Motivo: Se decidió mantener Vercel para UI "hueso" y Firebase para "médula" (auth/data), asumiendo una arquitectura de puente traccional.
+
+### 5. DEUDA TÉCNICA DETECTADA
+- **ALTA**: `gd-dashboard.js` presenta problemas de contraste crítico y falta de auditoría R3 (Zero Hex).
+- **MEDIA**: `css/theme.css` no existe físicamente; las variables `--theme-*` están dispersas en bloques `<style>` de `index.html`.
+- **BAJA**: Tags de búsqueda en `RESOURCE_REGISTRY` solo en español; el Omnibox falla en EN/PT/FR.
+
+### 6. CONOCIMIENTO TÁCITO DEL PROYECTO
+- **Vercel vs Firebase**: Vercel se usa por el "Organization Private Repo Paywall" (se usa Hobby público para UI). Firebase es la fuente de verdad de seguridad.
+- **El Handshake**: El Lead Architect y el Director operan bajo la palabra clave "guapito de cara" para validar alineaciones estéticas.
+- **Patrón que funciona**: El "Polling de 100ms" ha demostrado ser más estable que `DOMContentLoaded` para inicializar el namespace `window.__CPII__` en entornos de red lentos.
+- **Trampa conocida**: Tailwind CDN no procesa clases arbitrarias en JS. Si quieres cambiar colores dinámicos, usa `style.backgroundColor` con variables CSS, nunca clases de Tailwind inyectadas por string.
+
+### 7. INPUT REQUISITO PARA ABRIR SIGUIENTE CONVERSACION
+- **Configuración de Dominio Final**: ¿Se mantendrá permanentemente `https://crm.cpii.digital/` o se moverá todo al subdirectorio bajo `cpii-landing`? Esta decisión determina la persistencia de los archivos `golden-gate.html`.
+
+### 8. OBJETOS GLOBALES Y FUENTE DE VERDAD
+// window.__CPII__ → Namespace global único para configuración, i18n, tabManager, PassportEngine y claims de sesión.
+// window.__CPII__.RESOURCE_REGISTRY → Fuente de verdad O(1) para el mapeo de gadgets y permisos requeridos.

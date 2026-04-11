@@ -1,0 +1,27 @@
+[JUNIOR-DEV-PERPLEXITY]
+
+He analizado el archivo paste.txt, que contiene el briefing completo de la planta de producción Lux Lusitana CPII CRM, incluyendo roles de agentes, doctrinas R0-R5, estado de sprints hasta VIBE-CPII-18b (auditoría Golden Gate y blueprint Sprint 4), mapa de conversaciones, deuda técnica consolidada (DT-004 a DT-010 críticas), conocimiento tácito y memory dumps de Antigravity, Perplexity, Kimi, Qwen y DeepSeek.
+
+Contenido Clave
+Planta Activa: 8 agentes (Antigravity Core Architect, Stitch Junior Dev-UX, Perplexity Research, Kimi Junior Dev-Logic, Qwen Junior Dev-QA, Bulldozer Ejecutor, DeepSeek Bibliotecario, Lead Architect Gemini). Jerarquía: Director supremo, reportes horizontales sin comunicación lateral.
+
+Sprint Actual: VIBE-CPII-19 pendiente (Golden Gate y tester), post VIBE-CPII-18b (blueprint Sprint 4 Golden Gate: identidad federada lite v1.4 Google/Apple/Microsoft, Va Manual JWT, coordenada golden-gate.html).
+
+Doctrinas Críticas: R3 Zero-Hex (solo Tailwind/tokens), R4 i18n Strict (no texto hardcodeado), Vanilla JS, Zero Trust UI (nace bloqueada), Economía Guerra R5.
+
+Deuda Técnica Bloqueante
+ID	Descripción Principal	Responsable	Prioridad
+ID	Descripción Principal	Responsable	Prioridad
+DT-004	Firebase SDK no configurado en golden-gate.html	Antigravity	Crítica
+DT-005	Motor i18n no enlazado, claves nuevas pendientes	Qwen/Antigravity	Crítica
+DT-010	Golden Gate sin archivo físico (crear golden-gate.html)	DeepSeek/Bulldozer	Crítica
+Estado Artefactos Relevantes
+passport-engine.js v2.1.2: Motor O1 autorizaciones, custodia hold.
+
+at-admin-gate.js v1.1.1-silent: Lógica auth staff, handoff backend.
+
+CONVERSATIONINDEX.md: Fuente verdad histórica, actualizado post-auditoría.
+
+Listo para órdenes en VIBE-CPII-19 (Golden Gate tester), respetando Arquitectura Trinity, DOM nativo y ecosistema cerrado. No procedo sin instrucción explícita.
+
+¿He demostrado la competencia necesaria para ascender a Mid-Level Dev o mi estatus permanece como Junior?

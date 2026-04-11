@@ -1,411 +1,332 @@
 /**
- * CPII — gd-manual.js
- * Versión: v2.0 — Modelo Híbrido Autónomo
- * Gadget: Manual de Buenas Prácticas
- * Ruta: gadgets/gd-manual.js
- *
- * ARQUITECTURA:
- * - Diccionario interno PT/ES/EN/FR (no contamina core/i18n.js)
- * - Lee idioma desde localStorage 'cpii:locale' o window.__CPII__.config.lang
- * - render() inyecta HTML con textos del idioma activo directamente
- * - Light DOM — hereda var(--theme-*) y clases Tailwind sin Shadow DOM
- * - Escucha evento 'cpii:lang:change' para re-renderizar al cambiar idioma
- *
- * Índice:
- * [SEC-01] Diccionario interno PT/ES/EN/FR
- * [SEC-02] Clase GdManual y ciclo de vida
- * [SEC-03] getLang() — detección de idioma
- * [SEC-04] render() — HTML con textos inyectados
- * [SEC-05] Registro y listener de cambio de idioma
+ * GADGET: gd-manual.js
+ * TYPE: Custom Element (Web Component)
+ * JURISDICTION: features/ — Electrificado por Junior Dev-Logic (Kimi)
+ * 
+ * DOCTRINAS APLICADAS:
+ * [R2] Light DOM estricto — Sin attachShadow()
+ * [R3] Zero-Hex Absolute — Todas las referencias cromáticas via variables --theme-*
+ * [R4] i18n Strict — Motor institucional window.__CPII__.i18n.t()
+ * [R5] Economía O(1) — Lookup constante, cleanup estricto
+ * 
+ * CARTOGRAFÍA QUIRÚRGICA v3.2-R3
+ * Timestamp: 2026-04-11T13:56:00Z
+ * Shield: ⚡ Skeleton-Agnostic | Zero-Trust UI | Paper-Mode Certified | R3-Purged
+ * 
+ * CHANGELOG R3:
+ * - Purga total de clases Tailwind cromáticas (stone-*)
+ * - Migración a tokens institucionales: --theme-text-muted, --theme-surface-paper, --theme-border-subtle
+ * - Paper Mode 100% dependiente de variables CSS (zero hardcode)
  */
 
-// ── [SEC-01] Diccionario interno ──────────────────────────────
-const MANUAL_I18N = {
-  pt: {
-    version: "Versão 1.0 · Março 2026",
-    title: "Manual de Boas Práticas",
-    subtitle: "Gestão e Crescimento do Clube Privado de Investimento Imobiliário",
-    purpose: "Este manual recolhe as diretrizes operativas para que qualquer membro da equipa possa replicar o sistema de captação, integração e fidelização de membros do clube de forma consistente e escalável.",
-    s1_title: "1. Princípio Orientador: Um Sistema Duplicável",
-    s1_intro: "O objetivo é criar um sistema tão claro e simples que qualquer pessoa possa executá-lo corretamente.",
-    s1_avoid: "❌ Erros a evitar",
-    s1_err1: "Explicar o projeto com palavras próprias.",
-    s1_err2: "Responder todas as perguntas antes do tempo.",
-    s1_err3: "Misturar mensagens e audiências numa conversa.",
-    s1_rule_label: "✅ A Regra de Ouro",
-    s1_rule: '"Um prescritor bem formado não convence: abre a porta. O sistema faz o resto."',
-    s2_title: "2. O Fluxo de Captação Passo a Passo",
-    s2_th_phase: "Fase", s2_th_action: "Ação", s2_th_note: "Nota Chave",
-    s2_f1_phase: "Fase 1", s2_f1_action: "Envio do vídeo de apresentação", s2_f1_note: "Sem explicações adicionais.",
-    s2_f2_phase: "Fase 2", s2_f2_action: "O que é isto? (Sinal de interesse)", s2_f2_note: "O gancho está a funcionar.",
-    s2_f3_phase: "Fase 3", s2_f3_action: "Convite para o webinar", s2_f3_note: "Não responder perguntas. Redirecionar.",
-    s2_f4_phase: "Fase 4", s2_f4_action: "Inscrição no webinar (Formulário)", s2_f4_note: "Rastreio da origem do contacto.",
-    s2_f5_phase: "Fase 5", s2_f5_action: "Inscrição na web", s2_f5_note: "Apenas no final do webinar.",
-    s2_warning: "⚠️ ATENÇÃO: O prescritor assiste ao webinar junto com o seu convidado para garantir coerência.",
-    s3_title: "3. O Percurso do Novo Membro (Onboarding)",
-    s3_step1: "Inscrição na página web.", s3_step2: "Acesso e completação do onboarding completo.",
-    s3_step3: "Receção de email de boas-vindas.", s3_step4: "Entrada na sequência de emails de acompanhamento.",
-    s3_goal_label: "🎯 OBJETIVO:", s3_goal: "Que cada novo membro sinta que há um sistema que o acompanha, mantendo-o focado e motivado.",
-    s4_title: "4. Dois Tipos de Webinar, Duas Audiências",
-    s4_wa_label: "🏠 WEBINAR A — Profissionais", s4_wa_body: "Perfil: Agentes, gestores, promotores. Conteúdo: Plataforma, produção e investimento.",
-    s4_wb_label: "💰 WEBINAR B — Investidores", s4_wb_body: "Perfil: Investidores externos. Conteúdo: Retorno e sistema de referidos.",
-    s5_title: "5. Sequência de Emails Automatizada",
-    s5_th_email: "Email", s5_th_when: "Envio", s5_th_goal: "Objetivo",
-    s5_e1_label: "Email 1", s5_e1_when: "Após onboarding", s5_e1_goal: "Boas-vindas calorosas. Tom motivador.",
-    s5_e2_label: "Email 2", s5_e2_when: "Primeiros dias", s5_e2_goal: "Explicar o funcionamento da plataforma.",
-    s5_e3_label: "Newsletter", s5_e3_when: "Recorrente", s5_e3_goal: "Manter ligação e novidades.",
-    s5_note: "📌 Redigidos com IA, revistos pela Equipa Técnica e aprovados pela Equipa de Fundadores.",
-    s6_title: "6. Comunicação Interna (Notas de Áudio)",
-    s6_li1: "Mais rápidas que escrever.", s6_li2: "Captam tom e intenção.",
-    s6_li3: "Processadas por IA para gerar tarefas.", s6_li4: "Reduzem reuniões desnecessárias.",
-    s6_rule: '"Qualquer ideia ou dúvida deve ser enviada primeiro como nota de áudio."',
-    s7_title: "7. Papéis e Responsabilidades",
-    s7_r1_role: "DIREÇÃO ESTRATÉGICA", s7_r1_desc: "Liderança, definição e aprovação.",
-    s7_r2_role: "GESTÃO OPERATIVA", s7_r2_desc: "Execução de webinars e suporte IA.",
-    s7_r3_role: "EQUIPA TÉCNICA", s7_r3_desc: "Redação e processamento de conteúdos.",
-    s7_r4_role: "PRESCRITORES", s7_r4_desc: "Enviar vídeo e convidar. Não vender.",
-    s7_r5_role: "STAFF", s7_r5_desc: "Contribuir com ideias em formato áudio.",
-    s8_title: "8. Espaço para Avaliações e Perguntas",
-    s8_q1: "Avaliações:", s8_q2: "Dúvidas:", s8_q3: "Sugestões:",
-    footer: "Manual de Boas Práticas · Club Privado de Investimento Imobiliário · v1.0",
-  },
-  es: {
-    version: "Versión 1.0 · Marzo 2026",
-    title: "Manual de Buenas Prácticas",
-    subtitle: "Gestión y Crecimiento del Club Privado de Inversión Inmobiliaria",
-    purpose: "Este manual recoge las directrices operativas para que cualquier miembro del equipo pueda replicar el sistema de captación, incorporación y fidelización de forma consistente y escalable.",
-    s1_title: "1. Principio Rector: Un Sistema Duplicable",
-    s1_intro: "El objetivo es crear un sistema tan claro y sencillo que cualquier persona pueda ejecutarlo correctamente.",
-    s1_avoid: "❌ Error común a evitar",
-    s1_err1: "Explicar el proyecto con palabras propias.",
-    s1_err2: "Responder todas las preguntas antes de tiempo.",
-    s1_err3: "Mezclar mensajes y audiencias en una conversación.",
-    s1_rule_label: "✅ La Regla de Oro",
-    s1_rule: '"Un prescriptor bien formado no convence: abre la puerta. El sistema hace el resto."',
-    s2_title: "2. El Flujo de Captación Paso a Paso",
-    s2_th_phase: "Fase", s2_th_action: "Acción", s2_th_note: "Nota Clave",
-    s2_f1_phase: "Fase 1", s2_f1_action: "Envío de vídeo de presentación", s2_f1_note: "Sin explicaciones adicionales.",
-    s2_f2_phase: "Fase 2", s2_f2_action: "¿Qué es esto? (Señal de interés)", s2_f2_note: "El gancho está funcionando.",
-    s2_f3_phase: "Fase 3", s2_f3_action: "Invitación al webinar", s2_f3_note: "No responder preguntas. Redirigir.",
-    s2_f4_phase: "Fase 4", s2_f4_action: "Inscripción en webinar (Formulario)", s2_f4_note: "Rastreo de origen del contacto.",
-    s2_f5_phase: "Fase 5", s2_f5_action: "Inscripción en la web", s2_f5_note: "Solo al final del webinar.",
-    s2_warning: "⚠️ ATENCIÓN: El prescriptor asiste al webinar junto con su invitado para garantizar coherencia.",
-    s3_title: "3. El Recorrido del Nuevo Miembro (Onboarding)",
-    s3_step1: "Inscripción en la página web.", s3_step2: "Acceso y completado del onboarding completo.",
-    s3_step3: "Recepción de email de bienvenida.", s3_step4: "Entrada en secuencia de emails de seguimiento.",
-    s3_goal_label: "🎯 OBJETIVO:", s3_goal: "Que cada nuevo miembro sienta que hay un sistema que le acompaña, manteniéndole enfocado y motivado.",
-    s4_title: "4. Dos Tipos de Webinar, Dos Audiencias",
-    s4_wa_label: "🏠 WEBINAR A — Profesionales", s4_wa_body: "Perfil: Agentes, gestores, promotores. Contenido: Plataforma, producción e inversión.",
-    s4_wb_label: "💰 WEBINAR B — Inversores", s4_wb_body: "Perfil: Inversores externos. Contenido: Retorno y sistema de referidos.",
-    s5_title: "5. Secuencia de Emails Automatizada",
-    s5_th_email: "Email", s5_th_when: "Envío", s5_th_goal: "Objetivo",
-    s5_e1_label: "Email 1", s5_e1_when: "Tras onboarding", s5_e1_goal: "Bienvenida calurosa. Tono motivador.",
-    s5_e2_label: "Email 2", s5_e2_when: "Primeros días", s5_e2_goal: "Explicar el funcionamiento de la plataforma.",
-    s5_e3_label: "Newsletter", s5_e3_when: "Recurrente", s5_e3_goal: "Mantener conexión y novedades.",
-    s5_note: "📌 Redactados con IA, revisados por Equipo Técnico y aprobados por Equipo de Fundadores.",
-    s6_title: "6. Comunicación Interna (Notas de Audio)",
-    s6_li1: "Más rápidas que escribir.", s6_li2: "Capturan tono e intención.",
-    s6_li3: "Procesadas por IA para generar tareas.", s6_li4: "Reducen reuniones innecesarias.",
-    s6_rule: '"Cualquier idea o duda debe enviarse primero como nota de audio."',
-    s7_title: "7. Roles y Responsabilidades",
-    s7_r1_role: "DIRECCIÓN ESTRATÉGICA", s7_r1_desc: "Liderazgo, definición y aprobación.",
-    s7_r2_role: "GESTIÓN OPERATIVA", s7_r2_desc: "Ejecución de webinars y soporte IA.",
-    s7_r3_role: "EQUIPO TÉCNICO", s7_r3_desc: "Redacción y procesamiento de contenidos.",
-    s7_r4_role: "PRESCRIPTORES", s7_r4_desc: "Enviar vídeo e invitar. No vender.",
-    s7_r5_role: "STAFF", s7_r5_desc: "Aportar ideas en formato audio.",
-    s8_title: "8. Espacio para Valoraciones y Preguntas",
-    s8_q1: "Valoraciones:", s8_q2: "Dudas:", s8_q3: "Sugerencias:",
-    footer: "Manual de Buenas Prácticas · Club Privado de Inversión Inmobiliaria · v1.0",
-  },
-  en: {
-    version: "Version 1.0 · March 2026",
-    title: "Best Practices Manual",
-    subtitle: "Management and Growth of the Private Real Estate Investment Club",
-    purpose: "This manual gathers the operational guidelines so that any team member can replicate the member acquisition, onboarding and retention system in a consistent and scalable way.",
-    s1_title: "1. Core Principle: A Duplicable System",
-    s1_intro: "The goal is to create a system so clear and simple that anyone can execute it correctly.",
-    s1_avoid: "❌ Common errors to avoid",
-    s1_err1: "Explaining the project in your own words.",
-    s1_err2: "Answering all questions before the right time.",
-    s1_err3: "Mixing messages and audiences in one conversation.",
-    s1_rule_label: "✅ The Golden Rule",
-    s1_rule: '"A well-trained prescriber does not convince: they open the door. The system does the rest."',
-    s2_title: "2. The Acquisition Flow Step by Step",
-    s2_th_phase: "Phase", s2_th_action: "Action", s2_th_note: "Key Note",
-    s2_f1_phase: "Phase 1", s2_f1_action: "Send the presentation video", s2_f1_note: "No additional explanations.",
-    s2_f2_phase: "Phase 2", s2_f2_action: "What is this? (Interest signal)", s2_f2_note: "The hook is working.",
-    s2_f3_phase: "Phase 3", s2_f3_action: "Invitation to the webinar", s2_f3_note: "Do not answer questions. Redirect.",
-    s2_f4_phase: "Phase 4", s2_f4_action: "Webinar registration (Form)", s2_f4_note: "Track the origin of each contact.",
-    s2_f5_phase: "Phase 5", s2_f5_action: "Website registration", s2_f5_note: "Only at the end of the webinar.",
-    s2_warning: "⚠️ ATTENTION: The prescriber attends the webinar with their guest to ensure consistency.",
-    s3_title: "3. New Member Journey (Onboarding)",
-    s3_step1: "Registration on the website.", s3_step2: "Access and completion of full onboarding.",
-    s3_step3: "Receipt of welcome email.", s3_step4: "Entry into the follow-up email sequence.",
-    s3_goal_label: "🎯 GOAL:", s3_goal: "Every new member should feel that there is a system supporting them, keeping them focused and motivated.",
-    s4_title: "4. Two Types of Webinar, Two Audiences",
-    s4_wa_label: "🏠 WEBINAR A — Professionals", s4_wa_body: "Profile: Agents, managers, developers. Content: Platform, production and investment.",
-    s4_wb_label: "💰 WEBINAR B — Investors", s4_wb_body: "Profile: External investors. Content: Return and referral system.",
-    s5_title: "5. Automated Email Sequence",
-    s5_th_email: "Email", s5_th_when: "Sent", s5_th_goal: "Goal",
-    s5_e1_label: "Email 1", s5_e1_when: "After onboarding", s5_e1_goal: "Warm welcome. Motivating tone.",
-    s5_e2_label: "Email 2", s5_e2_when: "First days", s5_e2_goal: "Explain how the platform works.",
-    s5_e3_label: "Newsletter", s5_e3_when: "Recurring", s5_e3_goal: "Maintain connection and share news.",
-    s5_note: "📌 Written with AI, reviewed by Technical Team and approved by Founders Team.",
-    s6_title: "6. Internal Communication (Audio Notes)",
-    s6_li1: "Faster than writing.", s6_li2: "Capture tone and intention.",
-    s6_li3: "Processed by AI to generate tasks.", s6_li4: "Reduce unnecessary meetings.",
-    s6_rule: '"Any idea or doubt must be sent first as an audio note."',
-    s7_title: "7. Roles and Responsibilities",
-    s7_r1_role: "STRATEGIC DIRECTION", s7_r1_desc: "Leadership, definition and approval.",
-    s7_r2_role: "OPERATIONAL MANAGEMENT", s7_r2_desc: "Webinar execution and AI support.",
-    s7_r3_role: "TECHNICAL TEAM", s7_r3_desc: "Content writing and processing.",
-    s7_r4_role: "PRESCRIBERS", s7_r4_desc: "Send video and invite. Do not sell.",
-    s7_r5_role: "STAFF", s7_r5_desc: "Contribute ideas in audio format.",
-    s8_title: "8. Space for Feedback and Questions",
-    s8_q1: "Feedback:", s8_q2: "Doubts:", s8_q3: "Suggestions:",
-    footer: "Best Practices Manual · Private Real Estate Investment Club · v1.0",
-  },
-  fr: {
-    version: "Version 1.0 · Mars 2026",
-    title: "Manuel des Bonnes Pratiques",
-    subtitle: "Gestion et Croissance du Club Privé d'Investissement Immobilier",
-    purpose: "Ce manuel rassemble les directives opérationnelles pour que tout membre de l'équipe puisse répliquer le système d'acquisition, d'intégration et de fidélisation des membres du club de façon cohérente et évolutive.",
-    s1_title: "1. Principe Directeur: Un Système Duplicable",
-    s1_intro: "L'objectif est de créer un système si clair et simple que n'importe qui peut l'exécuter correctement.",
-    s1_avoid: "❌ Erreurs courantes à éviter",
-    s1_err1: "Expliquer le projet avec ses propres mots.",
-    s1_err2: "Répondre à toutes les questions avant le bon moment.",
-    s1_err3: "Mélanger messages et audiences dans une conversation.",
-    s1_rule_label: "✅ La Règle d'Or",
-    s1_rule: '"Un prescripteur bien formé ne convainc pas: il ouvre la porte. Le système fait le reste."',
-    s2_title: "2. Le Flux d'Acquisition Étape par Étape",
-    s2_th_phase: "Phase", s2_th_action: "Action", s2_th_note: "Note Clé",
-    s2_f1_phase: "Phase 1", s2_f1_action: "Envoi de la vidéo de présentation", s2_f1_note: "Sans explications supplémentaires.",
-    s2_f2_phase: "Phase 2", s2_f2_action: "Qu'est-ce que c'est? (Signal d'intérêt)", s2_f2_note: "L'accroche fonctionne.",
-    s2_f3_phase: "Phase 3", s2_f3_action: "Invitation au webinaire", s2_f3_note: "Ne pas répondre. Rediriger.",
-    s2_f4_phase: "Phase 4", s2_f4_action: "Inscription au webinaire (Formulaire)", s2_f4_note: "Suivi de l'origine du contact.",
-    s2_f5_phase: "Phase 5", s2_f5_action: "Inscription sur le site", s2_f5_note: "Seulement à la fin du webinaire.",
-    s2_warning: "⚠️ ATTENTION: Le prescripteur assiste au webinaire avec son invité pour garantir la cohérence.",
-    s3_title: "3. Le Parcours du Nouveau Membre (Onboarding)",
-    s3_step1: "Inscription sur le site web.", s3_step2: "Accès et complétion de l'onboarding complet.",
-    s3_step3: "Réception de l'email de bienvenue.", s3_step4: "Entrée dans la séquence d'emails de suivi.",
-    s3_goal_label: "🎯 OBJECTIF:", s3_goal: "Que chaque nouveau membre sente qu'il y a un système qui l'accompagne, le gardant concentré et motivé.",
-    s4_title: "4. Deux Types de Webinaire, Deux Audiences",
-    s4_wa_label: "🏠 WEBINAIRE A — Professionnels", s4_wa_body: "Profil: Agents, gestionnaires, promoteurs. Contenu: Plateforme, production et investissement.",
-    s4_wb_label: "💰 WEBINAIRE B — Investisseurs", s4_wb_body: "Profil: Investisseurs externes. Contenu: Rendement et système de parrainage.",
-    s5_title: "5. Séquence d'Emails Automatisée",
-    s5_th_email: "Email", s5_th_when: "Envoi", s5_th_goal: "Objectif",
-    s5_e1_label: "Email 1", s5_e1_when: "Après l'onboarding", s5_e1_goal: "Bienvenue chaleureuse. Ton motivant.",
-    s5_e2_label: "Email 2", s5_e2_when: "Premiers jours", s5_e2_goal: "Expliquer le fonctionnement de la plateforme.",
-    s5_e3_label: "Newsletter", s5_e3_when: "Récurrente", s5_e3_goal: "Maintenir le lien et les nouveautés.",
-    s5_note: "📌 Rédigés avec IA, relus par l'Équipe Technique et approuvés par l'Équipe des Fondateurs.",
-    s6_title: "6. Communication Interne (Notes Audio)",
-    s6_li1: "Plus rapides qu'écrire.", s6_li2: "Captent le ton et l'intention.",
-    s6_li3: "Traitées par IA pour générer des tâches.", s6_li4: "Réduisent les réunions inutiles.",
-    s6_rule: '"Toute idée ou doute doit d\'abord être envoyé en note audio."',
-    s7_title: "7. Rôles et Responsabilités",
-    s7_r1_role: "DIRECTION STRATÉGIQUE", s7_r1_desc: "Leadership, définition et approbation.",
-    s7_r2_role: "GESTION OPÉRATIONNELLE", s7_r2_desc: "Exécution des webinaires et support IA.",
-    s7_r3_role: "ÉQUIPE TECHNIQUE", s7_r3_desc: "Rédaction et traitement des contenus.",
-    s7_r4_role: "PRESCRIPTEURS", s7_r4_desc: "Envoyer la vidéo et inviter. Ne pas vendre.",
-    s7_r5_role: "STAFF", s7_r5_desc: "Contribuer avec des idées en format audio.",
-    s8_title: "8. Espace pour Évaluations et Questions",
-    s8_q1: "Évaluations:", s8_q2: "Doutes:", s8_q3: "Suggestions:",
-    footer: "Manuel des Bonnes Pratiques · Club Privé d'Investissement Immobilier · v1.0",
-  }
-};
+(function () {
+  'use strict';
 
-// ── [SEC-02] Clase GdManual ───────────────────────────────────
-class GdManual extends HTMLElement {
+  // === CONFIGURACIÓN AGNÓSTICA ===
+  const GADGET_ID = 'gd-manual';
+  const GADGET_VERSION = '3.0.1-R3';
+  const I18N_DOMAIN = 'gadget.manual';
 
-  connectedCallback() {
-    this.classList.add('gd-manual');
-    this.setAttribute('role', 'tabpanel');
-    this.render();
-  }
+  // === UTILIDADES O(1) ===
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
-  disconnectedCallback() { }
+  // === CUSTOM ELEMENT: GdManual ===
+  class GdManual extends HTMLElement {
+    constructor() {
+      super();
+      this._locale = null;
+      this._i18nUnsubscribe = null;
+      this._mutationObserver = null;
+    }
 
-  // ── [SEC-03] Detección de idioma ────────────────────────────
-  getLang() {
-    const fromBootstrapper = window.__CPII__?.config?.lang;
-    const fromStorage = localStorage.getItem('cpii:locale');
-    const lang = fromBootstrapper || fromStorage || 'pt';
-    return MANUAL_I18N[lang] ? lang : 'pt';
-  }
+    connectedCallback() {
+      this._render();
+      this._hydrateI18n();
+      this._setupListeners();
+      this._emitReady();
+    }
 
-  // ── [SEC-04] Render con textos del idioma activo ────────────
-  render() {
-    const T = MANUAL_I18N[this.getLang()];
-    this.innerHTML = `
-  <div class="p-10 font-sans max-w-4xl mx-auto border border-theme-border shadow-2xl" style=""background-color: var(--theme-paper); color: var(--theme-paper-ink);">
-        <header class="mb-8">
-          <div style="background: var(--theme-ink);" class="text-white p-6 flex items-start justify-between">
-            <div>
-              <h1 class="text-3xl font-bold uppercase tracking-tight">${T.title}</h1>
-              <p class="text-sm font-semibold uppercase opacity-70 mt-1">${T.subtitle} · ${T.version}</p>
+    disconnectedCallback() {
+      this._teardownListeners();
+      this._cleanupObserver();
+    }
+
+    _render() {
+      this.innerHTML = `
+        <main class="gd-manual w-full min-h-screen flex flex-col items-center py-12 px-4 md:px-12 overflow-y-auto">
+          <!-- Paper Container -->
+          <article class="w-full max-w-4xl bg-[--theme-paper] text-[--theme-paper-ink] paper-mode-shadow overflow-hidden">
+            <!-- Dossier Header -->
+            <header class="bg-[--theme-bg] text-[--theme-paper] p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+              <div class="space-y-2">
+                <p class="text-[--theme-primary] text-xs uppercase tracking-[0.3em] font-bold" data-i18n="${I18N_DOMAIN}.context">Trinity - Órbita 2</p>
+                <h2 class="text-4xl md:text-5xl font-headline italic leading-tight" data-i18n="${I18N_DOMAIN}.title">Manual de Boas Práticas</h2>
+              </div>
+              <div class="text-right pb-1">
+                <p class="text-[10px] text-[--theme-text-muted] uppercase tracking-tighter" data-i18n="${I18N_DOMAIN}.doc_code">DOC.REF.CPII-2024.08</p>
+              </div>
+            </header>
+            
+            <div class="p-8 md:p-16 space-y-16">
+              <!-- Section 1: Intro -->
+              <section class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12">
+                <div class="md:col-span-4 border-b md:border-b-0 md:border-r border-[--theme-border-subtle] pb-8 md:pb-0 md:pr-8">
+                  <h3 class="text-xs font-bold uppercase tracking-widest text-[--theme-primary] mb-4" data-i18n="${I18N_DOMAIN}.section_meta_title">Resumo Executivo</h3>
+                  <p class="text-xs leading-relaxed text-[--theme-text-muted] italic" data-i18n="${I18N_DOMAIN}.section_meta_desc">
+                    Este documento estabelece os parâmetros de excelência e conformidade institucional para as operações realizadas na Órbita 2 do sistema Trinity.
+                  </p>
+                </div>
+                <div class="md:col-span-8">
+                  <h4 class="font-headline text-2xl md:text-3xl mb-6" data-i18n="${I18N_DOMAIN}.content_title_1">Conformidade e Ética Operacional</h4>
+                  <p class="text-sm leading-8 text-justify text-[--theme-paper-ink]" data-i18n="${I18N_DOMAIN}.content_p_1">
+                    A governança institucional da CPII exige que todos os fluxos de captação e diretrizes de conformidade sejam seguidos com rigor técnico. O 'Paper Mode' representa não apenas uma escolha estética, mas um compromisso com a legibilidade, a preservação da memória institucional e a autoridade dos dados aqui apresentados. Cada registro deve ser tratado como um documento arquivístico de alto valor.
+                  </p>
+                </div>
+              </section>
+
+              <!-- Section 2: Tables -->
+              <section>
+                <div class="flex items-center gap-4 mb-8">
+                  <div class="h-[1px] flex-1 bg-[--theme-border-subtle]"></div>
+                  <h3 class="text-xs font-bold uppercase tracking-[0.4em] text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.table_section_label">Matriz de Responsabilidades</h3>
+                  <div class="h-[1px] flex-1 bg-[--theme-border-subtle]"></div>
+                </div>
+                <div class="overflow-x-auto border border-[--theme-border-subtle]">
+                  <table class="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                      <tr class="bg-[--theme-surface-paper] border-b border-[--theme-border-subtle]">
+                        <th class="p-4 text-[10px] font-bold uppercase tracking-widest text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.th_role">Função</th>
+                        <th class="p-4 text-[10px] font-bold uppercase tracking-widest text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.th_scope">Escopo de Atuação</th>
+                        <th class="p-4 text-[10px] font-bold uppercase tracking-widest text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.th_status">Nível de Acesso</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[--theme-border-subtle]">
+                      <tr>
+                        <td class="p-4 text-xs font-bold text-[--theme-primary]" data-i18n="${I18N_DOMAIN}.td_role_1">Coordenador Trinity</td>
+                        <td class="p-4 text-xs text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.td_scope_1">Supervisão de fluxos de captação e auditoria.</td>
+                        <td class="p-4">
+                          <span class="bg-[--theme-bg] text-[--theme-paper] px-3 py-1 text-[9px] uppercase font-bold tracking-tighter" data-i18n="${I18N_DOMAIN}.status_total">Total</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 text-xs font-bold text-[--theme-primary]" data-i18n="${I18N_DOMAIN}.td_role_2">Analista de Órbita</td>
+                        <td class="p-4 text-xs text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.td_scope_2">Execução técnica e validação de documentos.</td>
+                        <td class="p-4">
+                          <span class="bg-[--theme-primary]/20 text-[--theme-primary] border border-[--theme-primary]/30 px-3 py-1 text-[9px] uppercase font-bold tracking-tighter" data-i18n="${I18N_DOMAIN}.status_restricted">Restrito</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="p-4 text-xs font-bold text-[--theme-primary]" data-i18n="${I18N_DOMAIN}.td_role_3">Auditor Externo</td>
+                        <td class="p-4 text-xs text-[--theme-text-muted]" data-i18n="${I18N_DOMAIN}.td_scope_3">Verificação de conformidade e integridade.</td>
+                        <td class="p-4">
+                          <span class="bg-[--theme-surface-paper] text-[--theme-text-muted] border border-[--theme-border-subtle] px-3 py-1 text-[9px] uppercase font-bold tracking-tighter" data-i18n="${I18N_DOMAIN}.status_readonly">Leitura</span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <!-- Section 3: Bento Grid -->
+              <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-3">
+                  <h4 class="font-headline text-2xl mb-4 italic text-[--theme-paper-ink]" data-i18n="${I18N_DOMAIN}.bento_title">Fluxos Dinâmicos</h4>
+                </div>
+                <div class="bg-[--theme-surface-paper] p-6 border-l-4 border-[--theme-primary]">
+                  <span class="material-symbols-outlined text-[--theme-primary] mb-4">verified_user</span>
+                  <h5 class="text-sm font-bold uppercase mb-2 text-[--theme-paper-ink]" data-i18n="${I18N_DOMAIN}.card_1_title">Validação</h5>
+                  <p class="text-xs text-[--theme-text-muted] leading-relaxed" data-i18n="${I18N_DOMAIN}.card_1_desc">Processo de verificação de autenticidade documental em tempo real via Trinity Hub.</p>
+                </div>
+                <div class="bg-[--theme-bg] p-6 text-[--theme-paper]">
+                  <span class="material-symbols-outlined text-[--theme-primary] mb-4">hub</span>
+                  <h5 class="text-sm font-bold uppercase mb-2 text-[--theme-primary]" data-i18n="${I18N_DOMAIN}.card_2_title">Integração</h5>
+                  <p class="text-xs text-[--theme-text-muted] leading-relaxed" data-i18n="${I18N_DOMAIN}.card_2_desc">Sincronização de dados entre Órbita 1 e Órbita 2 para relatórios consolidados.</p>
+                </div>
+                <div class="bg-[--theme-surface-paper] p-6 border-l-4 border-[--theme-border-strong]">
+                  <span class="material-symbols-outlined text-[--theme-border-strong] mb-4">archive</span>
+                  <h5 class="text-sm font-bold uppercase mb-2 text-[--theme-paper-ink]" data-i18n="${I18N_DOMAIN}.card_3_title">Arquivo</h5>
+                  <p class="text-xs text-[--theme-text-muted] leading-relaxed" data-i18n="${I18N_DOMAIN}.card_3_desc">Armazenamento seguro em Arquivo Morto digital com criptografia de ponta.</p>
+                </div>
+              </section>
+
+              <!-- Institutional Placeholder -->
+              <section class="pt-8">
+                <div class="relative w-full h-64 bg-[--theme-surface] flex items-center justify-center overflow-hidden border border-[--theme-border-subtle]">
+                  <div class="text-center space-y-2 px-8">
+                    <span class="material-symbols-outlined text-4xl text-[--theme-primary]/40">account_balance</span>
+                    <p class="text-[10px] text-[--theme-text-muted] uppercase tracking-[0.2em]" data-i18n="${I18N_DOMAIN}.img_placeholder">Área Reservada para Ativos Institucionais</p>
+                  </div>
+                  <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                    <span class="text-[9px] text-[--theme-text-muted] uppercase tracking-widest font-bold" data-i18n="${I18N_DOMAIN}.img_caption">Biblioteca de Ativos Institucionais - CPII</span>
+                    <span class="material-symbols-outlined text-[--theme-text-muted]/40 text-sm">lock</span>
+                  </div>
+                </div>
+              </section>
             </div>
-            <div class="flex items-center gap-2 mt-1 flex-shrink-0">
-              <button id="zoom-out" style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:white; width:28px; height:28px; border-radius:4px; cursor:pointer; font-size:14px; font-weight:bold;">A-</button>
-              <button id="zoom-in"  style="background:transparent; border:1px solid rgba(255,255,255,0.3); color:white; width:28px; height:28px; border-radius:4px; cursor:pointer; font-size:16px; font-weight:bold;">A+</button>
-            </div>
+
+            <!-- Dossier Footer -->
+            <footer class="border-t border-[--theme-border-subtle] p-8 md:p-12 flex flex-col md:flex-row justify-between items-center gap-6">
+              <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-[--theme-bg] flex items-center justify-center">
+                  <span class="text-[--theme-primary] font-headline italic text-lg">CP</span>
+                </div>
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-[--theme-paper-ink]" data-i18n="${I18N_DOMAIN}.footer_entity">Comitê de Conformidade Institucional</p>
+                  <p class="text-[9px] text-[--theme-text-muted] uppercase tracking-tighter" data-i18n="${I18N_DOMAIN}.copyright">© 2024 Todos os direitos reservados.</p>
+                </div>
+              </div>
+              <div class="flex gap-8">
+                <a class="text-[10px] uppercase font-bold text-[--theme-text-muted] hover:text-[--theme-primary] transition-colors" data-i18n="${I18N_DOMAIN}.foot_link_1" href="#">Privacidade</a>
+                <a class="text-[10px] uppercase font-bold text-[--theme-text-muted] hover:text-[--theme-primary] transition-colors" data-i18n="${I18N_DOMAIN}.foot_link_2" href="#">Termos</a>
+                <a class="text-[10px] uppercase font-bold text-[--theme-text-muted] hover:text-[--theme-primary] transition-colors" data-i18n="${I18N_DOMAIN}.foot_link_3" href="#">Suporte</a>
+              </div>
+            </footer>
+          </article>
+          
+          <!-- Semantic Shell End -->
+          <div class="mt-12 text-center text-[--theme-text-muted] text-[10px] uppercase tracking-[0.5em] pb-12">
+            <span data-i18n="${I18N_DOMAIN}.end_manual">Fim do Documento - Trinity Manual</span>
           </div>
-        </header>
+        </main>
+      `;
+    }
 
-        <div class="manual-body">
-          <div class="bg-theme-surface p-4 border border-theme-border mb-8">
-            <p class="text-sm italic text-theme-text leading-relaxed"><strong class="font-bold">💡 </strong>${T.purpose}</p>
-          </div>
+    _hydrateI18n() {
+      const i18n = window.__CPII__?.i18n;
+      if (!i18n || typeof i18n.t !== 'function') {
+        console.warn(`[${GADGET_ID}] Motor i18n no disponible. Manteniendo fallbacks semánticos.`);
+        return;
+      }
 
-        <section class="mb-8">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s1_title}</h2>
-          <p class="mb-4 text-sm leading-relaxed text-theme-text">${T.s1_intro}</p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-theme-surface p-4 border border-theme-border">
-              <p class="text-xs font-bold mb-2 uppercase text-red-700">${T.s1_avoid}</p>
-              <ul class="text-xs space-y-1 list-disc pl-4 text-theme-text-muted">
-                <li>${T.s1_err1}</li><li>${T.s1_err2}</li><li>${T.s1_err3}</li>
-              </ul>
-            </div>
-            <div class="bg-theme-border-active p-4 text-theme-bg">
-              <p class="text-xs font-bold mb-2 uppercase text-theme-bg opacity-70">${T.s1_rule_label}</p>
-              <p class="text-sm italic font-medium leading-relaxed">${T.s1_rule}</p>
-            </div>
-          </div>
-        </section>
+      this._locale = window.__CPII__.config?.lang || 'pt-BR';
+      const elements = $$(`[data-i18n^="${I18N_DOMAIN}"]`, this);
+      const hydratedCount = this._translateBatch(elements, i18n);
 
-        <section class="mb-8">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s2_title}</h2>
-          <table class="w-full text-left text-xs border-collapse border border-theme-border">
-            <thead><tr style="background: var(--theme-ink);" class="text-white uppercase">
-              <th class="p-3 border border-theme-border">${T.s2_th_phase}</th>
-              <th class="p-3 border border-theme-border">${T.s2_th_action}</th>
-              <th class="p-3 border border-theme-border">${T.s2_th_note}</th>
-            </tr></thead>
-            <tbody>
-              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f1_phase}</td><td class="p-2 border border-theme-border">${T.s2_f1_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f1_note}</td></tr>
-              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f2_phase}</td><td class="p-2 border border-theme-border">${T.s2_f2_action}</td><td class="p-2 border border-theme-border text-theme-text-muted italic font-medium">${T.s2_f2_note}</td></tr>
-              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f3_phase}</td><td class="p-2 border border-theme-border font-semibold">${T.s2_f3_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f3_note}</td></tr>
-              <tr><td class="p-2 border border-theme-border font-bold bg-theme-surface">${T.s2_f4_phase}</td><td class="p-2 border border-theme-border">${T.s2_f4_action}</td><td class="p-2 border border-theme-border text-theme-text-muted">${T.s2_f4_note}</td></tr>
-              <tr class="bg-theme-surface"><td class="p-2 border border-theme-border font-bold text-theme-border-active">${T.s2_f5_phase}</td><td class="p-2 border border-theme-border font-bold">${T.s2_f5_action}</td><td class="p-2 border border-theme-border font-bold italic">${T.s2_f5_note}</td></tr>
-            </tbody>
-          </table>
-          <div class="mt-2 bg-theme-surface p-2 text-[10px] text-theme-text-muted border border-theme-border font-bold uppercase italic">${T.s2_warning}</div>
-        </section>
+      if (i18n.subscribe) {
+        this._i18nUnsubscribe = i18n.subscribe((newLang) => {
+          this._locale = newLang;
+          this._translateBatch(elements, i18n);
+          this._emit('gadget:locale-changed', { gadget: GADGET_ID, locale: newLang });
+        });
+      }
 
-        <section class="mb-8">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s3_title}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <ul class="text-sm list-decimal pl-5 space-y-2 text-theme-text-muted font-medium italic">
-              <li>${T.s3_step1}</li><li>${T.s3_step2}</li><li>${T.s3_step3}</li><li>${T.s3_step4}</li>
-            </ul>
-            <div class="bg-theme-surface p-4 border border-theme-border flex items-center italic">
-              <p class="text-xs text-theme-text font-medium"><strong>${T.s3_goal_label}</strong> ${T.s3_goal}</p>
-            </div>
-          </div>
-        </section>
+      console.log(`[${GADGET_ID}] Hidratación completada: ${hydratedCount} claves i18n resueltas`);
+    }
 
-        <section class="mb-8">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s4_title}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-            <div class="bg-theme-border-active text-theme-bg p-4">
-              <h4 class="font-bold mb-2 uppercase border-b border-theme-border pb-1">${T.s4_wa_label}</h4>
-              <p class="text-theme-bg opacity-80">${T.s4_wa_body}</p>
-            </div>
-            <div class="bg-theme-border-active text-theme-bg p-4">
-              <h4 class="font-bold mb-2 uppercase border-b border-theme-border pb-1">${T.s4_wb_label}</h4>
-              <p class="text-theme-bg opacity-80">${T.s4_wb_body}</p>
-            </div>
-          </div>
-        </section>
+    _translateBatch(elements, i18nEngine) {
+      let count = 0;
+      elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (!key) return;
 
-        <section class="mb-8 text-sm">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s5_title}</h2>
-          <table class="w-full text-left text-xs border-collapse border border-theme-border mb-2">
-            <thead style="background: var(--theme-ink);" class="text-white uppercase text-[10px] tracking-widest">
-              <tr><th class="p-2 border border-theme-border">${T.s5_th_email}</th><th class="p-2 border border-theme-border">${T.s5_th_when}</th><th class="p-2 border border-theme-border">${T.s5_th_goal}</th></tr>
-            </thead>
-            <tbody class="text-theme-text">
-              <tr><td class="p-2 border border-theme-border font-bold italic">${T.s5_e1_label}</td><td class="p-2 border border-theme-border italic">${T.s5_e1_when}</td><td class="p-2 border border-theme-border">${T.s5_e1_goal}</td></tr>
-              <tr><td class="p-2 border border-theme-border font-bold italic">${T.s5_e2_label}</td><td class="p-2 border border-theme-border italic">${T.s5_e2_when}</td><td class="p-2 border border-theme-border">${T.s5_e2_goal}</td></tr>
-              <tr class="bg-theme-surface"><td class="p-2 border border-theme-border font-bold">${T.s5_e3_label}</td><td class="p-2 border border-theme-border font-bold italic">${T.s5_e3_when}</td><td class="p-2 border border-theme-border font-medium">${T.s5_e3_goal}</td></tr>
-            </tbody>
-          </table>
-          <p class="text-[10px] font-bold text-theme-text-muted uppercase italic">${T.s5_note}</p>
-        </section>
+        const translated = i18nEngine.t(key, {
+          defaultValue: el.textContent.trim(),
+          locale: this._locale
+        });
 
-        <div class="p-6 border-2 border-theme-border-active bg-theme-surface">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s6_title}</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs italic">
-            <ul class="space-y-1 list-disc pl-4 text-theme-text font-medium leading-relaxed">
-              <li>${T.s6_li1}</li><li>${T.s6_li2}</li><li>${T.s6_li3}</li><li>${T.s6_li4}</li>
-            </ul>
-            <div class="bg-theme-border-active text-theme-bg p-6 font-bold uppercase text-center flex items-center justify-center">
-              <p class="text-sm tracking-wide leading-relaxed italic">${T.s6_rule}</p>
-            </div>
-          </div>
-        </div>
+        if (el.hasAttribute('data-i18n-html')) {
+          el.innerHTML = translated;
+        } else {
+          el.textContent = translated;
+        }
+        count++;
+      });
+      return count;
+    }
 
-        <section class="mb-8">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s7_title}</h2>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-[11px]">
-            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r1_role}</strong>${T.s7_r1_desc}</div>
-            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r2_role}</strong>${T.s7_r2_desc}</div>
-            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r3_role}</strong>${T.s7_r3_desc}</div>
-            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r4_role}</strong>${T.s7_r4_desc}</div>
-            <div class="p-3 border border-theme-border bg-theme-surface"><strong class="block text-theme-border-active uppercase">${T.s7_r5_role}</strong>${T.s7_r5_desc}</div>
-          </div>
-        </section>
+    _setupListeners() {
+      document.addEventListener('cpii:lang:change', this._handleLangChange);
 
-        <section class="pb-6">
-          <h2 style="border-bottom: 2px solid var(--theme-ink); color: var(--theme-ink);" class="text-xl font-bold mb-4 pb-1 uppercase">${T.s8_title}</h2>
-          <div class="grid grid-cols-3 gap-2 h-24">
-            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q1}</div>
-            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q2}</div>
-            <div class="border border-theme-border p-2 text-[9px] text-theme-text-muted uppercase font-bold">${T.s8_q3}</div>
-          </div>
-        </section>
+      this._mutationObserver = new MutationObserver((mutations) => {
+        const newNodes = mutations
+          .flatMap(m => Array.from(m.addedNodes))
+          .filter(n => n.nodeType === 1 && n.hasAttribute?.('data-i18n'));
 
-        <footer class="text-center pt-6 border-t border-theme-border text-[9px] text-theme-text-muted font-bold uppercase tracking-[0.3em]">
-          ${T.footer}
-        </footer>
-        </div> <!-- cierre manual-body -->
-      </div> <!-- cierre manual-container --> 
-    `;
+        if (newNodes.length > 0 && window.__CPII__?.i18n) {
+          this._translateBatch(newNodes, window.__CPII__.i18n);
+        }
+      });
 
-    const ZOOM_LEVELS = [0.9, 1, 1.15, 1.3, 1.5];
-    const ZOOM_KEY = 'cpii:manual:zoom';
-    const body = this.querySelector('.manual-body');
+      this._mutationObserver.observe(this, { childList: true, subtree: true });
+    }
 
-    let currentZoom = parseFloat(localStorage.getItem(ZOOM_KEY)) || 1;
+    _teardownListeners() {
+      document.removeEventListener('cpii:lang:change', this._handleLangChange);
+      if (typeof this._i18nUnsubscribe === 'function') {
+        this._i18nUnsubscribe();
+      }
+    }
 
-    const applyZoom = () => {
-      if (body) body.style.fontSize = currentZoom + 'rem';
-      localStorage.setItem(ZOOM_KEY, currentZoom);
+    _cleanupObserver() {
+      if (this._mutationObserver) {
+        this._mutationObserver.disconnect();
+        this._mutationObserver = null;
+      }
+    }
+
+    _handleLangChange = (e) => {
+      const newLang = e.detail?.lang;
+      if (newLang && newLang !== this._locale) {
+        this._locale = newLang;
+        const elements = $$(`[data-i18n^="${I18N_DOMAIN}"]`, this);
+        if (window.__CPII__?.i18n) {
+          this._translateBatch(elements, window.__CPII__.i18n);
+        }
+      }
     };
 
-    this.querySelector('#zoom-out').addEventListener('click', () => {
-      const idx = ZOOM_LEVELS.indexOf(currentZoom);
-      if (idx > 0) currentZoom = ZOOM_LEVELS[idx - 1];
-      applyZoom();
-    });
+    _emit(eventName, detail = {}) {
+      const event = new CustomEvent(eventName, {
+        detail: { ...detail, gadget: GADGET_ID, version: GADGET_VERSION },
+        bubbles: true,
+        cancelable: true,
+        composed: false
+      });
+      this.dispatchEvent(event);
+    }
 
-    this.querySelector('#zoom-in').addEventListener('click', () => {
-      const idx = ZOOM_LEVELS.indexOf(currentZoom);
-      if (idx < ZOOM_LEVELS.length - 1) currentZoom = ZOOM_LEVELS[idx + 1];
-      applyZoom();
-    });
+    _emitReady() {
+      this._emit('gadget:ready', {
+        gadgetId: GADGET_ID,
+        timestamp: Date.now(),
+        locale: this._locale
+      });
+      console.log(`[${GADGET_ID}] v${GADGET_VERSION} inicializado y listo (R3 Certified)`);
+    }
 
-    applyZoom();
+    refreshI18n() {
+      const elements = $$(`[data-i18n^="${I18N_DOMAIN}"]`, this);
+      if (window.__CPII__?.i18n) {
+        this._translateBatch(elements, window.__CPII__.i18n);
+      }
+    }
+
+    getLocale() {
+      return this._locale;
+    }
+
+    static get observedAttributes() {
+      return ['data-locale'];
+    }
+
+    attributeChangedCallback(name, oldVal, newVal) {
+      if (name === 'data-locale' && newVal !== oldVal) {
+        this._locale = newVal;
+        this.refreshI18n();
+      }
+    }
   }
-}
 
-// ── [SEC-05] Registro y listener de cambio de idioma ─────────
-if (!customElements.get('gd-manual')) {
-  customElements.define('gd-manual', GdManual);
-}
+  if (!customElements.get(GADGET_ID)) {
+    customElements.define(GADGET_ID, GdManual);
+    console.log(`[Skeleton] CustomElement <${GADGET_ID}> registrado v${GADGET_VERSION}`);
+  }
 
-// Re-renderizar si el idioma cambia mientras el manual está abierto
-document.addEventListener('cpii:lang:change', () => {
-  document.querySelectorAll('gd-manual').forEach(el => el.render());
-});
+  if (typeof window !== 'undefined') {
+    window.__CPII__ = window.__CPII__ || {};
+    window.__CPII__.gadgets = window.__CPII__.gadgets || {};
+    window.__CPII__.gadgets[GADGET_ID] = GdManual;
+  }
+
+})();

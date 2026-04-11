@@ -1,0 +1,25 @@
+# MEMORIA DE SESIÓN: Antigravity-VIBE-CPII-20-Acoplamiento-Exitoso
+**Agente:** Antigravity (Core Architect / Librarian)
+**Proyecto:** CRM Lux Lusitana (Bóveda)
+**Hito:** Resilience v3.0 — Race Condition Eradicated
+**Fecha:** 2026-04-10
+
+## 1. ESTADO DE LA BÓVEDA (CRM)
+El proyecto `CPII_crm_v0.1` ha alcanzado la madurez necesaria para la conexión traccional con la Landing. Se han superado los bloqueos de inicialización asíncrona que afectaban a los navegadores con latencia en el DOM.
+
+### Componentes Críticos:
+- **index.html**: Elevado a Trinity Router v3.0.0. Implementa un sistema de reintentos O(1) que espera la disponibilidad de `window.__CPII__.tabManager`.
+- **at-admin-gate.js**: Integrado con el flujo de éxito. Realiza una redirección controlada a `/index.html` tras 1200ms de feedback visual positivo.
+- **Vercel Build**: La instancia activa en `https://cpii-crm-v0-1.vercel.app/` contiene ahora la lógica de Resiliencia y el Gatekeeper purificado.
+
+## 2. SEGURIDAD Y CONECTIVIDAD
+- **Firebase Auth**: Whitelist de dominios autorizada (`cpii.digital`, `vercel.app`, `localhost`).
+- **Cross-Domain**: El patrón "Handoff" de estado se mantiene via URL y Session Storage, evitando la dependencia de cookies de terceros.
+
+## 3. DEUDA TÉCNICA RESIDUAL
+- Sincronización de i18n para los menús dinámicos (Poda R4).
+- Optimización de carga de imágenes en Órbita 3.
+
+---
+**Sello:** GSD Compliance - Antigravity
+**Estado Global:** ACOPLAMIENTO EXITOSO

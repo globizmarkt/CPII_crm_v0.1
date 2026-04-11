@@ -84,50 +84,8 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
         }
     </script>
 
-    <!-- [SEC-03] Estilos globales — :root Design Token System + clases utilitarias -->
-    <style>
-        /* ── Design Token System — fuente única de verdad ── */
-        :root {
-            /* Colores sólidos */
-            --theme-bg: #161513;
-            --theme-bg-light: #f8f7f6;
-            --theme-surface: #1e1b14;
-            --theme-primary: #c1a85c;
-            --theme-accent: #C1A85D;
-            --theme-ink: #181d6d;
-            /* wet blue ink / bloomberg */
-
-            /* Tripletes RGB para uso en rgba() — Doctrina R3 */
-            --theme-bg-rgb: 22, 21, 19;
-            --theme-surface-rgb: 30, 27, 20;
-            --theme-primary-rgb: 193, 168, 93;
-
-            /* Tokens semánticos — consumidos por tab-manager.css */
-            --theme-border: rgba(var(--theme-primary-rgb), 0.1);
-            --theme-accent: var(--theme-primary);
-            --theme-accent-subtle: rgba(var(--theme-primary-rgb), 0.08);
-            --theme-bg-secondary: var(--theme-surface);
-            --theme-bg-elevated: rgba(var(--theme-primary-rgb), 0.05);
-            --theme-surface-hover: rgba(var(--theme-primary-rgb), 0.08);
-        }
-
-        /* ── Utilidades globales ── */
-        body {
-            font-family: 'Manrope', sans-serif;
-            background-color: var(--theme-bg);
-        }
-
-        .luxury-glass {
-            background: rgba(var(--theme-surface-rgb), 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(var(--theme-primary-rgb), 0.1);
-        }
-
-        .gatekeeper-overlay {
-            backdrop-filter: blur(8px);
-            background: rgba(var(--theme-bg-rgb), 0.4);
-        }
-    </style>
+    <!-- [SEC-03] Estilos globales — Médula v2.6.1 (Tokens + Glass + Alerts) -->
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 
 <body class="bg-background-dark text-slate-100 overflow-hidden font-display">
@@ -185,17 +143,17 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
                 <nav class="flex flex-col gap-1">
                     <!-- Fase 1 — Acceso inmediato -->
                     <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 group"
-                        href="/dashboard" data-phase="1" data-requires="none" data-gadget="gd-dashboard">
+                        href="/dashboard" data-phase="2" data-requires="kyc:approved" data-gadget="gd-dashboard">
                         <span class="material-symbols-outlined transition-colors">monitoring</span>
                         <span class="text-sm font-semibold" data-i18n="nav_dashboard">Posición Global</span>
                     </a>
                     <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="/network" data-phase="1" data-requires="none" data-gadget="gd-network">
+                        href="/network" data-phase="2" data-requires="kyc:approved" data-gadget="gd-network">
                         <span class="material-symbols-outlined transition-colors">hub</span>
                         <span class="text-sm font-medium" data-i18n="nav_network">Mi Red</span>
                     </a>
                     <a class="menu-pillar flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-primary/5 hover:text-primary transition-all group"
-                        href="/academy" data-phase="1" data-requires="none" data-gadget="gd-academy">
+                        href="/academy" data-phase="2" data-requires="kyc:approved" data-gadget="gd-academy">
                         <span class="material-symbols-outlined transition-colors">school</span>
                         <span class="text-sm font-medium" data-i18n="nav_academy">Academy</span>
                     </a>
@@ -245,7 +203,7 @@ PROPÓSITO: Conectar brand_name y brand_subtitle al motor i18n.
         <!-- [SEC-07] Órbita 2 — Canvas dinámico (#canvas-orbita-2) -->
         <!-- Orbit 2: Center Canvas (Dynamic Workspace) -->
         <main class="flex-1 bg-background-light relative flex flex-col overflow-y-auto text-slate-800">
-            <div id="canvas-orbita-2" class="flex-1 flex flex-col relative">
+            <div id="canvas-orbita-2" class="flex-1 flex flex-col relative p-12 bg-[var(--theme-canvas-deep)">
             </div>
         </main>
 

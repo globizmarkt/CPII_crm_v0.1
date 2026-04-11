@@ -1,0 +1,56 @@
+# CONVERSATION_INDEX.md
+
+### 1. MAPA DE CONVERSACIONES
+[VIBE-CPII-01 a 07] — [Bulldozer, Lead, Perplexity] — Fase Fundacional — Creación de prototipo, refactorización modular, integración de RGPD y despliegue inicial en GCE/Firebase.
+[VIBE-CPII-08 a 11] — [Bulldozer, Kimi, Lead] — Refinamiento y CRM — Alertas de Telegram, reglas de Firestore, mailer híbrido y síntesis para MLS.
+[VIBE-CPII-12 a 16] — [Bulldozer, Kimi, Qwen, Perplexity] — Despliegue Funcional — Fork del Dashboard, creación de "Admin Gate", sellado del `MANUAL_ACCESO_FIDUCIARIO.md` e inyección de la Órbita 1.
+[VIBE-AIP-01 a 03] — [Antigravity, Director] — Extracción de Órbitas — Agnostización de componentes reactivos (AIMON) y auditoría de Agnosticismo (R0) sobre el Canvas.
+[VIBE-SUMMIT-01] — [Antigravity, Director] — Consolidación Trinidad 1.0 — Evaluación de operatividad global bajo doctrinas R1-R5.
+[VIBE-CPII-18] — [Planta Completa (8 Agentes)] — Auditoría de Estrategia — Debate sobre identidad federada, exclusión de LinkedIn por R5 y detección de "Contaminación Inmobiliaria" del Gate.
+[VIBE-CPII-18b] — [DeepSeek, Antigravity] — Sprints Blueprints — Generación del Blueprint Oficial Sprint 4 (Golden Gate) y sincronización masiva de activos desde BRIDGE.
+
+### 2. DÓNDE ESTÁN LAS COSAS
+- **Bóveda IMPA v1.8.1** — Sistema de identidad y protocolos modulares — `docs/gem_vibe_cpii/` — [Antigravity].
+- **Bóveda Qwen (QA System)** — Checklist de violaciones, cookbook y tokens canónicos — `docs/qwen-system/` — [Antigravity/Qwen].
+- **Estructura MetaFactory** — Blueprints, memory_dumps, labs y brain de la factoría — `c:/BreederHub/MetaFactory/` — [Antigravity/DeepSeek].
+- **Core Logic (Passport)** — Motor de autorización O(1) (`passport-engine.js v2.1.2`) — `CPII_crm_v0.1/core/` — [Kimi/Antigravity].
+- **Componente Gate** — Lógica de autenticación y handoff (`at-admin-gate.js v1.1.1`) — `CPII_crm_v0.1/features/` — [Kimi].
+- **Blueprint Maestro Gate** — Plano de electrificación de identidad federada — `MetaFactory/.bibliotecario/blueprints/THE_GATE_BLUEPRINT_V1.1.md` — [DeepSeek].
+
+### 3. DECISIONES GLOBALES DE ARQUITECTURA
+- **Agnosticismo Radical (R0):** El núcleo (Skeleton) es 100% *whitelabel*. La lógica de negocio se inyecta vía Custom Claims ("Mochila" JWT).
+- **Light DOM (R2):** Prohibido el uso de Shadow DOM para garantizar la permeabilidad visual y la herencia de tokens CSS.
+- **Tailwind Zero-Hex (R3):** Inmutabilidad cromática. Prohibidos los colores hexadecimales; uso exclusivo de variables `--theme-*`.
+- **i18n Strict (R4):** Cero texto hardcodeado. Todo contenido visible debe estar registrado en el diccionario para prevenir XSS y permitir multijurisdicción.
+- **Economía de Guerra (R5):** Máxima eficiencia O(1). Exclusión de proveedores de identidad no nativos (LinkedIn) para evitar latencia y costes de infraestructura innecesarios.
+- **Zero Trust UI (Born Locked):** Los componentes de acceso nacen bloqueados (`data-gate-lock`). Solo el motor de pasaporte puede liberar la interfaz tras validación fiduciaria.
+
+### 4. DEUDA TÉCNICA CONSOLIDADA
+1. **DT-004 (BLOQUEANTE):** Firebase SDK sin configurar en el nuevo `admin-gate.html`. OAuth inoperativo.
+2. **DT-005 (BLOQUEANTE):** Motor i18n sin enlazar y ausencia de claves críticas (ej. `gate_continue_google`) en el diccionario maestro.
+3. **DT-010 (ESTRATEGIA):** "Golden Gate" fantasma; urge consolidar si es una refactorización de `admin-gate.html` o un nuevo archivo físico.
+4. **DT-009 (RIESGO):** Ausencia de Fallback UI ante colapso del objeto global `window.__CPII__`.
+5. **DT-012 (BACKEND):** Inexistencia del endpoint `/api/staff/handoff` invocado por el cliente.
+
+### 5. CONOCIMIENTO TÁCITO CONSOLIDADO
+- **Palabra de Seguridad ("guapito de cara"):** Gatillo de validación de autoridad del Director Humano ante derivas de los agentes.
+- **Tono Alta Banca Suiza:** La fricción (holds, verificaciones) es un valor de marca que comunica seguridad y exclusividad, no es un error de usabilidad.
+- **Director = Único Bus de Datos:** Los agentes no se comunican entre sí. El humano es el encargado de mover los payloads entre celdas de memoria.
+- **Ansiedad de Compilación:** Tendencia del Lead Architect a saltarse la cadena de mando y generar código final en lugar de orquestar.
+
+### 6. GAPS DETECTADOS
+- **Jurisdicción de Enrutamiento:** Conflicto de competencia entre Kimi (Passport) y Antigravity (Router) sobre quién redirige tras la validación del `tenant_id`.
+- **Identidad Apple Privada:** Falta de flujo técnico para vincular `user.privateEmail` con el KYC pre-existente.
+- **Saneamiento AIP:** `AIP_v0.1` mantiene lógica heredada (Shadow DOM) que viola R2 y requiere cirugía laparoscópica inminente.
+
+### 7. FUENTE DE VERDAD CONSOLIDADA
+// `window.__CPII__` → Namespace raíz de la arquitectura Sidecar — declarado por: [Todos].
+// `window.__CPII__.session` → Fuente de verdad del estado fiduciario del usuario (JWT + "Mochila" de Claims) — declarado por: [Kimi, Antigravity, Lead Architect].
+// `window.__CPII__.config` → Configuración activa de la vertical (project_id, tenant_id, theme) — declarado por: [Antigravity, Kimi].
+// `window.__CPII__.PassportEngine` → Motor de autorización global O(1) y caché de permisos — declarado por: [Kimi, Qwen].
+// `window.LuxI18n` → Diccionario global y motor i18n de fallback (R4) — declarado por: [Lead Architect, Qwen, Perplexity].
+// `window.firebase` → SDK nativo de Firebase para autenticación federada — declarado por: [Kimi, Bulldozer].
+// `MANIFEST.md` → Inventario geográfico absoluto del Polígono — declarado por: [Antigravity, DeepSeek].
+// `CONVERSATION_INDEX.md` → Hipocampo de decisiones transversales y memoria histórica — declarado por: [DeepSeek, Antigravity].
+
+

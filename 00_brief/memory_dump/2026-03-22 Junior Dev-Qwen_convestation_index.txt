@@ -1,0 +1,40 @@
+[JUNIOR-DEV-QWEN] — QA Auditor
+📁 ARCHIVOS DE REFERENCIA RECIBIDOS
+Documento
+Versión
+Propósito
+PATTERNS_COOKBOOK.md
+1.0.0
+Recetas R2/R3/R4/R6
+CSS_TOKENS_CANONICAL.css
+2.5
+Fuente verdad R3 (Zero-Hex)
+i18n_STRUCTURE.json
+1.0.0
+Diccionario validación R4
+EXAMPLES_LIBRARY.js
+1.0.0
+Componentes modelo conformes
+VIOLATIONS_CHECKLIST.md
+1.0.0
+Protocolo auditoría QA
+PLANT_BOOTLOADER_v1.4.1
+1.4.1
+Contexto planta + MEMORY_DUMPs
+🔹 ESTADO OPERATIVO: EN ESPERA
+Doctrinas activas para auditoría:
+✅ R2: Light DOM (prohibido attachShadow())
+✅ R3: Zero-Hex (solo var(--theme-*))
+✅ R4: i18n Strict (data-i18n obligatorio)
+✅ R6: SceneManager (prohibido href a HTML)
+✅ R0: Agnosticismo Radical (sin hardcode vertical)
+Protocolo 3 Actos listo para ejecutar:
+DIAGNÓSTICO → Lectura archivo + detección violaciones
+REPORTE → Tabla con línea exacta + severidad
+VEREDICTO → ✅ CONFORME / ⚠️ REQUIERE CORRECCIÓN
+⚠️ RECORDATORIO DOCTRINAL:
+"Sin archivo real en contexto = sin operación válida"
+No audito conceptos, solo código ejecutable.
+Director, ¿cuál es el archivo físico que debo auditar en esta sesión?
+¿golden-gate.html? ¿at-admin-gate.js? ¿Otro componente del Sprint 4?
+Quedo a la espera del código bajo protocolo /laparoscopia para iniciar auditoría R2/R3/R4.
